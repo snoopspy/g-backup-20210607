@@ -24,15 +24,15 @@ struct GIp final {
   GIp(const QString& rhs) { operator =(rhs); }
   GIp(const struct in_addr& rhs) { operator =(rhs); }
 
-  GIp& operator =(const GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp& operator =(const quint32 rhs) { ip_ = rhs; return *this; }
-  GIp& operator =(const char* rhs);
-  GIp& operator =(const QString& rhs) { *this = qPrintable(rhs); return *this; }
-  GIp& operator =(const struct in_addr& rhs) {  ip_ = ntohl(rhs.s_addr);  return *this; }
-
   /*explicit*/ operator quint32() const { return ip_; } // default operator
   explicit operator const char*() const { return qPrintable((QString)*this); }
   explicit operator QString() const;
+
+  GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
+  GIp& operator = (const quint32 rhs) { ip_ = rhs; return *this; }
+  GIp& operator = (const char* rhs);
+  GIp& operator = (const QString& rhs) { *this = qPrintable(rhs); return *this; }
+  GIp& operator = (const struct in_addr& rhs) {  ip_ = ntohl(rhs.s_addr);  return *this; }
 
   void clear() { ip_ = 0; }
 

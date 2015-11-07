@@ -46,7 +46,7 @@ public:
 // GNetworkInterfaces
 // ----------------------------------------------------------------------------
 struct GNetworkInterfaces : QList<GNetworkInterface> {
-protected:
+public: // gilgil temp 2015.11.08
   GNetworkInterfaces();
   virtual ~GNetworkInterfaces();
   pcap_if_t* allDevs_{nullptr};

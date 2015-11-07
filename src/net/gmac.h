@@ -25,18 +25,14 @@ protected:
   uint8_t value[SIZE];
 
 public:
-  GMac()                     {                                   } // default ctor
-  GMac(const uint8_t* value) { memcpy(this->value, value, SIZE); } // conversion ctor
-
-  operator uint8_t*() const  { return (uint8_t*)value;           } // cast operator
-
-public:
+  GMac()                     {                                   }
+  GMac(const uint8_t* value) { memcpy(this->value, value, SIZE); }
   GMac(const QString s);
   GMac(const char* s)        { *this = QString(s);               }
 
-public:
-  QString str() const;
-  // QString qformat(QString format); // gilgil temp 2015.01.20
+  operator uint8_t*() const  { return (uint8_t*)value;           } // cast operator
+  explicit operator const char*() const { return qPrintable((QString)*this); }
+  explicit operator QString() const;
 
   bool operator == (const GMac& rhs) const   { return memcmp(value, rhs.value, SIZE) == 0; }
   bool operator != (const GMac& rhs) const   { return memcmp(value, rhs.value, SIZE) != 0; }

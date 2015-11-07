@@ -2,6 +2,13 @@
 #include "gnetworkinterface.h"
 
 // ----------------------------------------------------------------------------
+// GNetworkInterface
+// ----------------------------------------------------------------------------
+GNetworkInterfaces& GNetworkInterface::allInterfaces() {
+  return GNetworkInterfaces::instance();
+}
+
+// ----------------------------------------------------------------------------
 // GNetworkInterfaces
 // ----------------------------------------------------------------------------
 GNetworkInterfaces::GNetworkInterfaces() {
