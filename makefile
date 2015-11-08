@@ -16,6 +16,7 @@ clean:
 	find -type f -name '*.pro.user' -delete
 
 distclean: clean
+	rm -rf bin
 	cd lib && make distclean; true
 	cd app && make distclean; true
 	find -type f -name '*.a'        -delete
