@@ -61,25 +61,20 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
   GRtmEntry* res = nullptr;
 
   int _count = count();
-  for (int i = 0; i < _count; i++)
-  {
+  for (int i = 0; i < _count; i++) {
     GRtmEntry& entry = (GRtmEntry&)at(i);
 
     if ((entry.dst_ & entry.mask_) != (ip & entry.mask_)) continue;
-    if (res == nullptr)
-    {
+    if (res == nullptr) {
       res = &entry;
       continue;
     }
-    if (entry.mask_ > res->mask_)
-    {
+    if (entry.mask_ > res->mask_) {
       res = &entry;
       continue;
     } else
-    if (entry.mask_ == res->mask_)
-    {
-      if (entry.metric_ < res->metric_)
-      {
+    if (entry.mask_ == res->mask_) {
+      if (entry.metric_ < res->metric_) {
         res = &entry;
         continue;
       }
