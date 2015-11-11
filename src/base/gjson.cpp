@@ -172,4 +172,29 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget) {
   return ref;
 }
 
+// ----------------------------------------------------------------------------
+// QTreeView
+// ----------------------------------------------------------------------------
+QJsonValueRef operator << (QJsonValueRef ref, const QTreeView* treeView) {
+  int count = treeView->header()->count() - 1;
+  QList<int> sizes;
+  for (int i = 0; i < count; i++) {
+    sizes << treeView->columnWidth(i);
+  }
+  ref << sizes;
+  return ref;
+}
+
+QJsonValueRef operator >> (const QJsonValueRef ref, QTreeView* treeView) {
+  QList<int> sizes;
+  ref >> sizes;
+  if (sizes.count() != 0) {
+    int count = treeView->header()->count();
+    for (int i = 0; i < count - 1; i++) {
+      treeView->setColumnWidth(i, sizes.at(i));
+    }
+  }
+  return ref;
+}
+
 #endif // QT_GUI_LIB

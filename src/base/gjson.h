@@ -61,4 +61,12 @@ QJsonObject operator >> (const QJsonObject json, QWidget* widget);
 QJsonValueRef operator << (QJsonValueRef ref, const QWidget* widget);
 QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget);
 
+// ----------------------------------------------------------------------------
+// QTreeView
+// ----------------------------------------------------------------------------
+#include <QTreeView>
+#include <QHeaderView>
+QJsonValueRef operator << (QJsonValueRef ref, const QTreeView* treeView);
+QJsonValueRef operator >> (const QJsonValueRef ref, QTreeView* treeView);
+
 #endif // QT_GUI_LIB
