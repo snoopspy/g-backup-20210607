@@ -1,5 +1,5 @@
 #include <QApplication>
-#include <GJsonAux>
+#include <GJson>
 #include <GPropWidget>
 
 #include "party.h"
