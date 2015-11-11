@@ -27,7 +27,8 @@ public:
   void setObject(GObj* obj);
 
 protected:
-  GObj* obj_;
+  bool isFirstSetObject_{true};
+  GObj* obj_{nullptr};
 };
 
 #endif // QT_GUI_LIB

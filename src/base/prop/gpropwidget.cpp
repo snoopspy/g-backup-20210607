@@ -1,6 +1,7 @@
 #ifdef QT_GUI_LIB
 
 #include <QGridLayout>
+#include <QHeaderView>
 #include "gpropitemobjectname.h"
 #include "gpropwidget.h"
 
@@ -34,6 +35,11 @@ void GPropWidget::setObject(GObj* obj) {
   obj_->createPropItems(item);
 
   expandAll();
+
+  if (isFirstSetObject_) {
+    isFirstSetObject_ = false;
+    resizeColumnToContents(0);
+  }
 }
 
 #endif // QT_GUI_LIB
