@@ -38,8 +38,8 @@ public:
   ~Widget();
 
 public:
-  void initializeControl();
-  void finalizeControl();
+  void initControl();
+  void finiControl();
   void loadControl();
   void saveControl();
   void setControl();
@@ -59,8 +59,6 @@ private slots:
   void readyRead();
 
 public:
-  void load(QJsonObject json);
-  void save(QJsonObject& json);
   void showOption(NetClient* netClient);
 
 private slots:

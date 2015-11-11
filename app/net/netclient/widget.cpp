@@ -2,7 +2,7 @@
 #include "ui_widget.h"
 
 #include <QDialog>
-#include <GJsonAux>
+#include <GJson>
 #include <GPropWidget>
 
 // ----------------------------------------------------------------------------
@@ -13,17 +13,19 @@ Widget::Widget(QWidget *parent) :
   ui(new Ui::Widget)
 {
   ui->setupUi(this);
-  initializeControl();
+  initControl();
+  loadControl();
+  setControl();
 }
 
 Widget::~Widget()
 {
   saveControl();
-  finalizeControl();
+  finiControl();
   delete ui;
 }
 
-void Widget::initializeControl()
+void Widget::initControl()
 {
   move(0, 0); resize(640, 480);
 
@@ -42,12 +44,9 @@ void Widget::initializeControl()
   QObject::connect(&sslSocket_, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(error(QAbstractSocket::SocketError)));
   QObject::connect(&sslSocket_, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChanged(QAbstractSocket::SocketState)));
   QObject::connect(&sslSocket_, &QTcpSocket::readyRead, this, &Widget::readyRead);
-
-  loadControl();
-  setControl();
 }
 
-void Widget::finalizeControl()
+void Widget::finiControl()
 {
   on_pbClose_clicked();
 }
@@ -55,13 +54,42 @@ void Widget::finalizeControl()
 void Widget::loadControl()
 {
   QJsonObject json = GJson::instance().loadFromFile();
-  load(json);
+
+  json["widget"] >> this;
+  json["splitter"] >> ui->splitter;
+  json["option"] >> option_;
+
+  ui->chkShowHexa->setChecked(json["showHexa"].toBool());
+  ui->chkSendHexa->setChecked(json["sendHexa"].toBool());
+  ui->tabOption->setCurrentIndex(json["currentIndex"].toInt());
+  ui->leTcpHost->setText(json["tcpHost"].toString());
+  ui->leTcpPort->setText(json["tcpPort"].toString());
+  ui->leUdpHost->setText(json["udpHost"].toString());
+  ui->leUdpPort->setText(json["udpPort"].toString());
+  ui->leSslHost->setText(json["sslHost"].toString());
+  ui->leSslPort->setText(json["sslPort"].toString());
+  ui->pteSend->insertPlainText(json["sendText"].toString());
 }
 
 void Widget::saveControl()
 {
   QJsonObject json;
-  save(json);
+
+  json["widget"] << this;
+  json["splitter"] << ui->splitter;
+  json["option"] << option_;
+
+  json["showHexa"] = ui->chkShowHexa->isChecked();
+  json["sendHexa"] = ui->chkSendHexa->isChecked();
+  json["currentIndex"]= ui->tabOption->currentIndex();
+  json["tcpHost"] = ui->leTcpHost->text();
+  json["tcpPort"] = ui->leTcpPort->text();
+  json["udpHost"] = ui->leUdpHost->text();
+  json["udpPort"] = ui->leUdpPort->text();
+  json["sslHost"] = ui->leSslHost->text();
+  json["sslPort"] = ui->leSslPort->text();
+  json["sendText"] = ui->pteSend->toPlainText();
+
   GJson::instance().saveToFile(json);
 }
 
@@ -83,51 +111,6 @@ void Widget::setControl()
   ui->pbClose->setEnabled(active);
   ui->pbSend->setEnabled(netClient_ == nullptr ? false : netClient_->state() == QAbstractSocket::ConnectedState);
 }
-
-// ----- gilgil temp 2015.07.08 -----
-/*
-bool Widget::event(QEvent* event)
-{
-  StateEvent* stateEvent = dynamic_cast<StateEvent*>(event);
-  if (stateEvent != NULL)
-  {
-    setControl();
-    return true;
-  }
-
-  MsgEvent* msgEvent = dynamic_cast<MsgEvent*>(event);
-  if (msgEvent != NULL)
-  {
-    showMessage(msgEvent);
-    return true;
-  }
-
-  CloseEvent* closeEvent = dynamic_cast<CloseEvent*>(event);
-  if (closeEvent != NULL)
-  {
-    ui->pbClose->click();
-    return true;
-  }
-
-  return QWidget::event(event);
-}
-
-void Widget::showEvent(QShowEvent* showEvent)
-{
-  loadControl();
-  setControl();
-  QWidget::showEvent(showEvent);
-}
-
-void Widget::showMessage(MsgEvent* event)
-{
-  static Qt::HANDLE lastThreadId = 0;
-  if (lastThreadId != 0 && lastThreadId != event->threadId) event->msg = QString("\r\n") + event->msg;
-  lastThreadId = event->threadId;
-  ui->pteRecv->insertPlainText(event->msg);
-  ui->pteRecv->ensureCursorVisible();
-}
-*/
 
 void Widget::connected() {
   QString msg = "[connected] " + netClient_->peerAddress().toString() + "\r\n";
@@ -163,40 +146,6 @@ void Widget::readyRead() {
     ba = ba.toHex();
   ba += "\r\n";
   ui->pteRecv->insertPlainText(ba);
-}
-
-void Widget::load(QJsonObject json) {
-  json["widget"] >> this;
-  json["splitter"] >> ui->splitter;
-  json["option"] >> option_;
-
-  ui->chkShowHexa->setChecked(json["showHexa"].toBool());
-  ui->chkSendHexa->setChecked(json["sendHexa"].toBool());
-  ui->tabOption->setCurrentIndex(json["currentIndex"].toInt());
-  ui->leTcpHost->setText(json["tcpHost"].toString());
-  ui->leTcpPort->setText(json["tcpPort"].toString());
-  ui->leUdpHost->setText(json["udpHost"].toString());
-  ui->leUdpPort->setText(json["udpPort"].toString());
-  ui->leSslHost->setText(json["sslHost"].toString());
-  ui->leSslPort->setText(json["sslPort"].toString());
-  ui->pteSend->insertPlainText(json["sendText"].toString());
-}
-
-void Widget::save(QJsonObject& json) {
-  json["widget"] << this;
-  json["splitter"] << ui->splitter;
-  json["option"] << option_;
-
-  json["showHexa"] = ui->chkShowHexa->isChecked();
-  json["sendHexa"] = ui->chkSendHexa->isChecked();
-  json["currentIndex"]= ui->tabOption->currentIndex();
-  json["tcpHost"] = ui->leTcpHost->text();
-  json["tcpPort"] = ui->leTcpPort->text();
-  json["udpHost"] = ui->leUdpHost->text();
-  json["udpPort"] = ui->leUdpPort->text();
-  json["sslHost"] = ui->leSslHost->text();
-  json["sslPort"] = ui->leSslPort->text();
-  json["sendText"] = ui->pteSend->toPlainText();
 }
 
 void Widget::showOption(NetClient* netClient) {
