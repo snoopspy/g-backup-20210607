@@ -5,7 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
-GPropItemUnknownType::GPropItemUnknownType(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) : GPropItem(parent, object, mpro) {
+GPropItemUnknownType::GPropItemUnknownType(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+  : GPropItem(parent, object, mpro) {
   item_->setBackground(1, QBrush(Qt::lightGray));
 }
 

@@ -6,6 +6,7 @@
 // GPropItem
 // ----------------------------------------------------------------------------
 GPropItem::GPropItem(QTreeWidget* widget, QObject* object, QMetaProperty mpro) {
+  setParent(widget);
   item_ = new QTreeWidgetItem(widget);
   object_ = object;
   mpro_ = mpro;
@@ -13,6 +14,7 @@ GPropItem::GPropItem(QTreeWidget* widget, QObject* object, QMetaProperty mpro) {
 }
 
 GPropItem::GPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
+  setParent(parent->treeWidget());
   item_ = new QTreeWidgetItem(parent);
   object_ = object;
   mpro_ = mpro;

@@ -5,13 +5,15 @@
 // ----------------------------------------------------------------------------
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
-GPropItemLineEdit::GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro) : GPropItem(widget, object, mpro) {
+GPropItemLineEdit::GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro)
+  : GPropItem(widget, object, mpro) {
   lineEdit_ = new QLineEdit(widget);
   lineEdit_->setFrame(false);
   widget->setItemWidget(item_, 1, lineEdit_);
 }
 
-GPropItemLineEdit::GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) : GPropItem(parent, object, mpro) {
+GPropItemLineEdit::GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+  : GPropItem(parent, object, mpro) {
   QTreeWidget* treeWidget = item_->treeWidget();
   Q_ASSERT(treeWidget != nullptr);
   lineEdit_ = new QLineEdit(treeWidget);

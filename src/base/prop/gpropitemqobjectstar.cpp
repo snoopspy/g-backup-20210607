@@ -6,7 +6,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemQObjectStar
 // ----------------------------------------------------------------------------
-GPropItemQObjectStar::GPropItemQObjectStar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) : GPropItem(parent, object, mpro) {
+GPropItemQObjectStar::GPropItemQObjectStar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+  : GPropItem(parent, object, mpro) {
   const char* propName = mpro.name();
   QVariant variant = object_->property(propName);
   GObj* childObj = qvariant_cast<GObj*>(variant);

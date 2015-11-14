@@ -25,7 +25,7 @@ public:
   GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
   GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
 
-protected:
+public:
   QLineEdit* lineEdit_;
 };
 

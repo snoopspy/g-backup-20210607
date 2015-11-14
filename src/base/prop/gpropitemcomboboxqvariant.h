@@ -12,21 +12,20 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QMetaEnum>
 #include "gpropitemcombobox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemEnum
+// GPropItemComboBoxQVariant
 // ----------------------------------------------------------------------------
-struct GPropItemEnum : public GPropItemComboBox {
+struct GPropItemComboBoxQVariant : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemEnum(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemComboBoxQVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro, QStringList items);
   void update() override;
 
 protected slots:
-  void myCurrentIndexChanged(int index);
+  void myCurrentIndexChanged(const QString &arg1);
 };
 
 #endif // QT_GUI_LIB

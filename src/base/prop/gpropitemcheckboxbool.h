@@ -12,21 +12,20 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitemlineedit.h"
+#include "gpropitemcheckbox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemObjectName
+// GPropItemComboBoxBool
 // ----------------------------------------------------------------------------
-struct GPropItemObjectName : public GPropItemLineEdit {
+struct GPropItemComboBoxBool : public GPropItemCheckBox {
   Q_OBJECT
 
 public:
-  GPropItemObjectName(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemObjectName(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemComboBoxBool(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:
-  void myEditingFinished();
+  void myClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB

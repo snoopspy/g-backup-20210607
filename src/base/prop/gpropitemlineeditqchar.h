@@ -15,13 +15,13 @@
 #include "gpropitemlineedit.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemQVariant
+// GPropItemLineEditQChar
 // ----------------------------------------------------------------------------
-struct GPropItemQVariant : public GPropItemLineEdit {
+struct GPropItemLineEditQChar : public GPropItemLineEdit {
   Q_OBJECT
 
 public:
-  GPropItemQVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemLineEditQChar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:

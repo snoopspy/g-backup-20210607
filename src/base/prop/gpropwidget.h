@@ -25,6 +25,7 @@ struct GPropWidget : public QTreeWidget {
 public:
   QObject* object();
   void setObject(GObj* obj);
+  void update();
 
 protected:
   bool isFirstSetObject_{true};

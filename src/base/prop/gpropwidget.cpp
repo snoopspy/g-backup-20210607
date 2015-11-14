@@ -2,7 +2,7 @@
 
 #include <QGridLayout>
 #include <QHeaderView>
-#include "gpropitemobjectname.h"
+#include "gpropitemlineeditobjectname.h"
 #include "gpropwidget.h"
 
 // ----------------------------------------------------------------------------
@@ -29,16 +29,26 @@ void GPropWidget::setObject(GObj* obj) {
   obj_ = obj;
 
   QMetaProperty mpro = obj->metaObject()->property(0); // objectName
-  GPropItemObjectName* root = new GPropItemObjectName(this, obj, mpro);
-  root->update();
+  GPropItemLineEditObjectName* root = new GPropItemLineEditObjectName(this, obj, mpro);
   QTreeWidgetItem* item = root->item_;
   obj_->createPropItems(item);
 
+  update();
   expandAll();
 
   if (isFirstSetObject_) {
     isFirstSetObject_ = false;
     resizeColumnToContents(0);
+  }
+}
+
+void GPropWidget::update() {
+  QObjectList list = children();
+  foreach (QObject* object, list) {
+    qDebug() << object->metaObject()->className();// gilgil temp
+    GPropItem* item = dynamic_cast<GPropItem*>(object);
+    if (item != nullptr)
+      item->update();
   }
 }
 

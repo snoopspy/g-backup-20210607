@@ -141,12 +141,12 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
 
 #ifdef QT_GUI_LIB
 
-#include "base/prop/gpropitembool.h"
-#include "base/prop/gpropitemenum.h"
-#include "base/prop/gpropitemobjectname.h"
-#include "base/prop/gpropitemqchar.h"
+#include "base/prop/gpropitemcheckboxbool.h"
+#include "base/prop/gpropitemcomboboxenum.h"
+#include "base/prop/gpropitemlineeditobjectname.h"
+#include "base/prop/gpropitemlineeditqchar.h"
 #include "base/prop/gpropitemqobjectstar.h"
-#include "base/prop/gpropitemqvariant.h"
+#include "base/prop/gpropitemlineeditqvariant.h"
 #include "base/prop/gpropitemunknowntype.h"
 
 void GObj::createPropItems(QTreeWidgetItem* parent) {
@@ -168,19 +168,19 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
   int userType = mpro.userType();
 
   if (mpro.isEnumType()) {
-    return new GPropItemEnum(parent, object, mpro);
+    return new GPropItemComboBoxEnum(parent, object, mpro);
   }
 
   if ((QString)propName == "objectName") {
-    return new GPropItemObjectName(parent, object, mpro);
+    return new GPropItemLineEditObjectName(parent, object, mpro);
   }
 
   switch (userType) {
     case QMetaType::Bool:
-      return new GPropItemBool(parent, object, mpro);
+      return new GPropItemComboBoxBool(parent, object, mpro);
 
     case QMetaType::QChar:
-      return new GPropItemQChar(parent, object, mpro);
+      return new GPropItemLineEditQChar(parent, object, mpro);
 
     case QMetaType::QObjectStar:
       return new GPropItemQObjectStar(parent, object, mpro);
@@ -196,7 +196,7 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
     case QMetaType::UInt:
     case QMetaType::ULongLong:
     case QMetaType::UShort:
-      return new GPropItemQVariant(parent, object, mpro);
+      return new GPropItemLineEditQVariant(parent, object, mpro);
   }
 
   qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);

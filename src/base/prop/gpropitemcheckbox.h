@@ -21,7 +21,7 @@
 struct GPropItemCheckBox : public GPropItem {
   GPropItemCheckBox(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
 
-protected:
+public:
   QCheckBox* checkBox_{nullptr};
 };
 

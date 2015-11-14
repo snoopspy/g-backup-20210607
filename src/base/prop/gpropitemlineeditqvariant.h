@@ -12,17 +12,20 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QComboBox>
-#include "gpropitem.h"
+#include "gpropitemlineedit.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemComboBox
+// GPropItemLineEditQVariant
 // ----------------------------------------------------------------------------
-struct GPropItemComboBox : public GPropItem {
-  GPropItemComboBox(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+struct GPropItemLineEditQVariant : public GPropItemLineEdit {
+  Q_OBJECT
 
 public:
-  QComboBox* comboBox_{nullptr};
+  GPropItemLineEditQVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void update() override;
+
+protected slots:
+  void myEditingFinished();
 };
 
 #endif // QT_GUI_LIB
