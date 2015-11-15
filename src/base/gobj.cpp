@@ -46,13 +46,6 @@ bool GObj::load(QJsonObject json, QMetaProperty mpro) {
       res = setProperty(propName, variant.toString());
       break;
 
-    case QMetaType::QObjectStar: {
-        GObj* obj = qvariant_cast<GObj*>(property(propName));
-        Q_ASSERT(obj != nullptr);
-        obj->load(json[propName].toObject());
-        return true;
-      }
-
     case QMetaType::Char:
     case QMetaType::Double:
     case QMetaType::Float:
@@ -74,6 +67,13 @@ bool GObj::load(QJsonObject json, QMetaProperty mpro) {
         res = setProperty(propName, QVariant::fromValue<QString>(s));
         break;
       }
+  }
+
+  if (userType == qMetaTypeId<GObjRef>()) {
+    GObj* obj = qvariant_cast<GObj*>(property(propName));
+    Q_ASSERT(obj != nullptr);
+    obj->load(json[propName].toObject());
+    return true;
   }
 
   if (!res) {
@@ -104,15 +104,6 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
       json[propName] = property(propName).toString();
       return true;
 
-    case QMetaType::QObjectStar: {
-        GObj* obj = qvariant_cast<GObj*>(variant);
-        Q_ASSERT(obj != nullptr);
-        QJsonObject childJson;
-        obj->save(childJson);
-        json[propName] = childJson;
-        return true;
-      }
-
     case QMetaType::Char:
     case QMetaType::Double:
     case QMetaType::Float:
@@ -133,6 +124,15 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
          json[propName] = s;
          return true;
        }
+  }
+
+  if (userType == qMetaTypeId<GObjRef>()) {
+    GObj* obj = qvariant_cast<GObj*>(variant);
+    Q_ASSERT(obj != nullptr);
+    QJsonObject childJson;
+    obj->save(childJson);
+    json[propName] = childJson;
+    return true;
   }
 
   qWarning() << QString("%1::save(%2, %3) return false").arg(metaObject()->className(), propName, variant.toString());
@@ -156,7 +156,7 @@ void GObj::createPropItems(QTreeWidgetItem* parent) {
     QMetaProperty mpro = mobj->property(i);
     GPropItem* item = createPropItem(parent, this, mpro);
     if (item == nullptr) {
-      qWarning() << "item is nullptr typeName='" << mpro.typeName() <<"' name='"<< mpro.name() << "'";
+      qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(mpro.typeName(), mpro.name());
       item = new GPropItemUnknownType(parent, this, mpro);
     }
     item->update();
@@ -182,9 +182,6 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
     case QMetaType::QChar:
       return new GPropItemLineEditQChar(parent, object, mpro);
 
-    case QMetaType::QObjectStar:
-      return new GPropItemQObjectStar(parent, object, mpro);
-
     case QMetaType::Char:
     case QMetaType::Double:
     case QMetaType::Float:
@@ -199,7 +196,10 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
       return new GPropItemLineEditQVariant(parent, object, mpro);
   }
 
-  qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
+  if (userType == qMetaTypeId<GObjRef>())
+    return new GPropItemQObjectStar(parent, object, mpro);
+
+    qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
   return nullptr;
 }
 

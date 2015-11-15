@@ -4,12 +4,12 @@
 
 struct Party : public GObj {
   Q_OBJECT
-  Q_PROPERTY(QObject* owner READ getOwner)
+  Q_PROPERTY(GObjRef owner READ getOwner)
   Q_PROPERTY(QString partyName MEMBER partyName_)
   Q_PROPERTY(QString address MEMBER address_)
   Q_PROPERTY(bool free MEMBER free_)
 
-  Person* getOwner() { return &owner_; }
+  GObjRef getOwner() { return &owner_; }
 
 public:
   Person owner_;

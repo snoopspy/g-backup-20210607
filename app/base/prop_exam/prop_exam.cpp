@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <GApp>
 #include <GJson>
 #include <GPropWidget>
 
@@ -7,6 +8,7 @@
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
+  GApp::init();
 
   QJsonObject json = GJson::instance().loadFromFile();
   QJsonObject partyJson = json["party"].toObject();

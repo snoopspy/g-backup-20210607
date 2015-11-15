@@ -43,6 +43,8 @@ public:
 
   QSharedPointer<GErr> err{nullptr};
 };
+typedef GObj *GObjRef;
+Q_DECLARE_METATYPE(GObjRef)
 
 // ----------------------------------------------------------------------------
 // SET_ERR

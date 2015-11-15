@@ -45,7 +45,6 @@ void GPropWidget::setObject(GObj* obj) {
 void GPropWidget::update() {
   QObjectList list = children();
   foreach (QObject* object, list) {
-    qDebug() << object->metaObject()->className();// gilgil temp
     GPropItem* item = dynamic_cast<GPropItem*>(object);
     if (item != nullptr)
       item->update();
