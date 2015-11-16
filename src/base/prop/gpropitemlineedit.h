@@ -19,9 +19,6 @@
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
 struct GPropItemLineEdit : public GPropItem {
-  // Q_OBJECT // gilgil temp 2015.11.17
-
-public:
   GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
   GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
 
