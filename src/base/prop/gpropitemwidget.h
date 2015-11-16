@@ -12,21 +12,17 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QLineEdit>
+#include <QComboBox>
 #include "gpropitem.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemLineEdit
+// GPropItemWidget
 // ----------------------------------------------------------------------------
-struct GPropItemLineEdit : public GPropItem {
-  // Q_OBJECT // gilgil temp 2015.11.17
+struct GPropItemWidget : public GPropItem {
+  GPropItemWidget(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
 
 public:
-  GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
-
-public:
-  QLineEdit* lineEdit_;
+  QWidget* widget_{nullptr};
 };
 
 #endif // QT_GUI_LIB

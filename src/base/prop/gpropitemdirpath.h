@@ -12,21 +12,29 @@
 
 #ifdef QT_GUI_LIB
 
+#include <QHBoxLayout>
 #include <QLineEdit>
-#include "gpropitem.h"
+#include <QToolButton>
+#include "gpropitemwidget.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemLineEdit
+// GPropItemDirPath
 // ----------------------------------------------------------------------------
-struct GPropItemLineEdit : public GPropItem {
-  // Q_OBJECT // gilgil temp 2015.11.17
+struct GPropItemDirPath : public GPropItemWidget {
+  Q_OBJECT
 
 public:
-  GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemDirPath(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void update() override;
 
 public:
+  QHBoxLayout* layout_;
   QLineEdit* lineEdit_;
+  QToolButton* toolButton_;
+
+protected slots:
+  void myEditingFinished();
+  void myToolButtonClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB
