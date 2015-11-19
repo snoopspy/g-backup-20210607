@@ -13,6 +13,7 @@
 #include <errno.h>
 //#include <ostream>
 #include <QDebug>
+#include <QSharedPointer>
 #include <QString>
 
 // ----------------------------------------------------------------------------
@@ -52,6 +53,7 @@ std::ostream& operator << (std::ostream& os, GErr* err);
 QDebug operator << (QDebug os, GErr& err);
 QDebug operator << (QDebug os, GErr&& err);
 QDebug operator << (QDebug os, GErr* err);
+QDebug operator << (QDebug os, QSharedPointer<GErr> err);
 // ----------------------------------
 
 // ----------------------------------------------------------------------------

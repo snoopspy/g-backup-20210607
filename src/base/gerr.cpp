@@ -26,6 +26,10 @@ QDebug operator << (QDebug os, GErr* err) {
   return operator << (os, *err);
 }
 
+QDebug operator << (QDebug os, QSharedPointer<GErr> err) {
+  return operator << (os, err.data());
+}
+
 // ----------------------------------------------------------------------------
 // GTEST
 // ----------------------------------------------------------------------------
