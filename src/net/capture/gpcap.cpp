@@ -25,6 +25,7 @@ bool GPcap::doOpen() {
   switch (dataLink) {
     case DLT_NULL:
     case DLT_EN10MB:
+    case DLT_IEEE802_11_RADIO:
       filtering = true;
   }
   if (filtering && filter_ != "") {
