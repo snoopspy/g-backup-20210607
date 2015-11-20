@@ -20,7 +20,11 @@
 // ----------------------------------------------------------------------------
 struct GPropWidget : public QTreeWidget {
   GPropWidget(QWidget *parent = 0);
+  GPropWidget(GObj* obj);
   ~GPropWidget() override;
+
+protected:
+  void init();
 
 public:
   QObject* object();

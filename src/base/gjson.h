@@ -11,16 +11,20 @@
 #pragma once
 
 #include <QDebug>
+#include <QJsonDocument>
 #include <QJsonObject>
 
 // ----------------------------------------------------------------------------
 // GJson
 // ----------------------------------------------------------------------------
 struct GJson {
-  QJsonObject loadFromFile(QString fileName = "");
-  void saveToFile(QJsonObject jo, QString fileName = "");
-
+  bool loadFromFile(QString fileName = "");
+  bool saveToFile(QString fileName = "");
   static GJson& instance();
+
+public:
+  QJsonDocument doc_;
+  QJsonObject jo_;
 
 protected:
   static QString defaultFileName();
@@ -56,8 +60,8 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QSplitter* splitter);
 // QWidget
 // ----------------------------------------------------------------------------
 #include <QWidget>
-QJsonObject operator << (QJsonObject& jo, const QWidget* widget);
-QJsonObject operator >> (const QJsonObject jo, QWidget* widget);
+//QJsonObject operator << (QJsonObject& jo, const QWidget* widget); // gilgil temp 2015.11.20
+//QJsonObject operator >> (const QJsonObject jo, QWidget* widget); // gilgil temp 2015.11.20
 QJsonValueRef operator << (QJsonValueRef ref, const QWidget* widget);
 QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget);
 

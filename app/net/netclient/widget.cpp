@@ -53,7 +53,9 @@ void Widget::finiControl()
 
 void Widget::loadControl()
 {
-  QJsonObject jo = GJson::instance().loadFromFile();
+  GJson& json = GJson::instance();
+  json.loadFromFile();
+  QJsonObject& jo = json.jo_;
 
   jo["widget"] >> this;
   jo["splitter"] >> ui->splitter;
@@ -73,7 +75,8 @@ void Widget::loadControl()
 
 void Widget::saveControl()
 {
-  QJsonObject jo;
+  GJson& json = GJson::instance();
+  QJsonObject& jo = json.jo_;
 
   jo["widget"] << this;
   jo["splitter"] << ui->splitter;
@@ -90,7 +93,7 @@ void Widget::saveControl()
   jo["sslPort"] = ui->leSslPort->text();
   jo["sendText"] = ui->pteSend->toPlainText();
 
-  GJson::instance().saveToFile(jo);
+  json.saveToFile();
 }
 
 void Widget::setControl()

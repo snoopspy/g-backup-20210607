@@ -1,12 +1,11 @@
 #include <QCoreApplication>
 #include <QDir>
-#include <QJsonDocument>
 #include "gjson.h"
 
 // ----------------------------------------------------------------------------
 // GJson
 // ----------------------------------------------------------------------------
-QJsonObject GJson::loadFromFile(QString fileName) {
+bool GJson::loadFromFile(QString fileName) {
   if (fileName == "")
     fileName = fileName_;
   if (fileName == "")
@@ -14,20 +13,20 @@ QJsonObject GJson::loadFromFile(QString fileName) {
   fileName_ = fileName;
 
   if (!QFile::exists(fileName)) {
-    return QJsonObject();
+    return false;
   }
   QFile file(fileName);
   if (!file.open(QFile::ReadOnly)) {
     qWarning() << QString("file open(%1) failed(%2)").arg(fileName, file.errorString());
-    return QJsonObject();
+    return false;
   }
   QByteArray ba = file.readAll();
-  QJsonDocument doc = QJsonDocument::fromJson(ba);
-
-  return doc.object();
+  doc_ = QJsonDocument::fromJson(ba);
+  jo_ = doc_.object();
+  return true;
 }
 
-void GJson::saveToFile(QJsonObject jo, QString fileName) {
+bool GJson::saveToFile(QString fileName) {
   if (fileName == "")
     fileName = fileName_;
   if (fileName == "")
@@ -37,11 +36,16 @@ void GJson::saveToFile(QJsonObject jo, QString fileName) {
   QFile file(fileName);
   if (!file.open(QFile::WriteOnly)) {
     qWarning() << QString("file open(%1) failed(%2)").arg(fileName, file.errorString());
-    return;
+    return false;
   }
-  QJsonDocument doc;
-  doc.setObject(jo);
-  file.write(doc.toJson());
+  doc_.setObject(jo_);
+  QByteArray ba = doc_.toJson();
+  qint64 writeLen = file.write(ba);
+  if (writeLen != ba.size()) {
+    qWarning() << QString("file write(%1) return %2(%3)").arg(fileName, QString::number(writeLen), file.errorString());
+    return false;
+  }
+  return true;
 }
 
 GJson& GJson::instance() {
@@ -131,7 +135,7 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QSplitter* splitter) {
 // ----------------------------------------------------------------------------
 #include <QPoint>
 #include <QSize>
-QJsonObject operator << (QJsonObject& jo, const QWidget* widget) {
+QJsonObject operator << (QJsonObject& jo, const QWidget* widget) { // gilgil temp 2015.11.20
   QPoint pos = widget->pos();
   jo["left"] = pos.x();
   jo["top"] = pos.y();
@@ -143,7 +147,7 @@ QJsonObject operator << (QJsonObject& jo, const QWidget* widget) {
   return jo;
 }
 
-QJsonObject operator >> (const QJsonObject jo, QWidget* widget) {
+QJsonObject operator >> (const QJsonObject jo, QWidget* widget) { // gilgil temp 2015.11.20
   if (!jo.isEmpty()) {
     QPoint pos;
     pos.setX(jo["left"].toInt());

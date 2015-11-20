@@ -9,14 +9,23 @@
 // GPropWidget
 // ----------------------------------------------------------------------------
 GPropWidget::GPropWidget(QWidget *parent) : QTreeWidget(parent) {
+  init();
+}
+
+GPropWidget::GPropWidget(GObj* obj) : QTreeWidget(nullptr) {
+  init();
+  setObject(obj);
+}
+
+GPropWidget::~GPropWidget() {
+}
+
+void GPropWidget::init() {
   this->setColumnCount(2);
   this->setHeaderLabels(QStringList() << "property" << "value");
   QLayout* layout = new QGridLayout(this);
   layout->setMargin(0);
   obj_ = nullptr;
-}
-
-GPropWidget::~GPropWidget() {
 }
 
 QObject* GPropWidget::object() {
