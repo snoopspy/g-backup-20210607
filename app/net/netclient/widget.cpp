@@ -53,44 +53,44 @@ void Widget::finiControl()
 
 void Widget::loadControl()
 {
-  QJsonObject json = GJson::instance().loadFromFile();
+  QJsonObject jo = GJson::instance().loadFromFile();
 
-  json["widget"] >> this;
-  json["splitter"] >> ui->splitter;
-  json["option"] >> option_;
+  jo["widget"] >> this;
+  jo["splitter"] >> ui->splitter;
+  jo["option"] >> option_;
 
-  ui->chkShowHexa->setChecked(json["showHexa"].toBool());
-  ui->chkSendHexa->setChecked(json["sendHexa"].toBool());
-  ui->tabOption->setCurrentIndex(json["currentIndex"].toInt());
-  ui->leTcpHost->setText(json["tcpHost"].toString());
-  ui->leTcpPort->setText(json["tcpPort"].toString());
-  ui->leUdpHost->setText(json["udpHost"].toString());
-  ui->leUdpPort->setText(json["udpPort"].toString());
-  ui->leSslHost->setText(json["sslHost"].toString());
-  ui->leSslPort->setText(json["sslPort"].toString());
-  ui->pteSend->insertPlainText(json["sendText"].toString());
+  ui->chkShowHexa->setChecked(jo["showHexa"].toBool());
+  ui->chkSendHexa->setChecked(jo["sendHexa"].toBool());
+  ui->tabOption->setCurrentIndex(jo["currentIndex"].toInt());
+  ui->leTcpHost->setText(jo["tcpHost"].toString());
+  ui->leTcpPort->setText(jo["tcpPort"].toString());
+  ui->leUdpHost->setText(jo["udpHost"].toString());
+  ui->leUdpPort->setText(jo["udpPort"].toString());
+  ui->leSslHost->setText(jo["sslHost"].toString());
+  ui->leSslPort->setText(jo["sslPort"].toString());
+  ui->pteSend->insertPlainText(jo["sendText"].toString());
 }
 
 void Widget::saveControl()
 {
-  QJsonObject json;
+  QJsonObject jo;
 
-  json["widget"] << this;
-  json["splitter"] << ui->splitter;
-  json["option"] << option_;
+  jo["widget"] << this;
+  jo["splitter"] << ui->splitter;
+  jo["option"] << option_;
 
-  json["showHexa"] = ui->chkShowHexa->isChecked();
-  json["sendHexa"] = ui->chkSendHexa->isChecked();
-  json["currentIndex"]= ui->tabOption->currentIndex();
-  json["tcpHost"] = ui->leTcpHost->text();
-  json["tcpPort"] = ui->leTcpPort->text();
-  json["udpHost"] = ui->leUdpHost->text();
-  json["udpPort"] = ui->leUdpPort->text();
-  json["sslHost"] = ui->leSslHost->text();
-  json["sslPort"] = ui->leSslPort->text();
-  json["sendText"] = ui->pteSend->toPlainText();
+  jo["showHexa"] = ui->chkShowHexa->isChecked();
+  jo["sendHexa"] = ui->chkSendHexa->isChecked();
+  jo["currentIndex"]= ui->tabOption->currentIndex();
+  jo["tcpHost"] = ui->leTcpHost->text();
+  jo["tcpPort"] = ui->leTcpPort->text();
+  jo["udpHost"] = ui->leUdpHost->text();
+  jo["udpPort"] = ui->leUdpPort->text();
+  jo["sslHost"] = ui->leSslHost->text();
+  jo["sslPort"] = ui->leSslPort->text();
+  jo["sendText"] = ui->pteSend->toPlainText();
 
-  GJson::instance().saveToFile(json);
+  GJson::instance().saveToFile(jo);
 }
 
 void Widget::setControl()

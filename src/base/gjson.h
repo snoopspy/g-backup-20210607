@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 struct GJson {
   QJsonObject loadFromFile(QString fileName = "");
-  void saveToFile(QJsonObject json, QString fileName = "");
+  void saveToFile(QJsonObject jo, QString fileName = "");
 
   static GJson& instance();
 
@@ -56,8 +56,8 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QSplitter* splitter);
 // QWidget
 // ----------------------------------------------------------------------------
 #include <QWidget>
-QJsonObject operator << (QJsonObject& json, const QWidget* widget);
-QJsonObject operator >> (const QJsonObject json, QWidget* widget);
+QJsonObject operator << (QJsonObject& jo, const QWidget* widget);
+QJsonObject operator >> (const QJsonObject jo, QWidget* widget);
 QJsonValueRef operator << (QJsonValueRef ref, const QWidget* widget);
 QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget);
 

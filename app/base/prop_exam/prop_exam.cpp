@@ -10,25 +10,25 @@ int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   GApp::init();
 
-  QJsonObject json = GJson::instance().loadFromFile();
-  QJsonObject partyJson = json["party"].toObject();
-  QJsonObject widgetJson = json["widget"].toObject();
+  QJsonObject jo = GJson::instance().loadFromFile();
+  QJsonObject partyJo = jo["party"].toObject();
+  QJsonObject widgetJo = jo["widget"].toObject();
 
   Party party;
   //Person party;
-  party.load(partyJson);
+  party.load(partyJo);
 
   GPropWidget widget;
-  widgetJson >> &widget;
+  widgetJo >> &widget;
   widget.setObject(&party);
   widget.show();
   int res = a.exec();
 
-  party.save(partyJson);
-  widgetJson << &widget;
-  json["party"] = partyJson;
-  json["widget"] = widgetJson;
-  GJson::instance().saveToFile(json);
+  party.save(partyJo);
+  widgetJo << &widget;
+  jo["party"] = partyJo;
+  jo["widget"] = widgetJo;
+  GJson::instance().saveToFile(jo);
 
   return res;
 }

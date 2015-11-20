@@ -6,28 +6,28 @@
 GObj::~GObj() {
 }
 
-void GObj::load(QJsonObject json) {
+void GObj::load(QJsonObject jo) {
   const QMetaObject* mobj = metaObject();
   int count = mobj->propertyCount();
   for (int i = 0; i < count; i++) {
     QMetaProperty mpro = mobj->property(i);
-    load(json, mpro);
+    load(jo, mpro);
   }
 }
 
-void GObj::save(QJsonObject& json) {
+void GObj::save(QJsonObject& jo) {
   const QMetaObject* mobj = metaObject();
   int count = mobj->propertyCount();
   for (int i = 0; i < count; i++) {
     QMetaProperty mpro = mobj->property(i);
-    save(json, mpro);
+    save(jo, mpro);
   }
 }
 
-bool GObj::load(QJsonObject json, QMetaProperty mpro) {
+bool GObj::load(QJsonObject jo, QMetaProperty mpro) {
   const char* propName = mpro.name();
   int userType = mpro.userType();
-  QVariant variant = ((const QJsonObject)json)[propName];
+  QVariant variant = ((const QJsonObject)jo)[propName];
   bool res = false;
 
   if (mpro.isEnumType()) {
@@ -72,7 +72,7 @@ bool GObj::load(QJsonObject json, QMetaProperty mpro) {
   if (userType == qMetaTypeId<GObjRef>()) {
     GObj* obj = qvariant_cast<GObj*>(property(propName));
     Q_ASSERT(obj != nullptr);
-    obj->load(json[propName].toObject());
+    obj->load(jo[propName].toObject());
     return true;
   }
 
@@ -82,7 +82,7 @@ bool GObj::load(QJsonObject json, QMetaProperty mpro) {
   return res;
 }
 
-bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
+bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
   const char* propName = mpro.name();
   int userType = mpro.userType();
   QVariant variant = property(propName);
@@ -91,17 +91,17 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
     QMetaEnum menum = mpro.enumerator();
     int value = variant.toInt();
     QString key = menum.valueToKey(value);
-    json[propName] = key;
+    jo[propName] = key;
     return true;
   }
 
   switch (userType) {
     case QMetaType::Bool:
-      json[propName] = variant.toBool();
+      jo[propName] = variant.toBool();
       return true;
 
     case QMetaType::QChar:
-      json[propName] = property(propName).toString();
+      jo[propName] = property(propName).toString();
       return true;
 
     case QMetaType::Char:
@@ -115,13 +115,13 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
     case QMetaType::ULongLong:
     case QMetaType::UShort: {
         QString s = variant.toString();
-        json[propName] = s;
+        jo[propName] = s;
         return true;
       }
 
     case QMetaType::QString: {
          QString s = variant.toString();
-         json[propName] = s;
+         jo[propName] = s;
          return true;
        }
   }
@@ -131,7 +131,7 @@ bool GObj::save(QJsonObject& json, QMetaProperty mpro) {
     Q_ASSERT(obj != nullptr);
     QJsonObject childJson;
     obj->save(childJson);
-    json[propName] = childJson;
+    jo[propName] = childJson;
     return true;
   }
 

@@ -27,7 +27,7 @@ QJsonObject GJson::loadFromFile(QString fileName) {
   return doc.object();
 }
 
-void GJson::saveToFile(QJsonObject json, QString fileName) {
+void GJson::saveToFile(QJsonObject jo, QString fileName) {
   if (fileName == "")
     fileName = fileName_;
   if (fileName == "")
@@ -40,7 +40,7 @@ void GJson::saveToFile(QJsonObject json, QString fileName) {
     return;
   }
   QJsonDocument doc;
-  doc.setObject(json);
+  doc.setObject(jo);
   file.write(doc.toJson());
 }
 
@@ -90,19 +90,19 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QList<int>& intList) {
 // GObj
 // ----------------------------------------------------------------------------
 QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj) {
-  QJsonObject json;
+  QJsonObject jo;
 
-  ((GObj&)obj).save(json);
+  ((GObj&)obj).save(jo);
 
-  ref = json;
+  ref = jo;
   return ref;
 }
 
 QJsonValueRef operator >> (const QJsonValueRef ref, GObj& obj) {
-  QJsonObject json = ref.toObject();
+  QJsonObject jo = ref.toObject();
 
-  if (!json.empty()) {
-    obj.load(json);
+  if (!jo.empty()) {
+    obj.load(jo);
   }
 
   return ref;
@@ -131,44 +131,44 @@ QJsonValueRef operator >> (const QJsonValueRef ref, QSplitter* splitter) {
 // ----------------------------------------------------------------------------
 #include <QPoint>
 #include <QSize>
-QJsonObject operator << (QJsonObject& json, const QWidget* widget) {
+QJsonObject operator << (QJsonObject& jo, const QWidget* widget) {
   QPoint pos = widget->pos();
-  json["left"] = pos.x();
-  json["top"] = pos.y();
+  jo["left"] = pos.x();
+  jo["top"] = pos.y();
 
   QSize size = widget->size();
-  json["width"] = size.width();
-  json["height"] = size.height();
+  jo["width"] = size.width();
+  jo["height"] = size.height();
 
-  return json;
+  return jo;
 }
 
-QJsonObject operator >> (const QJsonObject json, QWidget* widget) {
-  if (!json.isEmpty()) {
+QJsonObject operator >> (const QJsonObject jo, QWidget* widget) {
+  if (!jo.isEmpty()) {
     QPoint pos;
-    pos.setX(json["left"].toInt());
-    pos.setY(json["top"].toInt());
+    pos.setX(jo["left"].toInt());
+    pos.setY(jo["top"].toInt());
     widget->move(pos);
 
     QSize size;
-    size.setWidth(json["width"].toInt());
-    size.setHeight(json["height"].toInt());
+    size.setWidth(jo["width"].toInt());
+    size.setHeight(jo["height"].toInt());
     widget->resize(size);
   }
 
-  return json;
+  return jo;
 }
 
 QJsonValueRef operator << (QJsonValueRef ref, const QWidget* widget) {
-  QJsonObject json;
-  json << widget;
-  ref = json;
+  QJsonObject jo;
+  jo << widget;
+  ref = jo;
   return ref;
 }
 
 QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget) {
-  QJsonObject json = ref.toObject();
-  json >> widget;
+  QJsonObject jo = ref.toObject();
+  jo >> widget;
   return ref;
 }
 
