@@ -17,6 +17,8 @@ clean:
 
 distclean: clean
 	rm -rf bin
+	rm -rf setup/setup
+	rm -rf setup/*.gz
 	cd lib && make distclean; true
 	cd app && make distclean; true
 	find -type f -name '*.a'        -delete
