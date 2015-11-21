@@ -29,7 +29,7 @@ cp $QTDIR/plugins/platforms/* setup/platforms
 #
 # g files 
 #
-cp netclient    setup
+cp ../bin/netclient    setup
 cp netclient.sh setup
 
 #
