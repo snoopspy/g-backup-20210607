@@ -13,20 +13,21 @@ int main(int argc, char *argv[]) {
   Party party;
   GPropWidget widget(&party);
 
-  GJson json;
-  json.loadFromFile();
-  QJsonObject& jo = json.jo_;
+  QJsonObject jo = GJson::loadFromFile();
 
   jo["party"] >> party;
-  jo["widget"] >> &widget;
+  jo["widget"] >> GJson::rect(&widget);
+  jo["sizes"] >> GJson::headerSizes(&widget);
 
   widget.update();
   widget.show();
   int res = a.exec();
 
   jo["party"] << party;
-  jo["widget"] << &widget;
-  json.saveToFile();
+  jo["widget"] << GJson::rect(&widget);
+  jo["sizes"] << GJson::headerSizes(&widget);
+
+  GJson::saveToFile(jo);
 
   return res;
 }

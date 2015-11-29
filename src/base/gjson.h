@@ -11,66 +11,74 @@
 #pragma once
 
 #include <QDebug>
-#include <QJsonDocument>
 #include <QJsonObject>
 
 // ----------------------------------------------------------------------------
 // GJson
 // ----------------------------------------------------------------------------
-struct GJson {
-  bool loadFromFile(QString fileName = "");
-  bool saveToFile(QString fileName = "");
-  static GJson& instance();
-
-public:
-  QJsonDocument doc_;
-  QJsonObject jo_;
-
-protected:
-  static QString defaultFileName();
-
-  QString fileName_;
-};
+namespace GJson {
+  QJsonObject loadFromFile(QString fileName = "");
+  bool saveToFile(QJsonObject jo, QString fileName = "");
+  QString defaultFileName();
+}
 
 #include <QList>
-
 // ----------------------------------------------------------------------------
 // QList<int>
 // ----------------------------------------------------------------------------
 QJsonValueRef operator << (QJsonValueRef ref, const QList<int>& intList);
-QJsonValueRef operator >> (const QJsonValueRef ref, QList<int>& intList);
+const QJsonValue operator >> (const QJsonValue val, QList<int>& intList);
 
 // ----------------------------------------------------------------------------
 // GObj
 // ----------------------------------------------------------------------------
 class GObj;
 QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj);
-QJsonValueRef operator >> (const QJsonValueRef ref, GObj& obj);
+const QJsonValue operator >> (const QJsonValue val, GObj& obj);
 
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// QSplitter
-// ----------------------------------------------------------------------------
-#include <QSplitter>
-QJsonValueRef operator << (QJsonValueRef ref, const QSplitter* splitter);
-QJsonValueRef operator >> (const QJsonValueRef ref, QSplitter* splitter);
-
-// ----------------------------------------------------------------------------
-// QWidget
+// GWidgetRect
 // ----------------------------------------------------------------------------
 #include <QWidget>
-//QJsonObject operator << (QJsonObject& jo, const QWidget* widget); // gilgil temp 2015.11.20
-//QJsonObject operator >> (const QJsonObject jo, QWidget* widget); // gilgil temp 2015.11.20
-QJsonValueRef operator << (QJsonValueRef ref, const QWidget* widget);
-QJsonValueRef operator >> (const QJsonValueRef ref, QWidget* widget);
+namespace GJson {
+  struct GWidgetRect {
+    GWidgetRect(QWidget* widget) { widget_ = widget; }
+    QWidget* widget_;
+  };
+  GWidgetRect rect(QWidget* widget);
+}
+QJsonValueRef operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect);
+const QJsonValue operator >> (const QJsonValue val, GJson::GWidgetRect&& rect);
 
 // ----------------------------------------------------------------------------
-// QTreeView
+// GSplitterSizes
+// ----------------------------------------------------------------------------
+#include <QSplitter>
+namespace GJson {
+  struct GSplitterSizes {
+    GSplitterSizes(QSplitter* splitter) { splitter_ = splitter; }
+    QSplitter* splitter_;
+  };
+  GSplitterSizes headerSizes(QSplitter* splitter);
+}
+QJsonValueRef operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes);
+const QJsonValue operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes);
+
+// ----------------------------------------------------------------------------
+// GTreeViewHeaderSizes
 // ----------------------------------------------------------------------------
 #include <QTreeView>
 #include <QHeaderView>
-QJsonValueRef operator << (QJsonValueRef ref, const QTreeView* treeView);
-QJsonValueRef operator >> (const QJsonValueRef ref, QTreeView* treeView);
+namespace GJson {
+  struct GTreeViewHeaderSizes {
+    GTreeViewHeaderSizes(QTreeView* treeView) { treeView_ = treeView; }
+    QTreeView* treeView_;
+  };
+  GTreeViewHeaderSizes headerSizes(QTreeView* treeView);
+}
+QJsonValueRef operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes);
+const QJsonValue operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes);
 
 #endif // QT_GUI_LIB
