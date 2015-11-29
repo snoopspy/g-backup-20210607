@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   QJsonObject jo = GJson::loadFromFile();
 
   jo["party"] >> party;
-  jo["widget"] >> GJson::rect(&widget);
+  jo["rect"] >> GJson::rect(&widget);
   jo["sizes"] >> GJson::headerSizes(&widget);
 
   widget.update();
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   int res = a.exec();
 
   jo["party"] << party;
-  jo["widget"] << GJson::rect(&widget);
+  jo["rect"] << GJson::rect(&widget);
   jo["sizes"] << GJson::headerSizes(&widget);
 
   GJson::saveToFile(jo);
