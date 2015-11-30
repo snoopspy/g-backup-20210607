@@ -53,12 +53,10 @@ void Widget::finiControl()
 
 void Widget::loadControl()
 {
-  GJson& json = GJson::instance();
-  json.loadFromFile();
-  QJsonObject& jo = json.jo_;
+  QJsonObject jo = GJson::loadFromFile();
 
-  jo["widget"] >> this;
-  jo["splitter"] >> ui->splitter;
+  jo["widget"] >> GJson::rect(this);
+  jo["splitter"] >> GJson::headerSizes(ui->splitter);
   jo["option"] >> option_;
 
   ui->chkShowHexa->setChecked(jo["showHexa"].toBool());
@@ -75,11 +73,10 @@ void Widget::loadControl()
 
 void Widget::saveControl()
 {
-  GJson& json = GJson::instance();
-  QJsonObject& jo = json.jo_;
+  QJsonObject jo = GJson::loadFromFile();
 
-  jo["widget"] << this;
-  jo["splitter"] << ui->splitter;
+  jo["widget"] << GJson::rect(this);
+  jo["splitter"] << GJson::headerSizes(ui->splitter);
   jo["option"] << option_;
 
   jo["showHexa"] = ui->chkShowHexa->isChecked();
@@ -93,7 +90,7 @@ void Widget::saveControl()
   jo["sslPort"] = ui->leSslPort->text();
   jo["sendText"] = ui->pteSend->toPlainText();
 
-  json.saveToFile();
+  GJson::saveToFile(jo);
 }
 
 void Widget::setControl()
