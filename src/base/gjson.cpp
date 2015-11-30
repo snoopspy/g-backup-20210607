@@ -163,21 +163,21 @@ GJson::GTreeViewHeaderSizes GJson::headerSizes(QTreeView* treeView) {
 
 QJsonValueRef operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes) {
   int count = headerSizes.treeView_->header()->count();
-  QList<int> sizes;
+  QList<int> intSizes;
   for (int i = 0; i < count - 1; i++) {
-    sizes << headerSizes.treeView_->columnWidth(i);
+    intSizes << headerSizes.treeView_->columnWidth(i);
   }
-  ref << (const QList<int>)sizes;
+  ref << (const QList<int>)intSizes;
   return ref;
 }
 
 const QJsonValue operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes) {
   if (val.isNull()) return val;
-  QList<int> sizes;
-  val >> sizes;
+  QList<int> intSizes;
+  val >> intSizes;
   int count = headerSizes.treeView_->header()->count();
   for (int i = 0; i < count - 1; i++) {
-    headerSizes.treeView_->setColumnWidth(i, sizes.at(i));
+    headerSizes.treeView_->setColumnWidth(i, intSizes.at(i));
   }
   return val;
 }
