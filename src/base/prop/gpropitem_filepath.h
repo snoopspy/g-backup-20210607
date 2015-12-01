@@ -12,6 +12,7 @@
 
 #ifdef QT_GUI_LIB
 
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QToolButton>
@@ -31,6 +32,7 @@ public:
   QHBoxLayout* layout_;
   QLineEdit* lineEdit_;
   QToolButton* toolButton_;
+  QFileDialog* fd_;
 
 protected slots:
   void myEditingFinished();

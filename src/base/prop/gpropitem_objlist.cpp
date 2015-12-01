@@ -8,11 +8,12 @@
 // ----------------------------------------------------------------------------
 GPropItemObjList::GPropItemObjList(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
   : GPropItemToolButton(parent, object, mpro) {
-  const char* propName = mpro.name();
-  QVariant variant = object_->property(propName);
-  GObj* childObj = qvariant_cast<GObj*>(variant);
-  Q_ASSERT(childObj != nullptr);
-  childObj->createPropItems(item_);
+  toolButton_->setText("+");
+  QObject::connect(toolButton_, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
+}
+
+void GPropItemObjList::myClicked(bool checked) {
+  qDebug() << ""; // gilgil temp 2015.12.02
 }
 
 #endif // QT_GUI_LIB

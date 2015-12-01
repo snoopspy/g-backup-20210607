@@ -142,10 +142,12 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 #ifdef QT_GUI_LIB
 
 #include "base/prop/gpropitem_bool.h"
+#include "base/prop/gpropitem_char.h"
 #include "base/prop/gpropitem_enum.h"
 #include "base/prop/gpropitem_objectname.h"
-#include "base/prop/gpropitem_char.h"
+#include "base/prop/gpropitem_objlist.h"
 #include "base/prop/gpropitem_objref.h"
+#include "base/prop/gpropitem_objvector.h"
 #include "base/prop/gpropitem_variant.h"
 #include "base/prop/gpropitem_unknowntype.h"
 
@@ -199,7 +201,13 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
   if (userType == qMetaTypeId<GObjRef>())
     return new GPropItemObjRef(parent, object, mpro);
 
-    qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
+  if (userType == qMetaTypeId<GObjList>())
+    return new GPropItemObjList(parent, object, mpro);
+
+  if (userType == qMetaTypeId<GObjVector>())
+    return new GPropItemObjVector(parent, object, mpro);
+
+  qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
   return nullptr;
 }
 

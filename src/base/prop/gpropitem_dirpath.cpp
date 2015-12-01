@@ -13,7 +13,7 @@ GPropItemDirPath::GPropItemDirPath(QTreeWidgetItem* parent, QObject* object, QMe
   lineEdit_ = new QLineEdit(treeWidget);
   toolButton_ = new QToolButton(treeWidget);
   layout_->setMargin(0);
-  // lineEdit_->setFrame(false); // gilgil temp 2015.11.17
+  lineEdit_->setFrame(false);
   toolButton_->setText("...");
   layout_->addWidget(lineEdit_);
   layout_->addWidget(toolButton_);

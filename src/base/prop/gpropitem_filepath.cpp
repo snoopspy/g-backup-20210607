@@ -12,8 +12,9 @@ GPropItemFilePath::GPropItemFilePath(QTreeWidgetItem* parent, QObject* object, Q
   layout_ = new QHBoxLayout;
   lineEdit_ = new QLineEdit(treeWidget);
   toolButton_ = new QToolButton(treeWidget);
+  fd_ = new QFileDialog(treeWidget);
   layout_->setMargin(0);
-  // lineEdit_->setFrame(false); // gilgil temp 2015.11.17
+  lineEdit_->setFrame(false);
   toolButton_->setText("...");
   layout_->addWidget(lineEdit_);
   layout_->addWidget(toolButton_);
@@ -36,13 +37,11 @@ void GPropItemFilePath::myEditingFinished() {
   update();
 }
 
-#include <QFileDialog>
 void GPropItemFilePath::myToolButtonClicked(bool checked) {
   (void)checked;
-  QFileDialog fd;
-  fd.setFileMode(QFileDialog::AnyFile);
-  if (fd.exec()) {
-    bool res = object_->setProperty(mpro_.name(), QVariant::fromValue<QString>(fd.selectedFiles().at(0)));
+  fd_->setFileMode(QFileDialog::AnyFile);
+  if (fd_->exec()) {
+    bool res = object_->setProperty(mpro_.name(), QVariant::fromValue<QString>(fd_->selectedFiles().at(0)));
     if (!res) {
       qWarning() << QString("object->setProperty(%1, %2) return false").arg(mpro_.name(), lineEdit_->text());
     }

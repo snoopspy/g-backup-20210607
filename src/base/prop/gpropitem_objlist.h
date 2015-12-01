@@ -18,11 +18,14 @@
 // GPropItemObjList
 // ----------------------------------------------------------------------------
 struct GPropItemObjList : public GPropItemToolButton {
-  // Q_OBJECT // gilgil temp 2015.12.02
+  Q_OBJECT
 
 public:
   GPropItemObjList(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override {}
+
+protected slots:
+  void myClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB

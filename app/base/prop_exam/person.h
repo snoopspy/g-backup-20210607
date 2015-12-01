@@ -7,6 +7,7 @@ class Person : public GObj {
   Q_PROPERTY(QString name MEMBER name_)
   Q_PROPERTY(int age MEMBER age_)
   Q_PROPERTY(Sex sex MEMBER sex_)
+  Q_PROPERTY(QString picture MEMBER picture_)
   Q_ENUMS(Sex)
 
 public:
@@ -20,4 +21,9 @@ public:
   QString name_;
   int age_{0};
   Sex sex_{Male};
+  QString picture_;
+
+#ifdef QT_GUI_LIB
+  GPropItem* createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) override;
+#endif // QT_GUI_LIB
 };
