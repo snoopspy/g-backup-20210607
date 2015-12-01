@@ -19,7 +19,7 @@
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
 struct GPropItemUnknownType : public GPropItem {
-  Q_OBJECT
+  // Q_OBJECT // gilgil temp 2015.12.02
 
 public:
   GPropItemUnknownType(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);

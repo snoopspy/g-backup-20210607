@@ -3,19 +3,19 @@
 #include <GJson>
 #include <GPropWidget>
 
-#include "party.h"
+#include "dept.h"
 #include "person.h"
 
 int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   GApp::init();
 
-  Party party;
-  GPropWidget widget(&party);
+  Dept dept;
+  GPropWidget widget(&dept);
 
   QJsonObject jo = GJson::loadFromFile();
 
-  jo["party"] >> party;
+  jo["dept"] >> dept;
   jo["rect"] >> GJson::rect(&widget);
   jo["sizes"] >> GJson::headerSizes(&widget);
 
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
   widget.show();
   int res = a.exec();
 
-  jo["party"] << party;
+  jo["dept"] << dept;
   jo["rect"] << GJson::rect(&widget);
   jo["sizes"] << GJson::headerSizes(&widget);
 
