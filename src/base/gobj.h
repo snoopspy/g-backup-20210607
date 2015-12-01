@@ -44,7 +44,11 @@ public:
   QSharedPointer<GErr> err{nullptr};
 };
 typedef GObj *GObjRef;
+typedef QList<GObjRef> GObjList;
+typedef QVector<GObjRef> GObjVector;
 Q_DECLARE_METATYPE(GObjRef)
+Q_DECLARE_METATYPE(GObjList)
+Q_DECLARE_METATYPE(GObjVector)
 
 // ----------------------------------------------------------------------------
 // SET_ERR

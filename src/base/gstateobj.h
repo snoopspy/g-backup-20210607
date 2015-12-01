@@ -44,4 +44,3 @@ protected:
 protected:
   State state_{Closed};
 };
-
