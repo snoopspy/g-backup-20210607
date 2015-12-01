@@ -13,16 +13,16 @@
 #ifdef QT_GUI_LIB
 
 #include <QMetaEnum>
-#include "gpropitemcombobox.h"
+#include "gpropitem_combobox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemComboBoxEnum
+// GPropItemEnum
 // ----------------------------------------------------------------------------
-struct GPropItemComboBoxEnum : public GPropItemComboBox {
+struct GPropItemEnum : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemComboBoxEnum(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemEnum(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:

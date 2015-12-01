@@ -1,4 +1,4 @@
-#include "gpropitemdirpath.h"
+#include "gpropitem_dirpath.h"
 
 #ifdef QT_GUI_LIB
 

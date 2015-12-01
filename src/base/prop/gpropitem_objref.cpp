@@ -1,12 +1,12 @@
 #include "base/gobj.h"
-#include "gpropitemqobjectstar.h"
+#include "gpropitem_objref.h"
 
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemQObjectStar
+// GPropItemObjRef
 // ----------------------------------------------------------------------------
-GPropItemQObjectStar::GPropItemQObjectStar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+GPropItemObjRef::GPropItemObjRef(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
   : GPropItem(parent, object, mpro) {
   const char* propName = mpro.name();
   QVariant variant = object_->property(propName);

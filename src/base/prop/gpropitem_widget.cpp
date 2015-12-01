@@ -1,4 +1,4 @@
-#include "gpropitemwidget.h"
+#include "gpropitem_widget.h"
 
 #ifdef QT_GUI_LIB
 

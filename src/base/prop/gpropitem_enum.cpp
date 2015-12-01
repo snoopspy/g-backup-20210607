@@ -1,11 +1,11 @@
-#include "gpropitemcomboboxenum.h"
+#include "gpropitem_enum.h"
 
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemComboBoxEnum
+// GPropItemEnum
 // ----------------------------------------------------------------------------
-GPropItemComboBoxEnum::GPropItemComboBoxEnum(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+GPropItemEnum::GPropItemEnum(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
   : GPropItemComboBox(parent, object, mpro) {
   QMetaEnum menum = mpro.enumerator();
   int count = menum.keyCount();
@@ -15,13 +15,13 @@ GPropItemComboBoxEnum::GPropItemComboBoxEnum(QTreeWidgetItem* parent, QObject* o
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(myCurrentIndexChanged(int)));
 }
 
-void GPropItemComboBoxEnum::update() {
+void GPropItemEnum::update() {
   QMetaEnum menum = mpro_.enumerator();
   QString key = menum.valueToKey(object_->property(mpro_.name()).toInt());
   comboBox_->setCurrentText(key);
 }
 
-void GPropItemComboBoxEnum::myCurrentIndexChanged(int index) {
+void GPropItemEnum::myCurrentIndexChanged(int index) {
   (void)index;
   QString key = comboBox_->currentText();
   bool res = object_->setProperty(mpro_.name(), key);

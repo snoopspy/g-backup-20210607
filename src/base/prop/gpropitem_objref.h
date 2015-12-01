@@ -15,13 +15,13 @@
 #include "gpropitem.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemQObjectStar
+// GPropItemObjRef
 // ----------------------------------------------------------------------------
-struct GPropItemQObjectStar : public GPropItem {
+struct GPropItemObjRef : public GPropItem {
   Q_OBJECT
 
 public:
-  GPropItemQObjectStar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemObjRef(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override {}
 };
 

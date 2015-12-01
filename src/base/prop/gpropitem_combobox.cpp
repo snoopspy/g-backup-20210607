@@ -1,4 +1,4 @@
-#include "gpropitemcombobox.h"
+#include "gpropitem_combobox.h"
 
 #ifdef QT_GUI_LIB
 

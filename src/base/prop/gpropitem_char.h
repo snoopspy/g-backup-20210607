@@ -12,16 +12,16 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitemlineedit.h"
+#include "gpropitem_lineedit.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemLineEditQChar
+// GPropItemChar
 // ----------------------------------------------------------------------------
-struct GPropItemLineEditQChar : public GPropItemLineEdit {
+struct GPropItemChar : public GPropItemLineEdit {
   Q_OBJECT
 
 public:
-  GPropItemLineEditQChar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemChar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:

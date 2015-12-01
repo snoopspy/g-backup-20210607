@@ -2,7 +2,7 @@
 
 #include <QGridLayout>
 #include <QHeaderView>
-#include "gpropitemlineeditobjectname.h"
+#include "gpropitem_objectname.h"
 #include "gpropwidget.h"
 
 // ----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ void GPropWidget::setObject(GObj* obj) {
   obj_ = obj;
 
   QMetaProperty mpro = obj->metaObject()->property(0); // objectName
-  GPropItemLineEditObjectName* root = new GPropItemLineEditObjectName(this, obj, mpro);
+  GPropItemObjectName* root = new GPropItemObjectName(this, obj, mpro);
   QTreeWidgetItem* item = root->item_;
   obj_->createPropItems(item);
 

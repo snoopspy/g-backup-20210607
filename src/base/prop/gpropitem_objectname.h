@@ -12,17 +12,17 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitemlineedit.h"
+#include "gpropitem_lineedit.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemLineEditObjectName
+// GPropItemObjectName
 // ----------------------------------------------------------------------------
-struct GPropItemLineEditObjectName : public GPropItemLineEdit {
+struct GPropItemObjectName : public GPropItemLineEdit {
   Q_OBJECT
 
 public:
-  GPropItemLineEditObjectName(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemLineEditObjectName(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemObjectName(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
+  GPropItemObjectName(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:

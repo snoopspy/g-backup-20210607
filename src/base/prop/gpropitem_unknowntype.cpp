@@ -1,4 +1,4 @@
-#include "gpropitemunknowntype.h"
+#include "gpropitem_unknowntype.h"
 
 #ifdef QT_GUI_LIB
 

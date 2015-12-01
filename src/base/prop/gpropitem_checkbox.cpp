@@ -1,4 +1,4 @@
-#include "gpropitemcheckbox.h"
+#include "gpropitem_checkbox.h"
 
 #ifdef QT_GUI_LIB
 

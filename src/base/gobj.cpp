@@ -141,13 +141,13 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 
 #ifdef QT_GUI_LIB
 
-#include "base/prop/gpropitemcheckboxbool.h"
-#include "base/prop/gpropitemcomboboxenum.h"
-#include "base/prop/gpropitemlineeditobjectname.h"
-#include "base/prop/gpropitemlineeditqchar.h"
-#include "base/prop/gpropitemqobjectstar.h"
-#include "base/prop/gpropitemlineeditqvariant.h"
-#include "base/prop/gpropitemunknowntype.h"
+#include "base/prop/gpropitem_bool.h"
+#include "base/prop/gpropitem_enum.h"
+#include "base/prop/gpropitem_objectname.h"
+#include "base/prop/gpropitem_char.h"
+#include "base/prop/gpropitem_objref.h"
+#include "base/prop/gpropitem_variant.h"
+#include "base/prop/gpropitem_unknowntype.h"
 
 void GObj::createPropItems(QTreeWidgetItem* parent) {
   const QMetaObject* mobj = metaObject();
@@ -168,19 +168,19 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
   int userType = mpro.userType();
 
   if (mpro.isEnumType()) {
-    return new GPropItemComboBoxEnum(parent, object, mpro);
+    return new GPropItemEnum(parent, object, mpro);
   }
 
   if ((QString)propName == "objectName") {
-    return new GPropItemLineEditObjectName(parent, object, mpro);
+    return new GPropItemObjectName(parent, object, mpro);
   }
 
   switch (userType) {
     case QMetaType::Bool:
-      return new GPropItemComboBoxBool(parent, object, mpro);
+      return new GPropItemBool(parent, object, mpro);
 
     case QMetaType::QChar:
-      return new GPropItemLineEditQChar(parent, object, mpro);
+      return new GPropItemChar(parent, object, mpro);
 
     case QMetaType::Char:
     case QMetaType::Double:
@@ -193,11 +193,11 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
     case QMetaType::UInt:
     case QMetaType::ULongLong:
     case QMetaType::UShort:
-      return new GPropItemLineEditQVariant(parent, object, mpro);
+      return new GPropItemVariant(parent, object, mpro);
   }
 
   if (userType == qMetaTypeId<GObjRef>())
-    return new GPropItemQObjectStar(parent, object, mpro);
+    return new GPropItemObjRef(parent, object, mpro);
 
     qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
   return nullptr;

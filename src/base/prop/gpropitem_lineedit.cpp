@@ -1,4 +1,4 @@
-#include "gpropitemlineedit.h"
+#include "gpropitem_lineedit.h"
 
 #ifdef QT_GUI_LIB
 

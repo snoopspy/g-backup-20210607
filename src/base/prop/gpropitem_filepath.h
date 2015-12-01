@@ -15,7 +15,7 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QToolButton>
-#include "gpropitemwidget.h"
+#include "gpropitem_widget.h"
 
 // ----------------------------------------------------------------------------
 // GPropItemFilePath

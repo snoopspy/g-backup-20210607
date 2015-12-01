@@ -12,16 +12,16 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitemcheckbox.h"
+#include "gpropitem_checkbox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemComboBoxBool
+// GPropItemBool
 // ----------------------------------------------------------------------------
-struct GPropItemComboBoxBool : public GPropItemCheckBox {
+struct GPropItemBool : public GPropItemCheckBox {
   Q_OBJECT
 
 public:
-  GPropItemComboBoxBool(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemBool(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:

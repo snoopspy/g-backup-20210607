@@ -1,21 +1,21 @@
-#include "gpropitemlineeditqchar.h"
+#include "gpropitem_char.h"
 
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemLineEditQChar
+// GPropItemChar
 // ----------------------------------------------------------------------------
-GPropItemLineEditQChar::GPropItemLineEditQChar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+GPropItemChar::GPropItemChar(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
   : GPropItemLineEdit(parent, object, mpro) {
   QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 
-void GPropItemLineEditQChar::update() {
+void GPropItemChar::update() {
   QVariant value = object_->property(mpro_.name());
   lineEdit_->setText(value.toString());
 }
 
-void GPropItemLineEditQChar::myEditingFinished() {
+void GPropItemChar::myEditingFinished() {
   QChar value;
   QString text = lineEdit_->text();
   if (text.length() == 0) value = '\0';

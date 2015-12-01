@@ -12,16 +12,16 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitemcombobox.h"
+#include "gpropitem_combobox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemComboBoxQVariant
+// GPropItemVariantSelect
 // ----------------------------------------------------------------------------
-struct GPropItemComboBoxQVariant : public GPropItemComboBox {
+struct GPropItemVariantSelect : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemComboBoxQVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro, QStringList items);
+  GPropItemVariantSelect(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro, QStringList items);
   void update() override;
 
 protected slots:
