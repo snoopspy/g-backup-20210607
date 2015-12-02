@@ -15,13 +15,13 @@
 #include "gpropitem_toolbutton.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemObjPtrList
+// GPropItemObjPtrListPtr
 // ----------------------------------------------------------------------------
-struct GPropItemObjPtrList : public GPropItemToolButton {
+struct GPropItemObjPtrListPtr : public GPropItemToolButton {
   Q_OBJECT
 
 public:
-  GPropItemObjPtrList(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemObjPtrListPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override;
 
 protected slots:
