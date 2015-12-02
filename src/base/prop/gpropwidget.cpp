@@ -21,6 +21,7 @@ GPropWidget::~GPropWidget() {
 }
 
 void GPropWidget::init() {
+  this->setIndentation(12);
   this->setColumnCount(2);
   this->setHeaderLabels(QStringList() << "property" << "value");
   QLayout* layout = new QGridLayout(this);

@@ -174,8 +174,8 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 #include "base/prop/gpropitem_objectname.h"
 #include "base/prop/gpropitem_objptr.h"
 #include "base/prop/gpropitem_objptrlistptr.h"
-#include "base/prop/gpropitem_variant.h"
 #include "base/prop/gpropitem_unknowntype.h"
+#include "base/prop/gpropitem_variant.h"
 
 void GObj::createPropItems(QTreeWidgetItem* parent) {
   const QMetaObject* mobj = metaObject();
