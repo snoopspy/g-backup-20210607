@@ -42,13 +42,13 @@ public:
 
 struct Option : GObj {
   Q_OBJECT
-  Q_PROPERTY(GObjRef tcpClient READ getTcpClient)
-  Q_PROPERTY(GObjRef udpClient READ getUdpClient)
-  Q_PROPERTY(GObjRef sslClient READ getSslClient)
+  Q_PROPERTY(GObjPtr tcpClient READ getTcpClient)
+  Q_PROPERTY(GObjPtr udpClient READ getUdpClient)
+  Q_PROPERTY(GObjPtr sslClient READ getSslClient)
 
-  GObjRef getTcpClient() { return &tcpClient_; }
-  GObjRef getUdpClient() { return &udpClient_; }
-  GObjRef getSslClient() { return &sslClient_; }
+  GObjPtr getTcpClient() { return &tcpClient_; }
+  GObjPtr getUdpClient() { return &udpClient_; }
+  GObjPtr getSslClient() { return &sslClient_; }
 
 public:
   TcpClient tcpClient_;

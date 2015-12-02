@@ -56,7 +56,7 @@ void Widget::loadControl()
   QJsonObject jo = GJson::loadFromFile();
 
   jo["widget"] >> GJson::rect(this);
-  jo["splitter"] >> GJson::headerSizes(ui->splitter);
+  jo["splitter"] >> GJson::splitterSizes(ui->splitter);
   jo["option"] >> option_;
 
   ui->chkShowHexa->setChecked(jo["showHexa"].toBool());
@@ -76,7 +76,7 @@ void Widget::saveControl()
   QJsonObject jo = GJson::loadFromFile();
 
   jo["widget"] << GJson::rect(this);
-  jo["splitter"] << GJson::headerSizes(ui->splitter);
+  jo["splitter"] << GJson::splitterSizes(ui->splitter);
   jo["option"] << option_;
 
   jo["showHexa"] = ui->chkShowHexa->isChecked();
