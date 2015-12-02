@@ -11,6 +11,24 @@ GNetworkInterfaces& GNetworkInterface::allInterfaces() {
 // ----------------------------------------------------------------------------
 // GNetworkInterfaces
 // ----------------------------------------------------------------------------
+#include <unistd.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
+static GMac getMac(char* name) {
+  int s;
+  struct ifreq buffer;
+
+  s = socket(PF_INET, SOCK_DGRAM, 0);
+  memset(&buffer, 0x00, sizeof(buffer));
+
+  strcpy(buffer.ifr_name, name);
+  ioctl(s, SIOCGIFHWADDR, &buffer);
+  close(s);
+
+  GMac res = (uint8_t*)buffer.ifr_ifru.ifru_hwaddr.sa_data;
+  return res;
+}
+
 GNetworkInterfaces::GNetworkInterfaces() {
   //
   // Initialize allDevs using pcap API.
@@ -39,8 +57,24 @@ GNetworkInterfaces::GNetworkInterfaces() {
     intf.description_ = dev->description;
     intf.dev_ = dev;
 
-    push_back(intf);
+    for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
+      sockaddr* addr;
 
+      // ip_
+      addr = pa->addr;
+      if(addr != nullptr && addr->sa_family == AF_INET)
+        intf.ip_ = ((struct sockaddr_in*)addr)->sin_addr;
+
+      // subnet_
+      addr = pa->netmask;
+      if(addr != nullptr && addr->sa_family == AF_INET) {
+        intf.subnet_ = ((struct sockaddr_in*)addr)->sin_addr;
+
+      intf.mac_ = getMac(dev->name);
+      }
+    }
+
+    push_back(intf);
     dev = dev->next;
     i++;
   }
