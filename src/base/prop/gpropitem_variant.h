@@ -15,7 +15,7 @@
 #include "gpropitem_lineedit.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemObjRef
+// GPropItemVariant
 // ----------------------------------------------------------------------------
 struct GPropItemVariant : public GPropItemLineEdit {
   Q_OBJECT

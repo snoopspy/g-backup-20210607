@@ -15,10 +15,10 @@
 #include "gpropitem_toolbutton.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemObjVector
+// GPropItemObjPtrVectorPtr
 // ----------------------------------------------------------------------------
-struct GPropItemObjVector : public GPropItemToolButton {
-  GPropItemObjVector(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+struct GPropItemObjPtrVectorPtr : public GPropItemToolButton {
+  GPropItemObjPtrVectorPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override {}
 };
 

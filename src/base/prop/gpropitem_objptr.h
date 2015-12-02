@@ -12,20 +12,17 @@
 
 #ifdef QT_GUI_LIB
 
-#include "gpropitem_toolbutton.h"
+#include "gpropitem.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemObjList
+// GPropItemObjPtr
 // ----------------------------------------------------------------------------
-struct GPropItemObjList : public GPropItemToolButton {
-  Q_OBJECT
+struct GPropItemObjPtr : public GPropItem {
+  // Q_OBJECT // gilgil temp 2015.12.02
 
 public:
-  GPropItemObjList(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  GPropItemObjPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
   void update() override {}
-
-protected slots:
-  void myClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB

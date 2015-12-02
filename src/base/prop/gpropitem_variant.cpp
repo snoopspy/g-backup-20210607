@@ -3,7 +3,7 @@
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemObjRef
+// GPropItemVariant
 // ----------------------------------------------------------------------------
 GPropItemVariant::GPropItemVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
   : GPropItemLineEdit(parent, object, mpro) {

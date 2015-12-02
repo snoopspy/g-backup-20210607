@@ -1,3 +1,4 @@
+#include <QJsonArray>
 #include "gobj.h"
 
 // ----------------------------------------------------------------------------
@@ -69,10 +70,22 @@ bool GObj::load(QJsonObject jo, QMetaProperty mpro) {
       }
   }
 
-  if (userType == qMetaTypeId<GObjRef>()) {
+  if (userType == qMetaTypeId<GObjPtr>()) {
     GObj* obj = qvariant_cast<GObj*>(property(propName));
     Q_ASSERT(obj != nullptr);
     obj->load(jo[propName].toObject());
+    return true;
+  }
+
+  if (userType == qMetaTypeId<GObjPtrListPtr>()) {
+    GObjPtrListPtr list = qvariant_cast<GObjPtrListPtr>(property(propName));
+    Q_ASSERT(list != nullptr);
+    QJsonArray array = jo[propName].toArray();
+    foreach (QJsonValue value, array) {
+      QJsonObject childJo = value.toObject();
+      GObj* childObj = list->addObj();
+      childObj->load(childJo);
+    }
     return true;
   }
 
@@ -126,12 +139,26 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
        }
   }
 
-  if (userType == qMetaTypeId<GObjRef>()) {
+  if (userType == qMetaTypeId<GObjPtr>()) {
     GObj* obj = qvariant_cast<GObj*>(variant);
     Q_ASSERT(obj != nullptr);
-    QJsonObject childJson;
-    obj->save(childJson);
-    jo[propName] = childJson;
+    QJsonObject childJo;
+    obj->save(childJo);
+    jo[propName] = childJo;
+    return true;
+  }
+
+  if (userType == qMetaTypeId<GObjPtrListPtr>()) {
+    GObjPtrListPtr list = qvariant_cast<GObjPtrListPtr>(variant);
+    Q_ASSERT(list != nullptr);
+    QJsonArray array;
+    for (_GObjPtrList::iterator it = list->begin(); it != list->end(); it++) {
+      QJsonObject childJo;
+      GObj* childObj = *it;
+      childObj->save(childJo);
+      array.append(QJsonValue(childJo));
+    }
+    jo[propName] = array;
     return true;
   }
 
@@ -145,9 +172,9 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 #include "base/prop/gpropitem_char.h"
 #include "base/prop/gpropitem_enum.h"
 #include "base/prop/gpropitem_objectname.h"
-#include "base/prop/gpropitem_objlist.h"
-#include "base/prop/gpropitem_objref.h"
-#include "base/prop/gpropitem_objvector.h"
+#include "base/prop/gpropitem_objptr.h"
+#include "base/prop/gpropitem_objptrlistptr.h"
+#include "base/prop/gpropitem_objptrvectorptr.h"
 #include "base/prop/gpropitem_variant.h"
 #include "base/prop/gpropitem_unknowntype.h"
 
@@ -198,14 +225,14 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
       return new GPropItemVariant(parent, object, mpro);
   }
 
-  if (userType == qMetaTypeId<GObjRef>())
-    return new GPropItemObjRef(parent, object, mpro);
+  if (userType == qMetaTypeId<GObjPtr>())
+    return new GPropItemObjPtr(parent, object, mpro);
 
-  if (userType == qMetaTypeId<GObjList>())
-    return new GPropItemObjList(parent, object, mpro);
+  if (userType == qMetaTypeId<GObjPtrListPtr>())
+    return new GPropItemObjPtrList(parent, object, mpro);
 
-  if (userType == qMetaTypeId<GObjVector>())
-    return new GPropItemObjVector(parent, object, mpro);
+  if (userType == qMetaTypeId<GObjPtrVectorPtr>())
+    return new GPropItemObjPtrVectorPtr(parent, object, mpro);
 
   qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
   return nullptr;
