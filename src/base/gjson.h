@@ -61,7 +61,7 @@ namespace GJson {
     GSplitterSizes(QSplitter* splitter) { splitter_ = splitter; }
     QSplitter* splitter_;
   };
-  GSplitterSizes headerSizes(QSplitter* splitter);
+  GSplitterSizes splitterSizes(QSplitter* splitter);
 }
 QJsonValueRef operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes);
 const QJsonValue operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes);

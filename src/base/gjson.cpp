@@ -137,7 +137,7 @@ const QJsonValue operator >> (const QJsonValue val, GJson::GWidgetRect&& rect) {
 // ----------------------------------------------------------------------------
 // GSplitterSizes
 // ----------------------------------------------------------------------------
-GJson::GSplitterSizes GJson::headerSizes(QSplitter* splitter) {
+GJson::GSplitterSizes GJson::splitterSizes(QSplitter* splitter) {
   return GJson::GSplitterSizes(splitter);
 }
 
