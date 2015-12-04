@@ -21,7 +21,7 @@ struct GPropItemObjPtrListPtr : public GPropItemToolButton {
   Q_OBJECT
 
 public:
-  GPropItemObjPtrListPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override;
 
 protected slots:

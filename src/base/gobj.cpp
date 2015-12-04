@@ -185,7 +185,7 @@ void GObj::createPropItems(QTreeWidgetItem* parent) {
     GPropItem* item = createPropItem(parent, this, mpro);
     if (item == nullptr) {
       qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(mpro.typeName(), mpro.name());
-      item = new GPropItemUnknownType(parent, this, mpro);
+      item = new GPropItemUnknownType;
     }
     item->update();
   }
@@ -194,41 +194,49 @@ void GObj::createPropItems(QTreeWidgetItem* parent) {
 GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
   const char* propName = mpro.name();
   int userType = mpro.userType();
+  GPropItem* res{nullptr};
 
   if (mpro.isEnumType()) {
-    return new GPropItemEnum(parent, object, mpro);
+    res = new GPropItemEnum;
   }
 
-  if ((QString)propName == "objectName") {
-    return new GPropItemObjectName(parent, object, mpro);
+  if (res == nullptr && (QString)propName == "objectName") {
+    res = new GPropItemObjectName;
   }
 
-  switch (userType) {
-    case QMetaType::Bool:
-      return new GPropItemBool(parent, object, mpro);
-
-    case QMetaType::QChar:
-      return new GPropItemChar(parent, object, mpro);
-
-    case QMetaType::Char:
-    case QMetaType::Double:
-    case QMetaType::Float:
-    case QMetaType::Int:
-    case QMetaType::LongLong:
-    case QMetaType::QString:
-    case QMetaType::Short:
-    case QMetaType::UChar:
-    case QMetaType::UInt:
-    case QMetaType::ULongLong:
-    case QMetaType::UShort:
-      return new GPropItemVariant(parent, object, mpro);
+  if (res == nullptr) {
+    switch (userType) {
+      case QMetaType::Bool:
+        res = new GPropItemBool;
+        break;
+      case QMetaType::QChar:
+        res = new GPropItemChar;
+        break;
+      case QMetaType::Char:
+      case QMetaType::Double:
+      case QMetaType::Float:
+      case QMetaType::Int:
+      case QMetaType::LongLong:
+      case QMetaType::QString:
+      case QMetaType::Short:
+      case QMetaType::UChar:
+      case QMetaType::UInt:
+      case QMetaType::ULongLong:
+      case QMetaType::UShort:
+        res = new GPropItemVariant;
+    }
   }
 
-  if (userType == qMetaTypeId<GObjPtr>())
-    return new GPropItemObjPtr(parent, object, mpro);
+  if (res == nullptr && userType == qMetaTypeId<GObjPtr>())
+    res = new GPropItemObjPtr;
 
-  if (userType == qMetaTypeId<GObjPtrListPtr>())
-    return new GPropItemObjPtrListPtr(parent, object, mpro);
+  if (res == nullptr && userType == qMetaTypeId<GObjPtrListPtr>())
+    res = new GPropItemObjPtrListPtr;
+
+  if (res != nullptr) {
+    res->init(parent->treeWidget(), parent, object, mpro);
+    return res;
+  }
 
   qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
   return nullptr;

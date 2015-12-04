@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariant
 // ----------------------------------------------------------------------------
-GPropItemVariant::GPropItemVariant(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItemLineEdit(parent, object, mpro) {
+void GPropItemVariant::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItemLineEdit::init(treeWidget, parentItem, object, mpro);
   QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 

@@ -21,15 +21,11 @@
 // GPropItem
 // ----------------------------------------------------------------------------
 struct GPropItem : public QObject {
- // Q_OBJECT // gilgil temp 2015.12.02
-
-public:
-  GPropItem(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  virtual void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro);
   virtual void update() = 0;
 
-  QTreeWidgetItem* item_;
-  QObject* object_;
+  QTreeWidgetItem* item_{nullptr};
+  QObject* object_{nullptr};
   QMetaProperty mpro_;
 };
 

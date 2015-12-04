@@ -18,10 +18,7 @@
 // GPropItemObjPtr
 // ----------------------------------------------------------------------------
 struct GPropItemObjPtr : public GPropItem {
-  // Q_OBJECT // gilgil temp 2015.12.02
-
-public:
-  GPropItemObjPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override {}
 };
 

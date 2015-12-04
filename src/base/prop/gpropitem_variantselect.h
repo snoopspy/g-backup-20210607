@@ -21,7 +21,7 @@ struct GPropItemVariantSelect : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemVariantSelect(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro, QStringList items);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override;
 
 protected slots:

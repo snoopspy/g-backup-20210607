@@ -21,7 +21,7 @@ struct GPropItemBool : public GPropItemCheckBox {
   Q_OBJECT
 
 public:
-  GPropItemBool(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override;
 
 protected slots:

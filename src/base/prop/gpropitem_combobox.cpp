@@ -5,10 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
-GPropItemComboBox::GPropItemComboBox(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItem(parent, object, mpro) {
-  QTreeWidget* treeWidget = dynamic_cast<QTreeWidget*>(item_->treeWidget());
-  Q_ASSERT(treeWidget != nullptr);
+void GPropItemComboBox::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItem::init(treeWidget, parentItem, object, mpro);
   comboBox_ = new QComboBox(treeWidget);
   treeWidget->setItemWidget(item_, 1, comboBox_);
 }

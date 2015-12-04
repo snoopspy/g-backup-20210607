@@ -39,7 +39,8 @@ void GPropWidget::setObject(GObj* obj) {
   obj_ = obj;
 
   QMetaProperty mpro = obj->metaObject()->property(0); // objectName
-  GPropItemObjectName* root = new GPropItemObjectName(this, obj, mpro);
+  GPropItemObjectName* root = new GPropItemObjectName;
+  root->init(this, nullptr, obj, mpro);
   QTreeWidgetItem* item = root->item_;
   obj_->createPropItems(item);
 

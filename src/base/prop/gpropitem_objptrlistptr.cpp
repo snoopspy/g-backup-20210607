@@ -41,8 +41,8 @@ protected slots:
 // ----------------------------------------------------------------------------
 // GPropItemObjPtrListPtr
 // ----------------------------------------------------------------------------
-GPropItemObjPtrListPtr::GPropItemObjPtrListPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItemToolButton(parent, object, mpro) {
+void GPropItemObjPtrListPtr::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItemToolButton::init(treeWidget, parentItem, object, mpro);
   toolButton_->setText("+");
   QObject::connect(toolButton_, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
 }

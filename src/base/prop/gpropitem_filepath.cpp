@@ -3,12 +3,10 @@
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemDirPath
+// GPropItemFilePath
 // ----------------------------------------------------------------------------
-GPropItemFilePath::GPropItemFilePath(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItemWidget(parent, object, mpro) {
-  QTreeWidget* treeWidget = item_->treeWidget();
-  Q_ASSERT(treeWidget != nullptr);
+void GPropItemFilePath::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItemWidget::init(treeWidget, parentItem, object, mpro);
   layout_ = new QHBoxLayout;
   lineEdit_ = new QLineEdit(treeWidget);
   toolButton_ = new QToolButton(treeWidget);

@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemObjPtr
 // ----------------------------------------------------------------------------
-GPropItemObjPtr::GPropItemObjPtr(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItem(parent, object, mpro) {
+void GPropItemObjPtr::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItem::init(treeWidget, parentItem, object, mpro);
   const char* propName = mpro.name();
   QVariant variant = object_->property(propName);
   GObj* childObj = qvariant_cast<GObj*>(variant);

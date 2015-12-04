@@ -19,7 +19,7 @@
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
 struct GPropItemComboBox : public GPropItem {
-  GPropItemComboBox(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
 
 public:
   QComboBox* comboBox_{nullptr};

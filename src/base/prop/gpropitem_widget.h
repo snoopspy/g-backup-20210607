@@ -19,7 +19,7 @@
 // GPropItemWidget
 // ----------------------------------------------------------------------------
 struct GPropItemWidget : public GPropItem {
-  GPropItemWidget(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
 
 public:
   QWidget* widget_{nullptr};

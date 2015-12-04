@@ -19,7 +19,7 @@
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
 struct GPropItemCheckBox : public GPropItem {
-  GPropItemCheckBox(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
 
 public:
   QCheckBox* checkBox_{nullptr};

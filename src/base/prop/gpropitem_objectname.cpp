@@ -5,14 +5,9 @@
 // ----------------------------------------------------------------------------
 // GPropItemObjectName
 // ----------------------------------------------------------------------------
-GPropItemObjectName::GPropItemObjectName(QTreeWidget* widget, QObject* object, QMetaProperty mpro)
-  : GPropItemLineEdit(widget, object, mpro) {
+void GPropItemObjectName::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItemLineEdit::init(treeWidget, parentItem, object, mpro);
   item_->setText(0, object->metaObject()->className());
-  QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
-}
-
-GPropItemObjectName::GPropItemObjectName(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItemLineEdit(parent, object, mpro) {
   QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 

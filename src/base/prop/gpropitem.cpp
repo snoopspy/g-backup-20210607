@@ -5,21 +5,17 @@
 // ----------------------------------------------------------------------------
 // GPropItem
 // ----------------------------------------------------------------------------
-GPropItem::GPropItem(QTreeWidget* widget, QObject* object, QMetaProperty mpro) {
-  setParent(widget);
-  item_ = new QTreeWidgetItem(widget);
+void GPropItem::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  setParent(treeWidget);
+  if (parentItem == nullptr)
+    item_ = new QTreeWidgetItem(treeWidget);
+  else
+    item_ = new QTreeWidgetItem(parentItem);
   object_ = object;
   mpro_ = mpro;
   item_->setText(0, mpro_.name());
+  if (parentItem == nullptr)
+    treeWidget->addTopLevelItem(item_);
 }
-
-GPropItem::GPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
-  setParent(parent->treeWidget());
-  item_ = new QTreeWidgetItem(parent);
-  object_ = object;
-  mpro_ = mpro;
-  item_->setText(0, mpro_.name());
-}
-
 
 #endif // QT_GUI_LIB

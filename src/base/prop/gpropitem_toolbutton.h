@@ -19,10 +19,10 @@
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
 struct GPropItemToolButton : public GPropItem {
-  GPropItemToolButton(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
 
 public:
-  QToolButton* toolButton_;
+  QToolButton* toolButton_{nullptr};
 };
 
 #endif // QT_GUI_LIB

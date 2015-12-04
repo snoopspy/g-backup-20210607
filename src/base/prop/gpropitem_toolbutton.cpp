@@ -5,10 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
-GPropItemToolButton::GPropItemToolButton(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItem(parent, object, mpro) {
-  QTreeWidget* treeWidget = item_->treeWidget();
-  Q_ASSERT(treeWidget != nullptr);
+void GPropItemToolButton::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItem::init(treeWidget, parentItem, object, mpro);
   toolButton_ = new QToolButton(treeWidget);
   toolButton_->setAutoRaise(true);
   treeWidget->setItemWidget(item_, 1, toolButton_);

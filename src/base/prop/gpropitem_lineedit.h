@@ -19,11 +19,10 @@
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
 struct GPropItemLineEdit : public GPropItem {
-  GPropItemLineEdit(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemLineEdit(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
 
 public:
-  QLineEdit* lineEdit_;
+  QLineEdit* lineEdit_{nullptr};
 };
 
 #endif // QT_GUI_LIB

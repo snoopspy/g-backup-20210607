@@ -21,8 +21,7 @@ struct GPropItemObjectName : public GPropItemLineEdit {
   Q_OBJECT
 
 public:
-  GPropItemObjectName(QTreeWidget* widget, QObject* object, QMetaProperty mpro);
-  GPropItemObjectName(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override;
 
 protected slots:

@@ -5,10 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemWidget
 // ----------------------------------------------------------------------------
-GPropItemWidget::GPropItemWidget(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
-  : GPropItem(parent, object, mpro) {
-  QTreeWidget* treeWidget = dynamic_cast<QTreeWidget*>(item_->treeWidget());
-  Q_ASSERT(treeWidget != nullptr);
+void GPropItemWidget::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
+  GPropItem::init(treeWidget, parentItem, object, mpro);
   widget_ = new QWidget(treeWidget);
   treeWidget->setItemWidget(item_, 1, widget_);
 }

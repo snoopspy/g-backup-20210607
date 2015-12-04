@@ -25,14 +25,14 @@ struct GPropItemFilePath : public GPropItemWidget {
   Q_OBJECT
 
 public:
-  GPropItemFilePath(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
   void update() override;
 
 public:
-  QHBoxLayout* layout_;
-  QLineEdit* lineEdit_;
-  QToolButton* toolButton_;
-  QFileDialog* fd_;
+  QHBoxLayout* layout_{nullptr};
+  QLineEdit* lineEdit_{nullptr};
+  QToolButton* toolButton_{nullptr};
+  QFileDialog* fd_{nullptr};
 
 protected slots:
   void myEditingFinished();
