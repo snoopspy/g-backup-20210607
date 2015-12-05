@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
-void GPropItemCheckBox::init(GPropItemParam param) {
-  GPropItem::init(param);
+GPropItemCheckBox::GPropItemCheckBox(GPropItemParam param) : GPropItem(param) {
   checkBox_ = new QCheckBox(param.treeWidget_);
   param.treeWidget_->setItemWidget(item_, 1, checkBox_);
 }

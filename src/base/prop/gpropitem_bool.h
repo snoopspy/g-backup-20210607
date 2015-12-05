@@ -21,7 +21,7 @@ struct GPropItemBool : public GPropItemCheckBox {
   Q_OBJECT
 
 public:
-  void init(GPropItemParam param) override;
+  GPropItemBool(GPropItemParam param);
   void update() override;
 
 protected slots:

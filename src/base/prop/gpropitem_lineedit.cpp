@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
-void GPropItemLineEdit::init(GPropItemParam param) {
-  GPropItem::init(param);
+GPropItemLineEdit::GPropItemLineEdit(GPropItemParam param) : GPropItem(param) {
   lineEdit_ = new QLineEdit(param.treeWidget_);
   lineEdit_->setFrame(false);
   param.treeWidget_->setItemWidget(item_, 1, lineEdit_);

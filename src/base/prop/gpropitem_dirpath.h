@@ -24,7 +24,7 @@ struct GPropItemDirPath : public GPropItemWidget {
   Q_OBJECT
 
 public:
-  void init(GPropItemParam param) override;
+  GPropItemDirPath(GPropItemParam param);
   void update() override;
 
 public:

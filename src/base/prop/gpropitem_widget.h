@@ -19,7 +19,7 @@
 // GPropItemWidget
 // ----------------------------------------------------------------------------
 struct GPropItemWidget : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemWidget(GPropItemParam param);
 
 public:
   QWidget* widget_{nullptr};

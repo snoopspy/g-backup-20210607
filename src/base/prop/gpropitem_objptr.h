@@ -18,7 +18,7 @@
 // GPropItemObjPtr
 // ----------------------------------------------------------------------------
 struct GPropItemObjPtr : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemObjPtr(GPropItemParam param);
   void update() override {}
 };
 

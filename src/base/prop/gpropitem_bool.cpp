@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemBool
 // ----------------------------------------------------------------------------
-void GPropItemBool::init(GPropItemParam param) {
-  GPropItemCheckBox::init(param);
+GPropItemBool::GPropItemBool(GPropItemParam param) : GPropItemCheckBox(param) {
   QObject::connect(checkBox_, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
 }
 

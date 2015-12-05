@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemWidget
 // ----------------------------------------------------------------------------
-void GPropItemWidget::init(GPropItemParam param) {
-  GPropItem::init(param);
+GPropItemWidget::GPropItemWidget(GPropItemParam param) : GPropItem(param) {
   widget_ = new QWidget(param.treeWidget_);
   param.treeWidget_->setItemWidget(item_, 1, widget_);
 }

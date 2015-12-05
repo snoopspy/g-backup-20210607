@@ -5,8 +5,7 @@
 
 GPropItem* Person::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
   if (QString(mpro.name()) == "picture") {
-    GPropItemFilePath* res = new GPropItemFilePath;
-    res->init(GPropItemParam(parent->treeWidget(), parent, object, mpro));
+    GPropItemFilePath* res = new GPropItemFilePath(GPropItemParam(parent->treeWidget(), parent, object, mpro));
     res->fd_->setNameFilter("Image files - *.png *.xpm *.jpg (*.png *.xpm *.jpg);;Any files - * (*)");
     return res;
   }

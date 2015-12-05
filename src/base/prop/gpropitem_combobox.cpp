@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
-void GPropItemComboBox::init(GPropItemParam param) {
-  GPropItem::init(param);
+GPropItemComboBox::GPropItemComboBox(GPropItemParam param) : GPropItem(param) {
   comboBox_ = new QComboBox(param.treeWidget_);
   param.treeWidget_->setItemWidget(item_, 1, comboBox_);
 }

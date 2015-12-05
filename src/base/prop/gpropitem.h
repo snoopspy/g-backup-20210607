@@ -34,7 +34,7 @@ struct GPropItemParam {
 // GPropItem
 // ----------------------------------------------------------------------------
 struct GPropItem : public QObject {
-  virtual void init(GPropItemParam param);
+  GPropItem(GPropItemParam param);
   virtual void update() = 0;
 
   QTreeWidgetItem* item_{nullptr};

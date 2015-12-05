@@ -19,7 +19,7 @@
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
 struct GPropItemComboBox : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemComboBox(GPropItemParam param);
 
 public:
   QComboBox* comboBox_{nullptr};

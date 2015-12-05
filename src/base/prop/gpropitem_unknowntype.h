@@ -19,7 +19,7 @@
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
 struct GPropItemUnknownType : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemUnknownType(GPropItemParam param);
   void update() override {}
 };
 

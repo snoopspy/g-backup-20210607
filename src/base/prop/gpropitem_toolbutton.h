@@ -19,7 +19,7 @@
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
 struct GPropItemToolButton : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemToolButton(GPropItemParam param);
 
 public:
   QToolButton* toolButton_{nullptr};

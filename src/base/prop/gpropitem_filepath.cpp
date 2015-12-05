@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemFilePath
 // ----------------------------------------------------------------------------
-void GPropItemFilePath::init(GPropItemParam param) {
-  GPropItemWidget::init(param);
+GPropItemFilePath::GPropItemFilePath(GPropItemParam param) : GPropItemWidget(param) {
   layout_ = new QHBoxLayout;
   lineEdit_ = new QLineEdit(param.treeWidget_);
   toolButton_ = new QToolButton(param.treeWidget_);

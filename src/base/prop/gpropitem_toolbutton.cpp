@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
-void GPropItemToolButton::init(GPropItemParam param) {
-  GPropItem::init(param);
+GPropItemToolButton::GPropItemToolButton(GPropItemParam param) : GPropItem(param) {
   toolButton_ = new QToolButton(param.treeWidget_);
   toolButton_->setAutoRaise(true);
   param.treeWidget_->setItemWidget(item_, 1, toolButton_);

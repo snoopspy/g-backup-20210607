@@ -5,8 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariant
 // ----------------------------------------------------------------------------
-void GPropItemVariant::init(GPropItemParam param) {
-  GPropItemLineEdit::init(param);
+GPropItemVariant::GPropItemVariant(GPropItemParam param) : GPropItemLineEdit(param) {
   QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 

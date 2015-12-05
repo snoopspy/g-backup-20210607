@@ -19,7 +19,7 @@
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
 struct GPropItemCheckBox : public GPropItem {
-  void init(GPropItemParam param) override;
+  GPropItemCheckBox(GPropItemParam param);
 
 public:
   QCheckBox* checkBox_{nullptr};

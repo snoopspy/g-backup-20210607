@@ -21,7 +21,7 @@ struct GPropItemVariantSelect : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  void init(GPropItemParam param) override;
+  GPropItemVariantSelect(GPropItemParam param);
   void update() override;
 
 protected slots:
