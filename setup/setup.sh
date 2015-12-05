@@ -1,4 +1,4 @@
-export QTDIR=/opt/Qt/5.5/gcc_64
+export QTDIR=/opt/qt/5.5/gcc_64
 
 #
 # directory
