@@ -6,6 +6,7 @@
 // GPropItem
 // ----------------------------------------------------------------------------
 GPropItem::GPropItem(GPropItemParam param) {
+  Q_ASSERT(param.treeWidget_ != nullptr);
   setParent(param.treeWidget_);
   if (param.parent_ == nullptr)
     item_ = new QTreeWidgetItem(param.treeWidget_);
