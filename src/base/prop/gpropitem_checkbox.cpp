@@ -5,10 +5,10 @@
 // ----------------------------------------------------------------------------
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
-void GPropItemCheckBox::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItem::init(treeWidget, parentItem, object, mpro);
-  checkBox_ = new QCheckBox(treeWidget);
-  treeWidget->setItemWidget(item_, 1, checkBox_);
+void GPropItemCheckBox::init(GPropItemParam param) {
+  GPropItem::init(param);
+  checkBox_ = new QCheckBox(param.treeWidget_);
+  param.treeWidget_->setItemWidget(item_, 1, checkBox_);
 }
 
 #endif // QT_GUI_LIB

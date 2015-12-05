@@ -5,10 +5,10 @@
 // ----------------------------------------------------------------------------
 // GPropItemWidget
 // ----------------------------------------------------------------------------
-void GPropItemWidget::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItem::init(treeWidget, parentItem, object, mpro);
-  widget_ = new QWidget(treeWidget);
-  treeWidget->setItemWidget(item_, 1, widget_);
+void GPropItemWidget::init(GPropItemParam param) {
+  GPropItem::init(param);
+  widget_ = new QWidget(param.treeWidget_);
+  param.treeWidget_->setItemWidget(item_, 1, widget_);
 }
 
 #endif // QT_GUI_LIB

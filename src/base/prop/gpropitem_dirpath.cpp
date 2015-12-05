@@ -5,11 +5,11 @@
 // ----------------------------------------------------------------------------
 // GPropItemDirPath
 // ----------------------------------------------------------------------------
-void GPropItemDirPath::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItemWidget::init(treeWidget, parentItem, object, mpro);
+void GPropItemDirPath::init(GPropItemParam param) {
+  GPropItemWidget::init(param);
   layout_ = new QHBoxLayout;
-  lineEdit_ = new QLineEdit(treeWidget);
-  toolButton_ = new QToolButton(treeWidget);
+  lineEdit_ = new QLineEdit(param.treeWidget_);
+  toolButton_ = new QToolButton(param.treeWidget_);
   layout_->setMargin(0);
   lineEdit_->setFrame(false);
   toolButton_->setText("...");

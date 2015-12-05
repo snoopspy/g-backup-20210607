@@ -22,7 +22,7 @@ struct GPropItemEnum : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
+  void init(GPropItemParam param) override;
   void update() override;
 
 protected slots:

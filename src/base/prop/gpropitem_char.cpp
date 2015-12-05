@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemChar
 // ----------------------------------------------------------------------------
-void GPropItemChar::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItem::init(treeWidget, parentItem, object, mpro);
+void GPropItemChar::init(GPropItemParam param) {
+  GPropItem::init(param);
   QObject::connect(lineEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 

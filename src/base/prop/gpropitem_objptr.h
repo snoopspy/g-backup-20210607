@@ -18,7 +18,7 @@
 // GPropItemObjPtr
 // ----------------------------------------------------------------------------
 struct GPropItemObjPtr : public GPropItem {
-  void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) override;
+  void init(GPropItemParam param) override;
   void update() override {}
 };
 

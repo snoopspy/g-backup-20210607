@@ -234,7 +234,7 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
     res = new GPropItemObjPtrListPtr;
 
   if (res != nullptr) {
-    res->init(parent->treeWidget(), parent, object, mpro);
+    res->init(GPropItemParam(parent->treeWidget(), parent, object, mpro));
     return res;
   }
 

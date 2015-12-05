@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariantSelect
 // ----------------------------------------------------------------------------
-void GPropItemVariantSelect::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItemComboBox::init(treeWidget, parentItem, object, mpro);
+void GPropItemVariantSelect::init(GPropItemParam param) {
+  GPropItemComboBox::init(param);
   // comboBox_->addItems(items); // gilgil temp 2015.12.04
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(QString)), this, SLOT(myCurrentIndexChanged(QString)));
 }

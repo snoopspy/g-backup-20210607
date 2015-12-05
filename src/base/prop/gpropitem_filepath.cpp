@@ -5,12 +5,12 @@
 // ----------------------------------------------------------------------------
 // GPropItemFilePath
 // ----------------------------------------------------------------------------
-void GPropItemFilePath::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItemWidget::init(treeWidget, parentItem, object, mpro);
+void GPropItemFilePath::init(GPropItemParam param) {
+  GPropItemWidget::init(param);
   layout_ = new QHBoxLayout;
-  lineEdit_ = new QLineEdit(treeWidget);
-  toolButton_ = new QToolButton(treeWidget);
-  fd_ = new QFileDialog(treeWidget);
+  lineEdit_ = new QLineEdit(param.treeWidget_);
+  toolButton_ = new QToolButton(param.treeWidget_);
+  fd_ = new QFileDialog(param.treeWidget_);
   layout_->setMargin(0);
   lineEdit_->setFrame(false);
   toolButton_->setText("...");

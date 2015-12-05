@@ -5,9 +5,9 @@
 // ----------------------------------------------------------------------------
 // GPropItemEnum
 // ----------------------------------------------------------------------------
-void GPropItemEnum::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItemComboBox::init(treeWidget, parentItem, object, mpro);
-  QMetaEnum menum = mpro.enumerator();
+void GPropItemEnum::init(GPropItemParam param) {
+  GPropItemComboBox::init(param);
+  QMetaEnum menum = param.mpro_.enumerator();
   int count = menum.keyCount();
   for (int i = 0; i < count; i++) {
     comboBox_->addItem(menum.key(i));

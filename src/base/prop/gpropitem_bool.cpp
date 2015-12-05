@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemBool
 // ----------------------------------------------------------------------------
-void GPropItemBool::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItemCheckBox::init(treeWidget, parentItem, object, mpro);
+void GPropItemBool::init(GPropItemParam param) {
+  GPropItemCheckBox::init(param);
   QObject::connect(checkBox_, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
 }
 

@@ -18,10 +18,23 @@
 #include <QTreeWidgetItem>
 
 // ----------------------------------------------------------------------------
+// GPropItemParam
+// ----------------------------------------------------------------------------
+struct GPropItemParam {
+  GPropItemParam(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
+    : treeWidget_(treeWidget), parent_(parent), object_(object), mpro_(mpro) {}
+
+  QTreeWidget* treeWidget_;
+  QTreeWidgetItem* parent_;
+  QObject* object_;
+  QMetaProperty mpro_;
+};
+
+// ----------------------------------------------------------------------------
 // GPropItem
 // ----------------------------------------------------------------------------
 struct GPropItem : public QObject {
-  virtual void init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro);
+  virtual void init(GPropItemParam param);
   virtual void update() = 0;
 
   QTreeWidgetItem* item_{nullptr};

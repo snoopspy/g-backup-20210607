@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
-void GPropItemUnknownType::init(QTreeWidget* treeWidget, QTreeWidgetItem* parentItem, QObject* object, QMetaProperty mpro) {
-  GPropItem::init(treeWidget, parentItem, object, mpro);
+void GPropItemUnknownType::init(GPropItemParam param) {
+  GPropItem::init(param);
   item_->setBackground(1, QBrush(Qt::lightGray));
 }
 
