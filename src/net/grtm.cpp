@@ -1,4 +1,6 @@
 #include <QDebug>
+#include <QProcess>
+#include <QTextStream>
 #include "grtm.h"
 
 // ----------------------------------------------------------------------------
@@ -15,44 +17,50 @@ GRtm::~GRtm() {
 bool GRtm::loadFromSystem() {
   clear();
 
-  char buf[BUFSIZ];
-  const char* command = "route -n";
-
-  FILE* fp = popen(command, "r");
-  if (fp == nullptr) {
-    qWarning() << QString("popen(%s) return nullptr").arg(command);
+  QString command = "cat /proc/net/route";
+  QProcess p;
+  p.start(command);
+  if (!p.waitForFinished()) {
+    qWarning() << QString("waitForFinished(%1) return false").arg(command);
     return false;
   }
+  QList<QByteArray> baList = p.readAll().split('\n');
 
-  while (true)
-  {
-    char* p = fgets(buf, BUFSIZ, fp);
-    if (p == nullptr) break;
-    QString s = buf;
-
-    GRtmEntry entry;
-    static QRegExp regex(
-      /* (1) Destination */ "([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)[ ]+"\
-      /* (2) Gateway     */ "([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)[ ]+"\
-      /* (3) Genmask     */ "([0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+)[ ]+"\
-      /* (X) Flags       */ "[A-Za-z]+[ ]+"\
-      /* (4) Metric      */ "([0-9]+)[ ]+"\
-      /* (X) Ref         */ "[0-9]+[ ]+"\
-      /* (X) Use         */ "[0-9]+[ ]+"\
-      /* (5) Iface       */ "([A-Za-z0-9]+)");
-
-    if (regex.indexIn(s) == -1) continue;
-
-    entry.dst_      = regex.cap(1);
-    entry.mask_     = regex.cap(3);
-    entry.gateway_  = regex.cap(2);
-    entry.intf_     = regex.cap(5);
-    entry.metric_   = regex.cap(4).toInt();
-
-    if (entry.gateway_ == 0xFFFFFFFF) entry.gateway_ = (quint32)0;
-    push_back(entry);
+  bool firstLine = true;
+  QList<QString> fields;
+  foreach (QByteArray ba, baList) {
+    QTextStream ts(ba);
+    if (firstLine) {
+      firstLine = false;
+      while (true) {
+        QString field;
+        ts >> field;
+        if (field == "") break;
+        fields.append(field);
+        qDebug() << field;
+      }
+    } else {
+      GRtmEntry entry;
+      for (int i = 0; i < fields.count(); i++) {
+        QString field = fields.at(i);
+        QString value;
+        ts >> value;
+        if (value == "") break;
+        if (field == "Iface")
+          entry.intf_ = value;
+        else if (field == "Destination")
+          entry.dst_ = ntohl(value.toInt(nullptr, 16));
+        else if (field == "Gateway")
+          entry.gateway_ = ntohl(value.toInt(nullptr, 16));
+        else if (field == "Mask")
+          entry.mask_ = ntohl(value.toInt(nullptr, 16));
+        else if (field == "Metric")
+          entry.metric_ = value.toInt(nullptr, 16);
+      }
+      if (entry.intf_ != "") // if not empty
+        append(entry);
+    }
   }
-  pclose(fp);
 
   return true;
 }
@@ -113,8 +121,8 @@ TEST(GRtm, loadTest) {
 TEST(GRtm, bestTest) {
   GRtm& rtm = GRtm::instance();
   GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
-  EXPECT_NE(entry,nullptr);
-  qDebug() << entry->intf_;
+  EXPECT_NE(entry, nullptr);
+  qDebug() << "best entry for 8.8.8.8 is" << entry->intf_;
 }
 
 #endif // GTEST
