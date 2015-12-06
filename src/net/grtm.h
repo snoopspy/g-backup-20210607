@@ -35,6 +35,7 @@ private:
 public:
   bool loadFromSystem();
   GRtmEntry* getBestEntry(GIp ip);
+  GIp getGateway(QString intf);
 
   static GRtm& instance();
 };

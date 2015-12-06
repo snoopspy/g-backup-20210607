@@ -37,16 +37,16 @@ struct GIp final {
   void clear() { ip_ = 0; }
 
 public:
-  bool isLocalHost() { // 127.*.*.*
+  bool isLocalHost() const { // 127.*.*.*
     quint8 prefix = (ip_ & 0xFF000000) >> 24;
     return prefix == 0x7F;
   }
 
-  bool isBroadcast() { // 255.255.255.255
+  bool isBroadcast() const { // 255.255.255.255
     return ip_ == 0xFFFFFFFF;
   }
 
-  bool isMulticast() { // 224.0.0.0 ~ 239.255.255.255
+  bool isMulticast() const { // 224.0.0.0 ~ 239.255.255.255
     quint8 prefix = (ip_ & 0xFF000000) >> 24;
     return prefix >= 0xE0 && prefix < 0xF0;
   }

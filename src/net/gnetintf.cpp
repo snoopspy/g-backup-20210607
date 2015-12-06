@@ -1,15 +1,16 @@
 #include <QDebug>
-#include "gnetworkinterface.h"
+#include "gnetintf.h"
+#include "grtm.h"
 
 // ----------------------------------------------------------------------------
-// GNetworkInterface
+// GNetInft
 // ----------------------------------------------------------------------------
-GNetworkInterfaces& GNetworkInterface::allInterfaces() {
-  return GNetworkInterfaces::instance();
+GNetIntfs& GNetIntf::all() {
+  return GNetIntfs::instance();
 }
 
 // ----------------------------------------------------------------------------
-// GNetworkInterfaces
+// GNetIntfs
 // ----------------------------------------------------------------------------
 #include <unistd.h>
 #include <net/if.h>
@@ -29,7 +30,7 @@ static GMac getMac(char* name) {
   return res;
 }
 
-GNetworkInterfaces::GNetworkInterfaces() {
+GNetIntfs::GNetIntfs() {
   //
   // Initialize allDevs using pcap API.
   //
@@ -50,7 +51,7 @@ GNetworkInterfaces::GNetworkInterfaces() {
   i = 1;
   while (dev != NULL)
   {
-    GNetworkInterface intf;
+    GNetIntf intf;
 
     intf.index_ = i;
     intf.name_ = dev->name;
@@ -60,18 +61,22 @@ GNetworkInterfaces::GNetworkInterfaces() {
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
       sockaddr* addr;
 
+      // mac_
+      intf.mac_ = getMac(dev->name);
+
       // ip_
       addr = pa->addr;
       if(addr != nullptr && addr->sa_family == AF_INET)
         intf.ip_ = ((struct sockaddr_in*)addr)->sin_addr;
 
-      // subnet_
+      // mask_;
       addr = pa->netmask;
       if(addr != nullptr && addr->sa_family == AF_INET) {
-        intf.subnet_ = ((struct sockaddr_in*)addr)->sin_addr;
-
-      intf.mac_ = getMac(dev->name);
+        intf.mask_ = ((struct sockaddr_in*)addr)->sin_addr;
       }
+
+      // gateway_
+      intf.gateway_ = GRtm::instance().getGateway(intf.name_);
     }
 
     push_back(intf);
@@ -80,7 +85,7 @@ GNetworkInterfaces::GNetworkInterfaces() {
   }
 }
 
-GNetworkInterfaces::~GNetworkInterfaces() {
+GNetIntfs::~GNetIntfs() {
   clear();
 
   //
@@ -93,7 +98,7 @@ GNetworkInterfaces::~GNetworkInterfaces() {
   }
 }
 
-GNetworkInterfaces& GNetworkInterfaces::instance() {
-  static GNetworkInterfaces intfs;
+GNetIntfs& GNetIntfs::instance() {
+  static GNetIntfs intfs;
   return intfs;
 }

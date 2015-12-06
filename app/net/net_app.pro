@@ -1,4 +1,5 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-        netclient \
-	networkinterface
+	enumintf \
+        netclient
+

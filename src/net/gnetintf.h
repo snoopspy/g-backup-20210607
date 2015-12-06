@@ -16,38 +16,38 @@
 #include "net/gmac.h"
 
 // ----------------------------------------------------------------------------
-// GNetworkInterface
+// GNetInft
 // ----------------------------------------------------------------------------
-struct GNetworkInterfaces;
-struct GNetworkInterface {
+struct GNetIntfs;
+struct GNetIntf {
   int index_{-1};
   QString name_;
   QString description_;
   pcap_if_t* dev_{nullptr};
   GMac mac_{GMac::cleanMac()};
   GIp ip_{(quint32)0};
-  GIp subnet_{(quint32)0};
+  GIp mask_{(quint32)0};
   GIp gateway_{(quint32)0};
 
 protected:
-  GIp ip_and_subnet_; // used for isSameLanIP
+  GIp ip_and_mask_; // used for isSameLanIP
 
 public:
-  bool isSameLanIp(GIp ip) { return (ip_and_subnet_) == (ip & subnet_); }
-  GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;    }
-  GIp  getStartIp()        { return (ip_ & subnet_) + 1;                }
-  GIp  getEndIp()          { return (ip_ | ~subnet_);                   }
+  bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
+  GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;  }
+  GIp  getStartIp()        { return (ip_ & mask_) + 1;                }
+  GIp  getEndIp()          { return (ip_ | ~mask_);                   }
 
 public:
-  static GNetworkInterfaces& allInterfaces();
+  static GNetIntfs& all();
 };
 
 // ----------------------------------------------------------------------------
-// GNetworkInterfaces
+// GNetIntfs
 // ----------------------------------------------------------------------------
-struct GNetworkInterfaces : QList<GNetworkInterface> {
-  GNetworkInterfaces();
-  virtual ~GNetworkInterfaces();
+struct GNetIntfs : QList<GNetIntf> {
+  GNetIntfs();
+  virtual ~GNetIntfs();
   pcap_if_t* allDevs_{nullptr};
-  static GNetworkInterfaces& instance();
+  static GNetIntfs& instance();
 };

@@ -24,10 +24,11 @@ bool GRtm::loadFromSystem() {
     qWarning() << QString("waitForFinished(%1) return false").arg(command);
     return false;
   }
-  QList<QByteArray> baList = p.readAll().split('\n');
 
+  QList<QByteArray> baList = p.readAll().split('\n');
   bool firstLine = true;
   QList<QString> fields;
+
   foreach (QByteArray ba, baList) {
     QTextStream ts(ba);
     if (firstLine) {
@@ -37,7 +38,6 @@ bool GRtm::loadFromSystem() {
         ts >> field;
         if (field == "") break;
         fields.append(field);
-        qDebug() << field;
       }
     } else {
       GRtmEntry entry;
@@ -90,6 +90,15 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
   }
 
   return res;
+}
+
+GIp GRtm::getGateway(QString intf) {
+  for (GRtm::iterator it = begin(); it != end(); it++) {
+    GRtmEntry& entry = *it;
+    if (entry.intf_ == intf && entry.gateway_ != 0)
+      return entry.gateway_;
+  }
+  return GIp(quint32(0));
 }
 
 GRtm& GRtm::instance() {

@@ -43,12 +43,12 @@ public:
   bool operator == (const uint8_t* rhs) const { return memcmp(value, rhs,       SIZE) == 0; }
 
 public:
-  void clear()          { *this = cleanMac();               }
+  void clear() { *this = cleanMac(); }
 
 public:
-  bool isClean()        { return *this == cleanMac();       }
-  bool isBroadcast()    { return *this == broadcastMac();   } // FF:FF:FF:FF:FF:FF
-  bool isMulticast()    { return value[0] == 0x01 && value[1] == 0x00 && value[2] == 0x5E && (value[3] & 0x80) == 0x00; } // 01:00:5e:0*
+  bool isClean() const     { return *this == cleanMac();       }
+  bool isBroadcast() const { return *this == broadcastMac();   } // FF:FF:FF:FF:FF:FF
+  bool isMulticast() const { return value[0] == 0x01 && value[1] == 0x00 && value[2] == 0x5E && (value[3] & 0x80) == 0x00; } // 01:00:5e:0*
 
   static GMac  randomMac();
   static GMac& cleanMac();
