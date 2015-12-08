@@ -24,6 +24,6 @@ public:
   QString picture_;
 
 #ifdef QT_GUI_LIB
-  GPropItem* createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) override;
+  GPropItem* createPropItem(GPropItemParam param) override;
 #endif // QT_GUI_LIB
 };

@@ -37,8 +37,8 @@ public:
   virtual bool save(QJsonObject& jo, QMetaProperty mpro);
 
 #ifdef QT_GUI_LIB
-  virtual void createPropItems(QTreeWidgetItem* parent);
-  virtual GPropItem* createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro);
+  virtual GPropItem* createPropItem(GPropItemParam param);
+  virtual void createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
 #endif // QT_GUI_LIB
 
   QSharedPointer<GErr> err{nullptr};

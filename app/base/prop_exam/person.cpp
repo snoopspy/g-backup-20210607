@@ -3,13 +3,13 @@
 
 #ifdef QT_GUI_LIB
 
-GPropItem* Person::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
-  if (QString(mpro.name()) == "picture") {
-    GPropItemFilePath* res = new GPropItemFilePath(GPropItemParam(parent->treeWidget(), parent, object, mpro));
+GPropItem* Person::createPropItem(GPropItemParam param) {
+  if (QString(param.mpro_.name()) == "picture") {
+    GPropItemFilePath* res = new GPropItemFilePath(param);
     res->fd_->setNameFilter("Image files - *.png *.xpm *.jpg (*.png *.xpm *.jpg);;Any files - * (*)");
     return res;
   }
-  return GObj::createPropItem(parent, object, mpro);
+  return GObj::createPropItem(param);
 }
 
 #endif // QT_GUI_LIB

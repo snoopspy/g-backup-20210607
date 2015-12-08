@@ -177,26 +177,11 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 #include "base/prop/gpropitem_unknowntype.h"
 #include "base/prop/gpropitem_variant.h"
 
-void GObj::createPropItems(QTreeWidgetItem* parent) {
-  const QMetaObject* mobj = metaObject();
-  int propCount = mobj->propertyCount();
-  for (int i = 1; i < propCount; i++) { // skip objectName
-    QMetaProperty mpro = mobj->property(i);
-    GPropItem* item = createPropItem(parent, this, mpro);
-    if (item == nullptr) {
-      qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(mpro.typeName(), mpro.name());
-      item = new GPropItemUnknownType(GPropItemParam(parent->treeWidget(), parent, this, mpro));
-    }
-    item->update();
-  }
-}
+GPropItem* GObj::createPropItem(GPropItemParam param) {
+  const char* propName = param.mpro_.name();
+  int userType = param.mpro_.userType();
 
-GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro) {
-  const char* propName = mpro.name();
-  int userType = mpro.userType();
-  GPropItemParam param(parent->treeWidget(), parent, object, mpro);
-
-  if (mpro.isEnumType()) {
+  if (param.mpro_.isEnumType()) {
     return new GPropItemEnum(param);
   }
 
@@ -231,8 +216,26 @@ GPropItem* GObj::createPropItem(QTreeWidgetItem* parent, QObject* object, QMetaP
   if (userType == qMetaTypeId<GObjPtrListPtr>())
     return new GPropItemObjPtrListPtr(param);
 
-  qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(object->metaObject()->className(), propName);
+  qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(param.object_->metaObject()->className(), propName);
   return nullptr;
+}
+
+void GObj::createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object) {
+  const QMetaObject* mobj = metaObject();
+  GPropItemParam param(treeWidget, parent, object, mobj->property(0));
+  GPropItem* rootItem = new GPropItemObjectName(param); // objectName
+
+  param.parent_ = rootItem->item_;
+  int propCount = mobj->propertyCount();
+  for (int i = 1; i < propCount; i++) { // skip objectName
+    param.mpro_ = mobj->property(i);
+    GPropItem* item = createPropItem(param);
+    if (item == nullptr) {
+      qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(param.mpro_.typeName(), param.mpro_.name());
+      item = new GPropItemUnknownType(GPropItemParam(param));
+    }
+    item->update();
+  }
 }
 
 #endif // QT_GUI_LIB

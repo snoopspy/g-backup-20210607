@@ -30,4 +30,3 @@ void GPropItemEnum::myCurrentIndexChanged(int index) {
 }
 
 #endif // QT_GUI_LIB
-
