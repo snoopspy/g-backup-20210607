@@ -54,7 +54,7 @@ void GPropItemObjPtrListPtr::update() {
   for (_GObjPtrList::iterator it = list->begin(); it != list->end(); it++) {
     GObj* childObj = *it;
     GPropItemObjPtrListMgr* mgr = new GPropItemObjPtrListMgr(item_, list, childObj);
-    childObj->createPropItems(item_->treeWidget(), mgr, object_);
+    childObj->createPropItems(item_->treeWidget(), mgr, childObj);
   }
 }
 
