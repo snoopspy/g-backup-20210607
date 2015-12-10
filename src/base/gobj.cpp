@@ -171,7 +171,6 @@ bool GObj::save(QJsonObject& jo, QMetaProperty mpro) {
 #include "base/prop/gpropitem_bool.h"
 #include "base/prop/gpropitem_char.h"
 #include "base/prop/gpropitem_enum.h"
-#include "base/prop/gpropitem_objectname.h"
 #include "base/prop/gpropitem_objptr.h"
 #include "base/prop/gpropitem_objptrlistptr.h"
 #include "base/prop/gpropitem_unknowntype.h"
@@ -183,10 +182,6 @@ GPropItem* GObj::createPropItem(GPropItemParam param) {
 
   if (param.mpro_.isEnumType()) {
     return new GPropItemEnum(param);
-  }
-
-  if ((QString)propName == "objectName") {
-    return new GPropItemObjectName(param);
   }
 
   switch (userType) {
@@ -222,13 +217,9 @@ GPropItem* GObj::createPropItem(GPropItemParam param) {
 
 void GObj::createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object) {
   const QMetaObject* mobj = metaObject();
-  GPropItemParam param(treeWidget, parent, object, mobj->property(0));
-  GPropItem* rootItem = new GPropItemObjectName(param); // objectName
-
-  param.parent_ = rootItem->item_;
   int propCount = mobj->propertyCount();
   for (int i = 1; i < propCount; i++) { // skip objectName
-    param.mpro_ = mobj->property(i);
+    GPropItemParam param(treeWidget, parent, object, mobj->property(i));
     GPropItem* item = createPropItem(param);
     if (item == nullptr) {
       qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(param.mpro_.typeName(), param.mpro_.name());
