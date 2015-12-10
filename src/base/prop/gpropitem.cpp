@@ -17,6 +17,8 @@ GPropItem::GPropItem(GPropItemParam param) {
   item_->setText(0, mpro_.name());
   if (param.parent_ == nullptr)
     param.treeWidget_->addTopLevelItem(item_);
+  item_->setExpanded(true);
+
 }
 
 #endif // QT_GUI_LIB

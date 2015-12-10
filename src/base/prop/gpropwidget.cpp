@@ -40,7 +40,6 @@ void GPropWidget::setObject(GObj* obj) {
   obj_->createPropItems(this, nullptr, obj);
 
   update();
-  expandAll();
 
   if (isFirstSetObject_) {
     isFirstSetObject_ = false;
