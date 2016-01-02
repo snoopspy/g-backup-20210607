@@ -133,8 +133,8 @@ void Widget::stateChanged(QAbstractSocket::SocketState socketState) {
   Q_UNUSED(socketState)
   // ----- gilgil temp 2015.07.14 -----
   ///*
-  QString msg = "[stateChanged] " + QString::number(socketState) + "\r\n";
-  ui->pteRecv->insertPlainText(msg);
+  QString msg = "[stateChanged] " + QString::number(socketState);
+  qDebug() << msg;
   //*/
   // ----------------------------------
   setControl();
