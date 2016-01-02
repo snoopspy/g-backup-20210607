@@ -130,13 +130,10 @@ void Widget::error(QAbstractSocket::SocketError socketError) {
 }
 
 void Widget::stateChanged(QAbstractSocket::SocketState socketState) {
-  Q_UNUSED(socketState)
-  // ----- gilgil temp 2015.07.14 -----
-  ///*
-  QString msg = "[stateChanged] " + QString::number(socketState);
-  qDebug() << msg;
-  //*/
-  // ----------------------------------
+  const QMetaObject& mobj = QAbstractSocket::staticMetaObject;
+  QMetaEnum menum = mobj.enumerator(mobj.indexOfEnumerator("SocketState"));
+  QString key = menum.valueToKey(socketState);
+  qDebug() << "[stateChanged]" << QString::number(socketState) << key;
   setControl();
 }
 
