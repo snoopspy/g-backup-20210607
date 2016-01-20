@@ -10,36 +10,21 @@
 
 #pragma once
 
-#include <QDebug>
-#include <QJsonObject>
-#include <QMetaObject>
-#include <QMetaProperty>
 #include <QObject>
 #include <QSharedPointer>
 #include "gbase.h"
 #include "gerr.h"
-#include "base/prop/gpropitem.h"
+#include "prop/gprop.h"
 
 // ----------------------------------------------------------------------------
 // GObj
 // ----------------------------------------------------------------------------
-struct GObj : QObject {
+struct GObj : QObject, GProp {
   Q_OBJECT
 
 public:
   GObj(QObject* parent = nullptr) : QObject(parent) {}
   ~GObj() override;
-
-  virtual void load(QJsonObject jo);
-  virtual void save(QJsonObject& jo);
-
-  virtual bool load(QJsonObject jo, QMetaProperty mpro);
-  virtual bool save(QJsonObject& jo, QMetaProperty mpro);
-
-#ifdef QT_GUI_LIB
-  virtual GPropItem* createPropItem(GPropItemParam param);
-  virtual void createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
-#endif // QT_GUI_LIB
 
   QSharedPointer<GErr> err{nullptr};
 };

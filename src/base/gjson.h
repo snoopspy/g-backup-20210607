@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <QDebug>
+#include <QDebug> // gilgil temp 2016.10.21
 #include <QJsonObject>
 
 // ----------------------------------------------------------------------------

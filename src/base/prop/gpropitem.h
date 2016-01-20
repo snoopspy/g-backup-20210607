@@ -12,7 +12,7 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QDebug>
+#include <QDebug> // gilgil temp 2016.10.21
 #include <QMetaProperty>
 #include <QJsonObject>
 #include <QTreeWidgetItem>
