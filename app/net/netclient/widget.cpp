@@ -4,7 +4,6 @@
 #include <QDialog>
 #include <GJson>
 #include <GPropWidget>
-#include <GSock>
 
 // ----------------------------------------------------------------------------
 // Widget
@@ -162,7 +161,6 @@ void Widget::on_pbOpen_clicked()
   switch (currentIndex)
   {
     case 0:
-      GSock::makeLocalHostAndPort(&tcpSocket_, option_.tcpClient_.localHost_, option_.tcpClient_.localPort_);
       tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toInt());
       netClient_ = &tcpSocket_;
       break;
