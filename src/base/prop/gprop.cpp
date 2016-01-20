@@ -248,3 +248,41 @@ void GProp::createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QO
 }
 
 #endif // QT_GUI_LIB
+
+// ----------------------------------------------------------------------------
+// GTEST
+// ----------------------------------------------------------------------------
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+struct TestPerson : QObject, GProp {
+  Q_OBJECT
+  Q_PROPERTY(QString name MEMBER name_)
+  Q_PROPERTY(int age MEMBER age_)
+
+public:
+  QString name_{""};
+  int age_{0};
+};
+
+TEST(GProp, loadSaveTest) {
+  TestPerson person;
+  person.name_ = "gilgil";
+  person.age_ = 20;
+
+  QJsonObject jo;
+  person.save(jo);
+
+  TestPerson person2;
+  person2.name_ = "marsaj";
+  person2.age_ = 17;
+
+  person2.load(jo);
+
+  EXPECT_EQ(person2.name_, "gilgil");
+  EXPECT_EQ(person2.age_, 20);
+}
+
+#include "gprop.moc"
+
+#endif // GTEST
