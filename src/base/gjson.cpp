@@ -1,4 +1,5 @@
 #include "gjson.h"
+#include <QDebug>
 #include <QFile>
 #include <QJsonDocument>
 
@@ -73,21 +74,21 @@ const QJsonValue operator >> (const QJsonValue val, QList<int>& intList) {
   return val;
 }
 
-#include "gobj.h"
+#include "prop/gprop.h"
 // ----------------------------------------------------------------------------
 // GObj
 // ----------------------------------------------------------------------------
-QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj) {
+QJsonValueRef operator << (QJsonValueRef ref, const GProp& prop) {
   QJsonObject jo;
-  ((GObj&)obj).propSave(jo);
+  ((GProp&)prop).propSave(jo);
   ref = jo;
   return ref;
 }
 
-const QJsonValue operator >> (const QJsonValue val, GObj& obj) {
+const QJsonValue operator >> (const QJsonValue val, GProp& prop) {
   if (val.isNull()) return val;
   QJsonObject jo = val.toObject();
-  obj.propLoad(jo);
+  prop.propLoad(jo);
   return val;
 }
 

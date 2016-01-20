@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <QDebug> // gilgil temp 2016.10.21
 #include <QJsonObject>
 
 // ----------------------------------------------------------------------------
@@ -30,11 +29,11 @@ QJsonValueRef operator << (QJsonValueRef ref, const QList<int>& intList);
 const QJsonValue operator >> (const QJsonValue val, QList<int>& intList);
 
 // ----------------------------------------------------------------------------
-// GObj
+// GProp
 // ----------------------------------------------------------------------------
-class GObj;
-QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj);
-const QJsonValue operator >> (const QJsonValue val, GObj& obj);
+class GProp;
+QJsonValueRef operator << (QJsonValueRef ref, const GProp& prop);
+const QJsonValue operator >> (const QJsonValue val, GProp& prop);
 
 #ifdef QT_GUI_LIB
 

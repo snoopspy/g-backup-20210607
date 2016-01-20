@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------
 struct GPropWidget : public QTreeWidget {
   GPropWidget(QWidget *parent = 0);
-  GPropWidget(GObj* obj);
+  GPropWidget(QObject* object);
   ~GPropWidget() override;
 
 protected:
@@ -28,12 +28,12 @@ protected:
 
 public:
   QObject* object();
-  void setObject(GObj* obj);
+  void setObject(QObject* object);
   void update();
 
 protected:
   bool isFirstSetObject_{true};
-  GObj* obj_{nullptr};
+  QObject* object_{nullptr};
 };
 
 #endif // QT_GUI_LIB

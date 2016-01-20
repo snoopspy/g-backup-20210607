@@ -11,9 +11,9 @@ GPropWidget::GPropWidget(QWidget *parent) : QTreeWidget(parent) {
   init();
 }
 
-GPropWidget::GPropWidget(GObj* obj) : QTreeWidget(nullptr) {
+GPropWidget::GPropWidget(QObject* object) : QTreeWidget(nullptr) {
   init();
-  setObject(obj);
+  setObject(object);
 }
 
 GPropWidget::~GPropWidget() {
@@ -25,19 +25,24 @@ void GPropWidget::init() {
   this->setHeaderLabels(QStringList() << "property" << "value");
   QLayout* layout = new QGridLayout(this);
   layout->setMargin(0);
-  obj_ = nullptr;
+  object_ = nullptr;
 }
 
 QObject* GPropWidget::object() {
-  return obj_;
+  return object_;
 }
 
-void GPropWidget::setObject(GObj* obj) {
-  if (obj == obj_) return;
+void GPropWidget::setObject(QObject* object) {
+  if (object == object_) return;
   clear();
-  obj_ = obj;
+  object_ = object;
 
-  obj_->propCreateItems(this, nullptr, obj);
+  GProp* prop = dynamic_cast<GProp*>(object_);
+  if (prop == nullptr) {
+    qWarning() << "prop is nullptr. object must be descendant of both QObject and GProp";
+    return;
+  }
+  prop->propCreateItems(this, nullptr, object_);
 
   update();
 
