@@ -54,7 +54,7 @@ void GPropItemObjPtrListPtr::update() {
   for (_GObjPtrList::iterator it = list->begin(); it != list->end(); it++) {
     GObj* childObj = *it;
     GPropItemObjPtrListMgr* mgr = new GPropItemObjPtrListMgr(item_, list, childObj);
-    childObj->createPropItems(item_->treeWidget(), mgr, childObj);
+    childObj->propCreateItems(item_->treeWidget(), mgr, childObj);
   }
 }
 
@@ -67,7 +67,7 @@ void GPropItemObjPtrListPtr::myClicked(bool checked) {
   GObj* childObj = list->addObj();
   Q_ASSERT(childObj != nullptr);
   GPropItemObjPtrListMgr* mgr = new GPropItemObjPtrListMgr(item_, list, childObj);
-  childObj->createPropItems(item_->treeWidget(), mgr, childObj);
+  childObj->propCreateItems(item_->treeWidget(), mgr, childObj);
 }
 
 #include "gpropitem_objptrlistptr.moc"

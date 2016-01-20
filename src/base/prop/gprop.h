@@ -20,15 +20,15 @@
 // GProp
 // ----------------------------------------------------------------------------
 struct GProp {
-  virtual void load(QJsonObject jo);
-  virtual void save(QJsonObject& jo);
+  virtual void propLoad(QJsonObject jo);
+  virtual void propSave(QJsonObject& jo);
 
-  virtual bool load(QJsonObject jo, QMetaProperty mpro);
-  virtual bool save(QJsonObject& jo, QMetaProperty mpro);
+  virtual bool propLoad(QJsonObject jo, QMetaProperty mpro);
+  virtual bool propSave(QJsonObject& jo, QMetaProperty mpro);
 
 #ifdef QT_GUI_LIB
-  virtual GPropItem* createPropItem(GPropItemParam param);
-  virtual void createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
+  virtual GPropItem* propCreatePItem(GPropItemParam param);
+  virtual void propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
 #endif // QT_GUI_LIB
 
 };

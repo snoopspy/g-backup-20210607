@@ -79,7 +79,7 @@ const QJsonValue operator >> (const QJsonValue val, QList<int>& intList) {
 // ----------------------------------------------------------------------------
 QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj) {
   QJsonObject jo;
-  ((GObj&)obj).save(jo);
+  ((GObj&)obj).propSave(jo);
   ref = jo;
   return ref;
 }
@@ -87,7 +87,7 @@ QJsonValueRef operator << (QJsonValueRef ref, const GObj& obj) {
 const QJsonValue operator >> (const QJsonValue val, GObj& obj) {
   if (val.isNull()) return val;
   QJsonObject jo = val.toObject();
-  obj.load(jo);
+  obj.propLoad(jo);
   return val;
 }
 

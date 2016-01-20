@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 // GProp
 // ----------------------------------------------------------------------------
-void GProp::load(QJsonObject jo) {
+void GProp::propLoad(QJsonObject jo) {
   QObject* object = dynamic_cast<QObject*>(this);
   if (object == nullptr) {
     qWarning() << "object is null";
@@ -14,11 +14,11 @@ void GProp::load(QJsonObject jo) {
   int count = mobj->propertyCount();
   for (int i = 0; i < count; i++) {
     QMetaProperty mpro = mobj->property(i);
-    load(jo, mpro);
+    propLoad(jo, mpro);
   }
 }
 
-void GProp::save(QJsonObject& jo) {
+void GProp::propSave(QJsonObject& jo) {
   QObject* object = dynamic_cast<QObject*>(this);
   if (object == nullptr) {
     qWarning() << "object is null";
@@ -28,11 +28,11 @@ void GProp::save(QJsonObject& jo) {
   int count = mobj->propertyCount();
   for (int i = 0; i < count; i++) {
     QMetaProperty mpro = mobj->property(i);
-    save(jo, mpro);
+    propSave(jo, mpro);
   }
 }
 
-bool GProp::load(QJsonObject jo, QMetaProperty mpro) {
+bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
   QObject* object = dynamic_cast<QObject*>(this);
   if (object == nullptr) {
     qWarning() << "object is null";
@@ -85,7 +85,7 @@ bool GProp::load(QJsonObject jo, QMetaProperty mpro) {
   if (userType == qMetaTypeId<GObjPtr>()) {
     GObj* obj = qvariant_cast<GObj*>(object->property(propName));
     Q_ASSERT(obj != nullptr);
-    obj->load(jo[propName].toObject());
+    obj->propLoad(jo[propName].toObject());
     return true;
   }
 
@@ -96,18 +96,18 @@ bool GProp::load(QJsonObject jo, QMetaProperty mpro) {
     foreach (QJsonValue value, array) {
       QJsonObject childJo = value.toObject();
       GObj* childObj = list->addObj();
-      childObj->load(childJo);
+      childObj->propLoad(childJo);
     }
     return true;
   }
 
   if (!res) {
-    qWarning() << QString("%1::load(%2, %3) return false").arg(object->metaObject()->className(), propName, variant.toString());
+    qWarning() << QString("%1::propLoad(%2, %3) return false").arg(object->metaObject()->className(), propName, variant.toString());
   }
   return res;
 }
 
-bool GProp::save(QJsonObject& jo, QMetaProperty mpro) {
+bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
   QObject* object = dynamic_cast<QObject*>(this);
   if (object == nullptr) {
     qWarning() << "object is null";
@@ -160,7 +160,7 @@ bool GProp::save(QJsonObject& jo, QMetaProperty mpro) {
     GObj* obj = qvariant_cast<GObj*>(variant);
     Q_ASSERT(obj != nullptr);
     QJsonObject childJo;
-    obj->save(childJo);
+    obj->propSave(childJo);
     jo[propName] = childJo;
     return true;
   }
@@ -172,29 +172,29 @@ bool GProp::save(QJsonObject& jo, QMetaProperty mpro) {
     for (_GObjPtrList::iterator it = list->begin(); it != list->end(); it++) {
       QJsonObject childJo;
       GObj* childObj = *it;
-      childObj->save(childJo);
+      childObj->propSave(childJo);
       array.append(QJsonValue(childJo));
     }
     jo[propName] = array;
     return true;
   }
 
-  qWarning() << QString("%1::save(%2, %3) return false").arg(object->metaObject()->className(), propName, variant.toString());
+  qWarning() << QString("%1::propSave(%2, %3) return false").arg(object->metaObject()->className(), propName, variant.toString());
   return false;
 }
 
 
 #ifdef QT_GUI_LIB
 
-#include "base/prop/gpropitem_bool.h"
-#include "base/prop/gpropitem_char.h"
-#include "base/prop/gpropitem_enum.h"
-#include "base/prop/gpropitem_objptr.h"
-#include "base/prop/gpropitem_objptrlistptr.h"
-#include "base/prop/gpropitem_unknowntype.h"
-#include "base/prop/gpropitem_variant.h"
+#include "gpropitem_bool.h"
+#include "gpropitem_char.h"
+#include "gpropitem_enum.h"
+#include "gpropitem_objptr.h"
+#include "gpropitem_objptrlistptr.h"
+#include "gpropitem_unknowntype.h"
+#include "gpropitem_variant.h"
 
-GPropItem* GProp::createPropItem(GPropItemParam param) {
+GPropItem* GProp::propCreatePItem(GPropItemParam param) {
   const char* propName = param.mpro_.name();
   int userType = param.mpro_.userType();
 
@@ -233,12 +233,12 @@ GPropItem* GProp::createPropItem(GPropItemParam param) {
   return nullptr;
 }
 
-void GProp::createPropItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object) {
+void GProp::propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object) {
   const QMetaObject* mobj = object->metaObject();
   int propCount = mobj->propertyCount();
   for (int i = 1; i < propCount; i++) { // skip objectName
     GPropItemParam param(treeWidget, parent, object, mobj->property(i));
-    GPropItem* item = createPropItem(param);
+    GPropItem* item = propCreatePItem(param);
     if (item == nullptr) {
       qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(param.mpro_.typeName(), param.mpro_.name());
       item = new GPropItemUnknownType(GPropItemParam(param));
@@ -271,13 +271,13 @@ TEST(GProp, loadSaveTest) {
   person.age_ = 20;
 
   QJsonObject jo;
-  person.save(jo);
+  person.propSave(jo);
 
   TestPerson person2;
   person2.name_ = "marsaj";
   person2.age_ = 17;
 
-  person2.load(jo);
+  person2.propLoad(jo);
 
   EXPECT_EQ(person2.name_, "gilgil");
   EXPECT_EQ(person2.age_, 20);

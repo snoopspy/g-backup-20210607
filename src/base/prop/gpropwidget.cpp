@@ -37,7 +37,7 @@ void GPropWidget::setObject(GObj* obj) {
   clear();
   obj_ = obj;
 
-  obj_->createPropItems(this, nullptr, obj);
+  obj_->propCreateItems(this, nullptr, obj);
 
   update();
 
