@@ -11,21 +11,19 @@ int main(int argc, char *argv[]) {
   GApp::init();
 
   Dept dept;
-  GPropWidget widget(&dept);
+  GPropWidget propWidget(&dept);
 
   QJsonObject jo = GJson::loadFromFile();
 
   jo["dept"] >> dept;
-  jo["rect"] >> GJson::rect(&widget);
-  jo["sizes"] >> GJson::headerSizes(&widget);
+  jo["propWidget"] >> propWidget;
 
-  widget.update();
-  widget.show();
+  propWidget.update();
+  propWidget.show();
   int res = a.exec();
 
   jo["dept"] << dept;
-  jo["rect"] << GJson::rect(&widget);
-  jo["sizes"] << GJson::headerSizes(&widget);
+  jo["propWidget"] << propWidget;
 
   GJson::saveToFile(jo);
 

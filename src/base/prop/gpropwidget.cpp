@@ -1,8 +1,10 @@
 #ifdef QT_GUI_LIB
 
+#include "gpropwidget.h"
+
 #include <QGridLayout>
 #include <QHeaderView>
-#include "gpropwidget.h"
+#include "base/gjson.h"
 
 // ----------------------------------------------------------------------------
 // GPropWidget
@@ -59,6 +61,16 @@ void GPropWidget::update() {
     if (item != nullptr)
       item->update();
   }
+}
+
+void GPropWidget::propLoad(QJsonObject jo) {
+  jo["rect"] >> GJson::rect(this);
+  jo["sizes"] >> GJson::headerSizes(this);
+}
+
+void GPropWidget::propSave(QJsonObject& jo) {
+  jo["rect"] << GJson::rect(this);
+  jo["sizes"] << GJson::headerSizes(this);
 }
 
 #endif // QT_GUI_LIB

@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropWidget
 // ----------------------------------------------------------------------------
-struct GPropWidget : public QTreeWidget {
+struct GPropWidget : public QTreeWidget, GProp {
   GPropWidget(QWidget *parent = 0);
   GPropWidget(QObject* object);
   ~GPropWidget() override;
@@ -34,6 +34,9 @@ public:
 protected:
   bool isFirstSetObject_{true};
   QObject* object_{nullptr};
+
+  void propLoad(QJsonObject jo) override;
+  void propSave(QJsonObject& jo) override;
 };
 
 #endif // QT_GUI_LIB
