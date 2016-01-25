@@ -194,7 +194,7 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
 #include "gpropitem_unknowntype.h"
 #include "gpropitem_variant.h"
 
-GPropItem* GProp::propCreatePItem(GPropItemParam param) {
+GPropItem* GProp::propCreateItem(GPropItemParam param) {
   const char* propName = param.mpro_.name();
   int userType = param.mpro_.userType();
 
@@ -238,7 +238,7 @@ void GProp::propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QO
   int propCount = mobj->propertyCount();
   for (int i = 1; i < propCount; i++) { // skip objectName
     GPropItemParam param(treeWidget, parent, object, mobj->property(i));
-    GPropItem* item = propCreatePItem(param);
+    GPropItem* item = propCreateItem(param);
     if (item == nullptr) {
       qWarning() << QString("item is nullptr typeName='%1' name='%2'").arg(param.mpro_.typeName(), param.mpro_.name());
       item = new GPropItemUnknownType(GPropItemParam(param));

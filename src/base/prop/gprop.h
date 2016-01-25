@@ -27,7 +27,7 @@ struct GProp {
   virtual bool propSave(QJsonObject& jo, QMetaProperty mpro);
 
 #ifdef QT_GUI_LIB
-  virtual GPropItem* propCreatePItem(GPropItemParam param);
+  virtual GPropItem* propCreateItem(GPropItemParam param);
   virtual void propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
 #endif // QT_GUI_LIB
 
