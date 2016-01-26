@@ -247,6 +247,19 @@ void GProp::propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QO
   }
 }
 
+#include <QDialog>
+#include <QHBoxLayout>
+#include "base/prop/gpropwidget.h"
+void GProp::showDialog(QObject* object) {
+  QDialog dialog;
+  QHBoxLayout* layout = new QHBoxLayout(&dialog);
+  GPropWidget* widget = new GPropWidget(&dialog);
+  widget->setObject(object);
+  layout->addWidget(widget);
+  dialog.setLayout(layout);
+  dialog.exec();
+}
+
 #endif // QT_GUI_LIB
 
 // ----------------------------------------------------------------------------

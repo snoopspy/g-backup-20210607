@@ -146,13 +146,7 @@ void Widget::readyRead() {
 }
 
 void Widget::showOption(NetClient* netClient) {
-  QDialog* dialog = new QDialog(this);
-  QHBoxLayout* layout = new QHBoxLayout(dialog);
-  GPropWidget* widget = new GPropWidget(dialog);
-  widget->setObject(netClient);
-  layout->addWidget(widget);
-  dialog->setLayout(layout);
-  dialog->exec();
+  GProp::showDialog(netClient);
 }
 
 void Widget::on_pbOpen_clicked()
