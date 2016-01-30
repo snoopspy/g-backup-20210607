@@ -25,9 +25,9 @@ struct GNetIntf {
   QString description_;
   pcap_if_t* dev_{nullptr};
   GMac mac_{GMac::cleanMac()};
-  GIp ip_{(quint32)0};
-  GIp mask_{(quint32)0};
-  GIp gateway_{(quint32)0};
+  GIp ip_{(uint32_t)0};
+  GIp mask_{(uint32_t)0};
+  GIp gateway_{(uint32_t)0};
 
 protected:
   GIp ip_and_mask_; // used for isSameLanIP

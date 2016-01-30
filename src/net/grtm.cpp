@@ -98,7 +98,7 @@ GIp GRtm::getGateway(QString intf) {
     if (entry.intf_ == intf && entry.gateway_ != 0)
       return entry.gateway_;
   }
-  return GIp(quint32(0));
+  return GIp(uint32_t(0));
 }
 
 GRtm& GRtm::instance() {

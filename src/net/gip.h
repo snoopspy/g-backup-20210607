@@ -19,17 +19,17 @@
 struct GIp final {
   GIp() {}
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
-  GIp(const quint32 rhs) : ip_(rhs) {}
+  GIp(const uint32_t rhs) : ip_(rhs) {}
   GIp(const char* rhs) { operator =(rhs); }
   GIp(const QString& rhs) { operator =(rhs); }
   GIp(const struct in_addr& rhs) { operator =(rhs); }
 
-  /*explicit*/ operator quint32() const { return ip_; } // default operator
+  /*explicit*/ operator uint32_t() const { return ip_; } // default operator
   explicit operator const char*() const { return qPrintable((QString)*this); }
   explicit operator QString() const;
 
   GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp& operator = (const quint32 rhs) { ip_ = rhs; return *this; }
+  GIp& operator = (const uint32_t rhs) { ip_ = rhs; return *this; }
   GIp& operator = (const char* rhs);
   GIp& operator = (const QString& rhs) { *this = qPrintable(rhs); return *this; }
   GIp& operator = (const struct in_addr& rhs) {  ip_ = ntohl(rhs.s_addr);  return *this; }
@@ -52,5 +52,5 @@ public:
   }
 
 protected:
-  quint32 ip_;
+  uint32_t ip_;
 };
