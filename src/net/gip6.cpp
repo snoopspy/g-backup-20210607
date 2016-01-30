@@ -69,7 +69,7 @@ TEST(GIp6, assignTest) {
 TEST(GIp6, operatorTest) {
   GIp6 ip6{"::1"};
 
-  const quint8* ui = (const quint8*)ip6; // operator const quint8*()
+  const uint8_t* ui = (const uint8_t*)ip6; // operator const uint8_t*()
   GIp6::Addr temp;
   for (int i = 0; i < GIp6::SIZE; i++)
     temp[i] = *ui++;

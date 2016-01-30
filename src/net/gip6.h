@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 struct GIp6 final {
   const static int SIZE = 16;
-  typedef quint8 Addr[SIZE];
+  typedef uint8_t Addr[SIZE];
 
   GIp6() {}
   GIp6(const GIp6& rhs) { memcpy(ip6_, rhs.ip6_, SIZE); }
@@ -35,7 +35,7 @@ struct GIp6 final {
 
   bool operator ==(const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) == 0; }
 
-  explicit operator const quint8*() const { return ip6_; }
+  explicit operator const uint8_t*() const { return ip6_; }
   explicit operator const char*() const { return qPrintable((QString)*this); }
   explicit operator QString() const;
 
