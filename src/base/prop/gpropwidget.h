@@ -23,11 +23,9 @@ struct GPropWidget : public QTreeWidget, GProp {
   GPropWidget(QObject* object);
   ~GPropWidget() override;
 
-protected:
-  void init();
-
 public:
   QObject* object();
+  void init();
   void setObject(QObject* object);
   void update();
 

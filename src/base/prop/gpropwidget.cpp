@@ -21,6 +21,10 @@ GPropWidget::GPropWidget(QObject* object) : QTreeWidget(nullptr) {
 GPropWidget::~GPropWidget() {
 }
 
+QObject* GPropWidget::object() {
+  return object_;
+}
+
 void GPropWidget::init() {
   this->setIndentation(12);
   this->setColumnCount(2);
@@ -28,10 +32,6 @@ void GPropWidget::init() {
   QLayout* layout = new QGridLayout(this);
   layout->setMargin(0);
   object_ = nullptr;
-}
-
-QObject* GPropWidget::object() {
-  return object_;
 }
 
 void GPropWidget::setObject(QObject* object) {
