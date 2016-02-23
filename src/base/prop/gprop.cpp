@@ -80,6 +80,15 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
         res = object->setProperty(propName, QVariant::fromValue<QString>(s));
         break;
       }
+
+    case QMetaType::QStringList: {
+          QJsonArray array = jo[propName].toArray();
+          QStringList sl;
+          for (int i = 0; i < array.size(); i++)
+            sl.append(array.at(i).toString());
+          res = object->setProperty(propName, sl);
+          break;
+        }
   }
 
   if (userType == qMetaTypeId<GObjPtr>()) {
@@ -154,6 +163,15 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
          jo[propName] = s;
          return true;
        }
+
+    case QMetaType::QStringList: {
+        QStringList sl = variant.toStringList();
+        QJsonArray array;
+        for (int i = 0; i < sl.size(); i++)
+          array.append(QJsonValue(sl.at(i)));
+        jo[propName] = array;
+        return true;
+      }
   }
 
   if (userType == qMetaTypeId<GObjPtr>()) {
