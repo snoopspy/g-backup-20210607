@@ -209,6 +209,7 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
 #include "gpropitem_enum.h"
 #include "gpropitem_objptr.h"
 #include "gpropitem_objptrlistptr.h"
+#include "gpropitem_stringlist.h"
 #include "gpropitem_unknowntype.h"
 #include "gpropitem_variant.h"
 
@@ -240,6 +241,9 @@ GPropItem* GProp::propCreateItem(GPropItemParam param) {
     case QMetaType::UShort:
       return new GPropItemVariant(param);
   }
+
+  if (userType == QMetaType::QStringList)
+    return new GPropItemStringList(param);
 
   if (userType == qMetaTypeId<GObjPtr>())
     return new GPropItemObjPtr(param);
