@@ -10,9 +10,9 @@ GPropItemPlainTextEdit_::GPropItemPlainTextEdit_(QWidget *parent, GPropItemPlain
 }
 
 void GPropItemPlainTextEdit_::focusOutEvent(QFocusEvent * e) {
-  Q_UNUSED(e)
   qDebug() << "focusOutEvent"; // gilgil temp 2016.04.06
   emit editingFinished();
+  QPlainTextEdit::focusOutEvent(e);
 }
 
 // ----------------------------------------------------------------------------
