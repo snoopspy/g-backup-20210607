@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 SUBDIRS += \
 	enumintf \
-        netclient
+        netclient \
+        netserver
 
