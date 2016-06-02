@@ -9,14 +9,14 @@ GPcap::~GPcap() {
 
 bool GPcap::doOpen() {
   if (pcap_ != nullptr) {
-    SET_ERR(GStdErr(GErr::VALUE_IS_NOT_NULL, "pcap is not null"));
+    SET_ERR(GErr(GErr::VALUE_IS_NOT_NULL, "pcap is not null"));
     return false;
   }
 
   char errBuf[PCAP_ERRBUF_SIZE];
   pcap_ = pcap_open_live(qPrintable(dev_), snapLen_, flags_, readTimeout_, errBuf);
   if (pcap_ == nullptr) {
-    SET_ERR(GStdErr(GErr::RETURN_NULL, errBuf));
+    SET_ERR(GErr(GErr::RETURN_NULL, errBuf));
     return false;
   }
 
@@ -57,11 +57,11 @@ GCapture::Result GPcap::read(GPacket* packet) {
   Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
-      SET_ERR(GStdErr(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))));
+      SET_ERR(GErr(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))));
       res = Eof;
       break;
     case -1: // if an error occurred
-      SET_ERR(GStdErr(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_))));
+      SET_ERR(GErr(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_))));
       res = Fail;
       break;
     case 0 : // if a timeout occured
@@ -83,7 +83,7 @@ GCapture::Result GPcap::write(GPacket* packet) {
 
 GCapture::Result GPcap::relay(GPacket* packet) {
   (void)packet;
-  SET_ERR(GStdErr(GErr::NOT_SUPPORTED, "not supported"));
+  SET_ERR(GErr(GErr::NOT_SUPPORTED, "not supported"));
   return Fail;
 }
 
@@ -98,12 +98,12 @@ bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
     uNetMask = 0xFFFFFFFF;
   if (pcap_compile(pcap_, &code, qPrintable(filter_), 1, uNetMask) < 0)
   {
-    SET_ERR(GStdErr(GErr::UNKNOWN, QString("error in pcap_compile(%1)").arg(pcap_geterr(pcap_))));
+    SET_ERR(GErr(GErr::UNKNOWN, QString("error in pcap_compile(%1)").arg(pcap_geterr(pcap_))));
     return false;
   }
   if (pcap_setfilter(pcap_, &code) < 0)
   {
-    SET_ERR(GStdErr(GErr::UNKNOWN, QString("error in pcap_setfilter(%1)").arg(pcap_geterr(pcap_))));
+    SET_ERR(GErr(GErr::UNKNOWN, QString("error in pcap_setfilter(%1)").arg(pcap_geterr(pcap_))));
     return false;
   }
   return true;

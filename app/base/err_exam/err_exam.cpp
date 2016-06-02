@@ -9,22 +9,22 @@ struct Obj {
     return err_;
   }
 private:
-  GStdErr err_ { GErr::FAIL, "NOT_SUPPORTED in Obj class" };
+  GErr err_ { GErr::FAIL, "NOT_SUPPORTED in Obj class" };
 };
 
 int main() {
   {
-    GStdErr err;
+    GErr err;
     qDebug() << err << endl;
   }
 
   {
-    GStdErr err{ GErr::NOT_SUPPORTED };
+    GErr err{ GErr::NOT_SUPPORTED };
     qDebug() << err << endl;
   }
 
   {
-    GStdErr err { GErr::NOT_SUPPORTED, "NOT_SUPPORTED" };
+    GErr err { GErr::NOT_SUPPORTED, "NOT_SUPPORTED" };
     qDebug() << err << endl;
   }
 
