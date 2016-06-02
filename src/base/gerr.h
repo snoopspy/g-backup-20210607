@@ -38,56 +38,33 @@ struct GErr {
     NET_CATEGORY = 2000
   };
 
+  GErr() : code_(OK) {}
+  GErr(int code) : code_(code) {}
+  GErr(int code, QString msg) : code_(code), msg_(msg) {}
   virtual ~GErr() {}
-  virtual const char* name() = 0;
-  virtual int code() = 0;
-  virtual QString msg() = 0;
+
+  virtual const char* name() { return "Err"; }
+  virtual int code() { return code_; }
+  virtual QString msg() { return msg_; }
+
+public: // protected: // gilgil temp 2016.06.02
+  int code_;
+  QString msg_;
 };
 
-// ----- gilgil temp 2015.10.28 -----
-/*
-std::ostream& operator << (std::ostream& os, GErr& err);
-std::ostream& operator << (std::ostream& os, GErr&& err);
-std::ostream& operator << (std::ostream& os, GErr* err);
-*/
 QDebug operator << (QDebug os, GErr& err);
 QDebug operator << (QDebug os, GErr&& err);
 QDebug operator << (QDebug os, GErr* err);
 QDebug operator << (QDebug os, QSharedPointer<GErr> err);
-// ----------------------------------
 
 // ----------------------------------------------------------------------------
 // GLastErr
 // ----------------------------------------------------------------------------
-struct GLastErr : GErr {
-  GLastErr() : code_(errno) {}
+struct GLastErr : public GErr {
+  GLastErr() {
+    code_ = errno;
+    msg_ = strerror(code_);
+  }
 
   const char* name() override { return "LastErr"; }
-  int code() override { return code_; }
-  QString msg() override { return strerror(code_); }
-
-  void setCode(int code) { code_ = code; }
-
-protected:
-  int code_;
-};
-
-// ----------------------------------------------------------------------------
-// GStdErr
-// ----------------------------------------------------------------------------
-struct GStdErr : GErr {
-  GStdErr() : code_(OK) {}
-  GStdErr(int code) : code_(code) {}
-  GStdErr(int code, QString msg) : code_(code), msg_(msg) {}
-
-  const char* name() override { return "StdErr"; }
-  int code() override { return code_; }
-  QString msg() override { return msg_; }
-
-  void setCode(int code) { code_ = code; }
-  void setMsg(QString msg) { msg_ = msg; }
-
-protected:
-  int code_;
-  QString msg_;
 };

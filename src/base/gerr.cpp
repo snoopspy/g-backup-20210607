@@ -43,9 +43,9 @@ TEST(GErr, lastErrTest) {
   }
 }
 
-TEST(GErr, stdErrTest) {
-  GStdErr stdErr(GErr::NOT_SUPPORTED, "not supported");
-  qDebug() << stdErr;
+TEST(GErr, errTest) {
+  GErr err(GErr::NOT_SUPPORTED, "not supported");
+  qDebug() << err;
 }
 
 TEST(GErr, nullTest) {
