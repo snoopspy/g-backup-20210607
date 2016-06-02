@@ -68,3 +68,4 @@ struct GLastErr : public GErr {
 
   const char* name() override { return "LastErr"; }
 };
+

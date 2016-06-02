@@ -45,19 +45,19 @@ bool GCapture::doClose() {
 
 GCapture::Result GCapture::read(GPacket* packet) {
   (void)packet;
-  SET_ERR(GErr(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call"));
+  SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return Fail;
 }
 
 GCapture::Result GCapture::write(GPacket* packet) {
   (void)packet;
-  SET_ERR(GErr(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call"));
+  SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return Fail;
 }
 
 GCapture::Result GCapture::relay(GPacket* packet) {
   (void)packet;
-  SET_ERR(GErr(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call"));
+  SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return Fail;
 }
 

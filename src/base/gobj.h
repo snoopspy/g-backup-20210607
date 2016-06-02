@@ -68,9 +68,9 @@ Q_DECLARE_METATYPE(GObjPtrVectorPtr)
 // ----------------------------------------------------------------------------
 // SET_ERR
 // ----------------------------------------------------------------------------
-#define SET_ERR(VALUE) { \
+#define SET_ERR(CODE, MSG) { \
   if (err == nullptr) { \
-    err = QSharedPointer<GErr>(new VALUE); \
+    err = QSharedPointer<GErr>(new GErr((CODE), (MSG))); \
     qWarning() << err; \
   } \
 }
