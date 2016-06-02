@@ -3,7 +3,6 @@
 // ----------------------------------------------------------------------------
 // GErr
 // ----------------------------------------------------------------------------
-// std::ostream& operator << (std::ostream& os, GErr& err) { // gilgil temp 2015.10.28
 QDebug operator << (QDebug os, GErr& err) {
   os
     << err.name() << ":"
@@ -12,12 +11,10 @@ QDebug operator << (QDebug os, GErr& err) {
   return os;
 }
 
-// std::ostream& operator << (std::ostream& os, GErr&& err) { // gilgil temp 2015.10.28
 QDebug operator << (QDebug os, GErr&& err) {
   return operator << (os, err);
 }
 
-// std::ostream& operator << (QDebug &os, GErr* err) { // gilgil temp 2015.10.28
 QDebug operator << (QDebug os, GErr* err) {
   if (err == nullptr) {
     os << "err is null";
