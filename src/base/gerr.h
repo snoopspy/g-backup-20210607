@@ -11,10 +11,10 @@
 #pragma once
 
 #include <errno.h>
-//#include <ostream>
 #include <QDebug>
 #include <QSharedPointer>
 #include <QString>
+#include "gerrcategory.h"
 
 // ----------------------------------------------------------------------------
 // GErr
@@ -23,7 +23,7 @@ struct GErr {
   enum {
     OK = 0,
     FAIL = -1,
-    UNKNOWN = 1000,
+    UNKNOWN = GErrCategory::BASE,
     NOT_SUPPORTED,
     NOT_OPENED_STATE,
     NOT_CLOSED_STATE,
@@ -34,9 +34,6 @@ struct GErr {
     RETURN_NOT_NULL,
   };
 
-  enum {
-    NET_CATEGORY = 2000
-  };
 
   GErr() : code_(OK) {}
   GErr(int code) : code_(code) {}
@@ -47,7 +44,7 @@ struct GErr {
   virtual int code() { return code_; }
   virtual QString msg() { return msg_; }
 
-public: // protected: // gilgil temp 2016.06.02
+protected:
   int code_;
   QString msg_;
 };

@@ -25,7 +25,7 @@ struct GPcap : GCapture {
 
 public:
   enum {
-    ERROR_IN_PCAP_NEXT_EX,
+    ERROR_IN_PCAP_NEXT_EX = GErrCategory::PCAP
   };
 
 public:
