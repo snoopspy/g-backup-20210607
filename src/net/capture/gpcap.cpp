@@ -81,6 +81,13 @@ GCapture::Result GPcap::write(GPacket* packet) {
   return Fail;
 }
 
+GCapture::Result GPcap::write(uint8_t* buf, size_t len) {
+  int i = pcap_sendpacket(pcap_, (const u_char*)buf, (int)len);
+  if (i == 0) return Ok;
+  qWarning() << QString("pcap_sendpacket return %1").arg(i);
+  return Fail;
+}
+
 GCapture::Result GPcap::relay(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::NOT_SUPPORTED, "not supported");

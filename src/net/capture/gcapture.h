@@ -64,6 +64,7 @@ protected:
 public:
   virtual Result read(GPacket* packet);
   virtual Result write(GPacket* packet);
+  virtual Result write(uint8_t* buf, size_t len);
   virtual Result relay(GPacket* packet);
 
   virtual PathType pathType() { return OutOfPath; }
