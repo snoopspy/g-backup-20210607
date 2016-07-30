@@ -22,15 +22,15 @@ public:
   static const int SIZE = 6;
 
 protected:
-  uint8_t value[SIZE];
+  u_char value[SIZE];
 
 public:
-  GMac()                     {                                   }
-  GMac(const uint8_t* value) { memcpy(this->value, value, SIZE); }
+  GMac() {}
+  GMac(const u_char* value) { memcpy(this->value, value, SIZE); }
   GMac(const QString s);
-  GMac(const char* s)        { *this = QString(s);               }
+  GMac(const char* s) { *this = QString(s); }
 
-  operator uint8_t*() const  { return (uint8_t*)value;           } // cast operator
+  operator u_char*() const { return (u_char*)value; }
   explicit operator const char*() const { return qPrintable((QString)*this); }
   explicit operator QString() const;
 
@@ -40,7 +40,7 @@ public:
   bool operator >  (const GMac& rhs) const   { return memcmp(value, rhs.value, SIZE) >  0; }
   bool operator <= (const GMac& rhs) const   { return memcmp(value, rhs.value, SIZE) <= 0; }
   bool operator >= (const GMac& rhs) const   { return memcmp(value, rhs.value, SIZE) >= 0; }
-  bool operator == (const uint8_t* rhs) const { return memcmp(value, rhs,       SIZE) == 0; }
+  bool operator == (const u_char* rhs) const { return memcmp(value, rhs,       SIZE) == 0; }
 
 public:
   void clear() { *this = cleanMac(); }

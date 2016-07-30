@@ -46,7 +46,7 @@ protected:
 public:
   Result read(GPacket* packet) override;
   Result write(GPacket* packet) override;
-  Result write(uint8_t* buf, size_t len) override;
+  Result write(u_char* buf, size_t len) override;
   Result relay(GPacket* packet) override;
 
   PathType captureType() { return OutOfPath; }

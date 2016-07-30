@@ -21,11 +21,11 @@
 class GFlowValue
 {
 public:
-  size_t         packets;
-  size_t         bytes;
+  size_t packets;
+  size_t bytes;
   struct timeval ts;
-  bool           created;
-  uint8_t*       totalMem;
+  bool created;
+  u_char* totalMem;
 };
 
 // ----------------------------------------------------------------------------
@@ -42,25 +42,25 @@ struct GPacket {
   // packet
   //
   GPktHdr* pktHdr;
-  uint8_t* pktData;
+  u_char* pktData;
 
   //
   // datalink layer
   //
-  int      linkType; // DLT_EN10MB, ...
+  int linkType; // DLT_EN10MB, ...
   GEthHdr* ethHdr;
 
   //
   // network layer
   //
   uint16_t netType; // ETHERTYPE_IP, ETHERTYPE_ARP, ...
-  GIpHdr*  ipHdr;
+  GIpHdr* ipHdr;
   GArpHdr* arpHdr;
 
   //
   // transport layer(protocol)
   //
-  uint8_t   proto; // IPPROTO_TCP, IPPROTO_UDP, IPPROTO_ICMP, ...
+  uint8_t proto; // IPPROTO_TCP, IPPROTO_UDP, IPPROTO_ICMP, ...
   GTcpHdr*  tcpHdr;
   GUdpHdr*  udpHdr;
   GIcmpHdr* icmpHdr;
@@ -68,8 +68,8 @@ struct GPacket {
   //
   // data
   //
-  uint8_t* data;
-  int      dataLen;
+  u_char* data;
+  int dataLen;
 
   //
   // control
@@ -79,7 +79,7 @@ struct GPacket {
   //
   // flow
   //
-  void*       flowKey; // GMacFlowKey, GIpFlowKey, GTcpFlowKey, GUdpFlowKey, ...
+  void* flowKey; // GMacFlowKey, GIpFlowKey, GTcpFlowKey, GUdpFlowKey, ...
   GFlowValue* flowValue;
 
 #ifdef WIN32

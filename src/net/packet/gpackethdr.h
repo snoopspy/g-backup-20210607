@@ -361,8 +361,8 @@ struct GTcpOption
 {
   uint8_t kind;
   uint8_t len;
-  uint8_t* value;
-  uint8_t* desc;
+  u_char* value;
+  char* desc;
 };
 typedef QList<GTcpOption> GTcpOptionList;
 
@@ -434,18 +434,18 @@ Number  Description      Reference
 // GTcpHdr
 // ----------------------------------------------------------------------------
 struct GTcpHdr : libnet_tcp_hdr {
-  bool isData(GIpHdr* ipHdr, uint8_t** tcpData = nullptr, int* tcpDataLen = nullptr);
-  bool isOption(uint8_t** tcpOption = nullptr, int* tcpOptionLen = nullptr);
+  bool isData(GIpHdr* ipHdr, u_char** tcpData = nullptr, int* tcpDataLen = nullptr);
+  bool isOption(u_char** tcpOption = nullptr, int* tcpOptionLen = nullptr);
   uint16_t checksum(GIpHdr* ipHdr);
 
   static int getOption( // Return one GTcpOption buffer size
-    uint8_t*    tcpOption,
-    int         tcpOptionLen,
+    u_char* tcpOption,
+    int tcpOptionLen,
     GTcpOption& _tcpOption);
 
   static int getOptionList( // Return total snoopTCPOption buffer size
-    uint8_t*        tcpOption,
-    int             tcpOptionLen,
+    u_char* tcpOption,
+    int tcpOptionLen,
     GTcpOptionList& tcpOptionList);
 };
 
@@ -453,7 +453,7 @@ struct GTcpHdr : libnet_tcp_hdr {
 // GUdpHdr
 // ----------------------------------------------------------------------------
 struct GUdpHdr : libnet_udp_hdr {
-  bool isData(uint8_t** udpData = nullptr, int* udpDataLen = nullptr);
+  bool isData(u_char** udpData = nullptr, int* udpDataLen = nullptr);
   uint16_t checksum(GIpHdr* ipHdr);
 };
 
@@ -462,7 +462,7 @@ struct GUdpHdr : libnet_udp_hdr {
 // ----------------------------------------------------------------------------
 struct GIcmpHdr : libnet_icmpv4_hdr {
 public:
-  bool isData(GIpHdr* ipHdr, uint8_t** icmpData = nullptr, int* icmpDataLen = nullptr);
+  bool isData(GIpHdr* ipHdr, u_char** icmpData = nullptr, int* icmpDataLen = nullptr);
   uint16_t checksum(GIpHdr* ipHdr);
 };
 
@@ -488,7 +488,7 @@ struct GDnsQuestion {
 
 public:
   QByteArray encode();
-  bool       decode(uint8_t* udpData, int dataLen, int* offset);
+  bool       decode(u_char* udpData, int dataLen, int* offset);
 };
 
 // ----------------------------------------------------------------------------
@@ -496,7 +496,7 @@ public:
 // ----------------------------------------------------------------------------
 struct GDnsQuestions : QList<int> {
   QByteArray encode();
-  bool       decode(uint8_t* udpData, int dataLen, int count, int* offset);
+  bool       decode(u_char* udpData, int dataLen, int count, int* offset);
 };
 
 // ----------------------------------------------------------------------------
@@ -512,7 +512,7 @@ struct GDnsResourceRecord {
 
 public:
   QByteArray encode();
-  bool       decode(uint8_t* udpData, int dataLen, int* offset);
+  bool       decode(u_char* udpData, int dataLen, int* offset);
 };
 
 // ----------------------------------------------------------------------------
@@ -521,7 +521,7 @@ public:
 struct GDnsResourceRecords : QList<GDnsResourceRecord> {
 public:
   QByteArray encode();
-  bool       decode(uint8_t* udpData, int dataLen, int count, int* offset);
+  bool       decode(u_char* udpData, int dataLen, int count, int* offset);
 };
 
 // ----------------------------------------------------------------------------
@@ -537,11 +537,11 @@ public:
 
 public:
   QByteArray encode();
-  bool       decode(uint8_t* udpData, int dataLen, int* offset);
+  bool       decode(u_char* udpData, int dataLen, int* offset);
 
 public:
   static QByteArray encodeName(QString name);
-  static QString    decodeName(uint8_t* udpData, int dataLen, int* offset);
+  static QString    decodeName(u_char* udpData, int dataLen, int* offset);
 };
 
 #pragma pack(pop)

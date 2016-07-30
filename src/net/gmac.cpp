@@ -5,11 +5,11 @@
 // ----------------------------------------------------------------------------
 GMac::GMac(const QString s) {
   int i;
-  uint8_t* p;
-  uint8_t ch1, ch2;
+  char* p;
+  char ch1, ch2;
 
   QByteArray arr = s.toLatin1();
-  p = (uint8_t*)arr.constData();
+  p = (char*)arr.constData();
   for (i = 0 ; i < SIZE; i++)
   {
     ch1 = *p++;
@@ -33,7 +33,7 @@ GMac::GMac(const QString s) {
 }
 
 GMac::operator QString() const {
-  uint8_t ch1, ch2;
+  char ch1, ch2;
   int i, index;
   char buf[SIZE * 3]; // enough size
 
@@ -69,13 +69,13 @@ GMac GMac::randomMac() {
 }
 
 GMac& GMac::cleanMac() {
-  static uint8_t _value[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  static u_char _value[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
   static GMac res(_value);
   return res;
 }
 
 GMac& GMac::broadcastMac() {
-  static uint8_t _value[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+  static u_char _value[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   static GMac res(_value);
   return res;
 }

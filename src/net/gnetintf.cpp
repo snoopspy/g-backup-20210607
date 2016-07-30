@@ -26,7 +26,7 @@ static GMac getMac(char* name) {
   ioctl(s, SIOCGIFHWADDR, &buffer);
   close(s);
 
-  GMac res = (uint8_t*)buffer.ifr_ifru.ifru_hwaddr.sa_data;
+  GMac res = (u_char*)buffer.ifr_ifru.ifru_hwaddr.sa_data;
   return res;
 }
 

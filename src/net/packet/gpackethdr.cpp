@@ -7,7 +7,7 @@ bool GEthHdr::is(uint16_t etherType, void** networkHdr) {
   if (ntohs(this->ether_type) != etherType)
     return false;
   if (networkHdr != nullptr)
-    *networkHdr = (void*)((uint8_t*)this + sizeof(GEthHdr));
+    *networkHdr = (void*)((u_char*)this + sizeof(GEthHdr));
   return true;
 }
 
@@ -26,7 +26,7 @@ bool GIpHdr::is(uint8_t protocol, void** transportHdr) {
   if (this->ip_p != protocol)
     return false;
   if (transportHdr != NULL)
-    *transportHdr = (void*)((uint8_t*)(this) + this->ip_hl * sizeof(uint32_t));
+    *transportHdr = (void*)((u_char*)(this) + this->ip_hl * sizeof(uint32_t));
   return true;
 }
 
@@ -103,9 +103,9 @@ uint16_t GIpHdr::recalculateChecksum(uint16_t oldChecksum, uint32_t oldValue, ui
 // ----------------------------------------------------------------------------
 // GTcpHdr
 // ----------------------------------------------------------------------------
-bool GTcpHdr::isData(GIpHdr* ipHdr, uint8_t** tcpData, int* tcpDataLen) {
+bool GTcpHdr::isData(GIpHdr* ipHdr, u_char** tcpData, int* tcpDataLen) {
   int   tcpHdrLen   = this->th_off * sizeof(uint32_t);
-  uint8_t* _tcpData    = (uint8_t*)this + tcpHdrLen;
+  u_char* _tcpData    = (u_char*)this + tcpHdrLen;
   int   _tcpDataLen = ntohs(ipHdr->ip_len) - sizeof(GIpHdr) - tcpHdrLen;
 
   if (_tcpDataLen > 0)
@@ -119,11 +119,11 @@ bool GTcpHdr::isData(GIpHdr* ipHdr, uint8_t** tcpData, int* tcpDataLen) {
   return false;
 }
 
-bool GTcpHdr::isOption(uint8_t** tcpOption, int* tcpOptionLen) {
+bool GTcpHdr::isOption(u_char** tcpOption, int* tcpOptionLen) {
   int tcpHdrLen = this->th_off * sizeof(uint32_t);
   int _tcpOptionLen = tcpHdrLen - sizeof(GTcpHdr);
   if (tcpOption != NULL)
-    *tcpOption = (uint8_t*)this + sizeof(GTcpHdr);
+    *tcpOption = (u_char*)this + sizeof(GTcpHdr);
   if (tcpOptionLen != NULL)
     *tcpOptionLen = _tcpOptionLen;
   return _tcpOptionLen > 0;
@@ -181,14 +181,14 @@ uint16_t GTcpHdr::checksum(GIpHdr* ipHdr) {
 }
 
 int GTcpHdr::getOption(
-  uint8_t*    tcpOption,
+  u_char*    tcpOption,
   int         tcpOptionLen,
   GTcpOption& _tcpOption) {
-  uint8_t*      p;
-  uint8_t       kind;
-  uint8_t       len;
+  u_char* p;
+  uint8_t kind;
+  uint8_t len;
 
-  p = (uint8_t*)tcpOption;
+  p = (u_char*)tcpOption;
 
   //
   // Set kind
@@ -250,9 +250,9 @@ int GTcpHdr::getOption(
     default : desc = "UNKNOWN";                             break;
   }
 
-  _tcpOption.desc = (uint8_t*)desc;
+  _tcpOption.desc = (char*)desc;
 
-  return (int)(p - (uint8_t*)tcpOption);
+  return (int)(p - (u_char*)tcpOption);
 }
 
 int GTcpHdr::getOptionList(
