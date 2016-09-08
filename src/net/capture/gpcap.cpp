@@ -8,18 +8,6 @@ GPcap::~GPcap() {
 }
 
 bool GPcap::doOpen() {
-  if (pcap_ != nullptr) {
-    SET_ERR(GErr::VALUE_IS_NOT_NULL, "pcap is not null");
-    return false;
-  }
-
-  char errBuf[PCAP_ERRBUF_SIZE];
-  pcap_ = pcap_open_live(qPrintable(dev_), snapLen_, flags_, readTimeout_, errBuf);
-  if (pcap_ == nullptr) {
-    SET_ERR(GErr::RETURN_NULL, errBuf);
-    return false;
-  }
-
   bool filtering = false;
   int dataLink = pcap_datalink(pcap_);
   switch (dataLink) {
@@ -58,7 +46,7 @@ GCapture::Result GPcap::read(GPacket* packet) {
   Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
-      SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_)));
+      SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))); // gilgi temp 2016.09.09
       res = Eof;
       break;
     case -1: // if an error occurred

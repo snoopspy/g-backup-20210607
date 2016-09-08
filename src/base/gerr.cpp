@@ -7,7 +7,7 @@ QDebug operator << (QDebug os, GErr& err) {
   os
     << err.name() << ":"
     << (err.msg().isEmpty() ? "no msg" : err.msg())
-    << " code=" << err.code();
+    << " code =" << err.code();
   return os;
 }
 

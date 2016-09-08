@@ -10,17 +10,23 @@
 
 #pragma once
 
-#include "base/gobj.h"
-#include "net/capture/gcapture.h"
+#include "gpcap.h"
 
 // ----------------------------------------------------------------------------
-// GParser
+// GPcapFile
 // ----------------------------------------------------------------------------
-struct GParser : GObj {
-  GParser(QObject* parent = nullptr) : GObj(parent) {}
-  ~GParser() override {}
+struct GPcapFile : GPcap {
+  Q_OBJECT
+  Q_PROPERTY(QString fileName MEMBER fileName_)
 
-  virtual void parse(GPacket* packet);
+public:
+  QString fileName_{""};
 
-  static GParser* getDefaultParser(GCapture::DataLinkType dataLinkType);
+public:
+  GPcapFile(QObject* parent = nullptr) : GPcap(parent) {}
+  ~GPcapFile() override;
+
+protected:
+  bool doOpen() override;
+  bool doClose() override;
 };

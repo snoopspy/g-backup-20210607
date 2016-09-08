@@ -32,6 +32,7 @@ struct GErr {
     VALUE_IS_NOT_NULL,
     RETURN_NULL,
     RETURN_NOT_NULL,
+    FILE_NAME_NOT_SPECIFIED,
   };
 
 
