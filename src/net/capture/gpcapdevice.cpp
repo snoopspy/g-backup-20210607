@@ -1,8 +1,15 @@
 #include "gpcapdevice.h"
+#include "net/grtm.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
+GPcapDevice::GPcapDevice(QObject* parent) : GPcap(parent) {
+  GRtmEntry* entry = GRtm::instance().getBestEntry("8.8.8.8");
+  if (entry != nullptr)
+    dev_ = entry->intf_;
+}
+
 GPcapDevice::~GPcapDevice() {
   close();
 }

@@ -50,5 +50,5 @@ protected:
   bool pcapProcessFilter(pcap_if_t* dev);
 
   pcap_t*  pcap_{nullptr};
-  DataLinkType dataLink_{None};
+  DataLinkType dataLink_{Null};
 };

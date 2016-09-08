@@ -12,9 +12,21 @@ bool GPcap::doOpen() {
   int dataLink = pcap_datalink(pcap_);
   switch (dataLink) {
     case DLT_NULL:
-    case DLT_EN10MB:
-    case DLT_IEEE802_11_RADIO:
+      this->dataLink_ = Null;
       filtering = true;
+      break;
+    case DLT_RAW:
+      this->dataLink_ = Raw;
+      filtering = true;
+      break;
+    case DLT_EN10MB:
+      this->dataLink_ = Eth;
+      filtering = true;
+      break;
+    case DLT_IEEE802_11_RADIO:
+      this->dataLink_ = Dot11;
+      filtering = true;
+      break;
   }
   if (filtering && filter_ != "") {
     if (!pcapProcessFilter(nullptr)) // gilgil temp 2015.10.28

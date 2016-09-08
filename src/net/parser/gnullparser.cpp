@@ -1,9 +1,9 @@
-#include <QString>
-#include "gapp.h"
+#include "gnullparser.h"
 
 // ----------------------------------------------------------------------------
-// GApp
+// GNullParser
 // ----------------------------------------------------------------------------
-void GApp::init() {
-  qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file}:%{line}] %{message}");
+void GNullParser::parse(GPacket* packet) {
+  (void)packet; // gilgil temp 2016.09.09
+  qDebug() << "parse";
 }

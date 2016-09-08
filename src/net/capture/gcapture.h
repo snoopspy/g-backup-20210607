@@ -49,9 +49,10 @@ public:
   } PathType;
 
   typedef enum {
-    None,
-    Ethernet,
-    Dot11
+    Null, // DLT_NULL
+    Raw,  // DLT_RAW
+    Eth,  // DLT_EN10MB
+    Dot11 // DLT_IEEE802_11_RADIO
   } DataLinkType;
 
   typedef enum {
@@ -76,7 +77,7 @@ public:
   virtual Result relay(GPacket* packet);
 
   virtual PathType pathType() { return OutOfPath; }
-  virtual DataLinkType dataLinkType() { return None; }
+  virtual DataLinkType dataLinkType() { return Null; }
 
 signals:
   void captured(GPacket* packet);

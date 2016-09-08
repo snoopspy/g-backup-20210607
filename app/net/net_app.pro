@@ -2,5 +2,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
 	enumintf \
         netclient \
-        netserver
+        netserver \
+        pcap_exam
 

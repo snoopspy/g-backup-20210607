@@ -70,7 +70,7 @@ GCapture::Result GCapture::relay(GPacket* packet) {
 }
 
 void GCapture::run() {
-  qDebug() << "stt"; // gilgil temp 2015.10.28
+  // qDebug() << "stt"; // gilgil temp 2015.10.28
   GParser* parser = GParser::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
   while (active()) {
@@ -89,6 +89,6 @@ void GCapture::run() {
       }
     }
   }
-  qDebug() << "end"; // gilgil temp 2015.10.28
+  // qDebug() << "end"; // gilgil temp 2015.10.28
   emit closed();
 }

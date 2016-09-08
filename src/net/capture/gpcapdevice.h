@@ -23,13 +23,13 @@ struct GPcapDevice : GPcap {
   Q_PROPERTY(int     readTimeout MEMBER readTimeout_)
 
 public:
-  QString dev_{"eth0"};// gilgil temp 2015.10.28
-  int     snapLen_{65536}; // gilgil temp 2015.10.28
+  QString dev_{""};
+  int     snapLen_{65536}; // 65536 bytes
   int     flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
   int     readTimeout_{1}; // 1 msec
 
 public:
-  GPcapDevice(QObject* parent = nullptr) : GPcap(parent) {}
+  GPcapDevice(QObject* parent = nullptr);
   ~GPcapDevice() override;
 
 protected:

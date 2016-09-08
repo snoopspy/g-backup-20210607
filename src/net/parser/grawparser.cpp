@@ -1,9 +1,9 @@
-#include <QString>
-#include "gapp.h"
+#include "grawparser.h"
 
 // ----------------------------------------------------------------------------
-// GApp
+// GRawParser
 // ----------------------------------------------------------------------------
-void GApp::init() {
-  qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file}:%{line}] %{message}");
+void GRawParser::parse(GPacket* packet) {
+  (void)packet; // gilgil temp 2016.09.09
+  qDebug() << "parse";
 }

@@ -1,4 +1,8 @@
 #include "gparser.h"
+#include "gnullparser.h"
+#include "grawparser.h"
+#include "gethparser.h"
+#include "gdot11parser.h"
 
 // ----------------------------------------------------------------------------
 // GParser
@@ -9,7 +13,14 @@ void GParser::parse(GPacket* packet) {
 }
 
 GParser* GParser::getDefaultParser(GCapture::DataLinkType dataLinkType) {
-  (void)dataLinkType; // gilgil temp 2016.09.09
-  static GParser parser;
-  return &parser; // gilgil temp 2016.09.09
+  switch (dataLinkType) {
+    case GCapture::Null:
+      return &GNullParser::instance();
+    case GCapture::Raw:
+      return &GRawParser::instance();
+    case GCapture::Eth:
+      return &GEthParser::instance();
+    case GCapture::Dot11:
+      return &GDot11Parser::instance();
+  }
 }
