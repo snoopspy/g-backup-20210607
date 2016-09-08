@@ -33,7 +33,7 @@ GMac::GMac(const QString s) {
 }
 
 GMac::operator QString() const {
-  uint8_t ch1, ch2;
+  u_char ch1, ch2;
   int i, index;
   char buf[SIZE * 3]; // enough size
 
