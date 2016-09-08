@@ -1,4 +1,5 @@
 #include "gcapture.h"
+#include "net/parser/gparser.h"
 
 // ----------------------------------------------------------------------------
 // GCaptureThread
@@ -70,14 +71,16 @@ GCapture::Result GCapture::relay(GPacket* packet) {
 
 void GCapture::run() {
   qDebug() << "stt"; // gilgil temp 2015.10.28
+  GParser* parser = GParser::getDefaultParser(dataLinkType());
+  Q_ASSERT(parser != nullptr);
   while (active()) {
     GPacket packet;
     packet.clear();
-    packet.capture = this;
+    packet.capture_ = this;
     Result res = read(&packet);
     if (res == TimeOut) continue;
     if (res == Eof || res == Fail) break;
-    if (autoParse_) packet.parse();
+    if (autoParse_) parser->parse(&packet);
     emit captured(&packet);
     if (this->pathType() == InPath) {
       res = relay(&packet);

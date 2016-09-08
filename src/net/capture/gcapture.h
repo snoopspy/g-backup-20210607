@@ -27,6 +27,8 @@ protected:
 // ----------------------------------------------------------------------------
 // GCapture
 // ----------------------------------------------------------------------------
+struct GPacket;
+struct GParser;
 struct GCapture : GStateObj {
   Q_OBJECT
   Q_PROPERTY(bool enabled MEMBER enabled_)
@@ -45,6 +47,12 @@ public:
     InPath,
     OutOfPath
   } PathType;
+
+  typedef enum {
+    None,
+    Ethernet,
+    Dot11
+  } DataLinkType;
 
   typedef enum {
     Eof = -2,
@@ -68,7 +76,7 @@ public:
   virtual Result relay(GPacket* packet);
 
   virtual PathType pathType() { return OutOfPath; }
-  virtual int dataLink() { return DLT_NULL; }
+  virtual DataLinkType dataLinkType() { return None; }
 
 signals:
   void captured(GPacket* packet);

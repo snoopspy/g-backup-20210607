@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <pcap.h>
 #include "gcapture.h"
 
 // ----------------------------------------------------------------------------
@@ -49,12 +50,12 @@ public:
   Result write(u_char* buf, size_t len) override;
   Result relay(GPacket* packet) override;
 
-  PathType captureType() { return OutOfPath; }
-  int dataLink() { return dataLink_; }
+  PathType pathType() override { return OutOfPath; }
+  DataLinkType dataLinkType() override { return dataLink_; }
 
 protected:
   bool pcapProcessFilter(pcap_if_t* dev);
 
   pcap_t*  pcap_{nullptr};
-  int dataLink_{DLT_NULL};
+  DataLinkType dataLink_{None};
 };

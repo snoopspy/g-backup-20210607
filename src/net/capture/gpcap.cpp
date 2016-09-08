@@ -53,7 +53,8 @@ bool GPcap::doClose() {
 }
 
 GCapture::Result GPcap::read(GPacket* packet) {
-  int i = pcap_next_ex(pcap_, &(packet->pktHdr), (const u_char **)&(packet->pktData));
+  struct pcap_pkthdr* hdr;
+  int i = pcap_next_ex(pcap_, &hdr, (const u_char**)(&(packet->buf_)));
   Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
@@ -68,6 +69,8 @@ GCapture::Result GPcap::read(GPacket* packet) {
       res = TimeOut;
       break;
     default: // packet captured
+      packet->ts_ = hdr->ts;
+      packet->len_ = hdr->caplen;
       res = Ok;
       break;
   }
@@ -75,7 +78,8 @@ GCapture::Result GPcap::read(GPacket* packet) {
 }
 
 GCapture::Result GPcap::write(GPacket* packet) {
-  int i = pcap_sendpacket(pcap_, (const u_char*)packet->pktData, (int)packet->pktHdr->caplen);
+  //int i = pcap_sendpacket(pcap_, (const u_char*)packet->buf_, (int)packet->len_);
+  int i = pcap_sendpacket(pcap_, packet->buf_, packet->len_);
   if (i == 0) return Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return Fail;
