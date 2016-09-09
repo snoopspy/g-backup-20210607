@@ -29,6 +29,5 @@ struct GPacket {
   u_char* buf_;
   size_t len_;
 
-  QVector<GPdu*> pdus_;
-
+  GPdus pdus_;
 };

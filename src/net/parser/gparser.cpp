@@ -23,4 +23,5 @@ GParser* GParser::getDefaultParser(GCapture::DataLinkType dataLinkType) {
     case GCapture::Dot11:
       return &GDot11Parser::instance();
   }
+  return &GNullParser::instance();
 }
