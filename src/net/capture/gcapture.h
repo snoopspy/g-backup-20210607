@@ -49,10 +49,10 @@ public:
   } PathType;
 
   typedef enum {
-    Null, // DLT_NULL
-    Raw,  // DLT_RAW
-    Eth,  // DLT_EN10MB
-    Dot11 // DLT_IEEE802_11_RADIO
+    Eth,   // DLT_EN10MB
+    Dot11, // DLT_IEEE802_11_RADIO
+    Raw,   // DLT_RAW
+    Null   // DLT_NULL
   } DataLinkType;
 
   typedef enum {

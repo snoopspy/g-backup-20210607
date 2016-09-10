@@ -10,16 +10,21 @@
 
 #pragma once
 
-#include "grawparser.h"
+#include "gparser.h"
+#include "net/capture/gcapture.h"
 
 // ----------------------------------------------------------------------------
-// GEthParser
+// GParserMap
 // ----------------------------------------------------------------------------
-struct GEthParser : GRawParser {
-  void parse(GPacket* packet) override;
+struct GParserMap {
+private:
+  GParserMap();
+  virtual  ~GParserMap();
 
-  static GEthParser& instance() {
-    static GEthParser ethParser;
-    return ethParser;
-  }
+public:
+  static GParserMap& instance();
+  static GParser* getDefaultParser(GCapture::DataLinkType dataLinkType);
+
+protected:
+  GParser* root_;
 };

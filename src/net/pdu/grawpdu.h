@@ -10,16 +10,10 @@
 
 #pragma once
 
-#include "gparser.h"
+#include "gpdu.h"
 
 // ----------------------------------------------------------------------------
 // GRawParser
 // ----------------------------------------------------------------------------
 struct GRawParser : GParser {
-  virtual void parse(GPacket* packet);
-
-  static GRawParser& instance() {
-    static GRawParser rawParser;
-    return rawParser;
-  }
 };

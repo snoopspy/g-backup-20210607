@@ -1,9 +1,5 @@
-#include "gdot11parser.h"
+#include "grawpdu.h"
 
 // ----------------------------------------------------------------------------
-// GDot11Parser
+// GRawPdu
 // ----------------------------------------------------------------------------
-void GDot11Parser::parse(GPacket* packet) {
-  (void)packet; // gilgil temp 2016.09.09
-  qDebug() << "parse";
-}

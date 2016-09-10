@@ -1,9 +1,5 @@
-#include "grawparser.h"
+#include "gnullpdu.h"
 
 // ----------------------------------------------------------------------------
-// GRawParser
+// GNullParser
 // ----------------------------------------------------------------------------
-void GRawParser::parse(GPacket* packet) {
-  (void)packet; // gilgil temp 2016.09.09
-  qDebug() << "parse";
-}

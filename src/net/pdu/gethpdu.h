@@ -27,10 +27,25 @@ struct ETH_HDR {
 // ----------------------------------------------------------------------------
 struct GEthPdu : GPdu {
   GPdu::Flag flag() override { return GPdu::GEthPdu; }
-  size_t size() { return len_; }
+  size_t size() { return ethHdr_ == nullptr ? 0 : ETHER_ADDR_LEN; }
 
   GEthPdu(u_char* buf, size_t len);
 
   ETH_HDR* ethHdr_;
-  size_t len_;
 };
+
+// ----------------------------------------------------------------------------
+// GEthParser
+// ----------------------------------------------------------------------------
+struct GEthParser : GParser {
+  Q_OBJECT
+
+public:
+  Q_INVOKABLE GEthParser(QObject* parent = nullptr);
+  ~GEthParser() override; // gilgil temp 2016.09.10
+
+protected:
+  bool isMatch(GPdu* prev, GPacket* packet) override;
+  GPdu* doParse(GPacket* packet) override;
+};
+// Q_DECLARE_METATYPE(GEthParser) // gilgil temp 2016.09.10

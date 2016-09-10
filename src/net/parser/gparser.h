@@ -11,16 +11,35 @@
 #pragma once
 
 #include "base/gobj.h"
-#include "net/capture/gcapture.h"
+
+// ----------------------------------------------------------------------------
+// GParsers
+// ----------------------------------------------------------------------------
+struct GParser;
+typedef QVector<GParser*> GParsers;
 
 // ----------------------------------------------------------------------------
 // GParser
 // ----------------------------------------------------------------------------
+struct GPacket;
+struct GPdu;
 struct GParser : GObj {
-  GParser(QObject* parent = nullptr) : GObj(parent) {}
+  Q_OBJECT
+
+public:
+  Q_INVOKABLE explicit GParser(QObject* parent = nullptr) : GObj(parent) {}
   ~GParser() override {}
 
-  virtual void parse(GPacket* packet);
+  virtual size_t parse(GPacket* packet);
 
-  static GParser* getDefaultParser(GCapture::DataLinkType dataLinkType);
+public:
+  GParsers children_;
+
+  GParser* findFirstChild(QString className);
+  QVector<GParser*> findAll(QString className);
+  void addChild(QString myClassName, QString childClassName);
+
+protected:
+  virtual bool isMatch(GPdu* prev, GPacket* packet);
+  virtual GPdu* doParse(GPacket* packet);
 };

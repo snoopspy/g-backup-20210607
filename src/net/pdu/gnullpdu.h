@@ -10,16 +10,10 @@
 
 #pragma once
 
-#include "gparser.h"
+#include "gpdu.h"
 
 // ----------------------------------------------------------------------------
 // GNullParser
 // ----------------------------------------------------------------------------
 struct GNullParser : GParser {
-  void parse(GPacket* packet) override;
-
-  static GNullParser& instance() {
-    static GNullParser nullParser;
-    return nullParser;
-  }
 };

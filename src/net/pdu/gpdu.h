@@ -17,6 +17,8 @@
 #include "net/libnet/libnet-headers.h"
 #pragma pack(pop)
 #include <QVector>
+#include "net/packet/gpacket.h"
+#include "net/parser/gparser.h"
 
 // ----------------------------------------------------------------------------
 // GPdu

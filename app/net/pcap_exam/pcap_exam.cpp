@@ -3,23 +3,28 @@
 #include <GApp>
 #include <GJson>
 #include <GPcapDevice>
-#include "net/pdu/gethpdu.h"
+#include "net/pdu/gethpdu.h" // gilgil temp 2016.09.10
+#include "net/parser/gparsermap.h" // gilgil temp 2016.09.10
+
 
 struct Obj: GObj {
   Q_OBJECT
 
 public slots:
   void captured(GPacket* packet) {
-    GPdus::iterator it = packet->pdus_.find(GPdu::GEthPdu);
+    GPdus::iterator it = packet->pdus_->find(GPdu::GEthPdu);
     GEthPdu* pdu = (GEthPdu*)*it;
     ETH_HDR* ethHdr = pdu->ethHdr_;
-    qDebug() << "captured" << packet->pdus_.size() << QString(ethHdr->src) << QString(ethHdr->dst) << ethHdr->type;
+    qDebug() << "captured" << packet->pdus_->size() << QString(ethHdr->src) << QString(ethHdr->dst) << ethHdr->type;
   }
 };
 
 int main(int argc, char* argv[]) {
   QCoreApplication a(argc, argv);
   GApp::init();
+
+  qRegisterMetaType<GEthParser*>();
+  GParserMap::instance(); // gilgil temp 2016.09.10
 
   GPcapDevice device;
 

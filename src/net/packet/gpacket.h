@@ -12,12 +12,12 @@
 
 #include <sys/time.h>
 #include <QVector>
-#include "net/pdu/gpdu.h"
 
 // ----------------------------------------------------------------------------
 // GPacket
 // ----------------------------------------------------------------------------
 struct GCapture;
+struct GPdus;
 struct GPacket {
   GPacket();
   GPacket(GCapture* capture);
@@ -29,5 +29,5 @@ struct GPacket {
   u_char* buf_;
   size_t len_;
 
-  GPdus pdus_;
+  GPdus* pdus_;
 };

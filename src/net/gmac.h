@@ -16,7 +16,7 @@
 // GMac
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-class GMac
+class GMac final
 {
 public:
   static const int SIZE = 6;
