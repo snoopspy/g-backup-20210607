@@ -11,39 +11,32 @@
 #pragma once
 
 #include "gpdu.h"
-#include "net/gmac.h"
 
 // ----------------------------------------------------------------------------
-// ETH_HDR
+// IP_HDR
 // ----------------------------------------------------------------------------
-#pragma pack(push, 1)
-struct ETH_HDR {
-  GMac ether_dhost;
-  GMac ether_shost;
-  uint16_t ether_type;
-};
-#pragma pack(pop)
+typedef libnet_ipv4_hdr IP_HDR;
 
 // ----------------------------------------------------------------------------
-// GEthPdu
+// GIpPdu
 // ----------------------------------------------------------------------------
-struct GEthPdu : GPdu {
-  GPdu::PduType pduType() override { return GPdu::GEthPdu; }
+struct GIpPdu : GPdu {
+  GPdu::PduType pduType() override { return GPdu::GIpPdu; }
   size_t size() override;
 
-  GEthPdu(u_char* buf);
+  GIpPdu(u_char* buf);
 
-  ETH_HDR* ethHdr_;
+  IP_HDR* ipHdr_;
 };
 
 // ----------------------------------------------------------------------------
-// GEthParser
+// GIpParser
 // ----------------------------------------------------------------------------
-struct GEthParser : GParser {
+struct GIpParser : GParser {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE GEthParser(QObject* parent = nullptr) : GParser(parent) {}
+  Q_INVOKABLE GIpParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
   bool isMatch(GPdu* prev, GPacket* packet) override;

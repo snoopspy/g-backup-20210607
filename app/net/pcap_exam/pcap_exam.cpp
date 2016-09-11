@@ -14,12 +14,13 @@ public:
 
 public slots:
   void captured(GPacket* packet) {
-    GPdus::iterator it = packet->pdus_->findIterator(GPdu::GEthPdu);
-    if (it == packet->pdus_->end()) return;
-    GEthPdu* pdu = (GEthPdu*)*it;
-    ETH_HDR* ethHdr = pdu->ethHdr_;
-    qDebug() << "hahaha"; // gilgil temp 2016.09.12
-    qDebug() << "captured" << QString(ethHdr->src) << QString(ethHdr->dst) << ethHdr->type;
+    GPdus* pdus = packet->pdus_;
+    GEthPdu* ethPdu = dynamic_cast<GEthPdu*>(pdus->findFirst(GPdu::GEthPdu));
+    if (ethPdu == nullptr) return;
+
+    ETH_HDR* ethHdr = ethPdu->ethHdr_;
+    qDebug() << QString("captured %1 > %2 (%3)").arg(
+      QString(ethHdr->ether_shost), QString(ethHdr->ether_dhost), QString::number(ntohs(ethHdr->ether_type), 16));
   }
 };
 

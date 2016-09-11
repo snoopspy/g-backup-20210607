@@ -1,17 +1,15 @@
 #include "gethpdu.h"
-#include <QDebug>
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GEthPdu
 // ----------------------------------------------------------------------------
-GEthPdu::GEthPdu(u_char* buf, size_t len) {
-  if (len > ETHER_ADDR_LEN) {
-    ethHdr_ = (ETH_HDR*)buf;
-  } else {
-    qWarning() << QString("invalid size(%)").arg(len);
-    ethHdr_ = nullptr;
-  }
+size_t GEthPdu::size() {
+  Q_ASSERT(ethHdr_ != nullptr);
+  return sizeof(ETH_HDR);
+}
+
+GEthPdu::GEthPdu(u_char* buf) {
+  ethHdr_ = (ETH_HDR*)buf;
 }
 
 // ----------------------------------------------------------------------------
@@ -25,6 +23,7 @@ bool GEthParser::isMatch(GPdu* prev, GPacket* packet) {
 }
 
 GPdu* GEthParser::doParse(GPacket* packet) {
-  GEthPdu* res = new GEthPdu(packet->buf_, packet->len_);
-  return res;
+  if ((packet->len_) < sizeof(ETH_HDR))
+    return nullptr;
+  return new GEthPdu(packet->buf_);
 }

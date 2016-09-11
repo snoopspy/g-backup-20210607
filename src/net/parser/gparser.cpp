@@ -7,9 +7,13 @@
 // ----------------------------------------------------------------------------
 size_t GParser::parse(GPacket* packet) {
   GPdu* pdu = doParse(packet);
-  if (pdu == nullptr) return 0;
-  packet->pdus_->push_back(pdu);
+  if (pdu == nullptr)
+    return 0;
+
   size_t res = pdu->size();
+  packet->buf_ += res;
+  packet->len_ -= res;
+  packet->pdus_->push_back(pdu);
 
   foreach (QObject* obj, children()) {
     GParser* child = (GParser*)obj;

@@ -34,9 +34,11 @@ struct GPdu {
     GIcmpPdu,
     GDnsPdu,
     GNone
-  } Flag;
+  } PduType;
 
-  virtual Flag flag() { return GNone; }
+  virtual ~GPdu() {}
+
+  virtual PduType pduType() { return GNone; }
   virtual size_t size() { return 0; }
 };
 
@@ -44,5 +46,17 @@ struct GPdu {
 // GPdus
 // ----------------------------------------------------------------------------
 struct GPdus : QVector<GPdu*> {
-  GPdus::iterator findIterator(GPdu::Flag flag);
+protected:
+  int current_{0};
+
+public:
+  void clear();
+  void add(GPdu* pdu);
+
+public:
+  GPdu* first();
+  GPdu* next();
+  GPdu* prev();
+  GPdu* findFirst(GPdu::PduType type);
+  GPdu* findNext(GPdu::PduType type);
 };

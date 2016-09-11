@@ -1,8 +1,11 @@
 #include "gparserfactory.h"
+
 #include "net/pdu/gethpdu.h"
 #include "net/pdu/gdot11pdu.h"
 #include "net/pdu/grawpdu.h"
 #include "net/pdu/gnullpdu.h"
+
+#include "net/pdu/gippdu.h"
 
 // ----------------------------------------------------------------------------
 // GParserFactory
@@ -12,12 +15,22 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GDot11Parser*>();
   qRegisterMetaType<GRawParser*>();
   qRegisterMetaType<GNullParser*>();
+  qRegisterMetaType<GIpParser*>();
 
   root_ = new GParser;
   root_->addChild("GParser", "GEthParser");
+
+  //
+  // root
+  //
   root_->addChild("GParser", "GDot11Parser");
   root_->addChild("GParser", "GRawParser");
   root_->addChild("GParser", "GNullParser");
+
+  //
+  // L3
+  //
+  root_->addChild("GEthParser", "GIpParser");
 }
 
 GParserFactory::~GParserFactory() {
