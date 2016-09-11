@@ -14,8 +14,7 @@ public:
 
 public slots:
   void captured(GPacket* packet) {
-    GPdus* pdus = packet->pdus_;
-    GEthPdu* ethPdu = dynamic_cast<GEthPdu*>(pdus->findFirst(GPdu::GEthPdu));
+    GEthPdu* ethPdu = dynamic_cast<GEthPdu*>(packet->findFirst(GPdu::GEthPdu));
     if (ethPdu == nullptr) return;
 
     ETH_HDR* ethHdr = ethPdu->ethHdr_;

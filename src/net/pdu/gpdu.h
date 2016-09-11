@@ -17,7 +17,6 @@
 #include "net/libnet/libnet-headers.h"
 #pragma pack(pop)
 #include <QVector>
-#include "net/packet/gpacket.h"
 #include "net/parser/gparser.h"
 
 // ----------------------------------------------------------------------------
@@ -34,11 +33,11 @@ struct GPdu {
     GIcmpPdu,
     GDnsPdu,
     GNone
-  } PduType;
+  } Type;
 
   virtual ~GPdu() {}
 
-  virtual PduType pduType() { return GNone; }
+  virtual Type type() { return GNone; }
   virtual size_t size() { return 0; }
 };
 
@@ -57,6 +56,7 @@ public:
   GPdu* first();
   GPdu* next();
   GPdu* prev();
-  GPdu* findFirst(GPdu::PduType type);
-  GPdu* findNext(GPdu::PduType type);
+  GPdu* findFirst(GPdu::Type type);
+  GPdu* findNext(GPdu::Type type);
+  GPdu* findPrev(GPdu::Type type);
 };

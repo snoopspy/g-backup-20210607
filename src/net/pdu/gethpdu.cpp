@@ -1,4 +1,5 @@
 #include "gethpdu.h"
+#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GEthPdu
