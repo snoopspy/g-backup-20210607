@@ -41,8 +41,7 @@ struct GEthParser : GParser {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE GEthParser(QObject* parent = nullptr);
-  ~GEthParser() override; // gilgil temp 2016.09.10
+  Q_INVOKABLE GEthParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
   bool isMatch(GPdu* prev, GPacket* packet) override;

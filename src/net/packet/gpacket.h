@@ -21,6 +21,8 @@ struct GPdus;
 struct GPacket {
   GPacket();
   GPacket(GCapture* capture);
+  virtual ~GPacket();
+
   void clear();
 
   GCapture* capture_;

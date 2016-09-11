@@ -8,12 +8,13 @@
 size_t GParser::parse(GPacket* packet) {
   GPdu* pdu = doParse(packet);
   if (pdu == nullptr) return 0;
+  packet->pdus_->push_back(pdu);
   size_t res = pdu->size();
 
-  for (GParsers::iterator it = children_.begin(); it != children_.end(); it++) {
-    GParser* childParser = *it;
-    if (childParser->isMatch(pdu, packet)) {
-      res += childParser->parse(packet);
+  foreach (QObject* obj, children()) {
+    GParser* child = (GParser*)obj;
+    if (child->isMatch(pdu, packet)) {
+      res += child->parse(packet);
       return res;
     }
   }
@@ -21,19 +22,23 @@ size_t GParser::parse(GPacket* packet) {
 }
 
 GParser* GParser::findFirstChild(QString className) {
- for (GParsers::iterator it = children_.begin(); it != children_.end(); it++) {
-   GParser* child = *it;
-   if (className == child->metaObject()->className())
-    return child;
- }
+  foreach (QObject* obj, children()) {
+    GParser* child = (GParser*)obj;
+    if (className == child->metaObject()->className())
+      return child;
+  }
  return nullptr;
 }
 
 static void _findAll(GParser* _this, QString className, QVector<GParser*>& res) {
-  if (className == QString(_this->metaObject()->className()))
+  Q_ASSERT(_this != nullptr);
+  const QMetaObject* mobj = _this->metaObject();
+  Q_ASSERT(mobj != nullptr);
+  QString _className = QString(mobj->className());
+  if (className == _className)
     res.push_back(_this);
-  for (GParsers::iterator it = _this->children_.begin(); it != _this->children_.end(); it++) {
-    GParser* child = *it;
+  foreach (QObject* obj, _this->children()) {
+    GParser* child = (GParser*)obj;
     _findAll(child, className, res);
   }
 }
@@ -46,26 +51,19 @@ QVector<GParser*> GParser::findAll(QString className) {
 
 void GParser::addChild(QString myClassName, QString childClassName) {
   QVector<GParser*> parsers = findAll(myClassName);
-  for (QVector<GParser*>::iterator it = parsers.begin(); it != parsers.end(); it++) {
-    GParser* parser = *it;
-    childClassName += "*";
-    int id = QMetaType::type(qPrintable(childClassName)); // gilgil temp 2016.09.10
-    if (id == QMetaType::UnknownType) {
-      qCritical() << QString("can not find class type for (%1)").arg(childClassName);
-      return;
-    }
-    const QMetaObject* mobj = QMetaType::metaObjectForType(id);
-    QObject* obj = mobj->newInstance();
+  foreach (GParser* parser, parsers) {
+    QObject* obj = GObj::createInstance(childClassName);
     if (obj == nullptr) {
-      qCritical() << QString("can not create class for (%1)").arg(childClassName);
-      return;
+      qCritical() << QString("can not createInstance for (%1)").arg(childClassName);
+      continue;
     }
+
     GParser* child = dynamic_cast<GParser*>(obj);
     if (child == nullptr) {
       qCritical() << QString("maybe not gparser class for (%1)").arg(childClassName);
-      return;
+      continue;
     }
-    parser->children_.push_back(child);
+    child->setParent(parser);
   }
 }
 

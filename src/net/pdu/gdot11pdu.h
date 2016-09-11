@@ -16,4 +16,8 @@
 // GDot11Parser
 // ----------------------------------------------------------------------------
 struct GDot11Parser : GParser {
+  Q_OBJECT
+
+public:
+  Q_INVOKABLE GDot11Parser(QObject* parent = nullptr) : GParser(parent) {}
 };

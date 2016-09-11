@@ -14,15 +14,16 @@
 #include "net/capture/gcapture.h"
 
 // ----------------------------------------------------------------------------
-// GParserMap
+// GParserFactory
 // ----------------------------------------------------------------------------
-struct GParserMap {
+struct GParserFactory {
 private:
-  GParserMap();
-  virtual  ~GParserMap();
+  GParserFactory();
+  virtual  ~GParserFactory();
 
 public:
-  static GParserMap& instance();
+  static GParserFactory& instance();
+  static void init();
   static GParser* getDefaultParser(GCapture::DataLinkType dataLinkType);
 
 protected:

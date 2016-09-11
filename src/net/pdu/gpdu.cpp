@@ -7,9 +7,7 @@
 // ----------------------------------------------------------------------------
 // GPdus
 // ----------------------------------------------------------------------------
-GPdus::iterator GPdus::find(GPdu::Flag flag) {
-  GPdus::iterator res = begin();
-  return res;
+GPdus::iterator GPdus::findIterator(GPdu::Flag flag) {
   for (GPdus::iterator it = begin(); it != end(); it++) {
     GPdu* pdu = *it;
     if (pdu->flag() == flag)

@@ -1,35 +1,39 @@
 #include <iostream>
+#include <string>
 #include <QCoreApplication>
 #include <GApp>
 #include <GJson>
 #include <GPcapDevice>
 #include "net/pdu/gethpdu.h" // gilgil temp 2016.09.10
-#include "net/parser/gparsermap.h" // gilgil temp 2016.09.10
 
-
-struct Obj: GObj {
+struct Obj : GObj {
   Q_OBJECT
+
+public:
+  Obj() : GObj(nullptr) {}
 
 public slots:
   void captured(GPacket* packet) {
-    GPdus::iterator it = packet->pdus_->find(GPdu::GEthPdu);
+    GPdus::iterator it = packet->pdus_->findIterator(GPdu::GEthPdu);
+    if (it == packet->pdus_->end()) return;
     GEthPdu* pdu = (GEthPdu*)*it;
     ETH_HDR* ethHdr = pdu->ethHdr_;
-    qDebug() << "captured" << packet->pdus_->size() << QString(ethHdr->src) << QString(ethHdr->dst) << ethHdr->type;
+    qDebug() << "hahaha"; // gilgil temp 2016.09.12
+    qDebug() << "captured" << QString(ethHdr->src) << QString(ethHdr->dst) << ethHdr->type;
   }
 };
 
 int main(int argc, char* argv[]) {
   QCoreApplication a(argc, argv);
   GApp::init();
-
-  qRegisterMetaType<GEthParser*>();
-  GParserMap::instance(); // gilgil temp 2016.09.10
+  qDebug() << "1"; // gilgil temp 2016.09.12
 
   GPcapDevice device;
 
   QJsonObject jo = GJson::loadFromFile();
   jo["GPcapDevice"] >> device;
+  jo["GPcapDevice"] << device;
+  GJson::saveToFile(jo);
 
   Obj obj;
   QObject::connect(&device, SIGNAL(captured(GPacket*)), &obj, SLOT(captured(GPacket*)), Qt::DirectConnection);
@@ -39,12 +43,10 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::cout << "Press enter key to close\n";
-  std::cin.get();
+  // std::cout << "Press enter key to close\n"; // gilgil temp 2016.09.12
+  std::string s; std::cin >> s;
 
-  jo["GPcapDevice"] << device;
-  GJson::saveToFile(jo);
-
+  qDebug() << "999"; // gilgil temp 2016.09.12
   return EXIT_SUCCESS;
 }
 

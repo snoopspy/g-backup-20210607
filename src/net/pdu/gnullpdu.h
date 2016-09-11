@@ -16,4 +16,8 @@
 // GNullParser
 // ----------------------------------------------------------------------------
 struct GNullParser : GParser {
+  Q_OBJECT
+
+public:
+  Q_INVOKABLE GNullParser(QObject* parent = nullptr) : GParser(parent) {}
 };

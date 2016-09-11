@@ -17,12 +17,6 @@ GEthPdu::GEthPdu(u_char* buf, size_t len) {
 // ----------------------------------------------------------------------------
 // GEthParser
 // ----------------------------------------------------------------------------
-GEthParser::GEthParser(QObject* parent) : GParser(parent) {
-}
-
-GEthParser::~GEthParser() { // gilgil temp 2016.09.10
-}
-
 bool GEthParser::isMatch(GPdu* prev, GPacket* packet) {
   (void)prev;
   (void)packet;

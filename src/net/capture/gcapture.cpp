@@ -1,5 +1,5 @@
 #include "gcapture.h"
-#include "net/parser/gparsermap.h"
+#include "net/parser/gparserfactory.h"
 
 // ----------------------------------------------------------------------------
 // GCaptureThread
@@ -71,7 +71,7 @@ GCapture::Result GCapture::relay(GPacket* packet) {
 
 void GCapture::run() {
   // qDebug() << "stt"; // gilgil temp 2015.10.28
-  GParser* parser = GParserMap::getDefaultParser(dataLinkType());
+  GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
   while (active()) {
     GPacket packet;

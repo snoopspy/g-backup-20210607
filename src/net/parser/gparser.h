@@ -27,14 +27,12 @@ struct GParser : GObj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE explicit GParser(QObject* parent = nullptr) : GObj(parent) {}
+  GParser(QObject* parent = nullptr) : GObj(parent) {}
   ~GParser() override {}
 
   virtual size_t parse(GPacket* packet);
 
 public:
-  GParsers children_;
-
   GParser* findFirstChild(QString className);
   QVector<GParser*> findAll(QString className);
   void addChild(QString myClassName, QString childClassName);

@@ -44,5 +44,5 @@ struct GPdu {
 // GPdus
 // ----------------------------------------------------------------------------
 struct GPdus : QVector<GPdu*> {
-  GPdus::iterator find(GPdu::Flag flag);
+  GPdus::iterator findIterator(GPdu::Flag flag);
 };

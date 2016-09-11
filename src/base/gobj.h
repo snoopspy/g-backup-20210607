@@ -23,10 +23,13 @@ struct GObj : QObject, GProp {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE explicit GObj(QObject* parent = nullptr) : QObject(parent) {} // gilgil temp 2016.09.10
-  ~GObj() override;
+  GObj(QObject* parent = nullptr) : QObject(parent) {}
+  ~GObj() override {}
 
   QSharedPointer<GErr> err{nullptr};
+
+public:
+  static QObject* createInstance(QString className);
 };
 
 // ----------------------------------------------------------------------------
