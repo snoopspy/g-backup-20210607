@@ -1,6 +1,6 @@
 #include "gippdu.h"
-#include "net/packet/gpacket.h"
 #include "gethpdu.h"
+#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GIpPdu
@@ -19,8 +19,9 @@ GIpPdu::GIpPdu(u_char* buf) {
 // ----------------------------------------------------------------------------
 bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
   Q_ASSERT(dynamic_cast<GEthPdu*>(prev) != nullptr);
-  ETH_HDR* ethHdr = ((GEthPdu*)prev)->ethHdr_;
-  if (ntohs(ethHdr->ether_type) != ETHERTYPE_IP)
+  GEthPdu* ethPdu = (GEthPdu*)prev;
+
+  if (ethPdu->type() != ETHERTYPE_IP)
     return false;
 
   if (packet->len_ <= sizeof(IP_HDR))

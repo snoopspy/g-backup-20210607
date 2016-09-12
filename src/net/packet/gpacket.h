@@ -36,14 +36,20 @@ public:
   u_char* buf_;
   size_t len_;
 
-protected:
-  GPdus* pdus_;
+public: // protected: // gilgil temp 2016.09.12
+  GPdus pdus_;
 
 public:
-  GPdu* first() { return pdus_->first(); }
-  GPdu* next() { return pdus_->next(); }
-  GPdu* prev() { return pdus_->prev(); }
-  GPdu* findFirst(GPdu::Type type) { return pdus_->findFirst(type); }
-  GPdu* findNext(GPdu::Type type) { return pdus_->findNext(type); }
-  GPdu* findPrev(GPdu::Type type) { return pdus_->findPrev(type); }
+  GPdu* first() { return pdus_.first(); }
+  GPdu* next() { return pdus_.next(); }
+  GPdu* prev() { return pdus_.prev(); }
+
+  template <typename T>
+  T* findFirst() { return pdus_.findFirst<T>(); }
+
+  template <typename T>
+  T* findNext() { return pdus_.findNext<T>(); }
+
+  template <typename T>
+  T* findPrev() { return pdus_.findPrev<T>(); }
 };

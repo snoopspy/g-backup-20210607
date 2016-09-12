@@ -28,11 +28,17 @@ struct ETH_HDR {
 // GEthPdu
 // ----------------------------------------------------------------------------
 struct GEthPdu : GPdu {
+  static const PduType staticType = GPdu::GEthPdu;
+  GPdu::PduType pduType() override { return staticType; }
   size_t size() override;
-  GPdu::Type type() override { return GPdu::GEthPdu; }
 
   GEthPdu(u_char* buf);
 
+  GMac dst() { return ethHdr_->ether_dhost; }
+  GMac src() { return ethHdr_->ether_shost; }
+  uint16_t type() { return ntohs(ethHdr_->ether_type); }
+
+protected:
   ETH_HDR* ethHdr_;
 };
 

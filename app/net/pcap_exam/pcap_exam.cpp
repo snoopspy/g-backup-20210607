@@ -5,6 +5,7 @@
 #include <GJson>
 #include <GPcapDevice>
 #include "net/pdu/gethpdu.h" // gilgil temp 2016.09.10
+#include "net/pdu/gippdu.h" // gilgil temp 2016.09.10
 
 struct Obj : GObj {
   Q_OBJECT
@@ -14,12 +15,21 @@ public:
 
 public slots:
   void captured(GPacket* packet) {
-    GEthPdu* ethPdu = dynamic_cast<GEthPdu*>(packet->findFirst(GPdu::GEthPdu));
-    if (ethPdu == nullptr) return;
+    GEthPdu* eth = packet->findFirst<GEthPdu>();
+    if (eth == nullptr) return;
 
-    ETH_HDR* ethHdr = ethPdu->ethHdr_;
-    qDebug() << QString("captured %1 > %2 (%3)").arg(
-      QString(ethHdr->ether_shost), QString(ethHdr->ether_dhost), QString::number(ntohs(ethHdr->ether_type), 16));
+    GIpPdu* ip = packet->findNext<GIpPdu>();
+    if (ip == nullptr) return;
+
+    char msg[256];
+    sprintf(msg, "%s>%s ", (const char*)(eth->src()), (const char*)(eth->dst()));
+    qDebug() << msg;
+    sprintf(msg, "%s>%s ", qPrintable(QString(eth->src())), qPrintable(QString(eth->dst())));
+    qDebug() << msg;
+    sprintf(msg, "src %s ", (const char*)eth->src());
+    qDebug() << msg;
+    sprintf(msg, "dst %s ", (const char*)eth->dst());
+    qDebug() << msg;
   }
 };
 
