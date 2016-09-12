@@ -1,16 +1,16 @@
-#include "gethpdu.h"
+#include "gethhdr.h"
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GEthPdu
+// GEthHdr
 // ----------------------------------------------------------------------------
-size_t GEthPdu::size() {
-  Q_ASSERT(ethHdr_ != nullptr);
+size_t GEthHdr::size() {
+  Q_ASSERT(eth_hdr_ != nullptr);
   return sizeof(ETH_HDR);
 }
 
-GEthPdu::GEthPdu(u_char* buf) {
-  ethHdr_ = (ETH_HDR*)buf;
+GEthHdr::GEthHdr(u_char* buf) {
+  eth_hdr_ = (ETH_HDR*)buf;
 }
 
 // ----------------------------------------------------------------------------
@@ -26,5 +26,5 @@ bool GEthParser::isMatch(GPdu* prev, GPacket* packet) {
 GPdu* GEthParser::doParse(GPacket* packet) {
   if ((packet->len_) < sizeof(ETH_HDR))
     return nullptr;
-  return new GEthPdu(packet->buf_);
+  return new GEthHdr(packet->buf_);
 }

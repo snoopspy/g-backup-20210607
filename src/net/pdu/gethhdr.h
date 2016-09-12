@@ -17,29 +17,33 @@
 // ETH_HDR
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct ETH_HDR {
-  GMac ether_dhost;
-  GMac ether_shost;
+struct ETH_HDR { // libnet_ethernet_hdr
+  GMac     ether_dhost;
+  GMac     ether_shost;
   uint16_t ether_type;
+
+  GMac dmac()     { return ether_dhost; }
+  GMac smac()     { return ether_shost; }
+  uint16_t type() { return ntohs(ether_type); }
 };
 #pragma pack(pop)
 
 // ----------------------------------------------------------------------------
-// GEthPdu
+// GEthHdr
 // ----------------------------------------------------------------------------
-struct GEthPdu : GPdu {
+struct GEthHdr : GPdu {
   static const GPduType staticType = GPduType::Eth;
   GPduType pduType() override { return staticType; }
   size_t size() override;
 
-  GEthPdu(u_char* buf);
+  GEthHdr(u_char* buf);
 
-  GMac dst() { return ethHdr_->ether_dhost; }
-  GMac src() { return ethHdr_->ether_shost; }
-  uint16_t type() { return ntohs(ethHdr_->ether_type); }
+  GMac     dmac() { return eth_hdr_->dmac(); }
+  GMac     smac() { return eth_hdr_->smac(); }
+  uint16_t type() { return eth_hdr_->type(); }
 
 protected:
-  ETH_HDR* ethHdr_;
+  ETH_HDR* eth_hdr_;
 };
 
 // ----------------------------------------------------------------------------

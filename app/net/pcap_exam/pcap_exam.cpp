@@ -1,11 +1,10 @@
 #include <iostream>
-#include <string>
 #include <QCoreApplication>
 #include <GApp>
 #include <GJson>
 #include <GPcapDevice>
-#include "net/pdu/gethpdu.h" // gilgil temp 2016.09.10
-#include "net/pdu/gippdu.h" // gilgil temp 2016.09.10
+#include "net/pdu/gethhdr.h" // gilgil temp 2016.09.10
+#include "net/pdu/giphdr.h" // gilgil temp 2016.09.10
 
 struct Obj : GObj {
   Q_OBJECT
@@ -15,21 +14,19 @@ public:
 
 public slots:
   void captured(GPacket* packet) {
-    GEthPdu* eth = packet->findFirst<GEthPdu>();
-    if (eth == nullptr) return;
+    GEthHdr* ethHdr = packet->findFirst<GEthHdr>();
+    if (ethHdr == nullptr) return;
 
-    GIpPdu* ip = packet->findNext<GIpPdu>();
-    if (ip == nullptr) return;
+    GIpHdr* ipHdr = packet->findNext<GIpHdr>();
+    if (ipHdr == nullptr) return;
 
-    char msg[256];
-    sprintf(msg, "%s>%s ", (const char*)(eth->src()), (const char*)(eth->dst()));
-    qDebug() << msg;
-    sprintf(msg, "%s>%s ", qPrintable(QString(eth->src())), qPrintable(QString(eth->dst())));
-    qDebug() << msg;
-    sprintf(msg, "src %s ", (const char*)eth->src());
-    qDebug() << msg;
-    sprintf(msg, "dst %s ", (const char*)eth->dst());
-    qDebug() << msg;
+    QString smac = (QString)ethHdr->smac();
+    QString dmac = (QString)ethHdr->dmac();
+    QString sip  = (QString)ipHdr->sip();
+    QString dip  = (QString)ipHdr->dip();
+
+    QString msg = QString("%1 > %2 %3 > %4\n").arg(smac, dmac, sip, dip);
+    std::clog << qPrintable(msg);
   }
 };
 
@@ -48,12 +45,12 @@ int main(int argc, char* argv[]) {
   QObject::connect(&device, SIGNAL(captured(GPacket*)), &obj, SLOT(captured(GPacket*)), Qt::DirectConnection);
 
   if (!device.open()) {
-    qWarning() << device.err;
+    std::clog << device.err;
     return EXIT_FAILURE;
   }
 
-  // std::cout << "Press enter key to close\n"; // gilgil temp 2016.09.12
-  std::string s; std::cin >> s;
+  std::clog << "Press enter key to close\n";
+  while (std::cin.get() != '\n');
 
   return EXIT_SUCCESS;
 }

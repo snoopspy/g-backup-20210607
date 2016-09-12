@@ -1,11 +1,11 @@
 #include "gparserfactory.h"
 
-#include "net/pdu/gethpdu.h"
+#include "net/pdu/gethhdr.h"
 #include "net/pdu/gdot11pdu.h"
 #include "net/pdu/grawpdu.h"
 #include "net/pdu/gnullpdu.h"
 
-#include "net/pdu/gippdu.h"
+#include "net/pdu/giphdr.h"
 
 // ----------------------------------------------------------------------------
 // GParserFactory

@@ -1,16 +1,16 @@
-#include "gippdu.h"
-#include "gethpdu.h"
+#include "giphdr.h"
+#include "gethhdr.h"
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GIpPdu
+// GIpHdr
 // ----------------------------------------------------------------------------
-size_t GIpPdu::size() {
+size_t GIpHdr::size() {
   Q_ASSERT(ipHdr_ != nullptr);
   return (ipHdr_->ip_hl) * 4;
 }
 
-GIpPdu::GIpPdu(u_char* buf) {
+GIpHdr::GIpHdr(u_char* buf) {
   ipHdr_ = (IP_HDR*)buf;
 }
 
@@ -18,10 +18,10 @@ GIpPdu::GIpPdu(u_char* buf) {
 // GIpParser
 // ----------------------------------------------------------------------------
 bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
-  Q_ASSERT(dynamic_cast<GEthPdu*>(prev) != nullptr);
-  GEthPdu* ethPdu = (GEthPdu*)prev;
+  Q_ASSERT(dynamic_cast<GEthHdr*>(prev) != nullptr);
+  GEthHdr* ethHdr = (GEthHdr*)prev;
 
-  if (ethPdu->type() != ETHERTYPE_IP)
+  if (ethHdr->type() != ETHERTYPE_IP)
     return false;
 
   if (packet->len_ < sizeof(IP_HDR))
@@ -32,5 +32,5 @@ bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
 
 GPdu* GIpParser::doParse(GPacket* packet) {
   Q_ASSERT(packet->len_ >= sizeof(IP_HDR));
-  return new GIpPdu(packet->buf_);
+  return new GIpHdr(packet->buf_);
 }
