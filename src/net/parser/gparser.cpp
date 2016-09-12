@@ -22,7 +22,7 @@ size_t GParser::parse(GPacket* packet) {
       return res;
     }
   }
-  return 0;
+  return res;
 }
 
 GParser* GParser::findFirstChild(QString className) {

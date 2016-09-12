@@ -36,7 +36,7 @@ public:
   u_char* buf_;
   size_t len_;
 
-public: // protected: // gilgil temp 2016.09.12
+protected:
   GPdus pdus_;
 
 public:

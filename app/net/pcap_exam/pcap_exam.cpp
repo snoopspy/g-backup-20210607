@@ -36,7 +36,6 @@ public slots:
 int main(int argc, char* argv[]) {
   QCoreApplication a(argc, argv);
   GApp::init();
-  qDebug() << "1"; // gilgil temp 2016.09.12
 
   GPcapDevice device;
 
@@ -56,7 +55,6 @@ int main(int argc, char* argv[]) {
   // std::cout << "Press enter key to close\n"; // gilgil temp 2016.09.12
   std::string s; std::cin >> s;
 
-  qDebug() << "999"; // gilgil temp 2016.09.12
   return EXIT_SUCCESS;
 }
 

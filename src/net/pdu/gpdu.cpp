@@ -21,4 +21,3 @@ void GPdus::clear() {
 void GPdus::add(GPdu* pdu) {
   push_back(pdu);
 }
-

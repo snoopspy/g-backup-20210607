@@ -20,25 +20,28 @@
 #include "net/parser/gparser.h"
 
 // ----------------------------------------------------------------------------
+// GPduType
+// ----------------------------------------------------------------------------
+typedef enum {
+  Eth,
+  Ip,
+  Ip6,
+  Tcp,
+  TcpOption,
+  Udp,
+  Icmp,
+  Dns,
+  None
+} GPduType;
+
+// ----------------------------------------------------------------------------
 // GPdu
 // ----------------------------------------------------------------------------
 struct GPdu {
-  typedef enum {
-    GEthPdu,
-    GIpPdu,
-    GIp6Pdu,
-    GTcpPdu,
-    GTcpOptionPdu,
-    GUdpPdu,
-    GIcmpPdu,
-    GDnsPdu,
-    GNone
-  } PduType;
-
   virtual ~GPdu() {}
 
-  static const PduType staticType = GNone;
-  virtual PduType pduType() { return staticType; }
+  static const GPduType staticType = None;
+  virtual GPduType pduType() { return staticType; }
   virtual size_t size() { return 0; }
 };
 
@@ -78,7 +81,7 @@ public:
   }
 
   template <typename T>
-  T* findFirst(GPdu::PduType findType = T::staticType) {
+  T* findFirst(GPduType findType = T::staticType) {
     int count = size();
     for (int i = 0; i < count; i++) {
       GPdu* pdu = at(i);
@@ -91,7 +94,7 @@ public:
   }
 
   template <typename T>
-  T* findNext(GPdu::PduType findType = T::staticType) {
+  T* findNext(GPduType findType = T::staticType) {
     Q_ASSERT(current_ >= 0 && current_ < size());
     int count = size();
     for (int i = current_ + 1; i < count; i++) {
@@ -105,7 +108,7 @@ public:
   }
 
   template <typename T>
-  T* findPrev(GPdu::PduType findType = T::staticType) {
+  T* findPrev(GPduType findType = T::staticType) {
     Q_ASSERT(current_ >= 0 && current_ < size());
     for (int i = current_ - 1; i >= 0; i--) {
       GPdu* pdu = at(i);

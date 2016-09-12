@@ -28,8 +28,8 @@ struct ETH_HDR {
 // GEthPdu
 // ----------------------------------------------------------------------------
 struct GEthPdu : GPdu {
-  static const PduType staticType = GPdu::GEthPdu;
-  GPdu::PduType pduType() override { return staticType; }
+  static const GPduType staticType = GPduType::Eth;
+  GPduType pduType() override { return staticType; }
   size_t size() override;
 
   GEthPdu(u_char* buf);

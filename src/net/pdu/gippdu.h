@@ -21,8 +21,8 @@ typedef libnet_ipv4_hdr IP_HDR;
 // GIpPdu
 // ----------------------------------------------------------------------------
 struct GIpPdu : GPdu {
-  static const PduType staticType = GPdu::GIpPdu;
-  GPdu::PduType pduType() override { return staticType; }
+  static const GPduType staticType = GPduType::Ip;
+  GPduType pduType() override { return staticType; }
   size_t size() override;
 
   GIpPdu(u_char* buf);

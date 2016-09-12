@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 size_t GIpPdu::size() {
   Q_ASSERT(ipHdr_ != nullptr);
-  return (ipHdr_->ip_v) * 4;
+  return (ipHdr_->ip_hl) * 4;
 }
 
 GIpPdu::GIpPdu(u_char* buf) {
@@ -24,7 +24,7 @@ bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
   if (ethPdu->type() != ETHERTYPE_IP)
     return false;
 
-  if (packet->len_ <= sizeof(IP_HDR))
+  if (packet->len_ < sizeof(IP_HDR))
     return false;
 
   return true;
@@ -34,4 +34,3 @@ GPdu* GIpParser::doParse(GPacket* packet) {
   Q_ASSERT(packet->len_ >= sizeof(IP_HDR));
   return new GIpPdu(packet->buf_);
 }
-
