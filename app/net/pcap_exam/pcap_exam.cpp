@@ -9,9 +9,6 @@
 struct Obj : GObj {
   Q_OBJECT
 
-public:
-  Obj() : GObj(nullptr) {}
-
 public slots:
   void captured(GPacket* packet) {
     GEthHdr* ethHdr = packet->findFirst<GEthHdr>();
@@ -37,8 +34,8 @@ int main(int argc, char* argv[]) {
   GPcapDevice device;
 
   QJsonObject jo = GJson::loadFromFile();
-  jo["GPcapDevice"] >> device;
-  jo["GPcapDevice"] << device;
+  jo["device"] >> device;
+  jo["device"] << device;
   GJson::saveToFile(jo);
 
   Obj obj;

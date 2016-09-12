@@ -6,12 +6,12 @@
 // GIpHdr
 // ----------------------------------------------------------------------------
 size_t GIpHdr::size() {
-  Q_ASSERT(ipHdr_ != nullptr);
-  return (ipHdr_->ip_hl) * 4;
+  Q_ASSERT(ip_hdr_ != nullptr);
+  return (ip_hdr_->ip_hl) * 4;
 }
 
 GIpHdr::GIpHdr(u_char* buf) {
-  ipHdr_ = (IP_HDR*)buf;
+  ip_hdr_ = (IP_HDR*)buf;
 }
 
 // ----------------------------------------------------------------------------

@@ -18,8 +18,6 @@
 // GPacket
 // ----------------------------------------------------------------------------
 struct GCapture;
-struct GPdu;
-struct GPdus;
 struct GPacket {
   friend struct GParser;
 
