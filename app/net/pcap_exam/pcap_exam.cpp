@@ -1,10 +1,10 @@
 #include <iostream>
 #include <QCoreApplication>
 #include <GApp>
+#include <GEthHdr>
+#include <GIpHdr>
 #include <GJson>
 #include <GPcapDevice>
-#include "net/pdu/gethhdr.h" // gilgil temp 2016.09.10
-#include "net/pdu/giphdr.h" // gilgil temp 2016.09.10
 
 struct Obj : GObj {
   Q_OBJECT
