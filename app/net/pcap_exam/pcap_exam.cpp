@@ -5,6 +5,7 @@
 #include <GIpHdr>
 #include <GJson>
 #include <GPcapDevice>
+#include <GTcpHdr>
 
 struct Obj : GObj {
   Q_OBJECT
@@ -17,12 +18,17 @@ public slots:
     GIpHdr* ipHdr = packet->findNext<GIpHdr>();
     if (ipHdr == nullptr) return;
 
-    QString smac = (QString)ethHdr->smac();
-    QString dmac = (QString)ethHdr->dmac();
-    QString sip  = (QString)ipHdr->sip();
-    QString dip  = (QString)ipHdr->dip();
+    GTcpHdr* tcpHdr = packet->findNext<GTcpHdr>();
+    if (tcpHdr == nullptr) return;
 
-    QString msg = QString("%1 > %2 %3 > %4\n").arg(smac, dmac, sip, dip);
+    QString smac  = (QString)ethHdr->smac();
+    QString dmac  = (QString)ethHdr->dmac();
+    QString sip   = (QString)ipHdr->sip();
+    QString dip   = (QString)ipHdr->dip();
+    QString sport = QString::number(tcpHdr->sport());
+    QString dport = QString::number(tcpHdr->dport());
+
+    QString msg = QString("%1 > %2 %3:%4 > %5:%6\n").arg(smac, dmac, sip, sport, dip, dport);
     std::clog << qPrintable(msg);
   }
 };

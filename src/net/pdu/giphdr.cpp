@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 size_t GIpHdr::size() {
   Q_ASSERT(ip_hdr_ != nullptr);
-  return (ip_hdr_->ip_hl) * 4;
+  return ip_hdr_->ip_hl * 4;
 }
 
 GIpHdr::GIpHdr(u_char* buf) {
@@ -20,13 +20,10 @@ GIpHdr::GIpHdr(u_char* buf) {
 bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
   Q_ASSERT(dynamic_cast<GEthHdr*>(prev) != nullptr);
   GEthHdr* ethHdr = (GEthHdr*)prev;
-
   if (ethHdr->type() != ETHERTYPE_IP)
     return false;
-
   if (packet->len_ < sizeof(IP_HDR))
     return false;
-
   return true;
 }
 
