@@ -19,7 +19,7 @@ distclean: clean
 	cd lib && make distclean; true
 	cd app && make distclean; true
 	find bin -type f -executable -delete
-	find bin -type f -name "*.json"
+	find bin -type f -name "*.json" -delete
 	rm -rf setup/setup
 	rm -rf setup/*.gz
 	find -type f -name 'Makefile*'  -delete

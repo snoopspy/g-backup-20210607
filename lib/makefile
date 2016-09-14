@@ -43,12 +43,10 @@ clean:
 	rm -rf libg_gui_d
 	rm -rf libg
 	rm -rf libg_gui
-	
 	rm -rf g_d_test
 	rm -rf g_gui_d_test
 	rm -rf g_test
 	rm -rf g_gui_test
-	
 	rm -rf *.pro.user
 
 distclean: clean
