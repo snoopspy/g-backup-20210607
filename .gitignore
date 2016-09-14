@@ -14,6 +14,7 @@ lib/libg_gui_d/
 *.bak
 *.json
 *.log
+*.moc
 *.o
 *.pro.user
 *.so
