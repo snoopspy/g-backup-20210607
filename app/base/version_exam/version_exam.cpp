@@ -3,4 +3,5 @@
 
 int main() {
   std::cout << G_VERSION << std::endl;
+  return 0;
 }

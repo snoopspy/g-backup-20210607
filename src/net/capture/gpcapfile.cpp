@@ -43,7 +43,7 @@ TEST(GPcapFile, noFileTest) {
 TEST(GPcapFile, icmpFileTest) {
   GPcapFile file;
   file.autoRead_ = false;
-  file.fileName_ = "icmp8.pcap";
+  file.fileName_ = "pcap/icmp8.pcap";
 
   ASSERT_TRUE(file.open());
 

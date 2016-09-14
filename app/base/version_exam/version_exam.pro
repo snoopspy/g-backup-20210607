@@ -1,4 +1,4 @@
-CONFIG -= qt
+QT -= gui
 CONFIG += console
 include(../../../g.pri)
 SOURCES += *.cpp
