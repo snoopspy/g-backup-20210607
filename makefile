@@ -6,7 +6,7 @@ lib:
 	cd lib && make && cd ..
 
 app:
-	cd app && qmake && make && cd ..
+	cd app && qmake && make -j 4 && cd ..
 
 clean:
 	cd lib && make clean; true
@@ -16,11 +16,10 @@ clean:
 	find -type f -name '*.pro.user' -delete
 
 distclean: clean
+	cd lib && make distclean; true
+	cd app && make distclean; true
 	find bin -type f -executable -delete
 	find bin -type f -name "*.json"
 	rm -rf setup/setup
 	rm -rf setup/*.gz
-	cd lib && make distclean; true
-	cd app && make distclean; true
-	find -type f -name '*.a'        -delete
 	find -type f -name 'Makefile*'  -delete
