@@ -16,7 +16,8 @@ clean:
 	find -type f -name '*.pro.user' -delete
 
 distclean: clean
-	rm -rf bin
+	find bin -type f -executable -delete
+	find bin -type f -name "*.json"
 	rm -rf setup/setup
 	rm -rf setup/*.gz
 	cd lib && make distclean; true
