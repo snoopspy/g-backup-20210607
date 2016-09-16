@@ -12,26 +12,24 @@
 
 #ifdef QT_GUI_LIB
 
-#include <QTreeWidget>
-#include "base/gobj.h"
+#include "ggraph.h"
 
 // ----------------------------------------------------------------------------
-// GPropWidget
+// GGraphWidget
 // ----------------------------------------------------------------------------
-struct GPropWidget : public QTreeWidget, GProp {
-  GPropWidget(QWidget *parent = nullptr);
-  GPropWidget(QObject* object);
-  ~GPropWidget() override;
+struct GGraphWidget : public QWidget, GProp {
+  GGraphWidget(QWidget *parent = nullptr);
+  GGraphWidget(GGraph* graph);
+  ~GGraphWidget() override;
 
 public:
   void init();
-  QObject* object() { return object_; }
-  void setObject(QObject* object);
+  GGraph* graph() { return graph_; }
+  void setGraph(GGraph* graph);
   void update();
 
 protected:
-  bool isFirstSetObject_{true};
-  QObject* object_{nullptr};
+  GGraph* graph_{nullptr};
 
 public:
   void propLoad(QJsonObject jo) override;

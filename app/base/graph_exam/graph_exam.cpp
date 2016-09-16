@@ -1,7 +1,7 @@
 #include <QApplication>
 #include <GApp>
+#include <GGraphWidget>
 #include <GJson>
-#include <GPropWidget>
 
 #include "mygraph.h"
 
@@ -10,17 +10,19 @@ int main(int argc, char *argv[]) {
   GApp::init();
 
   MyGraph myGraph;
-  GPropWidget propWidget(&myGraph);
+  GGraphWidget graphWidget;
 
   QJsonObject jo = GJson::loadFromFile();
 
   jo["myGraph"] >> myGraph;
+  jo["graphWidget"] >> graphWidget;
 
-  propWidget.update();
-  propWidget.show();
+  graphWidget.update();
+  graphWidget.show();
   int res = a.exec();
 
   jo["myGraph"] << myGraph;
+  jo["graphWidget"] << graphWidget;
 
   GJson::saveToFile(jo);
 

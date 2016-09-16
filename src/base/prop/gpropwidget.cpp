@@ -21,10 +21,6 @@ GPropWidget::GPropWidget(QObject* object) : QTreeWidget(nullptr) {
 GPropWidget::~GPropWidget() {
 }
 
-QObject* GPropWidget::object() {
-  return object_;
-}
-
 void GPropWidget::init() {
   this->setIndentation(12);
   this->setColumnCount(2);
@@ -61,6 +57,7 @@ void GPropWidget::update() {
     if (item != nullptr)
       item->update();
   }
+  QWidget::update();
 }
 
 void GPropWidget::propLoad(QJsonObject jo) {
