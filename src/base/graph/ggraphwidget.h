@@ -23,6 +23,8 @@
 #include <QTreeView>
 #include <QVBoxLayout>
 
+#include "base/prop/gpropwidget.h"
+
 // ----------------------------------------------------------------------------
 // GGraphWidget
 // ----------------------------------------------------------------------------
@@ -57,7 +59,7 @@ protected:
   QSplitter*   midSplitter_;
   QSplitter*     midLeftSplitter_;
   QTreeWidget*     nodeFactoryWidget_;
-  QTreeView*       propView_;
+  GPropWidget*     propWidget_;
   QWidget*       midRightWidget_;
   QStatusBar*  statusBar_;
 

@@ -41,7 +41,7 @@ void GGraphWidget::init() {
   midSplitter_ = new QSplitter(Qt::Horizontal, this);
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
   nodeFactoryWidget_ = new QTreeWidget(this);
-  propView_ = new QTreeView(this);
+  propWidget_ = new GPropWidget(this);
   midRightWidget_ = new QWidget(this);
   statusBar_ = new QStatusBar(this);
   statusBar_->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
@@ -55,13 +55,13 @@ void GGraphWidget::init() {
   midSplitter_->addWidget(midRightWidget_);
 
   midLeftSplitter_->addWidget(nodeFactoryWidget_);
-  midLeftSplitter_->addWidget(propView_);
+  midLeftSplitter_->addWidget(propWidget_);
 
   setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
   setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
   setColor(statusBar_, Qt::red); // gilgil temp 2016.09.18
-  setColor(nodeFactoryWidget_, Qt::green);
-  setColor(propView_, Qt::yellow);
+  setColor(nodeFactoryWidget_, Qt::green); // gilgil temp 2016.09.18
+  setColor(propWidget_, Qt::yellow); // gilgil temp 2016.09.18
 
   toolBar_->addAction(actionStart_);
   toolBar_->addAction(actionStop_);
@@ -94,14 +94,21 @@ void GGraphWidget::update() {
 
 void GGraphWidget::propLoad(QJsonObject jo) {
   jo["rect"] >> GJson::rect(this);
-  jo["midSplitter"] >> GJson::GSplitterSizes(midSplitter_);
-  jo["midLeftSplitter"] >> GJson::GSplitterSizes(midLeftSplitter_);
+
+  QJsonObject splitter = jo["splitter"].toObject();
+  splitter["mid"] >> GJson::splitterSizes(midSplitter_);
+  splitter["midLeft"] >> GJson::splitterSizes(midLeftSplitter_);
+  splitter["propWidget"] >> GJson::headerSizes(propWidget_);
 }
 
 void GGraphWidget::propSave(QJsonObject& jo) {
   jo["rect"] << GJson::rect(this);
-  jo["midSplitter"] << GJson::GSplitterSizes(midSplitter_);
-  jo["midLeftSplitter"] << GJson::GSplitterSizes(midLeftSplitter_);
+
+  QJsonObject splitter;
+  splitter["mid"] << GJson::splitterSizes(midSplitter_);
+  splitter["midLeft"] << GJson::splitterSizes(midLeftSplitter_);
+  splitter["propWidget"] << GJson::headerSizes(propWidget_);
+  jo["splitter"] = splitter;
 }
 
 void GGraphWidget::actionStartTriggered(bool checked) {
