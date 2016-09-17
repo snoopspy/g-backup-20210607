@@ -7,7 +7,7 @@
 #include <GPcapDevice>
 #include <GTcpHdr>
 
-struct Obj : GObj {
+struct Obj : QObject {
   Q_OBJECT
 
 public slots:
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
   GJson::saveToFile(jo);
 
   Obj obj;
-  QObject::connect(&device, SIGNAL(captured(GPacket*)), &obj, SLOT(captured(GPacket*)), Qt::DirectConnection);
+  QObject::connect(&device, &GCapture::captured, &obj, &Obj::captured, Qt::DirectConnection);
 
   if (!device.open()) {
     std::clog << device.err;
