@@ -97,8 +97,8 @@ void GGraphWidget::propLoad(QJsonObject jo) {
 
   QJsonObject splitter = jo["splitter"].toObject();
   splitter["mid"] >> GJson::splitterSizes(midSplitter_);
-  splitter["midLeft"] >> GJson::splitterSizes(midLeftSplitter_);
-  splitter["propWidget"] >> GJson::headerSizes(propWidget_);
+  splitter["left"] >> GJson::splitterSizes(midLeftSplitter_);
+  splitter["prop"] >> GJson::headerSizes(propWidget_);
 }
 
 void GGraphWidget::propSave(QJsonObject& jo) {
@@ -106,8 +106,8 @@ void GGraphWidget::propSave(QJsonObject& jo) {
 
   QJsonObject splitter;
   splitter["mid"] << GJson::splitterSizes(midSplitter_);
-  splitter["midLeft"] << GJson::splitterSizes(midLeftSplitter_);
-  splitter["propWidget"] << GJson::headerSizes(propWidget_);
+  splitter["left"] << GJson::splitterSizes(midLeftSplitter_);
+  splitter["prop"] << GJson::headerSizes(propWidget_);
   jo["splitter"] = splitter;
 }
 
