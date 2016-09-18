@@ -53,9 +53,13 @@ void GGraphWidget::init() {
 
   midSplitter_->addWidget(midLeftSplitter_);
   midSplitter_->addWidget(midRightWidget_);
+  midSplitter_->setStretchFactor(0, 0);
+  midSplitter_->setStretchFactor(1, 1);
 
   midLeftSplitter_->addWidget(nodeFactoryWidget_);
   midLeftSplitter_->addWidget(propWidget_);
+  midLeftSplitter_->setStretchFactor(0, 0);
+  midLeftSplitter_->setStretchFactor(1, 1);
 
   setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
   setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
