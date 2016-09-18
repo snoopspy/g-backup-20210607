@@ -26,6 +26,8 @@ void setColor(QWidget* widget, QColor color) { // gilgil temp 2016.09.18
 }
 
 void GGraphWidget::init() {
+  resize(QSize(640, 480));
+
   (actionStart_ = new QAction(this))->setText("Start");
   (actionStop_ = new QAction(this))->setText("Stop");
   (actionEdit_ = new QAction(this))->setText("Edit");
@@ -44,11 +46,10 @@ void GGraphWidget::init() {
   propWidget_ = new GPropWidget(this);
   midRightWidget_ = new QWidget(this);
   statusBar_ = new QStatusBar(this);
-  statusBar_->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-  mainLayout_->addWidget(toolBar_);
-  mainLayout_->addWidget(midSplitter_);
-  mainLayout_->addWidget(statusBar_);
+  mainLayout_->addWidget(toolBar_ , 0);
+  mainLayout_->addWidget(midSplitter_, 1);
+  mainLayout_->addWidget(statusBar_, 0);
   this->setLayout(mainLayout_);
 
   midSplitter_->addWidget(midLeftSplitter_);
@@ -61,11 +62,12 @@ void GGraphWidget::init() {
   midLeftSplitter_->setStretchFactor(0, 0);
   midLeftSplitter_->setStretchFactor(1, 1);
 
-  setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
-  setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
-  setColor(statusBar_, Qt::red); // gilgil temp 2016.09.18
-  setColor(nodeFactoryWidget_, Qt::green); // gilgil temp 2016.09.18
-  setColor(propWidget_, Qt::yellow); // gilgil temp 2016.09.18
+  //setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
+  //setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
+  //setColor(statusBar_, Qt::red); // gilgil temp 2016.09.18
+  //setColor(nodeFactoryWidget_, Qt::green); // gilgil temp 2016.09.18
+  //setColor(propWidget_, Qt::yellow); // gilgil temp 2016.09.18
+  setColor(midRightWidget_, Qt::darkGray); // gilgil temp 2016.09.18
 
   toolBar_->addAction(actionStart_);
   toolBar_->addAction(actionStop_);
