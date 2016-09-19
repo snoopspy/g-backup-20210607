@@ -95,7 +95,39 @@ void GGraphWidget::setGraph(GGraph* graph) {
 }
 
 void GGraphWidget::update() {
+  nodeFactoryWidget_->clear();
+  Q_ASSERT(graph_ != nullptr);
+  GGraph::Factory* factory = graph_->factory();
+  Q_ASSERT(factory!= nullptr);
+  foreach(GGraph::Factory::Item* item, factory->items_) {
+    updateNodeFactory(item, nullptr);
+  }
+}
 
+void GGraphWidget::updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
+  QTreeWidgetItem* newWidgetItem;
+  if (parent != nullptr)
+    newWidgetItem = new QTreeWidgetItem(parent);
+  else
+    newWidgetItem = new QTreeWidgetItem(nodeFactoryWidget_);
+
+  GGraph::Factory::ItemCategory* category = dynamic_cast<GGraph::Factory::ItemCategory*>(item);
+  if (category != nullptr) {
+    newWidgetItem->setText(0, category->name_);
+    newWidgetItem->setData(0, Qt::UserRole, QByteArray((const char*)category, sizeof(void*)));
+    foreach (GGraph::Factory::Item* child, category->items_) {
+      updateNodeFactory(child, newWidgetItem);
+    }
+    return;
+  }
+
+  GGraph::Factory::ItemNode* node = dynamic_cast<GGraph::Factory::ItemNode*>(item);
+  if (node != nullptr) {
+    newWidgetItem->setText(0, node->name_);
+    newWidgetItem->setData(0, Qt::UserRole, QByteArray((const char*)node, sizeof(void*)));return;
+  }
+
+  qCritical() << "neither ItemCatory nor ItemNode";
 }
 
 void GGraphWidget::propLoad(QJsonObject jo) {

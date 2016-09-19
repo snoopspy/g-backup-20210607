@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
   GApp::init();
 
   MyGraph myGraph;
-  GGraphWidget graphWidget;
+  GGraphWidget graphWidget(&myGraph);
 
   QJsonObject jo = GJson::loadFromFile();
 

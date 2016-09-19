@@ -40,6 +40,9 @@ public:
   void update();
 
 protected:
+  void updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
+
+protected:
   GGraph* graph_{nullptr};
 
 public:
