@@ -9,7 +9,7 @@
 GPropItemObjPtr::GPropItemObjPtr(GPropItemParam param) : GPropItem(param) {
   const char* propName = param.mpro_.name();
   QVariant variant = object_->property(propName);
-  GObj* childObj = qvariant_cast<GObj*>(variant);
+  GObj* childObj = variant.value<GObjPtr>();
   Q_ASSERT(childObj != nullptr);
   childObj->propCreateItems(param.treeWidget_, item_, childObj);
 }

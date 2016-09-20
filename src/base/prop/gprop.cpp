@@ -92,7 +92,7 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
   }
 
   if (userType == qMetaTypeId<GObjPtr>()) {
-    GObj* obj = qvariant_cast<GObj*>(object->property(propName));
+    GObj* obj = qvariant_cast<GObjPtr>(object->property(propName));
     Q_ASSERT(obj != nullptr);
     obj->propLoad(jo[propName].toObject());
     return true;
@@ -175,7 +175,7 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
   }
 
   if (userType == qMetaTypeId<GObjPtr>()) {
-    GObj* obj = qvariant_cast<GObj*>(variant);
+    GObj* obj = qvariant_cast<GObjPtr>(variant);
     Q_ASSERT(obj != nullptr);
     QJsonObject childJo;
     obj->propSave(childJo);

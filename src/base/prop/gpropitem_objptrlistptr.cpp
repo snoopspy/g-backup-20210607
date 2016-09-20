@@ -12,7 +12,7 @@ struct GPropItemObjPtrListMgr : QObject, QTreeWidgetItem {
 public:
   GPropItemObjPtrListMgr(QTreeWidgetItem* parent, GObjPtrListPtr list, GObj* obj)
     : QObject(parent->treeWidget()), QTreeWidgetItem(parent), list_(list),  obj_(obj) {
-    int index = list->indexOf(obj);
+    int index = list->indexOf(GObjPtr(obj));
     Q_ASSERT(index != -1);
     QString text = QString("item%1").arg(index);
     this->setText(0, text);
