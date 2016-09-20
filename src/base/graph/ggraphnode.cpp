@@ -1,5 +1,6 @@
 #include "ggraphnode.h"
 #include "ggraphscene.h"
+#include "ggraphwidget.h"
 
 Node::Node(GObj* obj)
 {

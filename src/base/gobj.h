@@ -28,6 +28,13 @@ public:
 
   QSharedPointer<GErr> err{nullptr};
 
+protected:
+  QStringList methodList(QMetaMethod::MethodType methodType);
+
+public:
+  QStringList signalList();
+  QStringList slotList();
+
 public:
   static QObject* createInstance(QString className);
 };

@@ -12,8 +12,6 @@
 
 #ifdef QT_GUI_LIB
 
-#include "ggraph.h"
-
 #include <QAction>
 #include <QHBoxLayout>
 #include <QToolBar>
@@ -25,6 +23,7 @@
 #include <QGraphicsView>
 
 #include "base/prop/gpropwidget.h"
+#include "ggraphscene.h"
 
 // ----------------------------------------------------------------------------
 // GGraphWidget
@@ -67,6 +66,7 @@ protected:
   QSplitter*     midLeftSplitter_;
   QTreeWidget*     factoryWidget_;
   GPropWidget*     propWidget_;
+  Scene*         scene_;
   QGraphicsView* graphView_;
   QStatusBar*  statusBar_;
 

@@ -19,9 +19,9 @@
 #include "ggrapharrow.h"
 #include "ggraphnode.h"
 #include "ggraphsignalslotform.h"
-#include "ggraphwidget.h"
 
-class Scene : public QGraphicsScene
+struct GGraphWidget;
+struct Scene : public QGraphicsScene
 {
 	Q_OBJECT
 
@@ -65,23 +65,19 @@ public: // for treeWidget
 
 public:
   GGraphWidget*         graphWidget_;
-  SignalSlotForm* signalSlotForm; // gilgil temp 2016.09.20
+  SignalSlotForm* signalSlotForm_; // gilgil temp 2016.09.20
 
-// ----- gilgil temp 2016.09.20 -----
-/*
 public:
-	QString generateObjectClassName(QString className);
+  // QString generateObjectClassName(QString className);
 	Node*  createNode(QString className, QString name, bool createObject);
 	Arrow* createArrow(Node* startNode, QString signal, Node* endNode, QString slot);
 	Arrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
-	Node*  findNodeByName(QString name);
+  Node*  findNodeByName(QString objectName);
 
 public: // for file manipulation
-	bool newFile(QString& errStr); // gilgil temp 2012.07.27
-	bool loadFromFile(QString fileName, QString& errStr); // gilgil temp 2012.07.27
-	bool saveToFile(QString fileName, QString& errStr); // gilgil temp 2012.07.27
-*/
-// ----------------------------------
+  //bool newFile(QString& errStr); // gilgil temp 2012.07.27
+  //bool loadFromFile(QString fileName, QString& errStr); // gilgil temp 2012.07.27
+  //bool saveToFile(QString fileName, QString& errStr); // gilgil temp 2012.07.27
 
 protected: // for drag and drop
 	QGraphicsLineItem *line;

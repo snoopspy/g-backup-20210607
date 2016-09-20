@@ -4,7 +4,6 @@
 
 #include <QMessageBox>
 #include "base/gjson.h"
-#include "ggraphscene.h"
 
 // ----------------------------------------------------------------------------
 // GGraphWidget
@@ -41,10 +40,11 @@ void GGraphWidget::init() {
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
   factoryWidget_ = new QTreeWidget(this);
   propWidget_ = new GPropWidget(this);
+  scene_ = new Scene(this);
   graphView_ = new QGraphicsView(this);
   graphView_->setRenderHint(QPainter::Antialiasing);
   graphView_->setAcceptDrops(true);
-  graphView_->setScene(new Scene(this));
+  graphView_->setScene(scene_);
   statusBar_ = new QStatusBar(this);
 
   mainLayout_->addWidget(toolBar_ , 0);
@@ -62,18 +62,13 @@ void GGraphWidget::init() {
   midLeftSplitter_->setStretchFactor(0, 0);
   midLeftSplitter_->setStretchFactor(1, 1);
 
-  //setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
-  //setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
-  //setColor(statusBar_, Qt::red); // gilgil temp 2016.09.18
-  //setColor(factoryWidget_, Qt::green); // gilgil temp 2016.09.18
-  //setColor(propWidget_, Qt::yellow); // gilgil temp 2016.09.18
-  //setColor(graphView_, Qt::darkGray); // gilgil temp 2016.09.18
-
   toolBar_->addAction(actionStart_);
   toolBar_->addAction(actionStop_);
   toolBar_->addSeparator();
   toolBar_->addAction(actionEdit_);
   toolBar_->addAction(actionLink_);
+  toolBar_->addSeparator();
+  toolBar_->addAction(actionDelete_);
   toolBar_->addSeparator();
   toolBar_->addAction(actionOption_);
 
@@ -190,11 +185,13 @@ void GGraphWidget::actionStopTriggered(bool checked) {
 void GGraphWidget::actionEditTriggered(bool checked) {
   (void)checked;
   qDebug() << ""; // gilgil temp 2016.09.18
+  scene_->setMode(Scene::MoveItem);
 }
 
 void GGraphWidget::actionLinkTriggered(bool checked) {
   (void)checked;
   qDebug() << ""; // gilgil temp 2016.09.18
+  scene_->setMode(Scene::InsertLine);
 }
 
 void GGraphWidget::actionDeleteTriggered(bool checked) {
@@ -210,9 +207,7 @@ void GGraphWidget::actionOptionTriggered(bool checked) {
 void GGraphWidget::factoryWidgetClicked(const QModelIndex &index) {
   (void)index;
   if (factoryWidget_->selectedItems().isEmpty()) return;
-  Scene* scene = dynamic_cast<Scene*>(graphView_->scene());
-  Q_ASSERT(scene != nullptr);
-  scene->setMode(Scene::InsertItem);
+   scene_->setMode(Scene::InsertItem);
 }
 
 // ----- gilgil temp 2016.09.20 -----

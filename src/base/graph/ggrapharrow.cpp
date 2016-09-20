@@ -10,11 +10,11 @@
 #include "ggrapharrow.h"
 #include "ggraphnode.h" // gilgil temp 2016.09.20
 #include "ggraphscene.h" // gilgil temp 2016.09.20
+#include "ggraphwidget.h"
 
 const qreal Pi = 3.14;
 
-//! [0]
-Arrow::Arrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGraphicsLineItem(NULL)
+Arrow::Arrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGraphicsLineItem(nullptr)
 {
 	myStartNode = startNode;
 	myEndNode   = endNode;
@@ -34,7 +34,7 @@ Arrow::~Arrow()
 {
 	Scene* scene = (Scene*)this->scene();
   GGraph::Connections& connections = scene->graphWidget_->graph()->connections_;
-  int index = connections.indexOf(&connection_);
+  int index = connections.indexOf(connection_);
   Q_ASSERT(index != -1);
   connections.removeAt(index);
 }

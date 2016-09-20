@@ -30,9 +30,10 @@ struct GGraph : GObj {
     QString signal_;
     QString receiver_;
     QString slot_;
+    bool operator ==(const Connection& other);
   };
 
-  struct Connections : QList<Connection*>, GProp {
+  struct Connections : QList<Connection>, GProp {
     void propLoad(QJsonObject jo) override;
     void propSave(QJsonObject& jo) override;
   };
@@ -69,8 +70,14 @@ struct GGraph : GObj {
     };
 
   public:
-    QStringList removePrefixNames_;
     Items items_;
+
+  public:
+    QStringList removePrefixNames_;
+    QStringList ignoreSignalNames_;
+    QStringList ignoreSlotNames_;
+    void propLoad(QJsonObject jo) override;
+    void propSave(QJsonObject& jo) override;
   };
 
 public:

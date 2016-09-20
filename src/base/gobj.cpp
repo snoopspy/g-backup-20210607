@@ -4,6 +4,30 @@
 // ----------------------------------------------------------------------------
 // GObj
 // ----------------------------------------------------------------------------
+QStringList GObj::methodList(QMetaMethod::MethodType methodType) {
+  QStringList res;
+
+  int _count = metaObject()->methodCount();
+  for (int i = 0; i < _count; i++)
+  {
+    QMetaMethod _method = metaObject()->method(i);
+    if (_method.access() == QMetaMethod::Public && _method.methodType() == methodType)
+    {
+      QString methodName = _method.methodSignature();
+      res.push_back(methodName);
+     }
+  }
+  return res;
+}
+
+QStringList GObj::signalList() {
+  return methodList(QMetaMethod::Signal);
+}
+
+QStringList GObj::slotList() {
+  return methodList(QMetaMethod::Slot);
+}
+
 QObject* GObj::createInstance(QString className) {
   className += "*";
   int id = QMetaType::type(qPrintable(className));

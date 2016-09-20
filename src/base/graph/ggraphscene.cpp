@@ -1,11 +1,12 @@
 #include "ggraphscene.h"
+#include "ggraphwidget.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent)
 {
 	m_mode         = MoveItem;
   graphWidget_   = dynamic_cast<GGraphWidget*>(parent);
   Q_ASSERT(graphWidget_ != nullptr);
-  signalSlotForm = nullptr;
+  signalSlotForm_ = nullptr;
   line           = nullptr;
 
   // ----- gilgil temp 2016.09.20 -----
@@ -53,9 +54,9 @@ Scene::~Scene()
 			delete node;
 		}
 	}
-  if (signalSlotForm != nullptr) {
-    delete signalSlotForm;
-    signalSlotForm = nullptr;
+  if (signalSlotForm_ != nullptr) {
+    delete signalSlotForm_;
+    signalSlotForm_ = nullptr;
   }
 }
 
@@ -177,6 +178,8 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 
 	return res;
 }
+*/
+// ----------------------------------
 
 Arrow* Scene::createArrow(Node* startNode, QString signal, Node* endNode, QString slot)
 {
@@ -196,23 +199,24 @@ Arrow* Scene::createArrow(QString startNodeName, QString signal, QString endNode
 	return createArrow(startNode, signal, endNode, slot);
 }
 
-Node* Scene::findNodeByName(QString name)
+Node* Scene::findNodeByName(QString objectName)
 {
 	int _count = this->items().count();
 	for (int i = 0; i < _count; i++)
 	{
 		QGraphicsItem* item = this->items().at(i);
-		if (!IS_CLASS(item, Node*)) continue;
 		Node* res = dynamic_cast<Node*>(item);
-		if (res->object->name == name)
-		{
+    if (res == nullptr) continue;
+    if (res->obj_->objectName() == objectName) {
 			return res;
 		}
 	}
-	LOG_ERROR("can not find for '%s'", qPrintable(name));
-	return NULL;
+  qWarning() << QString("can not find for '%1'").arg(objectName);
+  return nullptr;
 }
 
+// ----- gilgil temp 2016.09.20 -----
+/*
 bool Scene::newFile(QString& errStr)
 {
 	clear();
@@ -370,14 +374,13 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-  // ----- gilgil temp 2016.09.20 -----
-  /*
-	switch (m_mode)
-	{
+	switch (m_mode)	{
+    case InsertItem:
+      break;
 		case MoveItem:
 			break;
 		case InsertLine:
-			if (line != NULL)
+      if (line != nullptr)
 			{
 					QList<QGraphicsItem *> startItems = items(line->line().p1());
 					if (startItems.count() && startItems.first() == line)
@@ -389,70 +392,43 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 					if (startItems.count() > 0 && endItems.count() > 0 &&
 							startItems.first() != endItems.first())
 					{
-							Node *startNode         = (Node*)startItems.first();
-							Node *endNode           = (Node*)endItems.first();
+              Node *startNode = (Node*)startItems.first();
+              Node *endNode = (Node*)endItems.first();
+              GGraph::Factory* factory = graphWidget_->graph()->factory();
+              Q_ASSERT(factory != nullptr);
 
-							QStringList _signalList = VGraph::signalList(startNode->object);
-							foreach (QString name, removeSignalNames)
-							{
+              QStringList _signalList = startNode->obj_->signalList();
+              foreach(QString name, factory->ignoreSignalNames_) {
 								_signalList.removeAll(name);
 							}
-							{
-								int i = 0;
-								while (i < _signalList.count())
-								{
-									QString name = _signalList.at(i);
-									if (name.startsWith("__"))
-									{
-										_signalList.removeAt(i);
-										continue;
-									}
-									i++;
-								}
-							}
 
-							QStringList _slotList   = VGraph::slotList(endNode->object);
-							foreach (QString name, removeSlotNames)
-							{
+              QStringList _slotList = endNode->obj_->slotList();
+              foreach (QString name, factory->ignoreSlotNames_) {
 								_slotList.removeAll(name);
 							}
-							{
-								int i = 0;
-								while (i < _slotList.count())
-								{
-									QString name = _slotList.at(i);
-									if (name.startsWith("__"))
-									{
-										_slotList.removeAt(i);
-										continue;
-									}
-									i++;
-								}
-							}
 
-							if (signalSlotForm == NULL) signalSlotForm = new SignalSlotForm((QWidget*)this->parent());
-							signalSlotForm->ui->lwSignalList->clear();
-							signalSlotForm->ui->lwSignalList->addItems(_signalList);
-							signalSlotForm->ui->lwSlotList->clear();
-							signalSlotForm->ui->lwSlotList->addItems(_slotList);
-							signalSlotForm->exec();
-							if (signalSlotForm->result() == QDialog::Accepted)
+              if (signalSlotForm_ == NULL) signalSlotForm_ = new SignalSlotForm((QWidget*)this->parent());
+              signalSlotForm_->lwSignalList_->clear();
+              signalSlotForm_->lwSignalList_->addItems(_signalList);
+              signalSlotForm_->lwSlotList_->clear();
+              signalSlotForm_->lwSlotList_->addItems(_slotList);
+              signalSlotForm_->exec();
+              if (signalSlotForm_->result() == QDialog::Accepted)
 							{
-								QString signal = signalSlotForm->ui->lwSignalList->selectedItems().first()->text();
-								QString slot   = signalSlotForm->ui->lwSlotList->selectedItems().first()->text();
+                QString signal = signalSlotForm_->lwSignalList_->selectedItems().first()->text();
+                QString slot   = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
 
-								VGraphConnect connect;
-								connect.sender   = startNode->object->name;
-								connect.signal   = signal;
-								connect.receiver = endNode->object->name;
-								connect.slot     = slot;
-                this->graph_->connectList.addConnect(connect);
+                GGraph::Connection connection;
+                connection.sender_   = startNode->obj_->objectName();
+                connection.signal_   = signal;
+                connection.receiver_ = endNode->obj_->objectName();
+                connection.slot_     = slot;
+                graphWidget_->graph()->connections_.push_back(connection);
 
 								Arrow *arrow = createArrow(startNode, signal, endNode, slot);
-								if (arrow != NULL)
-								{
-								addItem(arrow);
-								arrow->updatePosition();
+                if (arrow != nullptr) {
+                  addItem(arrow);
+                  arrow->updatePosition();
 								}
 							}
 					}
@@ -462,8 +438,6 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			}
 			break;
 	}
-  */
-  // ----------------------------------
 
 	QGraphicsScene::mouseReleaseEvent(event);
 }
