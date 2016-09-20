@@ -76,7 +76,7 @@ const QJsonValue operator >> (const QJsonValue val, QList<int>& intList) {
 
 #include "prop/gprop.h"
 // ----------------------------------------------------------------------------
-// GObj
+// GProp
 // ----------------------------------------------------------------------------
 QJsonValueRef operator << (QJsonValueRef ref, const GProp& prop) {
   QJsonObject jo;

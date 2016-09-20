@@ -12,13 +12,13 @@
 
 #include <QList>
 #include "base/gobj.h"
+#include "base/gjson.h"
 
 // ----------------------------------------------------------------------------
 // GGraph
 // ----------------------------------------------------------------------------
 struct GGraph : GObj {
-  struct Node : QObject {
-  };
+  typedef GObj Node;
 
   struct Nodes : QList<Node*>, GProp {
     void propLoad(QJsonObject jo) override;
@@ -76,4 +76,8 @@ public:
   Connections connections_;
 
   virtual Factory* factory() = 0;
+
+public:
+  void propLoad(QJsonObject jo) override;
+  void propSave(QJsonObject& jo) override;
 };

@@ -73,6 +73,11 @@ public slots:
   void actionLinkTriggered(bool checked);
   void actionDeleteTriggered(bool checked);
   void actionOptionTriggered(bool checked);
+
+// ----- gilgil temp 2016.09.20 -----
+public slots:
+  void doubleClicked(const QModelIndex &index);
+// ----------------------------------
 };
 
 #endif // QT_GUI_LIB

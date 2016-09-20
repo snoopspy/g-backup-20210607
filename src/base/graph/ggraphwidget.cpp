@@ -83,6 +83,10 @@ void GGraphWidget::init() {
   QObject::connect(actionLink_, &QAction::triggered, this, &GGraphWidget::actionLinkTriggered);
   QObject::connect(actionDelete_, &QAction::triggered, this, &GGraphWidget::actionDeleteTriggered);
   QObject::connect(actionOption_, &QAction::triggered, this, &GGraphWidget::actionOptionTriggered);
+
+  // ----- gilgil temp 2016.09.20 -----
+  QObject::connect(nodeFactoryWidget_, &QTreeWidget::doubleClicked, this, &GGraphWidget::doubleClicked);
+  // ----------------------------------
 }
 
 void GGraphWidget::setGraph(GGraph* graph) {
@@ -102,6 +106,7 @@ void GGraphWidget::update() {
   foreach(GGraph::Factory::Item* item, factory->items_) {
     updateNodeFactory(item, nullptr);
   }
+  nodeFactoryWidget_->expandAll();
 }
 
 void GGraphWidget::updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
@@ -111,23 +116,17 @@ void GGraphWidget::updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetIte
   else
     newWidgetItem = new QTreeWidgetItem(nodeFactoryWidget_);
 
+  newWidgetItem->setText(0, item->name_);
+  QVariant v = QVariant::fromValue((void*)item);
+  newWidgetItem->setData(0, Qt::UserRole, v);
+
   GGraph::Factory::ItemCategory* category = dynamic_cast<GGraph::Factory::ItemCategory*>(item);
   if (category != nullptr) {
-    newWidgetItem->setText(0, category->name_);
-    newWidgetItem->setData(0, Qt::UserRole, QByteArray((const char*)category, sizeof(void*)));
     foreach (GGraph::Factory::Item* child, category->items_) {
       updateNodeFactory(child, newWidgetItem);
     }
     return;
   }
-
-  GGraph::Factory::ItemNode* node = dynamic_cast<GGraph::Factory::ItemNode*>(item);
-  if (node != nullptr) {
-    newWidgetItem->setText(0, node->name_);
-    newWidgetItem->setData(0, Qt::UserRole, QByteArray((const char*)node, sizeof(void*)));return;
-  }
-
-  qCritical() << "neither ItemCatory nor ItemNode";
 }
 
 void GGraphWidget::propLoad(QJsonObject jo) {
@@ -178,5 +177,23 @@ void GGraphWidget::actionOptionTriggered(bool checked) {
   (void)checked;
   qDebug() << ""; // gilgil temp 2016.09.18
 }
+
+// ----- gilgil temp 2016.09.20 -----
+void GGraphWidget::doubleClicked(const QModelIndex &index) {
+  (void)index;
+  QList<QTreeWidgetItem*> items = nodeFactoryWidget_->selectedItems();
+  if (items.count() == 0) return;
+  QTreeWidgetItem* item = items.at(0);
+  QVariant v = item->data(0, Qt::UserRole);
+  void* p = v.value<void*>();
+  GGraph::Factory::ItemNode* node = dynamic_cast<GGraph::Factory::ItemNode*>((GGraph::Factory::ItemNode*)p);
+  if (node == nullptr) return;
+  qDebug() << node->name_;
+  GObj* obj = (GObj*)GObj::createInstance(node->mobj_->className());
+  obj->setObjectName(node->name_);
+  obj->setParent(graph_);
+  graph_->nodes_.push_back(obj);
+}
+// ----------------------------------
 
 #endif // QT_GUI_LIB
