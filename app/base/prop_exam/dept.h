@@ -4,16 +4,16 @@
 
 struct Dept : public GObj {
   Q_OBJECT
-  Q_PROPERTY(GObjPtr boss READ getBoss)
+  Q_PROPERTY(GObjRef boss READ getBoss)
   Q_PROPERTY(QString deptName MEMBER deptName_)
-  Q_PROPERTY(GObjPtrListPtr members READ getMembers)
+  Q_PROPERTY(GObjRefArrayPtr members READ getMembers)
 
-  GObjPtr getBoss() { return &boss_; }
-  GObjPtrListPtr getMembers() { return &members_; }
+  GObjRef getBoss() { return &boss_; }
+  GObjRefArrayPtr getMembers() { return &members_; }
 
 public:
   Person boss_;
   QString deptName_;
   bool free_{false};
-  GObjPtrList<Person> members_;
+  GObjRefArray<Person> members_;
 };

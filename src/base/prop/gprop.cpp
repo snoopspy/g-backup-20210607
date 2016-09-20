@@ -91,20 +91,20 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
         }
   }
 
-  if (userType == qMetaTypeId<GObjPtr>()) {
-    GObj* obj = qvariant_cast<GObjPtr>(object->property(propName));
+  if (userType == qMetaTypeId<GObjRef>()) {
+    GObj* obj = qvariant_cast<GObjRef>(object->property(propName));
     Q_ASSERT(obj != nullptr);
     obj->propLoad(jo[propName].toObject());
     return true;
   }
 
-  if (userType == qMetaTypeId<GObjPtrListPtr>()) {
-    GObjPtrListPtr list = qvariant_cast<GObjPtrListPtr>(object->property(propName));
-    Q_ASSERT(list != nullptr);
-    QJsonArray array = jo[propName].toArray();
-    foreach (QJsonValue value, array) {
+  if (userType == qMetaTypeId<GObjRefArrayPtr>()) {
+    GObjRefArrayPtr array = qvariant_cast<GObjRefArrayPtr>(object->property(propName));
+    Q_ASSERT(array != nullptr);
+    QJsonArray ja = jo[propName].toArray();
+    foreach (QJsonValue value, ja) {
       QJsonObject childJo = value.toObject();
-      GObj* childObj = list->addObj();
+      GObj* childObj = array->addObj();
       childObj->propLoad(childJo);
     }
     return true;
@@ -174,8 +174,8 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
       }
   }
 
-  if (userType == qMetaTypeId<GObjPtr>()) {
-    GObj* obj = qvariant_cast<GObjPtr>(variant);
+  if (userType == qMetaTypeId<GObjRef>()) {
+    GObj* obj = qvariant_cast<GObjRef>(variant);
     Q_ASSERT(obj != nullptr);
     QJsonObject childJo;
     obj->propSave(childJo);
@@ -183,17 +183,17 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
     return true;
   }
 
-  if (userType == qMetaTypeId<GObjPtrListPtr>()) {
-    GObjPtrListPtr list = qvariant_cast<GObjPtrListPtr>(variant);
-    Q_ASSERT(list != nullptr);
-    QJsonArray array;
-    for (_GObjPtrList::iterator it = list->begin(); it != list->end(); it++) {
+  if (userType == qMetaTypeId<GObjRefArrayPtr>()) {
+    GObjRefArrayPtr array = qvariant_cast<GObjRefArrayPtr>(variant);
+    Q_ASSERT(array != nullptr);
+    QJsonArray ja;
+    for (_GObjRefArray::iterator it = array->begin(); it != array->end(); it++) {
       QJsonObject childJo;
       GObj* childObj = *it;
       childObj->propSave(childJo);
-      array.append(QJsonValue(childJo));
+      ja.append(QJsonValue(childJo));
     }
-    jo[propName] = array;
+    jo[propName] = ja;
     return true;
   }
 
@@ -207,8 +207,8 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
 #include "gpropitem_bool.h"
 #include "gpropitem_char.h"
 #include "gpropitem_enum.h"
-#include "gpropitem_objptr.h"
-#include "gpropitem_objptrlistptr.h"
+#include "gpropitem_objref.h"
+#include "gpropitem_objrefarrayptr.h"
 #include "gpropitem_stringlist.h"
 #include "gpropitem_unknowntype.h"
 #include "gpropitem_variant.h"
@@ -245,11 +245,11 @@ GPropItem* GProp::propCreateItem(GPropItemParam param) {
   if (userType == QMetaType::QStringList)
     return new GPropItemStringList(param);
 
-  if (userType == qMetaTypeId<GObjPtr>())
-    return new GPropItemObjPtr(param);
+  if (userType == qMetaTypeId<GObjRef>())
+    return new GPropItemObjRef(param);
 
-  if (userType == qMetaTypeId<GObjPtrListPtr>())
-    return new GPropItemObjPtrListPtr(param);
+  if (userType == qMetaTypeId<GObjRefArrayPtr>())
+    return new GPropItemObjRefArrayPtr(param);
 
   qWarning() << QString("can not create GPropItem(object=%1 propName=%2)").arg(param.object_->metaObject()->className(), propName);
   return nullptr;

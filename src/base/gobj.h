@@ -49,28 +49,27 @@ protected:
 };
 
 // ----------------------------------------------------------------------------
-// GObjPtr
+// GObjRef
 // ----------------------------------------------------------------------------
-struct GObjPtr : GPtr<GObj> {
-  GObjPtr() : GPtr(nullptr) {}
-  GObjPtr(GObj* obj) : GPtr(obj) {}
-  GObjPtr(GObj& obj) : GPtr(obj) {}
+struct GObjRef : GPtr<GObj> {
+  GObjRef() : GPtr(nullptr) {}
+  GObjRef(GObj* obj) : GPtr(obj) {}
+  GObjRef(GObj& obj) : GPtr(obj) {}
 };
-//typedef GObj* GObjPtr;
-Q_DECLARE_METATYPE(GObjPtr)
+Q_DECLARE_METATYPE(GObjRef)
 
 // ----------------------------------------------------------------------------
-// GObjPtrListPtr
+// GObjRefArrayPtr
 // ----------------------------------------------------------------------------
-struct _GObjPtrList : QList<GObjPtr> {
+struct _GObjRefArray : QList<GObjRef> {
   virtual GObj* addObj() = 0;
   virtual void delObj(GObj* obj) = 0;
 };
-typedef _GObjPtrList* GObjPtrListPtr;
-Q_DECLARE_METATYPE(GObjPtrListPtr)
+typedef _GObjRefArray* GObjRefArrayPtr;
+Q_DECLARE_METATYPE(GObjRefArrayPtr)
 
 template <typename T>
-struct GObjPtrList : _GObjPtrList {
+struct GObjRefArray : _GObjRefArray {
   GObj* addObj() override {
     GObj* obj = new T;
     push_back(obj);
@@ -82,12 +81,6 @@ struct GObjPtrList : _GObjPtrList {
       removeAt(index);
   }
 };
-
-// ----------------------------------------------------------------------------
-// GObjPtrVectorPtr
-// ----------------------------------------------------------------------------
-typedef QVector<GObjPtr> GObjPtrVectorPtr;
-Q_DECLARE_METATYPE(GObjPtrVectorPtr)
 
 // ----------------------------------------------------------------------------
 // SET_ERR
