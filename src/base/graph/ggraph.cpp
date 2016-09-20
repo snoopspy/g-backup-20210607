@@ -25,12 +25,23 @@ void GGraph::Connections::propSave(QJsonObject& jo) {
   (void)jo; // gilgil temp 2016.09.20
 }
 
+void GGraph::clear() {
+  nodes_.clear();
+  connections_.clear();
+}
+
 void GGraph::propLoad(QJsonObject jo) {
+  Factory* _factory = factory();
+  if (_factory != nullptr)
+    jo["factory"] >> *_factory;
   jo["nodes"] >> nodes_;
   jo["connections"] >> connections_;
 }
 
 void GGraph::propSave(QJsonObject& jo) {
+  Factory* _factory = factory();
+  if (_factory != nullptr)
+    jo["factory"] << *_factory;
   jo["nodes"] << nodes_;
   jo["connections"] << connections_;
 }

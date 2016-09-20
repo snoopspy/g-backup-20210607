@@ -2,18 +2,15 @@
 
 #include "ggraphwidget.h"
 
+#include <QMessageBox>
 #include "base/gjson.h"
+#include "ggraphscene.h"
 
 // ----------------------------------------------------------------------------
 // GGraphWidget
 // ----------------------------------------------------------------------------
 GGraphWidget::GGraphWidget(QWidget *parent) : QWidget(parent) {
   init();
-}
-
-GGraphWidget::GGraphWidget(GGraph* graph) {
-  init();
-  setGraph(graph);
 }
 
 GGraphWidget::~GGraphWidget() {
@@ -42,9 +39,12 @@ void GGraphWidget::init() {
   toolBar_ = new QToolBar(this);
   midSplitter_ = new QSplitter(Qt::Horizontal, this);
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
-  nodeFactoryWidget_ = new QTreeWidget(this);
+  factoryWidget_ = new QTreeWidget(this);
   propWidget_ = new GPropWidget(this);
-  midRightWidget_ = new QWidget(this);
+  graphView_ = new QGraphicsView(this);
+  graphView_->setRenderHint(QPainter::Antialiasing);
+  graphView_->setAcceptDrops(true);
+  graphView_->setScene(new Scene(this));
   statusBar_ = new QStatusBar(this);
 
   mainLayout_->addWidget(toolBar_ , 0);
@@ -53,11 +53,11 @@ void GGraphWidget::init() {
   this->setLayout(mainLayout_);
 
   midSplitter_->addWidget(midLeftSplitter_);
-  midSplitter_->addWidget(midRightWidget_);
+  midSplitter_->addWidget(graphView_);
   midSplitter_->setStretchFactor(0, 0);
   midSplitter_->setStretchFactor(1, 1);
 
-  midLeftSplitter_->addWidget(nodeFactoryWidget_);
+  midLeftSplitter_->addWidget(factoryWidget_);
   midLeftSplitter_->addWidget(propWidget_);
   midLeftSplitter_->setStretchFactor(0, 0);
   midLeftSplitter_->setStretchFactor(1, 1);
@@ -65,9 +65,9 @@ void GGraphWidget::init() {
   //setColor(toolBar_, Qt::black); // gilgil temp 2016.09.18
   //setColor(midSplitter_, Qt::blue); // gilgil temp 2016.09.18
   //setColor(statusBar_, Qt::red); // gilgil temp 2016.09.18
-  //setColor(nodeFactoryWidget_, Qt::green); // gilgil temp 2016.09.18
+  //setColor(factoryWidget_, Qt::green); // gilgil temp 2016.09.18
   //setColor(propWidget_, Qt::yellow); // gilgil temp 2016.09.18
-  setColor(midRightWidget_, Qt::darkGray); // gilgil temp 2016.09.18
+  //setColor(graphView_, Qt::darkGray); // gilgil temp 2016.09.18
 
   toolBar_->addAction(actionStart_);
   toolBar_->addAction(actionStop_);
@@ -84,8 +84,9 @@ void GGraphWidget::init() {
   QObject::connect(actionDelete_, &QAction::triggered, this, &GGraphWidget::actionDeleteTriggered);
   QObject::connect(actionOption_, &QAction::triggered, this, &GGraphWidget::actionOptionTriggered);
 
-  // ----- gilgil temp 2016.09.20 -----
-  QObject::connect(nodeFactoryWidget_, &QTreeWidget::doubleClicked, this, &GGraphWidget::doubleClicked);
+  QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
+      // ----- gilgil temp 2016.09.20 -----
+  QObject::connect(factoryWidget_, &QTreeWidget::doubleClicked, this, &GGraphWidget::doubleClicked);
   // ----------------------------------
 }
 
@@ -99,22 +100,22 @@ void GGraphWidget::setGraph(GGraph* graph) {
 }
 
 void GGraphWidget::update() {
-  nodeFactoryWidget_->clear();
+  factoryWidget_->clear();
   Q_ASSERT(graph_ != nullptr);
   GGraph::Factory* factory = graph_->factory();
   Q_ASSERT(factory!= nullptr);
   foreach(GGraph::Factory::Item* item, factory->items_) {
-    updateNodeFactory(item, nullptr);
+    updateFactory(item, nullptr);
   }
-  nodeFactoryWidget_->expandAll();
+  factoryWidget_->expandAll();
 }
 
-void GGraphWidget::updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
+void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
   QTreeWidgetItem* newWidgetItem;
   if (parent != nullptr)
     newWidgetItem = new QTreeWidgetItem(parent);
   else
-    newWidgetItem = new QTreeWidgetItem(nodeFactoryWidget_);
+    newWidgetItem = new QTreeWidgetItem(factoryWidget_);
 
   newWidgetItem->setText(0, item->name_);
   QVariant v = QVariant::fromValue((void*)item);
@@ -123,10 +124,38 @@ void GGraphWidget::updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetIte
   GGraph::Factory::ItemCategory* category = dynamic_cast<GGraph::Factory::ItemCategory*>(item);
   if (category != nullptr) {
     foreach (GGraph::Factory::Item* child, category->items_) {
-      updateNodeFactory(child, newWidgetItem);
+      updateFactory(child, newWidgetItem);
     }
     return;
   }
+}
+
+GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
+  QList<QTreeWidgetItem*> widgetItems = factoryWidget_->selectedItems();
+  if (widgetItems.count() == 0)
+    return nullptr;
+  QTreeWidgetItem* widgetItem = widgetItems.at(0);
+  QVariant variant = widgetItem->data(0, Qt::UserRole);
+  void* p = qvariant_cast<void*>(variant);
+  GGraph::Factory::Item* item = dynamic_cast<GGraph::Factory::Item*>((GGraph::Factory::Item*)p);
+  GGraph::Factory::ItemNode* itemNode = dynamic_cast<GGraph::Factory::ItemNode*>(item);
+  if (itemNode == nullptr)
+    return nullptr;
+  QString className = itemNode->mobj_->className();
+  GGraph::Node* node = (GGraph::Node*)GObj::createInstance(className);
+  if (node == nullptr) {
+    QString msg = "can not create object for \"" + className + "\"";
+    QMessageBox::information(NULL, "error", msg);
+    return nullptr;
+  }
+  // ----- gilgil temp 2016.09.20 -----
+  static int count = 0;
+  QString tempName = "mmm" + QString::number(++count);
+  node->setObjectName(tempName); // gilgil temp 2016.09.21
+  // ----------------------------------
+  node->setParent(graph_);
+  graph_->nodes_.push_back(node);
+  return node;
 }
 
 void GGraphWidget::propLoad(QJsonObject jo) {
@@ -178,21 +207,18 @@ void GGraphWidget::actionOptionTriggered(bool checked) {
   qDebug() << ""; // gilgil temp 2016.09.18
 }
 
+void GGraphWidget::factoryWidgetClicked(const QModelIndex &index) {
+  (void)index;
+  if (factoryWidget_->selectedItems().isEmpty()) return;
+  Scene* scene = dynamic_cast<Scene*>(graphView_->scene());
+  Q_ASSERT(scene != nullptr);
+  scene->setMode(Scene::InsertItem);
+}
+
 // ----- gilgil temp 2016.09.20 -----
 void GGraphWidget::doubleClicked(const QModelIndex &index) {
   (void)index;
-  QList<QTreeWidgetItem*> items = nodeFactoryWidget_->selectedItems();
-  if (items.count() == 0) return;
-  QTreeWidgetItem* item = items.at(0);
-  QVariant v = item->data(0, Qt::UserRole);
-  void* p = v.value<void*>();
-  GGraph::Factory::ItemNode* node = dynamic_cast<GGraph::Factory::ItemNode*>((GGraph::Factory::ItemNode*)p);
-  if (node == nullptr) return;
-  qDebug() << node->name_;
-  GObj* obj = (GObj*)GObj::createInstance(node->mobj_->className());
-  obj->setObjectName(node->name_);
-  obj->setParent(graph_);
-  graph_->nodes_.push_back(obj);
+  createNodeIfItemNodeSelected();
 }
 // ----------------------------------
 

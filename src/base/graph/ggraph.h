@@ -37,7 +37,7 @@ struct GGraph : GObj {
     void propSave(QJsonObject& jo) override;
   };
 
-  struct Factory {
+  struct Factory : GObj {
     struct Item {
       virtual ~Item() {}
       QString name_;
@@ -68,14 +68,20 @@ struct GGraph : GObj {
       Items items_;
     };
 
+  public:
+    QStringList removePrefixNames_;
     Items items_;
   };
+
+public:
+  virtual Factory* factory() = 0;
 
 public:
   Nodes nodes_;
   Connections connections_;
 
-  virtual Factory* factory() = 0;
+public:
+  void clear();
 
 public:
   void propLoad(QJsonObject jo) override;

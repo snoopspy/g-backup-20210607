@@ -22,6 +22,7 @@
 #include <QTreeWidget>
 #include <QTreeView>
 #include <QVBoxLayout>
+#include <QGraphicsView>
 
 #include "base/prop/gpropwidget.h"
 
@@ -29,8 +30,8 @@
 // GGraphWidget
 // ----------------------------------------------------------------------------
 struct GGraphWidget : public QWidget, GProp {
+public:
   GGraphWidget(QWidget *parent = nullptr);
-  GGraphWidget(GGraph* graph);
   ~GGraphWidget() override;
 
 public:
@@ -40,7 +41,10 @@ public:
   void update();
 
 protected:
-  void updateNodeFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
+  void updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
+
+public:
+  GGraph::Node* createNodeIfItemNodeSelected();
 
 protected:
   GGraph* graph_{nullptr};
@@ -61,9 +65,9 @@ protected:
   QToolBar*    toolBar_;
   QSplitter*   midSplitter_;
   QSplitter*     midLeftSplitter_;
-  QTreeWidget*     nodeFactoryWidget_;
+  QTreeWidget*     factoryWidget_;
   GPropWidget*     propWidget_;
-  QWidget*       midRightWidget_;
+  QGraphicsView* graphView_;
   QStatusBar*  statusBar_;
 
 public slots:
@@ -76,6 +80,7 @@ public slots:
 
 // ----- gilgil temp 2016.09.20 -----
 public slots:
+  void factoryWidgetClicked(const QModelIndex &index);
   void doubleClicked(const QModelIndex &index);
 // ----------------------------------
 };
