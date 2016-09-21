@@ -32,8 +32,8 @@ QT_END_NAMESPACE
 // ----------------------------------------------------------------------------
 // GGraphArrow
 // ----------------------------------------------------------------------------
-class Node;
-class GGraphArrow : public QGraphicsLineItem
+struct Node;
+struct GGraphArrow : QGraphicsLineItem
 {
 public:
 	enum { Type = UserType + 4 };

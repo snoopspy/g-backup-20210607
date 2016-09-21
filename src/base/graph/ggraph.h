@@ -70,12 +70,23 @@ struct GGraph : GObj {
     };
 
   public:
+    Factory(GGraph* graph) : graph_(graph) {}
+
+  protected:
+    GGraph* graph_;
+
+  public:
     Items items_;
 
   public:
+    Node* createInstance(QString className);
+
+  public:
+    bool toLowerFirstCharacter_{true};
     QStringList removePrefixNames_;
     QStringList ignoreSignalNames_;
     QStringList ignoreSlotNames_;
+
     void propLoad(QJsonObject jo) override;
     void propSave(QJsonObject& jo) override;
   };

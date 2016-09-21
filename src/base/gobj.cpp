@@ -39,7 +39,7 @@ QObject* GObj::createInstance(QString className) {
   Q_ASSERT(mobj != nullptr);
   QObject* obj = mobj->newInstance();
   if (obj == nullptr) {
-    qWarning() << QString("can not create class for (%1)").arg(className);
+    qWarning() << QString("newInstance failed for (%1)").arg(className);
     return nullptr;
   }
   return obj;

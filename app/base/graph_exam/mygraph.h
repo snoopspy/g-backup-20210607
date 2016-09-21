@@ -9,50 +9,50 @@ public:
   Obj(QObject* parent = nullptr) : GObj(parent) {}
 };
 
-struct Obj1 : Obj {
+struct ObjA : Obj {
   Q_OBJECT
   Q_PROPERTY(QString name MEMBER name_)
 
 public:
-  Q_INVOKABLE Obj1(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "Obj1::Obj1";
+  Q_INVOKABLE ObjA(QObject* parent = nullptr) : Obj(parent) {
+    qDebug() << "ObjA::ObjA";
   }
-  ~Obj1() override {
-    qDebug() << "Obj1::~Obj1";
+  ~ObjA() override {
+    qDebug() << "ObjA::~ObjA";
   }
   QString name_;
 };
 
-struct Obj2 : Obj {
+struct ObjB : Obj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE Obj2(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "Obj2::Obj2";
+  Q_INVOKABLE ObjB(QObject* parent = nullptr) : Obj(parent) {
+    qDebug() << "ObjB::ObjB";
   }
-  ~Obj2() override {
-    qDebug() << "Obj2::~Obj2";
+  ~ObjB() override {
+    qDebug() << "ObjB::~ObjB";
   }
 };
 
-struct Obj3 : Obj {
+struct ObjC : Obj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE Obj3(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "Obj3::Obj3";
+  Q_INVOKABLE ObjC(QObject* parent = nullptr) : Obj(parent) {
+    qDebug() << "ObjC::ObjC";
   }
-  ~Obj3() override {
-    qDebug() << "Obj3::~Obj3";
+  ~ObjC() override {
+    qDebug() << "ObjC::~ObjC";
   }
 };
 struct MyGraph : GGraph {
   struct Factory : GGraph::Factory {
-    Factory();
+    Factory(GGraph* graph);
   };
 
   GGraph::Factory* factory() override {
-    static Factory factory;
+    static Factory factory(this);
     return &factory;
   }
 };

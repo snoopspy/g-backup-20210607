@@ -58,13 +58,13 @@ void GParser::addChild(QString myClassName, QString childClassName) {
   foreach (GParser* parser, parsers) {
     QObject* obj = GObj::createInstance(childClassName);
     if (obj == nullptr) {
-      qCritical() << QString("can not createInstance for (%1)").arg(childClassName);
+      qCritical() << QString("createInstance failed for (%1)").arg(childClassName);
       continue;
     }
 
     GParser* child = dynamic_cast<GParser*>(obj);
     if (child == nullptr) {
-      qCritical() << QString("maybe not gparser class for (%1)").arg(childClassName);
+      qCritical() << QString("dynamic_cast<GParser*> failed for (%1)").arg(childClassName);
       continue;
     }
     child->setParent(parser);

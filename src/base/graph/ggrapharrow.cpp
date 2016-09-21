@@ -146,4 +146,3 @@ void GGraphArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
     painter->drawLine(myLine);
   }
 }
-//! [7]

@@ -137,17 +137,12 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   if (itemNode == nullptr)
     return nullptr;
   QString className = itemNode->mobj_->className();
-  GGraph::Node* node = (GGraph::Node*)GObj::createInstance(className);
+  GGraph::Node* node = graph()->factory()->createInstance(className);
   if (node == nullptr) {
-    QString msg = "can not create object for \"" + className + "\"";
+    QString msg = QString("createInstance failed for (%1)").arg(className);
     QMessageBox::information(NULL, "error", msg);
     return nullptr;
   }
-  // ----- gilgil temp 2016.09.20 -----
-  static int count = 0;
-  QString tempName = "mmm" + QString::number(++count);
-  node->setObjectName(tempName); // gilgil temp 2016.09.21
-  // ----------------------------------
   node->setParent(graph_);
   graph_->nodes_.push_back(node);
   return node;

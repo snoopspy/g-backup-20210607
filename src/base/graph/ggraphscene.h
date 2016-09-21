@@ -20,8 +20,11 @@
 #include "ggraphnode.h"
 #include "ggraphsignalslotform.h"
 
+// ----------------------------------------------------------------------------
+// Scene
+// ----------------------------------------------------------------------------
 struct GGraphWidget;
-struct Scene : public QGraphicsScene
+struct Scene : QGraphicsScene
 {
 	Q_OBJECT
 

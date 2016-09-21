@@ -22,7 +22,7 @@
 // ----------------------------------------------------------------------------
 // Node
 // ----------------------------------------------------------------------------
-class Node : public QGraphicsTextItem
+struct Node : QGraphicsTextItem
 {
 public:
 	enum { Type = UserType + 5 };
