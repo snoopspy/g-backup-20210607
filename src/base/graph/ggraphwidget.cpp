@@ -38,7 +38,7 @@ void GGraphWidget::init() {
   toolBar_ = new QToolBar(this);
   midSplitter_ = new QSplitter(Qt::Horizontal, this);
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
-  factoryWidget_ = new QTreeWidget(this);
+  (factoryWidget_ = new QTreeWidget(this))->setHeaderLabel("node");
   propWidget_ = new GPropWidget(this);
   scene_ = new Scene(this);
   graphView_ = new QGraphicsView(this);

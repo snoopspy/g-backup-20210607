@@ -2,48 +2,48 @@
 
 #include <GGraph>
 
-struct Obj : GObj {
+struct GMyObj : GObj {
   Q_OBJECT
 
 public:
-  Obj(QObject* parent = nullptr) : GObj(parent) {}
+  GMyObj(QObject* parent = nullptr) : GObj(parent) {}
 };
 
-struct ObjA : Obj {
+struct GMyObjA : GMyObj {
   Q_OBJECT
   Q_PROPERTY(QString name MEMBER name_)
 
 public:
-  Q_INVOKABLE ObjA(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "ObjA::ObjA";
+  Q_INVOKABLE GMyObjA(QObject* parent = nullptr) : GMyObj(parent) {
+    qDebug() << "GMyObjA::GMyObjA";
   }
-  ~ObjA() override {
-    qDebug() << "ObjA::~ObjA";
+  ~GMyObjA() override {
+    qDebug() << "GMyObjA::~GMyObjA";
   }
   QString name_;
 };
 
-struct ObjB : Obj {
+struct GMyObjB : GMyObj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE ObjB(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "ObjB::ObjB";
+  Q_INVOKABLE GMyObjB(QObject* parent = nullptr) : GMyObj(parent) {
+    qDebug() << "GMyObjB::GMyObjB";
   }
-  ~ObjB() override {
-    qDebug() << "ObjB::~ObjB";
+  ~GMyObjB() override {
+    qDebug() << "GMyObjB::~GMyObjB";
   }
 };
 
-struct ObjC : Obj {
+struct GMyObjC : GMyObj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE ObjC(QObject* parent = nullptr) : Obj(parent) {
-    qDebug() << "ObjC::ObjC";
+  Q_INVOKABLE GMyObjC(QObject* parent = nullptr) : GMyObj(parent) {
+    qDebug() << "GMyObjC::GMyObjC";
   }
-  ~ObjC() override {
-    qDebug() << "ObjC::~ObjC";
+  ~GMyObjC() override {
+    qDebug() << "GMyObjC::~GMyObjC";
   }
 };
 struct MyGraph : GGraph {

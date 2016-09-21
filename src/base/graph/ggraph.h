@@ -83,7 +83,7 @@ struct GGraph : GObj {
 
   public:
     bool toLowerFirstCharacter_{true};
-    QStringList removePrefixNames_;
+    QStringList removePrefixNames_{"G"};
     QStringList ignoreSignalNames_;
     QStringList ignoreSlotNames_;
 
