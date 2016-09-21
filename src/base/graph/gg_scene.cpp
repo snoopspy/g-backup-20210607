@@ -1,7 +1,7 @@
-#include "ggraphscene.h"
+#include "gg_scene.h"
 #include "ggraphwidget.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent)
+GGScene::GGScene(QObject *parent) : QGraphicsScene(parent)
 {
 	m_mode         = MoveItem;
   graphWidget_   = dynamic_cast<GGraphWidget*>(parent);
@@ -35,21 +35,21 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent)
   // ----------------------------------
 }
 
-Scene::~Scene()
+GGScene::~GGScene()
 {
 	while (items().count() > 0)
 	{
 		QGraphicsItem* item = items().first();
-    if (item->type() == GGraphArrow::Type)
+    if (item->type() == GGArrow::Type)
 		{
-      GGraphArrow *arrow = qgraphicsitem_cast<GGraphArrow*>(item);
+      GGArrow *arrow = qgraphicsitem_cast<GGArrow*>(item);
 			arrow->startItem()->removeArrow(arrow);
 			arrow->endItem()->removeArrow(arrow);
 			delete item;
 		};
-		if (item->type() == Node::Type)
+    if (item->type() == GGNode::Type)
 		{
-			Node* node = (Node*)items().first();
+      GGNode* node = (GGNode*)items().first();
 			node->removeArrows();
 			delete node;
 		}
@@ -60,7 +60,7 @@ Scene::~Scene()
   }
 }
 
-void Scene::clear()
+void GGScene::clear()
 {
   QGraphicsScene::clear();
 }
@@ -180,31 +180,31 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 */
 // ----------------------------------
 
-GGraphArrow* Scene::createArrow(Node* startNode, QString signal, Node* endNode, QString slot)
+GGArrow* GGScene::createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot)
 {
-  GGraphArrow *res = new GGraphArrow(startNode, signal, endNode, slot);
+  GGArrow *res = new GGArrow(startNode, signal, endNode, slot);
 	res->setColor(Qt::black);
 	startNode->addArrow(res);
 	endNode->addArrow(res);
 	return res;
 }
 
-GGraphArrow* Scene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot)
+GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot)
 {
-	Node* startNode = findNodeByName(startNodeName);
+  GGNode* startNode = findNodeByName(startNodeName);
 	if (startNode == NULL) return NULL;
-	Node* endNode   = findNodeByName(endNodeName);
+  GGNode* endNode   = findNodeByName(endNodeName);
 	if (endNode == NULL) return NULL;
 	return createArrow(startNode, signal, endNode, slot);
 }
 
-Node* Scene::findNodeByName(QString objectName)
+GGNode* GGScene::findNodeByName(QString objectName)
 {
 	int _count = this->items().count();
 	for (int i = 0; i < _count; i++)
 	{
 		QGraphicsItem* item = this->items().at(i);
-		Node* res = dynamic_cast<Node*>(item);
+    GGNode* res = dynamic_cast<GGNode*>(item);
     if (res == nullptr) continue;
     if (res->obj_->objectName() == objectName) {
 			return res;
@@ -278,7 +278,7 @@ bool Scene::loadFromFile(QString fileName, QString& errStr)
 		for (int i = 0; i < _count; i++)
 		{
       VGraphConnect connect = (VGraphConnect&)this->graph_->connectList.at(i);
-      GGraphArrow* arrow = createArrow(connect.sender, connect.signal, connect.receiver, connect.slot);
+      GGArrow* arrow = createArrow(connect.sender, connect.signal, connect.receiver, connect.slot);
 			if (arrow == NULL) return false;
 			addItem(arrow);
 			arrow->updatePosition();
@@ -323,14 +323,14 @@ bool Scene::saveToFile(QString fileName, QString& errStr)
 */
 // ----------------------------------
 
-void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	// LOG_DEBUG("mousePressEvent"); // gilgil temp 2012.06.30
 	switch (m_mode)	{
     case InsertItem: {
         GGraph::Node* newNode = graphWidget_->createNodeIfItemNodeSelected();
         if (newNode != nullptr) {
-          Node* newItem = new Node(newNode);
+          GGNode* newItem = new GGNode(newNode);
           newItem->setPlainText(newNode->objectName());
           addItem(newItem);
           newItem->setPos(event->scenePos());
@@ -350,7 +350,7 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 	QGraphicsScene::mousePressEvent(event);
 }
 
-void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void GGScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
   // qDebug() << "mouseMoveEvent"; // gilgil temp 2012.06.30
 	switch (m_mode)
@@ -371,7 +371,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	QGraphicsScene::mouseMoveEvent(event);
 }
 
-void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	switch (m_mode)	{
     case InsertItem:
@@ -391,18 +391,18 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 					if (startItems.count() > 0 && endItems.count() > 0 &&
 							startItems.first() != endItems.first())
 					{
-              Node *startNode = (Node*)startItems.first();
-              Node *endNode = (Node*)endItems.first();
+              GGNode *startNode = (GGNode*)startItems.first();
+              GGNode *endNode = (GGNode*)endItems.first();
               GGraph* graph = graphWidget_->graph();
               Q_ASSERT(graph != nullptr);
 
               QStringList _signalList = startNode->obj_->signalList();
-              foreach(QString name, graph->ignoreSignalNames_) {
+              foreach(QString name, graphWidget_->ignoreSignalNames_) {
 								_signalList.removeAll(name);
 							}
 
               QStringList _slotList = endNode->obj_->slotList();
-              foreach (QString name, graph->ignoreSlotNames_) {
+              foreach (QString name, graphWidget_->ignoreSlotNames_) {
 								_slotList.removeAll(name);
 							}
 
@@ -424,7 +424,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 connection.slot_     = slot;
                 graphWidget_->graph()->connections_.push_back(connection);
 
-                GGraphArrow *arrow = createArrow(startNode, signal, endNode, slot);
+                GGArrow *arrow = createArrow(startNode, signal, endNode, slot);
                 if (arrow != nullptr) {
                   addItem(arrow);
                   arrow->updatePosition();

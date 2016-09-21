@@ -23,7 +23,7 @@
 #include <QGraphicsView>
 
 #include "base/prop/gpropwidget.h"
-#include "ggraphscene.h"
+#include "gg_scene.h"
 
 // ----------------------------------------------------------------------------
 // GGraphWidget
@@ -44,10 +44,17 @@ protected:
   void updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
 
 public:
+  GGraph::Node* createInstance(QString className);
   GGraph::Node* createNodeIfItemNodeSelected();
 
 protected:
   GGraph* graph_{nullptr};
+
+public:
+  bool toLowerFirstCharacter_{true};
+  QStringList removePrefixNames_{"G"};
+  QStringList ignoreSignalNames_{"destroyed(QObject*)", "destroyed()", "objectNameChanged(QString)"};
+  QStringList ignoreSlotNames_{"deleteLater()"};
 
 public:
   void propLoad(QJsonObject jo) override;
@@ -67,7 +74,7 @@ protected:
   QSplitter*     midLeftSplitter_;
   QTreeWidget*     factoryWidget_;
   GPropWidget*     propWidget_;
-  Scene*         scene_;
+  GGScene*         scene_;
   QGraphicsView* graphView_;
   QStatusBar*  statusBar_;
 

@@ -1,8 +1,8 @@
-#include "ggraphnode.h"
-#include "ggraphscene.h"
+#include "gg_node.h"
+#include "gg_scene.h"
 #include "ggraphwidget.h"
 
-Node::Node(GObj* obj)
+GGNode::GGNode(GObj* obj)
 {
 	// LOG_DEBUG("%p scene()=%p", this, this->scene()); // gilgil temp 2012.07.27
 	setFlag(QGraphicsItem::ItemIsMovable);
@@ -11,11 +11,11 @@ Node::Node(GObj* obj)
 	// LOG_DEBUG("scene=%p", scene()); // gilgil temp 2012.07.27
 }
 
-Node::~Node()
+GGNode::~GGNode()
 {
   if (obj_ != nullptr)
 	{
-		Scene* scene = (Scene*)this->scene();
+    GGScene* scene = (GGScene*)this->scene();
     GGraph::Nodes& nodes = scene->graphWidget_->graph()->nodes_;
     int index = nodes.indexOf(obj_);
     Q_ASSERT(index != -1);
@@ -24,22 +24,22 @@ Node::~Node()
 	}
 }
 
-void Node::addArrow(GGraphArrow* arrow)
+void GGNode::addArrow(GGArrow* arrow)
 {
-	arrows.append(arrow);
+  arrows_.append(arrow);
 }
 
-void Node::removeArrow(GGraphArrow* arrow)
+void GGNode::removeArrow(GGArrow* arrow)
 {
-	int index = arrows.indexOf(arrow);
+  int index = arrows_.indexOf(arrow);
 
 	if (index != -1)
-		arrows.removeAt(index);
+    arrows_.removeAt(index);
 }
 
-void Node::removeArrows()
+void GGNode::removeArrows()
 {
-  foreach (GGraphArrow* arrow, arrows)
+  foreach (GGArrow* arrow, arrows_)
 	{
 		arrow->startItem()->removeArrow(arrow);
 		arrow->endItem()->removeArrow(arrow);
@@ -59,7 +59,7 @@ QRectF Node::boundingRect() const
 */
 // ----------------------------------
 
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void GGNode::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	painter->drawRect(boundingRect());
 	painter->fillRect(boundingRect(), Qt::gray);

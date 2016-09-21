@@ -42,7 +42,7 @@ void GGraphWidget::init() {
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
   (factoryWidget_ = new QTreeWidget(this))->setHeaderLabel("node");
   propWidget_ = new GPropWidget(this);
-  scene_ = new Scene(this);
+  scene_ = new GGScene(this);
   graphView_ = new QGraphicsView(this);
   graphView_->setRenderHint(QPainter::Antialiasing);
   graphView_->setAcceptDrops(true);
@@ -83,7 +83,7 @@ void GGraphWidget::init() {
 
   QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
 
-  QObject::connect(scene_, &Scene::selectionChanged, this, &GGraphWidget::setControl);
+  QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
 }
 
 void GGraphWidget::setGraph(GGraph* graph) {
@@ -128,6 +128,47 @@ void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* p
   }
 }
 
+GGraph::Node* GGraphWidget::createInstance(QString className) {
+  GGraph::Node* node = graph()->createInstance(className);
+  if (node == nullptr) return nullptr;
+
+  QString objectName = node->metaObject()->className();
+  foreach (QString removePrefixName, removePrefixNames_) {
+    if (objectName.startsWith(removePrefixName))
+      objectName = objectName.mid(removePrefixName.length());
+  }
+  if (objectName == "") {
+    qWarning() << QString("objectName is empty for (%1)").arg(className);
+    delete node;
+    return nullptr;
+  }
+  if (toLowerFirstCharacter_) {
+    char first = objectName.at(0).toLatin1();
+    if (first >= 'A' && first <= 'Z') {
+      first = first + 'a' - 'A';
+      objectName = QString(first) + objectName.mid(1);
+    }
+  }
+
+  int suffix = 1;
+  while (true) {
+    QString _objectName = objectName + QString::number(suffix);
+    bool isExist = false;
+    foreach(GGraph::Node* node, graph()->nodes_) {
+      if (node->objectName() == _objectName) {
+        isExist = true;
+        break;
+      }
+    }
+    if (!isExist) break;
+    suffix++;
+  }
+  objectName = objectName + QString::number(suffix);
+  node->setObjectName(objectName);
+
+  return node;
+}
+
 GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   QList<QTreeWidgetItem*> widgetItems = factoryWidget_->selectedItems();
   if (widgetItems.count() == 0)
@@ -140,7 +181,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   if (itemNode == nullptr)
     return nullptr;
   QString className = itemNode->mobj_->className();
-  GGraph::Node* node = graph()->createInstance(className);
+  GGraph::Node* node = createInstance(className);
   if (node == nullptr) {
     QString msg = QString("createInstance failed for (%1)").arg(className);
     QMessageBox::information(NULL, "error", msg);
@@ -158,6 +199,11 @@ void GGraphWidget::propLoad(QJsonObject jo) {
   splitter["mid"] >> GJson::splitterSizes(midSplitter_);
   splitter["left"] >> GJson::splitterSizes(midLeftSplitter_);
   splitter["prop"] >> GJson::headerSizes(propWidget_);
+
+  toLowerFirstCharacter_ = jo["toLowerFirstCharacter"].toBool();
+  removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
+  ignoreSignalNames_ = jo["ignoreSignalNames"].toString().split(",");
+  ignoreSlotNames_ = jo["ignoreSlotNames"].toString().split(",");
 }
 
 void GGraphWidget::propSave(QJsonObject& jo) {
@@ -168,6 +214,11 @@ void GGraphWidget::propSave(QJsonObject& jo) {
   splitter["left"] << GJson::splitterSizes(midLeftSplitter_);
   splitter["prop"] << GJson::headerSizes(propWidget_);
   jo["splitter"] = splitter;
+
+  jo["toLowerFirstCharacter"] = toLowerFirstCharacter_;
+  jo["removePrefixNames"] = removePrefixNames_.join(",");
+  jo["ignoreSignalNames"] = ignoreSignalNames_.join(",");
+  jo["ignoreSlotNames"] = ignoreSlotNames_.join(",");
 }
 
 void GGraphWidget::setControl() {
@@ -187,10 +238,10 @@ void GGraphWidget::setControl() {
   // ----------------------------------
 
 
-  Scene::Mode mode = scene_->mode();
+  GGScene::Mode mode = scene_->mode();
 
-  actionEdit_->setEnabled(mode != Scene::MoveItem);
-  actionLink_->setEnabled(mode != Scene::InsertLine);
+  actionEdit_->setEnabled(mode != GGScene::MoveItem);
+  actionLink_->setEnabled(mode != GGScene::InsertLine);
 
   bool active = false;
   if (graph_ != nullptr)
@@ -209,7 +260,7 @@ void GGraphWidget::setControl() {
   if (selected)
   {
     QGraphicsItem* item = scene_->selectedItems().first();
-    Node* node = dynamic_cast<Node*>(item);
+    GGNode* node = dynamic_cast<GGNode*>(item);
     if (node != nullptr)
       selectedObj = dynamic_cast<GObj*>(node->obj_);
   }
@@ -229,13 +280,13 @@ void GGraphWidget::actionStopTriggered(bool) {
 
 void GGraphWidget::actionEditTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
-  scene_->setMode(Scene::MoveItem);
+  scene_->setMode(GGScene::MoveItem);
   setControl();
 }
 
 void GGraphWidget::actionLinkTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
-  scene_->setMode(Scene::InsertLine);
+  scene_->setMode(GGScene::InsertLine);
   setControl();
 }
 
@@ -243,7 +294,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
   if (scene_->selectedItems().count() == 0)
     return;
   QGraphicsItem* item = scene_->selectedItems().first();
-  Node* node = dynamic_cast<Node*>(item);
+  GGNode* node = dynamic_cast<GGNode*>(item);
   if (node != nullptr)
     delete node;
   setControl();
@@ -255,7 +306,7 @@ void GGraphWidget::actionOptionTriggered(bool) {
 
 void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {
   if (factoryWidget_->selectedItems().isEmpty()) return;
-   scene_->setMode(Scene::InsertItem);
+   scene_->setMode(GGScene::InsertItem);
 }
 
 #endif // QT_GUI_LIB

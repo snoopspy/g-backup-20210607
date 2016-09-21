@@ -16,21 +16,21 @@
 #include <QTreeWidget>
 #include <QMessageBox>
 
-#include "ggrapharrow.h"
-#include "ggraphnode.h"
-#include "ggraphsignalslotform.h"
+#include "gg_arrow.h"
+#include "gg_node.h"
+#include "gg_signalslotform.h"
 
 // ----------------------------------------------------------------------------
 // Scene
 // ----------------------------------------------------------------------------
 struct GGraphWidget;
-struct Scene : QGraphicsScene
+struct GGScene : QGraphicsScene
 {
 	Q_OBJECT
 
 public:
-  Scene(QObject *parent);
-	virtual ~Scene();
+  GGScene(QObject *parent);
+  virtual ~GGScene();
 
 public:
 	void clear();
@@ -72,10 +72,10 @@ public:
 
 public:
   // QString generateObjectClassName(QString className);
-	Node*  createNode(QString className, QString name, bool createObject);
-  GGraphArrow* createArrow(Node* startNode, QString signal, Node* endNode, QString slot);
-  GGraphArrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
-  Node*  findNodeByName(QString objectName);
+  GGNode*  createNode(QString className, QString name, bool createObject);
+  GGArrow* createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot);
+  GGArrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
+  GGNode*  findNodeByName(QString objectName);
 
 public: // for file manipulation
   //bool newFile(QString& errStr); // gilgil temp 2012.07.27

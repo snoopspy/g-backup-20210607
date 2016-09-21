@@ -7,14 +7,14 @@
 */
 // ----------------------------------
 
-#include "ggrapharrow.h"
-#include "ggraphnode.h" // gilgil temp 2016.09.20
-#include "ggraphscene.h" // gilgil temp 2016.09.20
+#include "gg_arrow.h"
+#include "gg_node.h" // gilgil temp 2016.09.20
+#include "gg_scene.h" // gilgil temp 2016.09.20
 #include "ggraphwidget.h"
 
 const qreal Pi = 3.14;
 
-GGraphArrow::GGraphArrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGraphicsLineItem(nullptr)
+GGArrow::GGArrow(GGNode *startNode, QString signal, GGNode *endNode, QString slot) : QGraphicsLineItem(nullptr)
 {
 	myStartNode = startNode;
 	myEndNode   = endNode;
@@ -30,16 +30,16 @@ GGraphArrow::GGraphArrow(Node *startNode, QString signal, Node *endNode, QString
   connection_.slot_     = slot;
 }
 
-GGraphArrow::~GGraphArrow()
+GGArrow::~GGArrow()
 {
-	Scene* scene = (Scene*)this->scene();
+  GGScene* scene = (GGScene*)this->scene();
   GGraph::Connections& connections = scene->graphWidget_->graph()->connections_;
   int index = connections.indexOf(connection_);
   Q_ASSERT(index != -1);
   connections.removeAt(index);
 }
 
-QRectF GGraphArrow::boundingRect() const
+QRectF GGArrow::boundingRect() const
 {
   qreal extra = (pen().width() + 20) / 2.0;
 
@@ -47,20 +47,20 @@ QRectF GGraphArrow::boundingRect() const
     line().p2().y() - line().p1().y())).normalized().adjusted(-extra, -extra, extra, extra);
 }
 
-QPainterPath GGraphArrow::shape() const
+QPainterPath GGArrow::shape() const
 {
 	QPainterPath path = QGraphicsLineItem::shape();
   path.addPolygon(arrowHead);
 	return path;
 }
 
-void GGraphArrow::updatePosition()
+void GGArrow::updatePosition()
 {
 	QLineF line(mapFromItem(myStartNode, 0, 0), mapFromItem(myEndNode, 0, 0));
 	setLine(line);
 }
 
-void GGraphArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 					QWidget *)
 {
 	if (myStartNode->collidesWithItem(myEndNode))

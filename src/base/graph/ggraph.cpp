@@ -33,6 +33,11 @@ void GGraph::Connections::propSave(QJsonObject& jo) {
   (void)jo; // gilgil temp 2016.09.20
 }
 
+void GGraph::clear() {
+  nodes_.clear();
+  connections_.clear();
+}
+
 GGraph::Node* GGraph::createInstance(QString className) {
   QObject* obj = GObj::createInstance(className);
   if (obj == nullptr) return nullptr;
@@ -40,63 +45,15 @@ GGraph::Node* GGraph::createInstance(QString className) {
   if (node == nullptr) {
     qWarning() << QString("dynamic_cast<Node*> failed for (%1)").arg(className);
   }
-
-  QString objectName = node->metaObject()->className();
-  foreach (QString removePrefixName, removePrefixNames_) {
-    if (objectName.startsWith(removePrefixName))
-      objectName = objectName.mid(removePrefixName.length());
-  }
-  if (objectName == "") {
-    qWarning() << QString("objectName is empty for (%1)").arg(className);
-    delete node;
-    return nullptr;
-  }
-  if (toLowerFirstCharacter_) {
-    char first = objectName.at(0).toLatin1();
-    if (first >= 'A' && first <= 'Z') {
-      first = first + 'a' - 'A';
-      objectName = QString(first) + objectName.mid(1);
-    }
-  }
-
-  int suffix = 1;
-  while (true) {
-    QString _objectName = objectName + QString::number(suffix);
-    bool isExist = false;
-    foreach(Node* node, nodes_) {
-      if (node->objectName() == _objectName) {
-        isExist = true;
-        break;
-      }
-    }
-    if (!isExist) break;
-    suffix++;
-  }
-  objectName = objectName + QString::number(suffix);
-  node->setObjectName(objectName);
-
   return node;
 }
 
-void GGraph::clear() {
-  nodes_.clear();
-  connections_.clear();
-}
-
 void GGraph::propLoad(QJsonObject jo) {
-  toLowerFirstCharacter_ = jo["toLowerFirstCharacter"].toBool();
-  removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
-  ignoreSignalNames_ = jo["ignoreSignalNames"].toString().split(",");
-  ignoreSlotNames_ = jo["ignoreSlotNames"].toString().split(",");
   jo["nodes"] >> nodes_;
   jo["connections"] >> connections_;
 }
 
 void GGraph::propSave(QJsonObject& jo) {
-  jo["toLowerFirstCharacter"] = toLowerFirstCharacter_;
-  jo["removePrefixNames"] = removePrefixNames_.join(",");
-  jo["ignoreSignalNames"] = ignoreSignalNames_.join(",");
-  jo["ignoreSlotNames"] = ignoreSlotNames_.join(",");
   jo["nodes"] << nodes_;
   jo["connections"] << connections_;
 }

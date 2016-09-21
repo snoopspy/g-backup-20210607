@@ -17,25 +17,25 @@
 #include <QPainter>
 
 #include "base/gobj.h"
-#include "ggrapharrow.h"
+#include "gg_arrow.h"
 
 // ----------------------------------------------------------------------------
-// Node
+// GGNode
 // ----------------------------------------------------------------------------
-struct Node : QGraphicsTextItem
+struct GGNode : QGraphicsTextItem
 {
 public:
 	enum { Type = UserType + 5 };
 	int type() const { return Type; }
 
 public:
-  Node(GObj* obj);
-	virtual ~Node();
+  GGNode(GObj* obj);
+  ~GGNode() override;
 
 public:
-  QList<GGraphArrow*> arrows;
-  void addArrow(GGraphArrow *arrow);
-  void removeArrow(GGraphArrow *arrow);
+  QList<GGArrow*> arrows_;
+  void addArrow(GGArrow *arrow);
+  void removeArrow(GGArrow *arrow);
 	void removeArrows();
 
 public:

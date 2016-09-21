@@ -80,10 +80,6 @@ public:
   Node* createInstance(QString className);
 
 public:
-  bool toLowerFirstCharacter_{true};
-  QStringList removePrefixNames_{"G"};
-  QStringList ignoreSignalNames_;
-  QStringList ignoreSlotNames_;
   Nodes nodes_;
   Connections connections_;
 

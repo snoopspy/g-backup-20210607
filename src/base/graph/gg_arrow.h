@@ -30,22 +30,22 @@ QT_END_NAMESPACE
 // ----------------------------------
 
 // ----------------------------------------------------------------------------
-// GGraphArrow
+// GGArrow
 // ----------------------------------------------------------------------------
-struct Node;
-struct GGraphArrow : QGraphicsLineItem
+struct GGNode;
+struct GGArrow : QGraphicsLineItem
 {
 public:
 	enum { Type = UserType + 4 };
-  GGraphArrow(Node *startNode, QString signal, Node *endNode, QString slot);
-  virtual ~GGraphArrow();
+  GGArrow(GGNode *startNode, QString signal, GGNode *endNode, QString slot);
+  virtual ~GGArrow();
 
   int type() const override { return Type; }
   QRectF boundingRect() const override;
   QPainterPath shape() const override;
 	void setColor(const QColor &color) { myColor = color;    }
-	Node *startItem() const            { return myStartNode; }
-	Node *endItem() const              { return myEndNode;   }
+  GGNode *startItem() const            { return myStartNode; }
+  GGNode *endItem() const              { return myEndNode;   }
 
 	void updatePosition();
 
@@ -53,8 +53,8 @@ protected:
   void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0) override;
 
 private:
-	Node*     myStartNode;
-	Node*     myEndNode;
+  GGNode*     myStartNode;
+  GGNode*     myEndNode;
 	QColor    myColor;
 	QPolygonF arrowHead;
 

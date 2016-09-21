@@ -1,4 +1,4 @@
-#include "ggraphsignalslotform.h"
+#include "gg_signalslotform.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
