@@ -11,13 +11,13 @@
 #pragma once
 
 #include <QList>
-#include "base/gobj.h"
+#include "base/gstateobj.h"
 #include "base/gjson.h"
 
 // ----------------------------------------------------------------------------
 // GGraph
 // ----------------------------------------------------------------------------
-struct GGraph : GObj {
+struct GGraph : GStateObj {
   typedef GObj Node;
 
   struct Nodes : QList<Node*>, GProp {
@@ -70,31 +70,20 @@ struct GGraph : GObj {
     };
 
   public:
-    Factory(GGraph* graph) : graph_(graph) {}
-
-  protected:
-    GGraph* graph_;
-
-  public:
     Items items_;
-
-  public:
-    Node* createInstance(QString className);
-
-  public:
-    bool toLowerFirstCharacter_{true};
-    QStringList removePrefixNames_{"G"};
-    QStringList ignoreSignalNames_;
-    QStringList ignoreSlotNames_;
-
-    void propLoad(QJsonObject jo) override;
-    void propSave(QJsonObject& jo) override;
   };
 
 public:
   virtual Factory* factory() = 0;
 
 public:
+  Node* createInstance(QString className);
+
+public:
+  bool toLowerFirstCharacter_{true};
+  QStringList removePrefixNames_{"G"};
+  QStringList ignoreSignalNames_;
+  QStringList ignoreSlotNames_;
   Nodes nodes_;
   Connections connections_;
 

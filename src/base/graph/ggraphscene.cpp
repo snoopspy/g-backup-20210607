@@ -62,8 +62,7 @@ Scene::~Scene()
 
 void Scene::clear()
 {
-	QGraphicsScene::clear();
-  graphWidget_->graph()->clear();
+  QGraphicsScene::clear();
 }
 
 // ----- gilgil temp 2016.09.20 -----
@@ -394,16 +393,16 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 					{
               Node *startNode = (Node*)startItems.first();
               Node *endNode = (Node*)endItems.first();
-              GGraph::Factory* factory = graphWidget_->graph()->factory();
-              Q_ASSERT(factory != nullptr);
+              GGraph* graph = graphWidget_->graph();
+              Q_ASSERT(graph != nullptr);
 
               QStringList _signalList = startNode->obj_->signalList();
-              foreach(QString name, factory->ignoreSignalNames_) {
+              foreach(QString name, graph->ignoreSignalNames_) {
 								_signalList.removeAll(name);
 							}
 
               QStringList _slotList = endNode->obj_->slotList();
-              foreach (QString name, factory->ignoreSlotNames_) {
+              foreach (QString name, graph->ignoreSlotNames_) {
 								_slotList.removeAll(name);
 							}
 

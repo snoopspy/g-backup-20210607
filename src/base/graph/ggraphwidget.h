@@ -38,6 +38,7 @@ public:
   GGraph* graph() { return graph_; }
   void setGraph(GGraph* graph);
   void update();
+  void clear();
 
 protected:
   void updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
@@ -71,17 +72,19 @@ protected:
   QStatusBar*  statusBar_;
 
 public slots:
-  void actionStartTriggered(bool checked);
-  void actionStopTriggered(bool checked);
-  void actionEditTriggered(bool checked);
-  void actionLinkTriggered(bool checked);
-  void actionDeleteTriggered(bool checked);
-  void actionOptionTriggered(bool checked);
+  void setControl();
+
+public slots:
+  void actionStartTriggered(bool);
+  void actionStopTriggered(bool);
+  void actionEditTriggered(bool);
+  void actionLinkTriggered(bool);
+  void actionDeleteTriggered(bool);
+  void actionOptionTriggered(bool);
 
 // ----- gilgil temp 2016.09.20 -----
 public slots:
-  void factoryWidgetClicked(const QModelIndex &index);
-  void doubleClicked(const QModelIndex &index);
+  void factoryWidgetClicked(const QModelIndex&);
 // ----------------------------------
 };
 

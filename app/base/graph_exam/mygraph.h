@@ -48,11 +48,11 @@ public:
 };
 struct MyGraph : GGraph {
   struct Factory : GGraph::Factory {
-    Factory(GGraph* graph);
+    Factory();
   };
 
   GGraph::Factory* factory() override {
-    static Factory factory(this);
+    static Factory factory;
     return &factory;
   }
 };

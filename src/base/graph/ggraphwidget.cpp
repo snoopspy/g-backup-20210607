@@ -10,9 +10,11 @@
 // ----------------------------------------------------------------------------
 GGraphWidget::GGraphWidget(QWidget *parent) : QWidget(parent) {
   init();
+  setControl();
 }
 
 GGraphWidget::~GGraphWidget() {
+  clear();
 }
 
 void setColor(QWidget* widget, QColor color) { // gilgil temp 2016.09.18
@@ -80,18 +82,15 @@ void GGraphWidget::init() {
   QObject::connect(actionOption_, &QAction::triggered, this, &GGraphWidget::actionOptionTriggered);
 
   QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
-      // ----- gilgil temp 2016.09.20 -----
-  QObject::connect(factoryWidget_, &QTreeWidget::doubleClicked, this, &GGraphWidget::doubleClicked);
-  // ----------------------------------
+
+  QObject::connect(scene_, &Scene::selectionChanged, this, &GGraphWidget::setControl);
 }
 
 void GGraphWidget::setGraph(GGraph* graph) {
   if (graph == graph_) return;
-  // clear(); // gilgil temp 2016.09.17
-
-  // gilgil temp 2016.09.17
-
   graph_ = graph;
+  update();
+  setControl();
 }
 
 void GGraphWidget::update() {
@@ -103,6 +102,10 @@ void GGraphWidget::update() {
     updateFactory(item, nullptr);
   }
   factoryWidget_->expandAll();
+}
+
+void GGraphWidget::clear() {
+  scene_->clear();
 }
 
 void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
@@ -137,7 +140,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   if (itemNode == nullptr)
     return nullptr;
   QString className = itemNode->mobj_->className();
-  GGraph::Node* node = graph()->factory()->createInstance(className);
+  GGraph::Node* node = graph()->createInstance(className);
   if (node == nullptr) {
     QString msg = QString("createInstance failed for (%1)").arg(className);
     QMessageBox::information(NULL, "error", msg);
@@ -167,49 +170,92 @@ void GGraphWidget::propSave(QJsonObject& jo) {
   jo["splitter"] = splitter;
 }
 
-void GGraphWidget::actionStartTriggered(bool checked) {
-  (void)checked;
-  qDebug() << ""; // gilgil temp 2016.09.18
+void GGraphWidget::setControl() {
+  // ----- gilgil temp 2016.09.21 -----
+  /*
+  QString title = "SnoopSpy";
+  if (fileName != "")
+  {
+    QFileInfo fi(fileName);
+    title = fi.completeBaseName();
+  }
+  setWindowTitle(title);
+
+  ui->actionSaveFile->setEnabled(m_changed && fileName != "");
+  ui->actionSaveFileAs->setEnabled(m_changed);
+  */
+  // ----------------------------------
+
+
+  Scene::Mode mode = scene_->mode();
+
+  actionEdit_->setEnabled(mode != Scene::MoveItem);
+  actionLink_->setEnabled(mode != Scene::InsertLine);
+
+  bool active = false;
+  if (graph_ != nullptr)
+    active = graph_->active();
+
+  actionStart_->setEnabled(!active);
+  actionStop_->setEnabled(active);
+
+  bool selected = scene_->selectedItems().count() > 0;
+
+  actionDelete_->setEnabled(selected);
+  // actionBringToFront_->setEnabled(selected); // gilgil temp 2016.09.21
+  // actionSendToBack_->setEnabled(selected); // gilgil temp 2016.09.21
+
+  GObj* selectedObj = nullptr;
+  if (selected)
+  {
+    QGraphicsItem* item = scene_->selectedItems().first();
+    Node* node = dynamic_cast<Node*>(item);
+    if (node != nullptr)
+      selectedObj = dynamic_cast<GObj*>(node->obj_);
+  }
+  propWidget_->setObject(selectedObj);
+  actionOption_->setEnabled(selectedObj != nullptr);
 }
 
-void GGraphWidget::actionStopTriggered(bool checked) {
-  (void)checked;
+void GGraphWidget::actionStartTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
+  setControl();
 }
 
-void GGraphWidget::actionEditTriggered(bool checked) {
-  (void)checked;
+void GGraphWidget::actionStopTriggered(bool) {
+  qDebug() << ""; // gilgil temp 2016.09.18
+  setControl();
+}
+
+void GGraphWidget::actionEditTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
   scene_->setMode(Scene::MoveItem);
+  setControl();
 }
 
-void GGraphWidget::actionLinkTriggered(bool checked) {
-  (void)checked;
+void GGraphWidget::actionLinkTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
   scene_->setMode(Scene::InsertLine);
+  setControl();
 }
 
-void GGraphWidget::actionDeleteTriggered(bool checked) {
-  (void)checked;
+void GGraphWidget::actionDeleteTriggered(bool) {
+  if (scene_->selectedItems().count() == 0)
+    return;
+  QGraphicsItem* item = scene_->selectedItems().first();
+  Node* node = dynamic_cast<Node*>(item);
+  if (node != nullptr)
+    delete node;
+  setControl();
+}
+
+void GGraphWidget::actionOptionTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
 }
 
-void GGraphWidget::actionOptionTriggered(bool checked) {
-  (void)checked;
-  qDebug() << ""; // gilgil temp 2016.09.18
-}
-
-void GGraphWidget::factoryWidgetClicked(const QModelIndex &index) {
-  (void)index;
+void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {
   if (factoryWidget_->selectedItems().isEmpty()) return;
    scene_->setMode(Scene::InsertItem);
 }
-
-// ----- gilgil temp 2016.09.20 -----
-void GGraphWidget::doubleClicked(const QModelIndex &index) {
-  (void)index;
-  createNodeIfItemNodeSelected();
-}
-// ----------------------------------
 
 #endif // QT_GUI_LIB

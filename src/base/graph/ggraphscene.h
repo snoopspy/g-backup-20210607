@@ -67,7 +67,7 @@ public: // for treeWidget
 // ----------------------------------
 
 public:
-  GGraphWidget*         graphWidget_;
+  GGraphWidget* graphWidget_;
   SignalSlotForm* signalSlotForm_; // gilgil temp 2016.09.20
 
 public:

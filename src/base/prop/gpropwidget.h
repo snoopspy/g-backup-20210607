@@ -28,6 +28,7 @@ public:
   QObject* object() { return object_; }
   void setObject(QObject* object);
   void update();
+  void clear();
 
 protected:
   bool isFirstSetObject_{true};

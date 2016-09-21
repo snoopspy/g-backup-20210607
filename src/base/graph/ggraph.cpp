@@ -33,7 +33,7 @@ void GGraph::Connections::propSave(QJsonObject& jo) {
   (void)jo; // gilgil temp 2016.09.20
 }
 
-GGraph::Node* GGraph::Factory::createInstance(QString className) {
+GGraph::Node* GGraph::createInstance(QString className) {
   QObject* obj = GObj::createInstance(className);
   if (obj == nullptr) return nullptr;
   Node* node = dynamic_cast<Node*>(obj);
@@ -62,9 +62,14 @@ GGraph::Node* GGraph::Factory::createInstance(QString className) {
   int suffix = 1;
   while (true) {
     QString _objectName = objectName + QString::number(suffix);
-    GGraph::Node* exist = graph_->findChild<GGraph::Node*>(_objectName);
-    if (exist == nullptr)
-      break;
+    bool isExist = false;
+    foreach(Node* node, nodes_) {
+      if (node->objectName() == _objectName) {
+        isExist = true;
+        break;
+      }
+    }
+    if (!isExist) break;
     suffix++;
   }
   objectName = objectName + QString::number(suffix);
@@ -73,37 +78,25 @@ GGraph::Node* GGraph::Factory::createInstance(QString className) {
   return node;
 }
 
-void GGraph::Factory::propLoad(QJsonObject jo) {
-  toLowerFirstCharacter_ = jo["toLowerFirstCharacter"].toBool();
-  removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
-  ignoreSignalNames_ = jo["ignoreSignalNames"].toString().split(",");
-  ignoreSlotNames_ = jo["ignoreSlotNames"].toString().split(",");
-}
-
-void GGraph::Factory::propSave(QJsonObject& jo) {
-  jo["toLowerFirstCharacter"] = toLowerFirstCharacter_;
-  jo["removePrefixNames"] = removePrefixNames_.join(",");
-  jo["ignoreSignalNames"] = ignoreSignalNames_.join(",");
-  jo["ignoreSlotNames"] = ignoreSlotNames_.join(",");
-}
-
 void GGraph::clear() {
   nodes_.clear();
   connections_.clear();
 }
 
 void GGraph::propLoad(QJsonObject jo) {
-  Factory* _factory = factory();
-  if (_factory != nullptr)
-    jo["factory"] >> *_factory;
+  toLowerFirstCharacter_ = jo["toLowerFirstCharacter"].toBool();
+  removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
+  ignoreSignalNames_ = jo["ignoreSignalNames"].toString().split(",");
+  ignoreSlotNames_ = jo["ignoreSlotNames"].toString().split(",");
   jo["nodes"] >> nodes_;
   jo["connections"] >> connections_;
 }
 
 void GGraph::propSave(QJsonObject& jo) {
-  Factory* _factory = factory();
-  if (_factory != nullptr)
-    jo["factory"] << *_factory;
+  jo["toLowerFirstCharacter"] = toLowerFirstCharacter_;
+  jo["removePrefixNames"] = removePrefixNames_.join(",");
+  jo["ignoreSignalNames"] = ignoreSignalNames_.join(",");
+  jo["ignoreSlotNames"] = ignoreSlotNames_.join(",");
   jo["nodes"] << nodes_;
   jo["connections"] << connections_;
 }

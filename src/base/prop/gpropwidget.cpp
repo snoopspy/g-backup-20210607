@@ -19,6 +19,7 @@ GPropWidget::GPropWidget(QObject* object) : QTreeWidget(nullptr) {
 }
 
 GPropWidget::~GPropWidget() {
+  clear();
 }
 
 void GPropWidget::init() {
@@ -34,6 +35,8 @@ void GPropWidget::setObject(QObject* object) {
   if (object == object_) return;
   clear();
   object_ = object;
+
+  if (object == nullptr) return;
 
   GProp* prop = dynamic_cast<GProp*>(object_);
   if (prop == nullptr) {
@@ -57,7 +60,17 @@ void GPropWidget::update() {
     if (item != nullptr)
       item->update();
   }
-  QWidget::update();
+  QTreeWidget::update();
+}
+
+void GPropWidget::clear() {
+  QObjectList list = children();
+  foreach (QObject* object, list) {
+    GPropItem* item = dynamic_cast<GPropItem*>(object);
+    if (item != nullptr)
+      delete item;
+  }
+  QTreeWidget::clear();
 }
 
 void GPropWidget::propLoad(QJsonObject jo) {

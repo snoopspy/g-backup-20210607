@@ -1,6 +1,6 @@
 #include "mygraph.h"
 
-MyGraph::Factory::Factory(GGraph* graph) : GGraph::Factory(graph) {
+MyGraph::Factory::Factory() {
   qRegisterMetaType<GMyObjA*>();
   qRegisterMetaType<GMyObjB*>();
   qRegisterMetaType<GMyObjC*>();
