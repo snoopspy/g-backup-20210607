@@ -30,15 +30,15 @@ QT_END_NAMESPACE
 // ----------------------------------
 
 // ----------------------------------------------------------------------------
-// Arrow
+// GGraphArrow
 // ----------------------------------------------------------------------------
 class Node;
-class Arrow : public QGraphicsLineItem
+class GGraphArrow : public QGraphicsLineItem
 {
 public:
 	enum { Type = UserType + 4 };
-	Arrow(Node *startNode, QString signal, Node *endNode, QString slot);
-	virtual ~Arrow();
+  GGraphArrow(Node *startNode, QString signal, Node *endNode, QString slot);
+  virtual ~GGraphArrow();
 
   int type() const override { return Type; }
   QRectF boundingRect() const override;

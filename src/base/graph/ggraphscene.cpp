@@ -40,9 +40,9 @@ Scene::~Scene()
 	while (items().count() > 0)
 	{
 		QGraphicsItem* item = items().first();
-		if (item->type() == Arrow::Type)
+    if (item->type() == GGraphArrow::Type)
 		{
-			Arrow *arrow = qgraphicsitem_cast<Arrow *>(item);
+      GGraphArrow *arrow = qgraphicsitem_cast<GGraphArrow*>(item);
 			arrow->startItem()->removeArrow(arrow);
 			arrow->endItem()->removeArrow(arrow);
 			delete item;
@@ -181,16 +181,16 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 */
 // ----------------------------------
 
-Arrow* Scene::createArrow(Node* startNode, QString signal, Node* endNode, QString slot)
+GGraphArrow* Scene::createArrow(Node* startNode, QString signal, Node* endNode, QString slot)
 {
-	Arrow *res = new Arrow(startNode, signal, endNode, slot);
+  GGraphArrow *res = new GGraphArrow(startNode, signal, endNode, slot);
 	res->setColor(Qt::black);
 	startNode->addArrow(res);
 	endNode->addArrow(res);
 	return res;
 }
 
-Arrow* Scene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot)
+GGraphArrow* Scene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot)
 {
 	Node* startNode = findNodeByName(startNodeName);
 	if (startNode == NULL) return NULL;
@@ -279,7 +279,7 @@ bool Scene::loadFromFile(QString fileName, QString& errStr)
 		for (int i = 0; i < _count; i++)
 		{
       VGraphConnect connect = (VGraphConnect&)this->graph_->connectList.at(i);
-			Arrow* arrow = createArrow(connect.sender, connect.signal, connect.receiver, connect.slot);
+      GGraphArrow* arrow = createArrow(connect.sender, connect.signal, connect.receiver, connect.slot);
 			if (arrow == NULL) return false;
 			addItem(arrow);
 			arrow->updatePosition();
@@ -425,7 +425,7 @@ void Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 connection.slot_     = slot;
                 graphWidget_->graph()->connections_.push_back(connection);
 
-								Arrow *arrow = createArrow(startNode, signal, endNode, slot);
+                GGraphArrow *arrow = createArrow(startNode, signal, endNode, slot);
                 if (arrow != nullptr) {
                   addItem(arrow);
                   arrow->updatePosition();

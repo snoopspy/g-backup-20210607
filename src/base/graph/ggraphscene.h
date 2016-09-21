@@ -70,8 +70,8 @@ public:
 public:
   // QString generateObjectClassName(QString className);
 	Node*  createNode(QString className, QString name, bool createObject);
-	Arrow* createArrow(Node* startNode, QString signal, Node* endNode, QString slot);
-	Arrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
+  GGraphArrow* createArrow(Node* startNode, QString signal, Node* endNode, QString slot);
+  GGraphArrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
   Node*  findNodeByName(QString objectName);
 
 public: // for file manipulation

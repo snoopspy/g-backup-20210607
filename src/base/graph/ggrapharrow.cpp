@@ -14,7 +14,7 @@
 
 const qreal Pi = 3.14;
 
-Arrow::Arrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGraphicsLineItem(nullptr)
+GGraphArrow::GGraphArrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGraphicsLineItem(nullptr)
 {
 	myStartNode = startNode;
 	myEndNode   = endNode;
@@ -30,7 +30,7 @@ Arrow::Arrow(Node *startNode, QString signal, Node *endNode, QString slot) : QGr
   connection_.slot_     = slot;
 }
 
-Arrow::~Arrow()
+GGraphArrow::~GGraphArrow()
 {
 	Scene* scene = (Scene*)this->scene();
   GGraph::Connections& connections = scene->graphWidget_->graph()->connections_;
@@ -39,34 +39,28 @@ Arrow::~Arrow()
   connections.removeAt(index);
 }
 
-QRectF Arrow::boundingRect() const
+QRectF GGraphArrow::boundingRect() const
 {
   qreal extra = (pen().width() + 20) / 2.0;
 
   return QRectF(line().p1(), QSizeF(line().p2().x() - line().p1().x(),
     line().p2().y() - line().p1().y())).normalized().adjusted(-extra, -extra, extra, extra);
 }
-//! [1]
 
-//! [2]
-QPainterPath Arrow::shape() const
+QPainterPath GGraphArrow::shape() const
 {
 	QPainterPath path = QGraphicsLineItem::shape();
   path.addPolygon(arrowHead);
 	return path;
 }
-//! [2]
 
-//! [3]
-void Arrow::updatePosition()
+void GGraphArrow::updatePosition()
 {
 	QLineF line(mapFromItem(myStartNode, 0, 0), mapFromItem(myEndNode, 0, 0));
 	setLine(line);
 }
-//! [3]
 
-//! [4]
-void Arrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
+void GGraphArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 					QWidget *)
 {
 	if (myStartNode->collidesWithItem(myEndNode))

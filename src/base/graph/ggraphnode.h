@@ -33,9 +33,9 @@ public:
 	virtual ~Node();
 
 public:
-	QList<Arrow *> arrows;
-	void addArrow(Arrow *arrow);
-	void removeArrow(Arrow *arrow);
+  QList<GGraphArrow*> arrows;
+  void addArrow(GGraphArrow *arrow);
+  void removeArrow(GGraphArrow *arrow);
 	void removeArrows();
 
 public:

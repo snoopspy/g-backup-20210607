@@ -24,12 +24,12 @@ Node::~Node()
 	}
 }
 
-void Node::addArrow(Arrow *arrow)
+void Node::addArrow(GGraphArrow* arrow)
 {
 	arrows.append(arrow);
 }
 
-void Node::removeArrow(Arrow *arrow)
+void Node::removeArrow(GGraphArrow* arrow)
 {
 	int index = arrows.indexOf(arrow);
 
@@ -39,7 +39,7 @@ void Node::removeArrow(Arrow *arrow)
 
 void Node::removeArrows()
 {
-	foreach (Arrow *arrow, arrows)
+  foreach (GGraphArrow* arrow, arrows)
 	{
 		arrow->startItem()->removeArrow(arrow);
 		arrow->endItem()->removeArrow(arrow);
