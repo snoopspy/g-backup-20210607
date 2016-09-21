@@ -2,7 +2,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-SignalSlotForm::SignalSlotForm(QWidget *parent) : QDialog(parent) {
+GGSignalSlotForm::GGSignalSlotForm(QWidget *parent) : QDialog(parent) {
+  setWindowTitle("Signal and Slot");
+
   lwSignalList_ = new QListWidget(this);
   lwSlotList_ = new QListWidget(this);
   btnOK_ = new QPushButton(this);
@@ -23,52 +25,52 @@ SignalSlotForm::SignalSlotForm(QWidget *parent) : QDialog(parent) {
   mainLayout->addLayout(listViewLayout);
   mainLayout->addLayout(buttonLayout);
 
-  QObject::connect(btnOK_, &QPushButton::clicked, this, &SignalSlotForm::on_btnOK_clicked);
-  QObject::connect(btnCancel_, &QPushButton::clicked, this, &SignalSlotForm::on_btnCancel_clicked);
-  QObject::connect(lwSignalList_, &QListWidget::currentRowChanged, this, &SignalSlotForm::on_lwSignalList_currentRowChanged);
-  QObject::connect(lwSlotList_, &QListWidget::currentRowChanged, this, &SignalSlotForm::on_lwSlotList_currentRowChanged);
-  QObject::connect(lwSignalList_, &QListWidget::clicked, this, &SignalSlotForm::on_lwSignalList_clicked);
-  QObject::connect(lwSlotList_, &QListWidget::clicked, this, &SignalSlotForm::on_lwSlotList_clicked);
+  QObject::connect(btnOK_, &QPushButton::clicked, this, &GGSignalSlotForm::on_btnOK_clicked);
+  QObject::connect(btnCancel_, &QPushButton::clicked, this, &GGSignalSlotForm::on_btnCancel_clicked);
+  QObject::connect(lwSignalList_, &QListWidget::currentRowChanged, this, &GGSignalSlotForm::on_lwSignalList_currentRowChanged);
+  QObject::connect(lwSlotList_, &QListWidget::currentRowChanged, this, &GGSignalSlotForm::on_lwSlotList_currentRowChanged);
+  QObject::connect(lwSignalList_, &QListWidget::clicked, this, &GGSignalSlotForm::on_lwSignalList_clicked);
+  QObject::connect(lwSlotList_, &QListWidget::clicked, this, &GGSignalSlotForm::on_lwSlotList_clicked);
 
 	setControl();
 }
 
-SignalSlotForm::~SignalSlotForm() {
+GGSignalSlotForm::~GGSignalSlotForm() {
 }
 
-void SignalSlotForm::setControl() {
+void GGSignalSlotForm::setControl() {
 	bool ok = true;
   if (lwSignalList_->selectedItems().count() == 0) ok = false;
   if (lwSlotList_->selectedItems().count() == 0) ok = false;
   btnOK_->setEnabled(ok);
 }
 
-void SignalSlotForm::on_btnOK_clicked(bool)
+void GGSignalSlotForm::on_btnOK_clicked(bool)
 {
 	this->done(QDialog::Accepted);
 }
 
-void SignalSlotForm::on_btnCancel_clicked(bool)
+void GGSignalSlotForm::on_btnCancel_clicked(bool)
 {
 	this->done(QDialog::Rejected);
 }
 
-void SignalSlotForm::on_lwSignalList_currentRowChanged(int)
+void GGSignalSlotForm::on_lwSignalList_currentRowChanged(int)
 {
 	setControl();
 }
 
-void SignalSlotForm::on_lwSlotList_currentRowChanged(int)
+void GGSignalSlotForm::on_lwSlotList_currentRowChanged(int)
 {
 	setControl();
 }
 
-void SignalSlotForm::on_lwSignalList_clicked(const QModelIndex&)
+void GGSignalSlotForm::on_lwSignalList_clicked(const QModelIndex&)
 {
 	setControl();
 }
 
-void SignalSlotForm::on_lwSlotList_clicked(const QModelIndex&)
+void GGSignalSlotForm::on_lwSlotList_clicked(const QModelIndex&)
 {
 	setControl();
 }

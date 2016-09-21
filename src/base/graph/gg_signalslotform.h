@@ -17,15 +17,15 @@
 #include <QPushButton>
 
 // ----------------------------------------------------------------------------
-// SignalSlotForm
+// GGSignalSlotForm
 // ----------------------------------------------------------------------------
-class SignalSlotForm : public QDialog
+class GGSignalSlotForm : public QDialog
 {
 	Q_OBJECT
 	
 public:
-  explicit SignalSlotForm(QWidget *parent = nullptr);
-  ~SignalSlotForm() override;
+  explicit GGSignalSlotForm(QWidget *parent = nullptr);
+  ~GGSignalSlotForm() override;
 
 public:
   QListWidget* lwSignalList_;

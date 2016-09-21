@@ -3,17 +3,33 @@
 // ----------------------------------------------------------------------------
 // GGraph
 // ----------------------------------------------------------------------------
-void GGraph::Nodes::propLoad(QJsonObject jo) {
-  (void)jo; // gilgil temp 2016.09.20
+void GGraph::Nodes::load(QJsonArray ja) {
+  clear();
+  foreach (QJsonValue jv, ja) {
+    QJsonObject childJo = jv.toObject();
+    QString className = childJo["class"].toString();
+    if (className == "") {
+      qWarning() << QString("className is empty");
+      continue;
+    }
+    GGraph::Node* node = GGraph::createInstance(className);
+    if (node == nullptr) {
+      qWarning() << QString("node is null for (%1)").arg(className);
+      continue;
+    }
+    node->propLoad(childJo);
+    append(node);
+  }
 }
 
-void GGraph::Nodes::propSave(QJsonObject& jo) {
-  jo = QJsonObject(); // clear
+void GGraph::Nodes::save(QJsonArray& ja) {
+  ja = QJsonArray(); // clear
   foreach (GGraph::Node* node, *this) {
     QJsonObject childJo;
     node->propSave(childJo);
-    QString objectName = node->objectName();
-    jo[objectName] = childJo; // gilgil temp 2016.09.20
+    QString className = node->metaObject()->className();
+    childJo["class"] = className;
+    ja.append(childJo);
   }
 }
 
@@ -25,12 +41,28 @@ bool GGraph::Connection::operator ==(const Connection& other) {
   return true;
 }
 
-void GGraph::Connections::propLoad(QJsonObject jo) {
-  (void)jo; // gilgil temp 2016.09.20
+void GGraph::Connections::load(QJsonArray ja) {
+  clear();
+  foreach (QJsonValue jv, ja) {
+    QJsonObject connectionJo = jv.toObject();
+    Connection connection;
+    connection.sender_ = connectionJo["sender_"].toString();
+    connection.signal_ = connectionJo["signal_"].toString();
+    connection.receiver_ = connectionJo["receiver_"].toString();
+    connection.slot_ = connectionJo["slot_"].toString();
+  }
 }
 
-void GGraph::Connections::propSave(QJsonObject& jo) {
-  (void)jo; // gilgil temp 2016.09.20
+void GGraph::Connections::save(QJsonArray& ja) {
+  ja = QJsonArray(); // clear
+  foreach (Connection connection, *this) {
+    QJsonObject connectionJo;
+    connectionJo["sender"] = connection.sender_;
+    connectionJo["signal"] = connection.signal_;
+    connectionJo["receiver"] = connection.receiver_;
+    connectionJo["slot"] = connection.slot_;
+    ja.append(connectionJo);
+  }
 }
 
 void GGraph::clear() {
@@ -49,11 +81,14 @@ GGraph::Node* GGraph::createInstance(QString className) {
 }
 
 void GGraph::propLoad(QJsonObject jo) {
-  jo["nodes"] >> nodes_;
-  jo["connections"] >> connections_;
+  nodes_.load(jo["nodes"].toArray());
+  connections_.load(jo["connections"].toArray());
 }
 
 void GGraph::propSave(QJsonObject& jo) {
-  jo["nodes"] << nodes_;
-  jo["connections"] << connections_;
+  QJsonArray ja;
+  nodes_.save(ja);
+  jo["nodes"] = ja;
+  connections_.save(ja);
+  jo["connections"] = ja;
 }

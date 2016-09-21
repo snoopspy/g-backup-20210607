@@ -13,14 +13,15 @@
 #ifdef QT_GUI_LIB
 
 #include <QAction>
+#include <QFileDialog>
+#include <QGraphicsView>
 #include <QHBoxLayout>
-#include <QToolBar>
 #include <QSplitter>
 #include <QStatusBar>
 #include <QTreeWidget>
 #include <QTreeView>
+#include <QToolBar>
 #include <QVBoxLayout>
-#include <QGraphicsView>
 
 #include "base/prop/gpropwidget.h"
 #include "gg_scene.h"
@@ -38,7 +39,11 @@ public:
   GGraph* graph() { return graph_; }
   void setGraph(GGraph* graph);
   void update();
+
+public:
   void clear();
+  void loadGraph(QJsonObject jo);
+  void saveGraph(QJsonObject& jo);
 
 protected:
   void updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
@@ -49,6 +54,8 @@ public:
 
 protected:
   GGraph* graph_{nullptr};
+  QString fileName_;
+  QFileDialog fileDialog_;
 
 public:
   bool toLowerFirstCharacter_{true};
@@ -61,6 +68,10 @@ public:
   void propSave(QJsonObject& jo) override;
 
 protected:
+  QAction* actionNewFile_;
+  QAction* actionOpenFile_;
+  QAction* actionSaveFile_;
+  QAction* actionSaveFileAs_;
   QAction* actionStart_;
   QAction* actionStop_;
   QAction* actionEdit_;
@@ -82,6 +93,10 @@ public slots:
   void setControl();
 
 public slots:
+  void actionNewFileTriggered(bool);
+  void actionOpenFileTriggered(bool);
+  void actionSaveFileTriggered(bool);
+  void actionSaveFileAsTriggered(bool);
   void actionStartTriggered(bool);
   void actionStopTriggered(bool);
   void actionEditTriggered(bool);

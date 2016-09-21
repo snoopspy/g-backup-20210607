@@ -21,8 +21,8 @@ struct GGraph : GStateObj {
   typedef GObj Node;
 
   struct Nodes : QList<Node*>, GProp {
-    void propLoad(QJsonObject jo) override;
-    void propSave(QJsonObject& jo) override;
+    void load(QJsonArray ja);
+    void save(QJsonArray& ja);
   };
 
   struct Connection {
@@ -33,9 +33,9 @@ struct GGraph : GStateObj {
     bool operator ==(const Connection& other);
   };
 
-  struct Connections : QList<Connection>, GProp {
-    void propLoad(QJsonObject jo) override;
-    void propSave(QJsonObject& jo) override;
+  struct Connections : QList<Connection> {
+    void load(QJsonArray ja);
+    void save(QJsonArray& ja);
   };
 
   struct Factory : GObj {
@@ -77,7 +77,7 @@ public:
   virtual Factory* factory() = 0;
 
 public:
-  Node* createInstance(QString className);
+  static Node* createInstance(QString className);
 
 public:
   Nodes nodes_;

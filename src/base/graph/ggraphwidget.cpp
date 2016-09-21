@@ -26,6 +26,15 @@ void setColor(QWidget* widget, QColor color) { // gilgil temp 2016.09.18
 void GGraphWidget::init() {
   resize(QSize(640, 480));
 
+  QStringList filters; filters << "graph files(*.graph)" << "any files(*)";
+  fileDialog_.setNameFilters(filters);
+  fileDialog_.setDefaultSuffix("graph");
+  fileDialog_.setViewMode(QFileDialog::Detail);
+
+  (actionNewFile_ = new QAction(this))->setText("New");
+  (actionOpenFile_ = new QAction(this))->setText("Open");
+  (actionSaveFile_ = new QAction(this))->setText("Save");
+  (actionSaveFileAs_ = new QAction(this))->setText("Save As");
   (actionStart_ = new QAction(this))->setText("Start");
   (actionStop_ = new QAction(this))->setText("Stop");
   (actionEdit_ = new QAction(this))->setText("Edit");
@@ -64,6 +73,11 @@ void GGraphWidget::init() {
   midLeftSplitter_->setStretchFactor(0, 0);
   midLeftSplitter_->setStretchFactor(1, 1);
 
+  toolBar_->addAction(actionNewFile_);
+  toolBar_->addAction(actionOpenFile_);
+  toolBar_->addAction(actionSaveFile_);
+  toolBar_->addAction(actionSaveFileAs_);
+  toolBar_->addSeparator();
   toolBar_->addAction(actionStart_);
   toolBar_->addAction(actionStop_);
   toolBar_->addSeparator();
@@ -74,6 +88,10 @@ void GGraphWidget::init() {
   toolBar_->addSeparator();
   toolBar_->addAction(actionOption_);
 
+  QObject::connect(actionNewFile_, &QAction::triggered, this, &GGraphWidget::actionNewFileTriggered);
+  QObject::connect(actionOpenFile_, &QAction::triggered, this, &GGraphWidget::actionOpenFileTriggered);
+  QObject::connect(actionSaveFile_, &QAction::triggered, this, &GGraphWidget::actionSaveFileTriggered);
+  QObject::connect(actionSaveFileAs_, &QAction::triggered, this, &GGraphWidget::actionSaveFileAsTriggered);
   QObject::connect(actionStart_, &QAction::triggered, this, &GGraphWidget::actionStartTriggered);
   QObject::connect(actionStop_, &QAction::triggered, this, &GGraphWidget::actionStopTriggered);
   QObject::connect(actionEdit_, &QAction::triggered, this, &GGraphWidget::actionEditTriggered);
@@ -82,7 +100,6 @@ void GGraphWidget::init() {
   QObject::connect(actionOption_, &QAction::triggered, this, &GGraphWidget::actionOptionTriggered);
 
   QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
-
   QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
 }
 
@@ -105,7 +122,22 @@ void GGraphWidget::update() {
 }
 
 void GGraphWidget::clear() {
+  fileName_ = "";
   scene_->clear();
+}
+
+void GGraphWidget::loadGraph(QJsonObject jo) {
+  graph_->propLoad(jo);
+  // gilgil temp 2016.09.22
+}
+
+void GGraphWidget::saveGraph(QJsonObject& jo) {
+  graph_->propSave(jo);
+  foreach (GGraph::Node* node, graph_->nodes_) {
+    qDebug() << node;
+  }
+
+  // gilgil temp 2016.09.22
 }
 
 void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
@@ -184,7 +216,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   GGraph::Node* node = createInstance(className);
   if (node == nullptr) {
     QString msg = QString("createInstance failed for (%1)").arg(className);
-    QMessageBox::information(NULL, "error", msg);
+    QMessageBox::warning(nullptr, "Error", msg);
     return nullptr;
   }
   node->setParent(graph_);
@@ -204,6 +236,8 @@ void GGraphWidget::propLoad(QJsonObject jo) {
   removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
   ignoreSignalNames_ = jo["ignoreSignalNames"].toString().split(",");
   ignoreSlotNames_ = jo["ignoreSlotNames"].toString().split(",");
+
+  loadGraph(jo["graph"].toObject());
 }
 
 void GGraphWidget::propSave(QJsonObject& jo) {
@@ -219,6 +253,10 @@ void GGraphWidget::propSave(QJsonObject& jo) {
   jo["removePrefixNames"] = removePrefixNames_.join(",");
   jo["ignoreSignalNames"] = ignoreSignalNames_.join(",");
   jo["ignoreSlotNames"] = ignoreSlotNames_.join(",");
+
+  QJsonObject graphJo;
+  saveGraph(graphJo);
+  jo["graph"] = graphJo;
 }
 
 void GGraphWidget::setControl() {
@@ -237,7 +275,6 @@ void GGraphWidget::setControl() {
   */
   // ----------------------------------
 
-
   GGScene::Mode mode = scene_->mode();
 
   actionEdit_->setEnabled(mode != GGScene::MoveItem);
@@ -247,6 +284,10 @@ void GGraphWidget::setControl() {
   if (graph_ != nullptr)
     active = graph_->active();
 
+  actionNewFile_->setEnabled(!active);
+  actionOpenFile_->setEnabled(!active);
+  actionSaveFile_->setEnabled(!active && fileName_ != "");
+  actionSaveFileAs_->setEnabled(!active);
   actionStart_->setEnabled(!active);
   actionStop_->setEnabled(active);
 
@@ -268,8 +309,45 @@ void GGraphWidget::setControl() {
   actionOption_->setEnabled(selectedObj != nullptr);
 }
 
+void GGraphWidget::actionNewFileTriggered(bool) {
+  clear();
+  setControl();
+}
+
+void GGraphWidget::actionOpenFileTriggered(bool) {
+  fileDialog_.setAcceptMode(QFileDialog::AcceptOpen);
+  fileDialog_.setFileMode(QFileDialog::ExistingFile);
+  if (fileDialog_.exec() == QDialog::Accepted) {
+    fileName_ = fileDialog_.selectedFiles().first();
+    QJsonObject jo = GJson::loadFromFile(fileName_);
+    saveGraph(jo);
+    setControl();
+  }
+}
+
+void GGraphWidget::actionSaveFileTriggered(bool) {
+  QJsonObject jo;
+  saveGraph(jo);
+  GJson::saveToFile(jo, fileName_);
+  setControl();
+}
+
+void GGraphWidget::actionSaveFileAsTriggered(bool) {
+  fileDialog_.setAcceptMode(QFileDialog::AcceptSave);
+  fileDialog_.setFileMode(QFileDialog::AnyFile);
+  if (fileDialog_.exec() == QDialog::Accepted)
+  {
+    fileName_ = fileDialog_.selectedFiles().first();
+    actionSaveFileTriggered(false);
+  }
+}
+
 void GGraphWidget::actionStartTriggered(bool) {
-  qDebug() << ""; // gilgil temp 2016.09.18
+  bool res = graph_->open();
+  if (!res) {
+    QString msg = graph_->err->msg();
+    QMessageBox::warning(nullptr, "Error", msg);
+  }
   setControl();
 }
 

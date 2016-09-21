@@ -20,6 +20,7 @@ GGNode::~GGNode()
     int index = nodes.indexOf(obj_);
     Q_ASSERT(index != -1);
     nodes.removeAt(index);
+    delete obj_;
     obj_ = nullptr;
 	}
 }

@@ -180,8 +180,7 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 */
 // ----------------------------------
 
-GGArrow* GGScene::createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot)
-{
+GGArrow* GGScene::createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot) {
   GGArrow *res = new GGArrow(startNode, signal, endNode, slot);
 	res->setColor(Qt::black);
 	startNode->addArrow(res);
@@ -189,8 +188,7 @@ GGArrow* GGScene::createArrow(GGNode* startNode, QString signal, GGNode* endNode
 	return res;
 }
 
-GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot)
-{
+GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot) {
   GGNode* startNode = findNodeByName(startNodeName);
 	if (startNode == NULL) return NULL;
   GGNode* endNode   = findNodeByName(endNodeName);
@@ -198,8 +196,7 @@ GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString end
 	return createArrow(startNode, signal, endNode, slot);
 }
 
-GGNode* GGScene::findNodeByName(QString objectName)
-{
+GGNode* GGScene::findNodeByName(QString objectName) {
 	int _count = this->items().count();
 	for (int i = 0; i < _count; i++)
 	{
@@ -406,7 +403,8 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 								_slotList.removeAll(name);
 							}
 
-              if (signalSlotForm_ == NULL) signalSlotForm_ = new SignalSlotForm((QWidget*)this->parent());
+              if (signalSlotForm_ == nullptr)
+                signalSlotForm_ = new GGSignalSlotForm((QWidget*)this->parent());
               signalSlotForm_->lwSignalList_->clear();
               signalSlotForm_->lwSignalList_->addItems(_signalList);
               signalSlotForm_->lwSlotList_->clear();
@@ -440,7 +438,6 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 	QGraphicsScene::mouseReleaseEvent(event);
 }
-
 
 // ----- gilgil temp 2016.09.20 -----
 /*

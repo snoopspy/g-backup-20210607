@@ -15,14 +15,12 @@ int main(int argc, char *argv[]) {
 
   QJsonObject jo = GJson::loadFromFile();
 
-  jo["myGraph"] >> myGraph;
   jo["graphWidget"] >> graphWidget;
 
   graphWidget.update();
   graphWidget.show();
   int res = a.exec();
 
-  jo["myGraph"] << myGraph;
   jo["graphWidget"] << graphWidget;
 
   GJson::saveToFile(jo);
