@@ -1,32 +1,23 @@
-// ----- gilgil temp 2016.09.20 -----
-/*
-#include <math.h>
-
-#define WIN32_LEAN_AND_MEAN
-#include <QtGui>
-*/
-// ----------------------------------
-
 #include "gg_arrow.h"
-#include "gg_node.h" // gilgil temp 2016.09.20
-#include "gg_scene.h" // gilgil temp 2016.09.20
+#include "gg_text.h"
+#include "gg_scene.h"
 #include "ggraphwidget.h"
 
 const qreal Pi = 3.14;
 
-GGArrow::GGArrow(GGNode *startNode, QString signal, GGNode *endNode, QString slot) : QGraphicsLineItem(nullptr)
+GGArrow::GGArrow(GGText *startText, QString signal, GGText *endText, QString slot) : QGraphicsLineItem(nullptr)
 {
-	myStartNode = startNode;
-	myEndNode   = endNode;
+  myStartText = startText;
+  myEndText   = endText;
 
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	myColor = Qt::black;
 	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	setZValue(-1000.0);
 
-  connection_.sender_   = startNode->obj_->objectName();
+  connection_.sender_   = startText->obj_->objectName();
   connection_.signal_   = signal;
-  connection_.receiver_ = endNode->obj_->objectName();
+  connection_.receiver_ = endText->obj_->objectName();
   connection_.slot_     = slot;
 }
 
@@ -56,14 +47,14 @@ QPainterPath GGArrow::shape() const
 
 void GGArrow::updatePosition()
 {
-	QLineF line(mapFromItem(myStartNode, 0, 0), mapFromItem(myEndNode, 0, 0));
+  QLineF line(mapFromItem(myStartText, 0, 0), mapFromItem(myEndText, 0, 0));
 	setLine(line);
 }
 
 void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 					QWidget *)
 {
-	if (myStartNode->collidesWithItem(myEndNode))
+  if (myStartText->collidesWithItem(myEndText))
 			return;
 
   QPen myPen = pen();
@@ -92,10 +83,10 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
   */
   // ----------------------------------
   QPointF start, end;
-  start.setX(myStartNode->pos().x() + myStartNode->boundingRect().width() / 2);
-  start.setY(myStartNode->pos().y() + myStartNode->boundingRect().height() / 2);
-  end.setX  (myEndNode->pos().x()   + myEndNode->boundingRect().width() / 2);
-  end.setY  (myEndNode->pos().y()   + myEndNode->boundingRect().height() / 2);
+  start.setX(myStartText->pos().x() + myStartText->boundingRect().width() / 2);
+  start.setY(myStartText->pos().y() + myStartText->boundingRect().height() / 2);
+  end.setX  (myEndText->pos().x()   + myEndText->boundingRect().width() / 2);
+  end.setY  (myEndText->pos().y()   + myEndText->boundingRect().height() / 2);
   QLineF centerLine(start, end);
 
   QPointF intersectPoint;
@@ -104,19 +95,19 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
 
   while (true)
   {
-    polyLine = QLineF(myEndNode->sceneBoundingRect().topLeft(), myEndNode->sceneBoundingRect().topRight());
+    polyLine = QLineF(myEndText->sceneBoundingRect().topLeft(), myEndText->sceneBoundingRect().topRight());
     intersectType = polyLine.intersect(centerLine, &intersectPoint);
     if (intersectType == QLineF::BoundedIntersection) break;
 
-    polyLine = QLineF(myEndNode->sceneBoundingRect().topLeft(), myEndNode->sceneBoundingRect().bottomLeft());
+    polyLine = QLineF(myEndText->sceneBoundingRect().topLeft(), myEndText->sceneBoundingRect().bottomLeft());
     intersectType = polyLine.intersect(centerLine, &intersectPoint);
     if (intersectType == QLineF::BoundedIntersection) break;
 
-    polyLine = QLineF(myEndNode->sceneBoundingRect().topRight(), myEndNode->sceneBoundingRect().bottomRight());
+    polyLine = QLineF(myEndText->sceneBoundingRect().topRight(), myEndText->sceneBoundingRect().bottomRight());
     intersectType = polyLine.intersect(centerLine, &intersectPoint);
     if (intersectType == QLineF::BoundedIntersection) break;
 
-    polyLine = QLineF(myEndNode->sceneBoundingRect().bottomLeft(), myEndNode->sceneBoundingRect().bottomRight());
+    polyLine = QLineF(myEndText->sceneBoundingRect().bottomLeft(), myEndText->sceneBoundingRect().bottomRight());
     intersectType = polyLine.intersect(centerLine, &intersectPoint);
     if (intersectType == QLineF::BoundedIntersection) break;
 

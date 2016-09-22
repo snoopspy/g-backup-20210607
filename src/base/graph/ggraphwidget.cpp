@@ -132,10 +132,44 @@ void GGraphWidget::loadGraph(QJsonObject jo) {
 }
 
 void GGraphWidget::saveGraph(QJsonObject& jo) {
-  graph_->propSave(jo);
-  foreach (GGraph::Node* node, graph_->nodes_) {
-    qDebug() << node;
+  QJsonArray nodeJa;
+  QObjectList objectList = scene_->children();
+  foreach (QObject* object, objectList) {
+    GGText* text = dynamic_cast<GGText*>(object);
+    if (text != nullptr) {
+      QJsonObject childJo;
+      GObj* obj = text->obj_;
+      childJo >> *obj;
+      childJo["left"] = 999;
+      nodeJa.append(childJo);
+    }
   }
+  jo["nodes"] = nodeJa;
+
+  /*
+  graph_->propSave(jo);
+  QJsonArray ja = jo["nodes"].toArray();
+  foreach (QJsonValue jv, ja) {
+    QJsonObject& childJo = jv.toObject();
+    qDebug() << childJo;
+    childJo["left"] = 999;
+    ja.append(childJo);
+  }
+  jo["nodes"] = ja;
+  */
+  // ----- gilgil temp 2016.09.22 -----
+  /*
+  foreach (GGraph::Node* node, graph_->nodes_) {
+    QString objectName = node->objectName();
+    GGText* text = scene_->findNodeByObjectName(objectName);
+    if (gnode == nullptr) {
+      qWarning() << QString("can not find (%1)").arg(objectName);
+      continue;
+    }
+    gnode->boundingRect()
+  }
+  */
+  // ----------------------------------
 
   // gilgil temp 2016.09.22
 }
@@ -301,9 +335,9 @@ void GGraphWidget::setControl() {
   if (selected)
   {
     QGraphicsItem* item = scene_->selectedItems().first();
-    GGNode* node = dynamic_cast<GGNode*>(item);
-    if (node != nullptr)
-      selectedObj = dynamic_cast<GObj*>(node->obj_);
+    GGText* text = dynamic_cast<GGText*>(item);
+    if (text != nullptr)
+      selectedObj = dynamic_cast<GObj*>(text->obj_);
   }
   propWidget_->setObject(selectedObj);
   actionOption_->setEnabled(selectedObj != nullptr);
@@ -372,9 +406,9 @@ void GGraphWidget::actionDeleteTriggered(bool) {
   if (scene_->selectedItems().count() == 0)
     return;
   QGraphicsItem* item = scene_->selectedItems().first();
-  GGNode* node = dynamic_cast<GGNode*>(item);
-  if (node != nullptr)
-    delete node;
+  GGText* text = dynamic_cast<GGText*>(item);
+  if (text != nullptr)
+    delete text;
   setControl();
 }
 

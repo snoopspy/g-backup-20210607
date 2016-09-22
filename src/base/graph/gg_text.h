@@ -20,17 +20,17 @@
 #include "gg_arrow.h"
 
 // ----------------------------------------------------------------------------
-// GGNode
+// GGText
 // ----------------------------------------------------------------------------
-struct GGNode : QGraphicsTextItem
+struct GGText : QGraphicsTextItem
 {
 public:
 	enum { Type = UserType + 5 };
 	int type() const { return Type; }
 
 public:
-  GGNode(GObj* obj);
-  ~GGNode() override;
+  GGText(GObj* obj);
+  ~GGText() override;
 
 public:
   QList<GGArrow*> arrows_;

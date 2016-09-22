@@ -17,7 +17,7 @@
 #include <QMessageBox>
 
 #include "gg_arrow.h"
-#include "gg_node.h"
+#include "gg_text.h"
 #include "gg_signalslotform.h"
 
 // ----------------------------------------------------------------------------
@@ -72,10 +72,10 @@ public:
 
 public:
   // QString generateObjectClassName(QString className);
-  GGNode*  createNode(QString className, QString name, bool createObject);
-  GGArrow* createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot);
-  GGArrow* createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot);
-  GGNode*  findNodeByName(QString objectName);
+  // GGText*  createNode(QString className, QString name, bool createObject); // gilgil temp 2016.09.22
+  GGArrow* createArrow(GGText* startText, QString signal, GGText* endText, QString slot);
+  GGArrow* createArrow(QString startTextName, QString signal, QString endTextName, QString slot);
+  GGText*  findTextByObjectName(QString objectName);
 
 public: // for file manipulation
   //bool newFile(QString& errStr); // gilgil temp 2012.07.27

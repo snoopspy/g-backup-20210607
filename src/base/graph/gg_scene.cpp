@@ -43,15 +43,15 @@ GGScene::~GGScene()
     if (item->type() == GGArrow::Type)
 		{
       GGArrow *arrow = qgraphicsitem_cast<GGArrow*>(item);
-			arrow->startItem()->removeArrow(arrow);
-			arrow->endItem()->removeArrow(arrow);
+      arrow->startText()->removeArrow(arrow);
+      arrow->endText()->removeArrow(arrow);
 			delete item;
 		};
-    if (item->type() == GGNode::Type)
+    if (item->type() == GGText::Type)
 		{
-      GGNode* node = (GGNode*)items().first();
-			node->removeArrows();
-			delete node;
+      GGText* text = (GGText*)items().first();
+      text->removeArrows();
+      delete text;
 		}
 	}
   if (signalSlotForm_ != nullptr) {
@@ -180,32 +180,31 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 */
 // ----------------------------------
 
-GGArrow* GGScene::createArrow(GGNode* startNode, QString signal, GGNode* endNode, QString slot) {
-  GGArrow *res = new GGArrow(startNode, signal, endNode, slot);
+GGArrow* GGScene::createArrow(GGText* startText, QString signal, GGText* endText, QString slot) {
+  GGArrow *res = new GGArrow(startText, signal, endText, slot);
 	res->setColor(Qt::black);
-	startNode->addArrow(res);
-	endNode->addArrow(res);
+  startText->addArrow(res);
+  endText->addArrow(res);
 	return res;
 }
 
 GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot) {
-  GGNode* startNode = findNodeByName(startNodeName);
-	if (startNode == NULL) return NULL;
-  GGNode* endNode   = findNodeByName(endNodeName);
-	if (endNode == NULL) return NULL;
-	return createArrow(startNode, signal, endNode, slot);
+  GGText* startText = findTextByObjectName(startNodeName);
+  if (startText == NULL) return NULL;
+  GGText* endText   = findTextByObjectName(endNodeName);
+  if (endText == NULL) return NULL;
+  return createArrow(startText, signal, endText, slot);
 }
 
-GGNode* GGScene::findNodeByName(QString objectName) {
+GGText* GGScene::findTextByObjectName(QString objectName) {
 	int _count = this->items().count();
 	for (int i = 0; i < _count; i++)
 	{
 		QGraphicsItem* item = this->items().at(i);
-    GGNode* res = dynamic_cast<GGNode*>(item);
+    GGText* res = dynamic_cast<GGText*>(item);
     if (res == nullptr) continue;
-    if (res->obj_->objectName() == objectName) {
+    if (res->obj_->objectName() == objectName)
 			return res;
-		}
 	}
   qWarning() << QString("can not find for '%1'").arg(objectName);
   return nullptr;
@@ -327,10 +326,10 @@ void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case InsertItem: {
         GGraph::Node* newNode = graphWidget_->createNodeIfItemNodeSelected();
         if (newNode != nullptr) {
-          GGNode* newItem = new GGNode(newNode);
-          newItem->setPlainText(newNode->objectName());
-          addItem(newItem);
-          newItem->setPos(event->scenePos());
+          GGText* newText = new GGText(newNode);
+          newText->setPlainText(newNode->objectName());
+          addItem(newText);
+          newText->setPos(event->scenePos());
         }
         setMode(MoveItem);
       }
@@ -388,17 +387,17 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 					if (startItems.count() > 0 && endItems.count() > 0 &&
 							startItems.first() != endItems.first())
 					{
-              GGNode *startNode = (GGNode*)startItems.first();
-              GGNode *endNode = (GGNode*)endItems.first();
+              GGText *startText = (GGText*)startItems.first();
+              GGText *endText = (GGText*)endItems.first();
               GGraph* graph = graphWidget_->graph();
               Q_ASSERT(graph != nullptr);
 
-              QStringList _signalList = startNode->obj_->signalList();
+              QStringList _signalList = startText->obj_->signalList();
               foreach(QString name, graphWidget_->ignoreSignalNames_) {
 								_signalList.removeAll(name);
 							}
 
-              QStringList _slotList = endNode->obj_->slotList();
+              QStringList _slotList = endText->obj_->slotList();
               foreach (QString name, graphWidget_->ignoreSlotNames_) {
 								_slotList.removeAll(name);
 							}
@@ -416,13 +415,13 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 QString slot   = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
 
                 GGraph::Connection connection;
-                connection.sender_   = startNode->obj_->objectName();
+                connection.sender_   = startText->obj_->objectName();
                 connection.signal_   = signal;
-                connection.receiver_ = endNode->obj_->objectName();
+                connection.receiver_ = endText->obj_->objectName();
                 connection.slot_     = slot;
                 graphWidget_->graph()->connections_.push_back(connection);
 
-                GGArrow *arrow = createArrow(startNode, signal, endNode, slot);
+                GGArrow *arrow = createArrow(startText, signal, endText, slot);
                 if (arrow != nullptr) {
                   addItem(arrow);
                   arrow->updatePosition();
