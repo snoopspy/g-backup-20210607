@@ -3,7 +3,7 @@ INTERFACE=$2
 
 function usage() {
 	echo "usage : dummy <install|uninstall|add|del> [<interface>]"
-	echo "example:"
+	echo "example :"
 	echo "  dummy.sh install"
 	echo "  dummy.sh uninstall"
 	echo "  dummy.sh add dum0"
