@@ -42,14 +42,14 @@ GGScene::~GGScene()
 		QGraphicsItem* item = items().first();
     if (item->type() == GGArrow::Type)
 		{
-      GGArrow *arrow = qgraphicsitem_cast<GGArrow*>(item);
+      GGArrow *arrow = (GGArrow*)(item);
       arrow->startText()->removeArrow(arrow);
       arrow->endText()->removeArrow(arrow);
 			delete item;
 		};
     if (item->type() == GGText::Type)
 		{
-      GGText* text = (GGText*)items().first();
+      GGText* text = (GGText*)item;
       text->removeArrows();
       delete text;
 		}
@@ -180,20 +180,30 @@ Node* Scene::createNode(QString className, QString name, bool createObject)
 */
 // ----------------------------------
 
-GGArrow* GGScene::createArrow(GGText* startText, QString signal, GGText* endText, QString slot) {
-  GGArrow *res = new GGArrow(startText, signal, endText, slot);
-	res->setColor(Qt::black);
-  startText->addArrow(res);
-  endText->addArrow(res);
-	return res;
+GGText* GGScene::createText(GGraph::Node* node, QPointF pos) {
+  GGText* text = new GGText(node);
+  text->setPlainText(node->objectName());
+  addItem(text);
+  text->setPos(pos);
+  return text;
 }
 
-GGArrow* GGScene::createArrow(QString startNodeName, QString signal, QString endNodeName, QString slot) {
+GGArrow* GGScene::createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection) {
+  GGArrow* arrow = new GGArrow(startText, endText, connection);
+  arrow->setColor(Qt::black);
+  startText->addArrow(arrow);
+  endText->addArrow(arrow);
+  addItem(arrow);
+  arrow->updatePosition();
+  return arrow;
+}
+
+GGArrow* GGScene::createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection) {
   GGText* startText = findTextByObjectName(startNodeName);
-  if (startText == NULL) return NULL;
+  if (startText == nullptr) return nullptr;
   GGText* endText   = findTextByObjectName(endNodeName);
-  if (endText == NULL) return NULL;
-  return createArrow(startText, signal, endText, slot);
+  if (endText == nullptr) return nullptr;
+  return createArrow(startText, endText, connection);
 }
 
 GGText* GGScene::findTextByObjectName(QString objectName) {
@@ -203,7 +213,7 @@ GGText* GGScene::findTextByObjectName(QString objectName) {
 		QGraphicsItem* item = this->items().at(i);
     GGText* res = dynamic_cast<GGText*>(item);
     if (res == nullptr) continue;
-    if (res->obj_->objectName() == objectName)
+    if (res->node_->objectName() == objectName)
 			return res;
 	}
   qWarning() << QString("can not find for '%1'").arg(objectName);
@@ -326,10 +336,7 @@ void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     case InsertItem: {
         GGraph::Node* newNode = graphWidget_->createNodeIfItemNodeSelected();
         if (newNode != nullptr) {
-          GGText* newText = new GGText(newNode);
-          newText->setPlainText(newNode->objectName());
-          addItem(newText);
-          newText->setPos(event->scenePos());
+          createText(newNode, event->scenePos());
         }
         setMode(MoveItem);
       }
@@ -392,12 +399,12 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
               GGraph* graph = graphWidget_->graph();
               Q_ASSERT(graph != nullptr);
 
-              QStringList _signalList = startText->obj_->signalList();
+              QStringList _signalList = startText->node_->signalList();
               foreach(QString name, graphWidget_->ignoreSignalNames_) {
 								_signalList.removeAll(name);
 							}
 
-              QStringList _slotList = endText->obj_->slotList();
+              QStringList _slotList = endText->node_->slotList();
               foreach (QString name, graphWidget_->ignoreSlotNames_) {
 								_slotList.removeAll(name);
 							}
@@ -414,18 +421,25 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 QString signal = signalSlotForm_->lwSignalList_->selectedItems().first()->text();
                 QString slot   = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
 
-                GGraph::Connection connection;
-                connection.sender_   = startText->obj_->objectName();
-                connection.signal_   = signal;
-                connection.receiver_ = endText->obj_->objectName();
-                connection.slot_     = slot;
+                bool res = GObj::connect(
+                  startText->node_, qPrintable(signal),
+                  endText->node_, qPrintable(slot),
+                  Qt::DirectConnection);
+                if (!res) {
+                  QString msg = QString("Can not connect %1:%2 > %3:%4").arg(
+                    startText->node_->objectName(), signal,
+                    endText->node_->objectName(), slot);
+                  QMessageBox::warning(nullptr, "Error", msg);
+                  return;
+                }
+                GGraph::Connection* connection = new GGraph::Connection;
+                connection->sender_   = startText->node_;
+                connection->signal_   = signal;
+                connection->receiver_ = endText->node_;
+                connection->slot_     = slot;
                 graphWidget_->graph()->connections_.push_back(connection);
 
-                GGArrow *arrow = createArrow(startText, signal, endText, slot);
-                if (arrow != nullptr) {
-                  addItem(arrow);
-                  arrow->updatePosition();
-								}
+                GGArrow *arrow = createArrow(startText, endText, connection);
 							}
 					}
 					removeItem(line);

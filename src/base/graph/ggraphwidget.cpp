@@ -14,6 +14,7 @@ GGraphWidget::GGraphWidget(QWidget *parent) : QWidget(parent) {
 }
 
 GGraphWidget::~GGraphWidget() {
+  actionStop_->trigger();
   clear();
 }
 
@@ -123,55 +124,61 @@ void GGraphWidget::update() {
 
 void GGraphWidget::clear() {
   fileName_ = "";
+  graph_->clear();
   scene_->clear();
 }
 
 void GGraphWidget::loadGraph(QJsonObject jo) {
   graph_->propLoad(jo);
-  // gilgil temp 2016.09.22
+
+  QJsonArray nodeJa = jo["nodes"].toArray();
+  foreach (QJsonValue jv, nodeJa) {
+    QJsonObject nodeJo = jv.toObject();
+    QString objectName = nodeJo["objectName"].toString();
+    if (objectName == "") {
+      qWarning() << "objectName is empty" << nodeJo;
+      continue;
+    }
+    GGraph::Node* node = graph_->nodes_.findNode(objectName);
+    if (node == nullptr) {
+      qWarning() << "node is null" << nodeJo;
+      continue;
+    }
+    qreal x = nodeJo["_x"].toVariant().toFloat();
+    qreal y = nodeJo["_y"].toVariant().toFloat();
+    QPointF pos(x, y);
+    scene_->createText(node, pos);
+  }
+
+  foreach (GGraph::Connection* connection, graph_->connections_) {
+    QString startNodeName = connection->sender_->objectName();
+    QString endNodeName = connection->receiver_->objectName();
+    scene_->createArrow(startNodeName, endNodeName, connection);
+  }
 }
 
 void GGraphWidget::saveGraph(QJsonObject& jo) {
-  QJsonArray nodeJa;
-  QObjectList objectList = scene_->children();
-  foreach (QObject* object, objectList) {
-    GGText* text = dynamic_cast<GGText*>(object);
-    if (text != nullptr) {
-      QJsonObject childJo;
-      GObj* obj = text->obj_;
-      childJo >> *obj;
-      childJo["left"] = 999;
-      nodeJa.append(childJo);
-    }
-  }
-  jo["nodes"] = nodeJa;
-
-  /*
   graph_->propSave(jo);
-  QJsonArray ja = jo["nodes"].toArray();
-  foreach (QJsonValue jv, ja) {
-    QJsonObject& childJo = jv.toObject();
-    qDebug() << childJo;
-    childJo["left"] = 999;
-    ja.append(childJo);
-  }
-  jo["nodes"] = ja;
-  */
-  // ----- gilgil temp 2016.09.22 -----
-  /*
-  foreach (GGraph::Node* node, graph_->nodes_) {
-    QString objectName = node->objectName();
-    GGText* text = scene_->findNodeByObjectName(objectName);
-    if (gnode == nullptr) {
-      qWarning() << QString("can not find (%1)").arg(objectName);
+
+  QJsonArray nodeJa = jo["nodes"].toArray();
+  for (int i = 0; i < nodeJa.count(); i++) {
+    QJsonObject nodeJo = nodeJa.at(i).toObject();
+    QString objectName = nodeJo["objectName"].toString();
+    if (objectName == "") {
+      qWarning() << "objectName is empty" << nodeJo;
       continue;
     }
-    gnode->boundingRect()
+    GGText* text = scene_->findTextByObjectName(objectName);
+    if (text == nullptr) {
+      qWarning() << "text is null" << nodeJo;
+      continue;
+    }
+    nodeJo["_x"] = text->pos().x();
+    nodeJo["_y"] = text->pos().y();
+    nodeJa.removeAt(i);
+    nodeJa.insert(i, nodeJo);
   }
-  */
-  // ----------------------------------
-
-  // gilgil temp 2016.09.22
+  jo["nodes"] = nodeJa;
 }
 
 void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent) {
@@ -326,18 +333,14 @@ void GGraphWidget::setControl() {
   actionStop_->setEnabled(active);
 
   bool selected = scene_->selectedItems().count() > 0;
-
   actionDelete_->setEnabled(selected);
-  // actionBringToFront_->setEnabled(selected); // gilgil temp 2016.09.21
-  // actionSendToBack_->setEnabled(selected); // gilgil temp 2016.09.21
-
   GObj* selectedObj = nullptr;
   if (selected)
   {
     QGraphicsItem* item = scene_->selectedItems().first();
     GGText* text = dynamic_cast<GGText*>(item);
     if (text != nullptr)
-      selectedObj = dynamic_cast<GObj*>(text->obj_);
+      selectedObj = dynamic_cast<GObj*>(text->node_);
   }
   propWidget_->setObject(selectedObj);
   actionOption_->setEnabled(selectedObj != nullptr);
@@ -386,7 +389,7 @@ void GGraphWidget::actionStartTriggered(bool) {
 }
 
 void GGraphWidget::actionStopTriggered(bool) {
-  qDebug() << ""; // gilgil temp 2016.09.18
+  graph_->close();
   setControl();
 }
 
@@ -406,9 +409,39 @@ void GGraphWidget::actionDeleteTriggered(bool) {
   if (scene_->selectedItems().count() == 0)
     return;
   QGraphicsItem* item = scene_->selectedItems().first();
+
   GGText* text = dynamic_cast<GGText*>(item);
-  if (text != nullptr)
+  if (text != nullptr) {
+    GGraph::Node* node = text->node_;
+
+    foreach (QGraphicsItem* item, scene_->items()) {
+      GGArrow* arrow = dynamic_cast<GGArrow*>(item);
+      if (arrow == nullptr) continue;
+      if (arrow->startText() == text || arrow->endText() == text) {
+        GGraph::Connection* connection = arrow->connection_;
+        GObj::disconnect(
+          connection->sender_, qPrintable(connection->signal_),
+          connection->receiver_, qPrintable(connection->slot_));
+        graph_->connections_.removeOne(connection);
+        delete connection;
+        delete arrow;
+      }
+    }
+    graph_->nodes_.removeOne(node);
+    delete node;
     delete text;
+  }
+
+  GGArrow* arrow = dynamic_cast<GGArrow*>(item);
+  if (arrow != nullptr) {
+    GGraph::Connection* connection = arrow->connection_;
+    GObj::disconnect(
+      connection->sender_, qPrintable(connection->signal_),
+      connection->receiver_, qPrintable(connection->slot_));
+    graph_->connections_.removeOne(connection);
+    delete arrow;
+  }
+
   setControl();
 }
 

@@ -2,7 +2,7 @@
 
 #include <GGraph>
 
-struct GMyObj : GObj {
+struct GMyObj : GStateObj {
   Q_OBJECT
   Q_PROPERTY(QString prop MEMBER prop_)
 
@@ -10,7 +10,7 @@ public:
   QString prop_;
 
 public:
-  GMyObj(QObject* parent = nullptr) : GObj(parent) {}
+  GMyObj(QObject* parent = nullptr) : GStateObj(parent) {}
 
 signals:
   void signalMyObj();
@@ -36,6 +36,10 @@ public:
     qDebug() << "GMyObjA::~GMyObjA";
   }
 
+protected:
+    bool doOpen() { emit signalMyObj(); return true; }
+    bool doClose() { emit signalMyObjA(); return true; }
+
 signals:
   void signalMyObjA();
 
@@ -59,7 +63,10 @@ public:
   ~GMyObjB() override {
     qDebug() << "GMyObjB::~GMyObjB";
   }
-  QString nameA_;
+
+protected:
+    bool doOpen() { emit signalMyObj(); return true; }
+    bool doClose() { emit signalMyObjB(); return true; }
 
 signals:
   void signalMyObjB();
@@ -85,8 +92,12 @@ public:
     qDebug() << "GMyObjC::~GMyObjC";
   }
 
+protected:
+    bool doOpen() { emit signalMyObj(); return true; }
+    bool doClose() { emit signalMyObjC(); return true; }
+
 signals:
-  void signalMyObjB();
+  void signalMyObjC();
 
 public slots:
   void slotMyObjC() {

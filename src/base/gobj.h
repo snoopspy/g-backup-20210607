@@ -36,6 +36,12 @@ public:
   QStringList slotList();
 
 public:
+  static bool connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type = Qt::AutoConnection);
+  static bool connect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot, Qt::ConnectionType type = Qt::AutoConnection);
+  static bool disconnect(QObject* sender, const char* signal, QObject* receiver, const char* slot);
+  static bool disconnect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot);
+
+public:
   static QObject* createInstance(QString className);
 };
 

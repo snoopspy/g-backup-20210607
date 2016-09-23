@@ -60,7 +60,12 @@ protected:
 public:
   bool toLowerFirstCharacter_{true};
   QStringList removePrefixNames_{"G"};
-  QStringList ignoreSignalNames_{"destroyed(QObject*)", "destroyed()", "objectNameChanged(QString)"};
+  QStringList ignoreSignalNames_{
+    "destroyed(QObject*)",
+    "destroyed()",
+    "objectNameChanged(QString)",
+    "opened()",
+    "closed()"};
   QStringList ignoreSlotNames_{"deleteLater()"};
 
 public:

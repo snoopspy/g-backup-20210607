@@ -72,9 +72,9 @@ public:
 
 public:
   // QString generateObjectClassName(QString className);
-  // GGText*  createNode(QString className, QString name, bool createObject); // gilgil temp 2016.09.22
-  GGArrow* createArrow(GGText* startText, QString signal, GGText* endText, QString slot);
-  GGArrow* createArrow(QString startTextName, QString signal, QString endTextName, QString slot);
+  GGText* createText(GGraph::Node* node, QPointF pos);
+  GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
+  GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
   GGText*  findTextByObjectName(QString objectName);
 
 public: // for file manipulation

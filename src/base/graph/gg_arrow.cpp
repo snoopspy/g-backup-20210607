@@ -3,10 +3,12 @@
 #include "gg_scene.h"
 #include "ggraphwidget.h"
 
-const qreal Pi = 3.14;
+static const qreal Pi = 3.14;
 
-GGArrow::GGArrow(GGText *startText, QString signal, GGText *endText, QString slot) : QGraphicsLineItem(nullptr)
-{
+// ----------------------------------------------------------------------------
+// GGArrow
+// ----------------------------------------------------------------------------
+GGArrow::GGArrow(GGText *startText, GGText *endText, GGraph::Connection* connection) : QGraphicsLineItem(nullptr) {
   myStartText = startText;
   myEndText   = endText;
 
@@ -15,45 +17,31 @@ GGArrow::GGArrow(GGText *startText, QString signal, GGText *endText, QString slo
 	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 	setZValue(-1000.0);
 
-  connection_.sender_   = startText->obj_->objectName();
-  connection_.signal_   = signal;
-  connection_.receiver_ = endText->obj_->objectName();
-  connection_.slot_     = slot;
+  connection_ = connection;
 }
 
-GGArrow::~GGArrow()
-{
-  GGScene* scene = (GGScene*)this->scene();
-  GGraph::Connections& connections = scene->graphWidget_->graph()->connections_;
-  int index = connections.indexOf(connection_);
-  Q_ASSERT(index != -1);
-  connections.removeAt(index);
+GGArrow::~GGArrow() {
 }
 
-QRectF GGArrow::boundingRect() const
-{
+QRectF GGArrow::boundingRect() const {
   qreal extra = (pen().width() + 20) / 2.0;
 
   return QRectF(line().p1(), QSizeF(line().p2().x() - line().p1().x(),
     line().p2().y() - line().p1().y())).normalized().adjusted(-extra, -extra, extra, extra);
 }
 
-QPainterPath GGArrow::shape() const
-{
+QPainterPath GGArrow::shape() const {
 	QPainterPath path = QGraphicsLineItem::shape();
   path.addPolygon(arrowHead);
 	return path;
 }
 
-void GGArrow::updatePosition()
-{
+void GGArrow::updatePosition() {
   QLineF line(mapFromItem(myStartText, 0, 0), mapFromItem(myEndText, 0, 0));
 	setLine(line);
 }
 
-void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *,
-					QWidget *)
-{
+void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) {
   if (myStartText->collidesWithItem(myEndText))
 			return;
 

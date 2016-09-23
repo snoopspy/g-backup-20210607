@@ -29,7 +29,7 @@ public:
 	int type() const { return Type; }
 
 public:
-  GGText(GObj* obj);
+  GGText(GGraph::Node* node);
   ~GGText() override;
 
 public:
@@ -39,7 +39,7 @@ public:
 	void removeArrows();
 
 public:
-  GObj* obj_; // reference
+  GGraph::Node* node_;
 
 public:
   // virtual QRectF boundingRect() const; // gilgil temp 2016.09.20

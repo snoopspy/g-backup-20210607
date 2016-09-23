@@ -20,21 +20,24 @@
 struct GGraph : GStateObj {
   typedef GObj Node;
 
-  struct Nodes : QList<Node*>, GProp {
+  struct Nodes : public QList<Node*> {
+    void clear();
+    GGraph::Node* findNode(QString objectName);
     void load(QJsonArray ja);
     void save(QJsonArray& ja);
   };
 
   struct Connection {
-    QString sender_;
-    QString signal_;
-    QString receiver_;
-    QString slot_;
+    Node* sender_{nullptr};
+    QString signal_{""};
+    Node* receiver_{nullptr};
+    QString slot_{""};
     bool operator ==(const Connection& other);
   };
 
-  struct Connections : QList<Connection> {
-    void load(QJsonArray ja);
+  struct Connections : QList<Connection*> {
+    void clear();
+    void load(GGraph* graph, QJsonArray ja);
     void save(QJsonArray& ja);
   };
 
@@ -76,6 +79,10 @@ struct GGraph : GStateObj {
 public:
   virtual Factory* factory() = 0;
 
+protected:
+  bool doOpen() override;
+  bool doClose() override;
+
 public:
   static Node* createInstance(QString className);
 
@@ -83,8 +90,10 @@ public:
   Nodes nodes_;
   Connections connections_;
 
-public:
+public slots:
   void clear();
+  void start();
+  void stop();
 
 public:
   void propLoad(QJsonObject jo) override;

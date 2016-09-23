@@ -2,25 +2,15 @@
 #include "gg_scene.h"
 #include "ggraphwidget.h"
 
-GGText::GGText(GObj* obj) {
+GGText::GGText(GGraph::Node* node) {
 	// LOG_DEBUG("%p scene()=%p", this, this->scene()); // gilgil temp 2012.07.27
 	setFlag(QGraphicsItem::ItemIsMovable);
 	setFlag(QGraphicsItem::ItemIsSelectable);
-  obj_ = obj;
+  node_ = node;
 	// LOG_DEBUG("scene=%p", scene()); // gilgil temp 2012.07.27
 }
 
 GGText::~GGText() {
-  if (obj_ != nullptr)
-	{
-    GGScene* scene = (GGScene*)this->scene();
-    GGraph::Nodes& nodes = scene->graphWidget_->graph()->nodes_;
-    int index = nodes.indexOf(obj_);
-    Q_ASSERT(index != -1);
-    nodes.removeAt(index);
-    delete obj_;
-    obj_ = nullptr;
-	}
 }
 
 void GGText::addArrow(GGArrow* arrow)
