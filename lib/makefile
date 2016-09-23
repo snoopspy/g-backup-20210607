@@ -2,7 +2,7 @@
 
 all: lib #test
 
-lib: debug release
+lib: release #debug
 
 test: debug_test release_test
 

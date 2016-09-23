@@ -6,7 +6,8 @@ SOURCES += \
   $${PWD}/../src/net/capture/*.cpp \
   $${PWD}/../src/net/packet/*.cpp \
   $${PWD}/../src/net/parser/*.cpp \
-  $${PWD}/../src/net/pdu/*.cpp
+  $${PWD}/../src/net/pdu/*.cpp \
+  $${PWD}/../src/net/process/*.cpp
 
 HEADERS += \
   $${PWD}/../src/base/*.h \
@@ -17,4 +18,5 @@ HEADERS += \
   $${PWD}/../src/net/libnet/*.h \
   $${PWD}/../src/net/packet/*.h \
   $${PWD}/../src/net/parser/*.h \
-  $${PWD}/../src/net/pdu/*.h
+  $${PWD}/../src/net/pdu/*.h \
+  $${PWD}/../src/net/process/*.h
