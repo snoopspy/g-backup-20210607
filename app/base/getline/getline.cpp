@@ -44,10 +44,9 @@ namespace GetLine {
     //
     // dir
     //
-    fileInfoList = dir.entryInfoList(QDir::AllDirs);
+    fileInfoList = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     foreach (QFileInfo fileInfo, fileInfoList) {
       QString fileName = fileInfo.fileName();
-      if (fileName == "." || fileName == "..") continue;
       QString subFolder = folder + fileName + "/";
       res += scan(subFolder, nameFilters);
     }
