@@ -10,8 +10,6 @@
 
 #pragma once
 
-#ifdef QT_GUI_LIB
-
 #include "base/gstateobj.h"
 #include "base/gjson.h"
 
@@ -33,7 +31,6 @@ struct GGraph : GStateObj {
     QString signal_{""};
     Node* receiver_{nullptr};
     QString slot_{""};
-    // bool operator ==(const Connection& other); // gilgil temp 2016.09.23
   };
 
   struct Connections : QList<Connection*> {
@@ -74,11 +71,23 @@ struct GGraph : GStateObj {
     };
 
   public:
+    Factory(QObject* parent = nullptr);
+    ~Factory() override;
+
+  public:
     Items items_;
   };
 
 public:
-  virtual Factory* factory() = 0;
+  GGraph(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GGraph() override {}
+
+public:
+  Factory* factory() { return factory_; }
+  void setFactory(Factory* factory) { factory_ = factory; }
+
+protected:
+  Factory* factory_{nullptr};
 
 protected:
   bool doOpen() override;
@@ -100,5 +109,3 @@ public:
   void propLoad(QJsonObject jo) override;
   void propSave(QJsonObject& jo) override;
 };
-
-#endif // QT_GUI_LIB

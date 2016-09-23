@@ -1,6 +1,8 @@
 #include "mygraph.h"
 
-MyGraph::Factory::Factory() {
+MyFactory::MyFactory(QObject* parent) : GPluginFactory(parent) {
+  load("plugin");
+
   qRegisterMetaType<GMyObjA*>();
   qRegisterMetaType<GMyObjB*>();
   qRegisterMetaType<GMyObjC*>();
@@ -11,4 +13,7 @@ MyGraph::Factory::Factory() {
   category->items_.push_back(new ItemNode(&GMyObjC::staticMetaObject));
 
   items_.push_back(category);
+}
+
+MyFactory::~MyFactory() {
 }

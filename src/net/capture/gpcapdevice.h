@@ -29,7 +29,7 @@ public:
   int     readTimeout_{1}; // 1 msec
 
 public:
-  GPcapDevice(QObject* parent = nullptr);
+  Q_INVOKABLE GPcapDevice(QObject* parent = nullptr);
   ~GPcapDevice() override;
 
 protected:

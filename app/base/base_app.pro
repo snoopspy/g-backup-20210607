@@ -4,4 +4,6 @@ SUBDIRS += \
 	getline \
 	graph_exam \
 	prop_exam \
+	sscon \
 	version_exam
+

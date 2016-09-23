@@ -9,9 +9,11 @@ int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   GApp::init();
 
-  MyGraph myGraph;
+  GGraph graph;
+  MyFactory myFactory(&graph);
+
   GGraphWidget graphWidget;
-  graphWidget.setGraph(&myGraph);
+  graphWidget.setGraph(&graph);
 
   QJsonObject jo = GJson::loadFromFile();
 

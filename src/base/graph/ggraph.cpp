@@ -1,9 +1,7 @@
-#ifdef QT_GUI_LIB
-
 #include "ggraph.h"
 
 // ----------------------------------------------------------------------------
-// GGraph
+// GGraph::Nodes
 // ----------------------------------------------------------------------------
 GGraph::Node* GGraph::Nodes::findNode(QString objectName) {
   foreach (GGraph::Node* node, *this) {
@@ -50,18 +48,9 @@ void GGraph::Nodes::save(QJsonArray& ja) {
   }
 }
 
-// ----- gilgil temp 2016.09.23 -----
-/*
-bool GGraph::Connection::operator ==(const Connection& other) {
-  if (sender_ != other.sender_) return false;
-  if (signal_ != other.signal_) return false;
-  if (receiver_ != other.receiver_) return false;
-  if (slot_ != other.slot_) return false;
-  return true;
-}
-*/
-// ----------------------------------
-
+// ----------------------------------------------------------------------------
+// GGraph::Connections
+// ----------------------------------------------------------------------------
 void GGraph::Connections::clear() {
   foreach (Connection* connection, *this) {
     delete connection;
@@ -113,6 +102,24 @@ void GGraph::Connections::save(QJsonArray& ja) {
   }
 }
 
+// ----------------------------------------------------------------------------
+// GGraph::Factory
+// ----------------------------------------------------------------------------
+GGraph::Factory::Factory(QObject* parent) : GObj(parent) {
+  GGraph* graph = dynamic_cast<GGraph*>(parent);
+  if (graph != nullptr)
+    graph->setFactory(this);
+}
+
+GGraph::Factory::~Factory() {
+  foreach (Item* item, items_) {
+    delete item;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// GGraph
+// ----------------------------------------------------------------------------
 bool GGraph::doOpen() {
   foreach (Node* node, nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
@@ -174,5 +181,3 @@ void GGraph::propSave(QJsonObject& jo) {
   connections_.save(ja);
   jo["connections"] = ja;
 }
-
-#endif // QT_GUI_LIB

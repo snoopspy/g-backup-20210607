@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GGraph>
+#include <GPluginFactory>
 
 struct GMyObj : GStateObj {
   Q_OBJECT
@@ -105,13 +105,7 @@ public slots:
   }
 };
 
-struct MyGraph : GGraph {
-  struct Factory : GGraph::Factory {
-    Factory();
-  };
-
-  GGraph::Factory* factory() override {
-    static Factory factory;
-    return &factory;
-  }
+struct MyFactory : GPluginFactory {
+  MyFactory(QObject* parent);
+  ~MyFactory() override;
 };

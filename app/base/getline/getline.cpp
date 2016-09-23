@@ -25,13 +25,12 @@ namespace GetLine {
     int res = 0;
     QDir dir(folder);
     bool isFolderWritten = false;
-    QFileInfoList fileInfoList;
 
     //
     // file
     //
-    fileInfoList = dir.entryInfoList(nameFilters);
-    foreach (QFileInfo fileInfo, fileInfoList) {
+    QFileInfoList fileList = dir.entryInfoList(nameFilters);
+    foreach (QFileInfo fileInfo, fileList) {
       if (fileInfo.isDir()) continue;
       if (!isFolderWritten) {
         printf("--------------------------------------------------\n");
@@ -44,8 +43,8 @@ namespace GetLine {
     //
     // dir
     //
-    fileInfoList = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (QFileInfo fileInfo, fileInfoList) {
+    QFileInfoList dirList = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach (QFileInfo fileInfo, dirList) {
       QString fileName = fileInfo.fileName();
       QString subFolder = folder + fileName + "/";
       res += scan(subFolder, nameFilters);
@@ -101,6 +100,7 @@ public:
     printf("  getline '*.h' '*.cpp'\n");
     printf("  getline '*.h*' '*.c*'\n");
     printf("  getline -f /usr/include '*.h'\n");
+    printf("\n");
   }
 };
 
