@@ -213,7 +213,7 @@ void Widget::on_tbSslAdvanced_clicked()
 
 void Widget::on_pbSend_clicked()
 {
-  if (netClient_ == NULL) return;
+  if (netClient_ == nullptr) return;
   QByteArray ba = qPrintable(ui->pteSend->toPlainText());
   ba = ba.replace("\n", "\r\n");
   if (ui->chkSendHexa->isChecked()) ba = ba.fromHex(ba);

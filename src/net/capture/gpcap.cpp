@@ -103,7 +103,7 @@ bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
   u_int uNetMask;
   bpf_program code;
 
-  if (dev != NULL && dev->addresses != NULL && dev->addresses->netmask != NULL)
+  if (dev != nullptr && dev->addresses != nullptr && dev->addresses->netmask != nullptr)
     uNetMask = ((struct sockaddr_in*)(dev->addresses->netmask))->sin_addr.s_addr;
   else
     uNetMask = 0xFFFFFFFF;

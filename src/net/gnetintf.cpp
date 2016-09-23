@@ -49,7 +49,7 @@ GNetIntfs::GNetIntfs() {
   //
   pcap_if_t* dev = allDevs_;
   i = 1;
-  while (dev != NULL)
+  while (dev != nullptr)
   {
     GNetIntf intf;
 
@@ -91,7 +91,7 @@ GNetIntfs::~GNetIntfs() {
   //
   // Finalize allDevs_
   //
-  if (allDevs_ != NULL)
+  if (allDevs_ != nullptr)
   {
     pcap_freealldevs(allDevs_);
     allDevs_ = nullptr;
