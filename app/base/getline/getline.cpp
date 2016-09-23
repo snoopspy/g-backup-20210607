@@ -17,7 +17,7 @@ namespace GetLine {
       res++;
     }
     file.close();
-    printf("%s\t%d\n", QFileInfo(fileName).fileName().toLatin1().data(), res);
+    printf("%s\t%d\n", qPrintable(fileName), res);
     return res;
   }
 
