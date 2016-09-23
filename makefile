@@ -1,6 +1,6 @@
-.PHONY: all lib app clean distclean
+.PHONY: all lib app plugin clean distclean
 
-all: lib app
+all: lib app plugin
 
 lib:
 	cd lib && make && cd ..
@@ -8,9 +8,13 @@ lib:
 app:
 	cd app && qmake && make -j 4 && cd ..
 
+plugin:
+	cd plugin && qmake && make -j 4 && cd ..
+
 clean:
 	cd lib && make clean; true
 	cd app && make clean; true
+	cd plugin && make clean; true
 	find -type d -name 'build-*'    -exec rm -r {} \; | true
 	find -type f -name '*.o'        -delete
 	find -type f -name '*.pro.user' -delete
