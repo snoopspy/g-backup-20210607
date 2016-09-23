@@ -1,3 +1,5 @@
+#ifdef QT_GUI_LIB
+
 #include "gg_signalslotform.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -45,32 +47,28 @@ void GGSignalSlotForm::setControl() {
   btnOK_->setEnabled(ok);
 }
 
-void GGSignalSlotForm::on_btnOK_clicked(bool)
-{
+void GGSignalSlotForm::on_btnOK_clicked(bool) {
 	this->done(QDialog::Accepted);
 }
 
-void GGSignalSlotForm::on_btnCancel_clicked(bool)
-{
+void GGSignalSlotForm::on_btnCancel_clicked(bool) {
 	this->done(QDialog::Rejected);
 }
 
-void GGSignalSlotForm::on_lwSignalList_currentRowChanged(int)
-{
+void GGSignalSlotForm::on_lwSignalList_currentRowChanged(int) {
 	setControl();
 }
 
-void GGSignalSlotForm::on_lwSlotList_currentRowChanged(int)
-{
+void GGSignalSlotForm::on_lwSlotList_currentRowChanged(int) {
 	setControl();
 }
 
-void GGSignalSlotForm::on_lwSignalList_clicked(const QModelIndex&)
-{
+void GGSignalSlotForm::on_lwSignalList_clicked(const QModelIndex&) {
 	setControl();
 }
 
-void GGSignalSlotForm::on_lwSlotList_clicked(const QModelIndex&)
-{
+void GGSignalSlotForm::on_lwSlotList_clicked(const QModelIndex&) {
 	setControl();
 }
+
+#endif // QT_GUI_LIB

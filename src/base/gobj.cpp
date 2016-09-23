@@ -31,7 +31,7 @@ QStringList GObj::slotList() {
 
 bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type)
 {
-  qDebug() << QString("connect %1:%2 > %3:%4 %5").
+  qDebug() << QString("connect %1::%2 > %3::%4 %5").
     arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg((int)type);
 
   QByteArray newSignal;
@@ -67,7 +67,7 @@ bool GObj::connect(QObject *sender, const QMetaMethod &signal, QObject *receiver
 
 bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, const char* slot)
 {
-  qDebug() << QString("disconnect %1:%2 > %3:%4").
+  qDebug() << QString("disconnect %1::%2 > %3::%4").
     arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot);
 
   QByteArray newSignal;
@@ -97,14 +97,13 @@ bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, co
 bool GObj::disconnect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot)
 {
   QByteArray baSignal = signal.methodSignature();
-  baSignal = "2" + baSignal; // # define SIGNAL(a)   qFlagLocation("2"#a QLOCATION)
-  QByteArray baSlot  = slot.methodSignature();
-  baSlot = "1" + baSlot;     // # define SLOT(a)     qFlagLocation("1"#a QLOCATION)
+  QByteArray baSlot = slot.methodSignature();
   return GObj::disconnect(sender, baSignal.data(), receiver, baSlot.data());
 }
 
 QObject* GObj::createInstance(QString className) {
-  className += "*";
+  if (!className.endsWith('*'))
+    className += "*";
   int id = QMetaType::type(qPrintable(className));
   if (id == QMetaType::UnknownType) {
     qWarning() << QString("can not find class type for (%1)").arg(className);

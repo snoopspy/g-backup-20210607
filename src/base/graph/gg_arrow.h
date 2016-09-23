@@ -10,6 +10,8 @@
 
 #pragma once
 
+#ifdef QT_GUI_LIB
+
 #include <QGraphicsLineItem>
 #include <QPen>
 #include "ggraph.h"
@@ -45,3 +47,5 @@ private:
 public:
   GGraph::Connection* connection_;
 };
+
+#endif // QT_GUI_LIB

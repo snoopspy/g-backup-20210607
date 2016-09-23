@@ -10,13 +10,14 @@
 
 #pragma once
 
+#ifdef QT_GUI_LIB
+
 #include <QGraphicsItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
 #include <QRectF>
 #include <QPainter>
 
-#include "base/gobj.h"
 #include "gg_arrow.h"
 
 // ----------------------------------------------------------------------------
@@ -42,6 +43,7 @@ public:
   GGraph::Node* node_;
 
 public:
-  // virtual QRectF boundingRect() const; // gilgil temp 2016.09.20
-	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
+
+#endif // QT_GUI_LIB

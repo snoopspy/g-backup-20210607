@@ -109,10 +109,7 @@ public slots:
   void actionDeleteTriggered(bool);
   void actionOptionTriggered(bool);
 
-// ----- gilgil temp 2016.09.20 -----
-public slots:
   void factoryWidgetClicked(const QModelIndex&);
-// ----------------------------------
 };
 
 #endif // QT_GUI_LIB

@@ -18,12 +18,6 @@ GGraphWidget::~GGraphWidget() {
   clear();
 }
 
-void setColor(QWidget* widget, QColor color) { // gilgil temp 2016.09.18
-  QPalette pal(color);
-  widget->setAutoFillBackground(true);
-  widget->setPalette(pal);
-}
-
 void GGraphWidget::init() {
   resize(QSize(640, 480));
 
@@ -301,20 +295,13 @@ void GGraphWidget::propSave(QJsonObject& jo) {
 }
 
 void GGraphWidget::setControl() {
-  // ----- gilgil temp 2016.09.21 -----
-  /*
   QString title = "SnoopSpy";
-  if (fileName != "")
+  if (fileName_ != "")
   {
-    QFileInfo fi(fileName);
+    QFileInfo fi(fileName_);
     title = fi.completeBaseName();
   }
   setWindowTitle(title);
-
-  ui->actionSaveFile->setEnabled(m_changed && fileName != "");
-  ui->actionSaveFileAs->setEnabled(m_changed);
-  */
-  // ----------------------------------
 
   GGScene::Mode mode = scene_->mode();
 
@@ -357,7 +344,7 @@ void GGraphWidget::actionOpenFileTriggered(bool) {
   if (fileDialog_.exec() == QDialog::Accepted) {
     fileName_ = fileDialog_.selectedFiles().first();
     QJsonObject jo = GJson::loadFromFile(fileName_);
-    saveGraph(jo);
+    loadGraph(jo);
     setControl();
   }
 }
@@ -394,13 +381,11 @@ void GGraphWidget::actionStopTriggered(bool) {
 }
 
 void GGraphWidget::actionEditTriggered(bool) {
-  qDebug() << ""; // gilgil temp 2016.09.18
   scene_->setMode(GGScene::MoveItem);
   setControl();
 }
 
 void GGraphWidget::actionLinkTriggered(bool) {
-  qDebug() << ""; // gilgil temp 2016.09.18
   scene_->setMode(GGScene::InsertLine);
   setControl();
 }

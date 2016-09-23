@@ -10,6 +10,7 @@
 
 #pragma once
 
+#ifdef QT_GUI_LIB
 
 #include <QDialog>
 #include <QListWidget>
@@ -44,3 +45,5 @@ private slots:
   void on_lwSignalList_clicked(const QModelIndex&);
   void on_lwSlotList_clicked(const QModelIndex&);
 };
+
+#endif // QT_GUI_LIB

@@ -1,3 +1,5 @@
+#ifdef QT_GUI_LIB
+
 #include "gg_arrow.h"
 #include "gg_text.h"
 #include "gg_scene.h"
@@ -51,38 +53,18 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
   painter->setPen(myPen);
   painter->setBrush(myColor);
 
-  // ----- gilgil temp 2012.06.29 -----
-  /*
-  QLineF centerLine(myStartNode->pos(), myEndNode->pos());
-  QPolygonF endPolygon = myEndNode->polygon();
-  QPointF p1 = endPolygon.first() + myEndNode->pos();
-  QPointF p2;
-  QPointF intersectPoint;
-  QLineF polyLine;
-  for (int i = 1; i < endPolygon.count(); ++i) {
-  p2 = endPolygon.at(i) + myEndNode->pos();
-  polyLine = QLineF(p1, p2);
-  QLineF::IntersectType intersectType =
-      polyLine.intersect(centerLine, &intersectPoint);
-  if (intersectType == QLineF::BoundedIntersection)
-      break;
-      p1 = p2;
-  }
-  */
-  // ----------------------------------
   QPointF start, end;
   start.setX(myStartText->pos().x() + myStartText->boundingRect().width() / 2);
   start.setY(myStartText->pos().y() + myStartText->boundingRect().height() / 2);
-  end.setX  (myEndText->pos().x()   + myEndText->boundingRect().width() / 2);
-  end.setY  (myEndText->pos().y()   + myEndText->boundingRect().height() / 2);
+  end.setX(myEndText->pos().x() + myEndText->boundingRect().width() / 2);
+  end.setY(myEndText->pos().y() + myEndText->boundingRect().height() / 2);
   QLineF centerLine(start, end);
 
   QPointF intersectPoint;
   QLineF::IntersectType intersectType;
   QLineF polyLine;
 
-  while (true)
-  {
+  while (true) {
     polyLine = QLineF(myEndText->sceneBoundingRect().topLeft(), myEndText->sceneBoundingRect().topRight());
     intersectType = polyLine.intersect(centerLine, &intersectPoint);
     if (intersectType == QLineF::BoundedIntersection) break;
@@ -108,16 +90,16 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
   if (line().dy() >= 0)
     angle = (Pi * 2) - angle;
 
-    QPointF ArrowP1 = line().p1() + QPointF(sin(angle + Pi / 3) * ArrowSize, cos(angle + Pi / 3) * ArrowSize);
-    QPointF ArrowP2 = line().p1() + QPointF(sin(angle + Pi - Pi / 3) * ArrowSize, cos(angle + Pi - Pi / 3) * ArrowSize);
+  QPointF ArrowP1 = line().p1() + QPointF(sin(angle + Pi / 3) * ArrowSize, cos(angle + Pi / 3) * ArrowSize);
+  QPointF ArrowP2 = line().p1() + QPointF(sin(angle + Pi - Pi / 3) * ArrowSize, cos(angle + Pi - Pi / 3) * ArrowSize);
 
-    arrowHead.clear();
-    arrowHead << line().p1() << ArrowP1 << ArrowP2;
+  arrowHead.clear();
+  arrowHead << line().p1() << ArrowP1 << ArrowP2;
 
-    painter->drawLine(line());
-    painter->drawPolygon(arrowHead);
-    if (isSelected()) {
-      painter->setPen(QPen(myColor, 1, Qt::DashLine));
+  painter->drawLine(line());
+  painter->drawPolygon(arrowHead);
+  if (isSelected()) {
+    painter->setPen(QPen(myColor, 1, Qt::DashLine));
     QLineF myLine = line();
     myLine.translate(0, 4.0);
     painter->drawLine(myLine);
@@ -125,3 +107,5 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
     painter->drawLine(myLine);
   }
 }
+
+#endif // QT_GUI_LIB
