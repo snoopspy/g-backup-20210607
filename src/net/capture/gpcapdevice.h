@@ -24,9 +24,9 @@ struct GPcapDevice : GPcap {
 
 public:
   QString dev_{""};
-  int     snapLen_{65536}; // 65536 bytes
-  int     flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
-  int     readTimeout_{1}; // 1 msec
+  int snapLen_{65536}; // 65536 bytes
+  int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
+  int readTimeout_{1}; // 1 msec
 
 public:
   Q_INVOKABLE GPcapDevice(QObject* parent = nullptr);

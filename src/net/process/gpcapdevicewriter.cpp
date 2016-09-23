@@ -4,7 +4,9 @@
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
 GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GPcapDevice(parent) {
-  this->autoRead_= false;
+  dev_ = "";
+  autoRead_= false;
+  autoParse_ = false;
 }
 
 GPcapDeviceWriter::~GPcapDeviceWriter() {

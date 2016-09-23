@@ -81,7 +81,7 @@ void GGraph::Connections::load(GGraph* graph, QJsonArray ja) {
     }
     QString slot = connectionJo["slot"].toString();
 
-    bool res = GObj::connect(sender, qPrintable(signal), receiver, qPrintable(slot));
+    bool res = GObj::connect(sender, qPrintable(signal), receiver, qPrintable(slot), Qt::DirectConnection);
     if (!res) continue;
 
     Connection* connection = new Connection;

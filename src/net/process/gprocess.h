@@ -10,19 +10,10 @@
 
 #pragma once
 
-#include "gprocess.h"
-#include "net/capture/gpcapdevice.h"
+#include "base/gstateobj.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriter
+// GProcess
 // ----------------------------------------------------------------------------
-struct GPcapDeviceWriter : GPcapDevice {
-  Q_OBJECT
-
-public:
-  Q_INVOKABLE GPcapDeviceWriter(QObject* parent = nullptr);
-  ~GPcapDeviceWriter() override;
-
-public slots:
-  Result write(GPacket* packet) override;
+struct GProcess : GStateObj {
 };
