@@ -22,7 +22,7 @@ struct GGraph : GStateObj {
   struct Nodes : public QList<Node*> {
     void clear();
     GGraph::Node* findNode(QString objectName);
-    void load(QJsonArray ja);
+    void load(GGraph* graph, QJsonArray ja);
     void save(QJsonArray& ja);
   };
 

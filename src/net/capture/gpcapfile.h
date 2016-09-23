@@ -23,7 +23,7 @@ public:
   QString fileName_{""};
 
 public:
-  GPcapFile(QObject* parent = nullptr) : GPcap(parent) {}
+  Q_INVOKABLE GPcapFile(QObject* parent = nullptr) : GPcap(parent) {}
   ~GPcapFile() override;
 
 protected:

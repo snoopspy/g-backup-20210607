@@ -79,7 +79,9 @@ void GCapture::run() {
     packet.capture_ = this;
     Result res = read(&packet);
     if (res == TimeOut) continue;
-    if (res == Eof || res == Fail) break;
+    if (res == Eof || res == Fail) {
+      break;
+    }
     if (autoParse_) parser->parse(&packet);
     emit captured(&packet);
     if (this->pathType() == InPath) {

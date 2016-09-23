@@ -18,7 +18,7 @@ void GGraph::Nodes::clear() {
   QList::clear();
 }
 
-void GGraph::Nodes::load(QJsonArray ja) {
+void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
   clear();
   foreach (QJsonValue jv, ja) {
     QJsonObject nodeJo = jv.toObject();
@@ -29,9 +29,12 @@ void GGraph::Nodes::load(QJsonArray ja) {
     }
     GGraph::Node* node = GGraph::createInstance(className);
     if (node == nullptr) {
-      qWarning() << QString("node is null for (%1)").arg(className);
+      qWarning() << QString("GGraph::createInstance(%1) return null").arg(className);
       continue;
     }
+    GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
+    if (stateObj != nullptr)
+      QObject::connect(stateObj, &GStateObj::closed, graph, &GGraph::stop);
     node->propLoad(nodeJo);
     append(node);
   }
@@ -162,15 +165,15 @@ void GGraph::clear() {
 }
 
 void GGraph::start() {
-  doOpen();
+  open();
 }
 
 void GGraph::stop() {
-  doClose();
+  close();
 }
 
 void GGraph::propLoad(QJsonObject jo) {
-  nodes_.load(jo["nodes"].toArray());
+  nodes_.load(this, jo["nodes"].toArray());
   connections_.load(this, jo["connections"].toArray());
 }
 

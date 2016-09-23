@@ -101,6 +101,7 @@ void GGraphWidget::init() {
 void GGraphWidget::setGraph(GGraph* graph) {
   if (graph == graph_) return;
   graph_ = graph;
+  QObject::connect(graph, &GStateObj::closed, this, &GGraphWidget::stop);
   update();
   setControl();
 }
@@ -331,6 +332,11 @@ void GGraphWidget::setControl() {
   }
   propWidget_->setObject(selectedObj);
   actionOption_->setEnabled(selectedObj != nullptr);
+}
+
+void GGraphWidget::stop() {
+  graph_->close();
+  setControl();
 }
 
 void GGraphWidget::actionNewFileTriggered(bool) {

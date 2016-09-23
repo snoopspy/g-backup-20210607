@@ -96,6 +96,7 @@ protected:
 
 public slots:
   void setControl();
+  void stop();
 
 public slots:
   void actionNewFileTriggered(bool);

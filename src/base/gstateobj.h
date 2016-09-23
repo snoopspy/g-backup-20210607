@@ -30,6 +30,8 @@ public:
   ~GStateObj() override;
 
   bool active();
+
+public slots:
   virtual bool open();
   virtual bool close();
 
