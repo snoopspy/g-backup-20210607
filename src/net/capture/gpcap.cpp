@@ -11,23 +11,24 @@ bool GPcap::doOpen() {
   bool filtering = false;
   int dataLink = pcap_datalink(pcap_);
   switch (dataLink) {
-    case DLT_NULL:
-      this->dataLink_ = Null;
-      filtering = true;
-      break;
-    case DLT_RAW:
-      this->dataLink_ = Raw;
-      filtering = true;
-      break;
     case DLT_EN10MB:
-      this->dataLink_ = Eth;
+      dataLinkType_ = GPacket::Eth;
       filtering = true;
       break;
     case DLT_IEEE802_11_RADIO:
-      this->dataLink_ = Dot11;
+      dataLinkType_ = GPacket::Dot11;
+      filtering = true;
+      break;
+    case DLT_RAW:
+      dataLinkType_ = GPacket::Raw;
+      filtering = true;
+      break;
+    case DLT_NULL:
+      dataLinkType_ = GPacket::Null;
       filtering = true;
       break;
   }
+
   if (filtering && filter_ != "") {
     if (!pcapProcessFilter(nullptr)) // gilgil temp 2015.10.28
       return false;
@@ -40,37 +41,35 @@ bool GPcap::doClose() {
   // ----- by gilgil 2009.09.01 -----
   // Strange to say, when pcap_next_ex is called after pcap_close is called, it occurs memory problem.
   // So waits until thread is terminated.
-
   bool res = GCapture::doClose();
-
   if (pcap_ != nullptr) {
     pcap_close(pcap_);
     pcap_ = nullptr;
   }
   // --------------------------------
-
   return res;
 }
 
 GPacket::Result GPcap::read(GPacket* packet) {
-  struct pcap_pkthdr* hdr;
-  int i = pcap_next_ex(pcap_, &hdr, (const u_char**)(&(packet->buf_)));
+  pcap_pkthdr* pkthdr;
+  int i = pcap_next_ex(pcap_, &pkthdr, (const u_char**)(&(packet->buf_)));
   GPacket::Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
-      SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))); // gilgi temp 2016.09.09
+      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))); // gilgi temp 2016.09.09
       res = GPacket::Eof;
       break;
     case -1: // if an error occurred
-      SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_)));
+      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_)));
       res = GPacket::Fail;
       break;
     case 0 : // if a timeout occured
       res = GPacket::TimeOut;
       break;
     default: // packet captured
-      packet->ts_ = hdr->ts;
-      packet->len_ = hdr->caplen;
+      packet->pkthdr_ = *pkthdr;
+      packet->parseBuf_ = packet->buf_;
+      packet->parseLen_ = (size_t)pkthdr->caplen;
       res = GPacket::Ok;
       break;
   }
@@ -78,8 +77,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-  //int i = pcap_sendpacket(pcap_, (const u_char*)packet->buf_, (int)packet->len_);
-  int i = pcap_sendpacket(pcap_, packet->buf_, packet->len_);
+  int i = pcap_sendpacket(pcap_, packet->buf_, packet->pkthdr_.caplen);
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;
@@ -107,16 +105,13 @@ bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
     uNetMask = ((struct sockaddr_in*)(dev->addresses->netmask))->sin_addr.s_addr;
   else
     uNetMask = 0xFFFFFFFF;
-  if (pcap_compile(pcap_, &code, qPrintable(filter_), 1, uNetMask) < 0)
-  {
+  if (pcap_compile(pcap_, &code, qPrintable(filter_), 1, uNetMask) < 0) {
     SET_ERR(GErr::UNKNOWN, QString("error in pcap_compile(%1)").arg(pcap_geterr(pcap_)));
     return false;
   }
-  if (pcap_setfilter(pcap_, &code) < 0)
-  {
+  if (pcap_setfilter(pcap_, &code) < 0) {
     SET_ERR(GErr::UNKNOWN, QString("error in pcap_setfilter(%1)").arg(pcap_geterr(pcap_)));
     return false;
   }
   return true;
 }
-

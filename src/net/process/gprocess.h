@@ -16,4 +16,6 @@
 // GProcess
 // ----------------------------------------------------------------------------
 struct GProcess : GStateObj {
+  GProcess(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GProcess() override {}
 };

@@ -48,13 +48,6 @@ public:
     OutOfPath
   } PathType;
 
-  typedef enum {
-    Eth,   // DLT_EN10MB
-    Dot11, // DLT_IEEE802_11_RADIO
-    Raw,   // DLT_RAW
-    Null   // DLT_NULL
-  } DataLinkType;
-
 public:
   GCapture(QObject* parent = nullptr) : GStateObj(parent) {}
   ~GCapture() override;
@@ -69,8 +62,8 @@ public:
   virtual GPacket::Result write(u_char* buf, size_t len);
   virtual GPacket::Result relay(GPacket* packet);
 
+  virtual GPacket::DataLinkType dataLinkType() { return GPacket::Null; }
   virtual PathType pathType() { return OutOfPath; }
-  virtual DataLinkType dataLinkType() { return Null; }
 
 signals:
   void captured(GPacket* packet);

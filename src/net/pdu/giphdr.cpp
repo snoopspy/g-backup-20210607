@@ -22,12 +22,12 @@ bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
   GEthHdr* ethHdr = (GEthHdr*)prev;
   if (ethHdr->type() != ETHERTYPE_IP)
     return false;
-  if (packet->len_ < sizeof(IP_HDR))
+  if (packet->parseLen_ < sizeof(IP_HDR))
     return false;
   return true;
 }
 
 GPdu* GIpParser::doParse(GPacket* packet) {
-  Q_ASSERT(packet->len_ >= sizeof(IP_HDR));
-  return new GIpHdr(packet->buf_);
+  Q_ASSERT(packet->parseLen_ >= sizeof(IP_HDR));
+  return new GIpHdr(packet->parseBuf_);
 }

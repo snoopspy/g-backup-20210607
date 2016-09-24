@@ -18,8 +18,9 @@ GPacket::~GPacket() {
 }
 
 void GPacket::clear() {
-  memset(&ts_, 0, sizeof(ts_));
+  memset(&pkthdr_, 0, sizeof(pkthdr_));
   buf_ = nullptr;
-  len_ = 0;
+  parseBuf_ = nullptr;
+  parseLen_ = 0;
   pdus_.clear();
 }

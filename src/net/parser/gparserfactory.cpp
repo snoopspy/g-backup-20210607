@@ -57,20 +57,20 @@ void GParserFactory::init() {
   instance();
 }
 
-GParser* GParserFactory::getDefaultParser(GCapture::DataLinkType dataLinkType) {
+GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
   GParserFactory& map = instance();
   GParser* res = nullptr;
   switch (dataLinkType) {
-    case GCapture::Eth:
+    case GPacket::Eth:
       res = map.root_->findFirstChild("GEthParser");
       break;
-    case GCapture::Dot11:
+    case GPacket::Dot11:
       res = map.root_->findFirstChild("GDot11Parser");
       break;
-    case GCapture::Raw:
+    case GPacket::Raw:
       res = map.root_->findFirstChild("GRawParser");
       break;
-    case GCapture::Null:
+    case GPacket::Null:
       res = map.root_->findFirstChild("GNullParser");
       break;
   }

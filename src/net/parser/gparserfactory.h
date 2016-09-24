@@ -24,7 +24,7 @@ private:
 public:
   static GParserFactory& instance();
   static void init();
-  static GParser* getDefaultParser(GCapture::DataLinkType dataLinkType);
+  static GParser* getDefaultParser(GPacket::DataLinkType dataLinkType);
 
 protected:
   GParser* root_;

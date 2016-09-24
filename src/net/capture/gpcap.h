@@ -42,12 +42,12 @@ public:
   GPacket::Result write(u_char* buf, size_t len) override;
   GPacket::Result relay(GPacket* packet) override;
 
+  GPacket::DataLinkType dataLinkType() override { return dataLinkType_; }
   PathType pathType() override { return OutOfPath; }
-  DataLinkType dataLinkType() override { return dataLink_; }
 
 protected:
   bool pcapProcessFilter(pcap_if_t* dev);
 
   pcap_t* pcap_{nullptr};
-  DataLinkType dataLink_{Null};
+  GPacket::DataLinkType dataLinkType_{GPacket::Null};
 };

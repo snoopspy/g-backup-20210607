@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GStateObj(parent) {
+GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GProcess(parent) {
 
 }
 
@@ -36,7 +36,7 @@ bool GPcapDeviceWriter::doClose()  {
 }
 
 GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
-  int i = pcap_sendpacket(pcap_, packet->buf_, packet->len_);
+  int i = pcap_sendpacket(pcap_, packet->buf_, packet->pkthdr_.caplen);
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;

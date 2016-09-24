@@ -24,7 +24,7 @@ bool GTcpParser::isMatch(GPdu* prev, GPacket* packet) {
         GIpHdr* ipHdr = (GIpHdr*)prev;
         if (ipHdr->p() != IPPROTO_TCP)
           return false;
-        if (packet->len_ < sizeof(TCP_HDR))
+        if (packet->parseLen_ < sizeof(TCP_HDR))
           return false;
         return true;
       }
@@ -37,6 +37,6 @@ bool GTcpParser::isMatch(GPdu* prev, GPacket* packet) {
 }
 
 GPdu* GTcpParser::doParse(GPacket* packet) {
-  Q_ASSERT(packet->len_ >= sizeof(TCP_HDR));
-  return new GTcpHdr(packet->buf_);
+  Q_ASSERT(packet->parseLen_ >= sizeof(TCP_HDR));
+  return new GTcpHdr(packet->parseBuf_);
 }

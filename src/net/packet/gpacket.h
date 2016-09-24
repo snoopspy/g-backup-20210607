@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <sys/time.h>
+#include <pcap.h>
 #include <QVector>
 #include "net/pdu/gpdu.h"
 
@@ -18,7 +18,11 @@
 // GPacket
 // ----------------------------------------------------------------------------
 struct GCapture;
-struct GPacket {
+struct GPacket : QObject {
+  Q_OBJECT
+  Q_ENUMS(DataLinkType)
+
+public:
   typedef enum {
     Eof = -2,    // read
     Fail = -1,   // read write
@@ -26,20 +30,29 @@ struct GPacket {
     Ok = 1,      // read write
   } Result;
 
+  typedef enum {
+    Eth,   // DLT_EN10MB
+    Dot11, // DLT_IEEE802_11_RADIO
+    Raw,   // DLT_RAW
+    Null   // DLT_NULL
+  } DataLinkType;
+
   friend struct GParser;
 
 public:
   GPacket();
   GPacket(GCapture* capture);
-  virtual ~GPacket();
+  ~GPacket() override;
 
   void clear();
 
   GCapture* capture_;
 
-  struct timeval ts_;
+  pcap_pkthdr pkthdr_;
   u_char* buf_;
-  size_t len_;
+
+  u_char* parseBuf_; // for parsing
+  size_t parseLen_;  // for parsing
 
 protected:
   GPdus pdus_;

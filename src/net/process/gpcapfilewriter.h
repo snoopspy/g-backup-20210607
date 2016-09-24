@@ -15,26 +15,34 @@
 #include "gprocess.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriter
+// GPcapFileWriter
 // ----------------------------------------------------------------------------
-struct GPcapDeviceWriter : GProcess {
+struct GPcapFileWriter : GProcess {
   Q_OBJECT
-  Q_PROPERTY(QString dev MEMBER dev_)
+  Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
+  Q_PROPERTY(int snapLen MEMBER snapLen_)
+  Q_PROPERTY(QString fileName MEMBER fileName_)
 
 public:
-  QString dev_{""};
+  GPacket::DataLinkType dataLinkType_{GPacket::Eth};
+  int snapLen_{65536};
+  QString fileName_{"pcap/%04d%02d%02d.%02d%02d.%02d.%03d.pcap"};
 
 public:
-  Q_INVOKABLE GPcapDeviceWriter(QObject* parent = nullptr);
-  ~GPcapDeviceWriter() override;
+  Q_INVOKABLE GPcapFileWriter(QObject* parent = nullptr);
+  ~GPcapFileWriter() override;
 
 protected:
   bool doOpen() override;
   bool doClose() override;
 
 public slots:
-  GPacket::Result write(GPacket* packet);
+  void write(GPacket* packet);
+
+signals:
+  void written(GPacket* packet);
 
 protected:
   pcap_t* pcap_{nullptr};
+  pcap_dumper_t* pcap_dumper_{nullptr};
 };
