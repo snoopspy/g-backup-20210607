@@ -297,8 +297,7 @@ void GGraphWidget::propSave(QJsonObject& jo) {
 
 void GGraphWidget::setControl() {
   QString title = "SnoopSpy";
-  if (fileName_ != "")
-  {
+  if (fileName_ != "") {
     QFileInfo fi(fileName_);
     title = fi.completeBaseName();
   }
