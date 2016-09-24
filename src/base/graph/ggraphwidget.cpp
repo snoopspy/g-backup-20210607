@@ -306,9 +306,6 @@ void GGraphWidget::setControl() {
 
   GGScene::Mode mode = scene_->mode();
 
-  actionEdit_->setEnabled(mode != GGScene::MoveItem);
-  actionLink_->setEnabled(mode != GGScene::InsertLine);
-
   bool active = false;
   if (graph_ != nullptr)
     active = graph_->active();
@@ -319,13 +316,15 @@ void GGraphWidget::setControl() {
   actionSaveFileAs_->setEnabled(!active);
   actionStart_->setEnabled(!active);
   actionStop_->setEnabled(active);
+  actionEdit_->setEnabled(!active && mode != GGScene::MoveItem);
+  actionLink_->setEnabled(!active && mode != GGScene::InsertLine);
 
   factoryWidget_->setEnabled(!active);
   propWidget_->setEnabled(!active);
   graphView_->setEnabled(!active);
 
   bool selected = scene_->selectedItems().count() > 0;
-  actionDelete_->setEnabled(selected);
+  actionDelete_->setEnabled(!active && selected);
   GObj* selectedObj = nullptr;
   if (selected)
   {
@@ -335,7 +334,7 @@ void GGraphWidget::setControl() {
       selectedObj = dynamic_cast<GObj*>(text->node_);
   }
   propWidget_->setObject(selectedObj);
-  actionOption_->setEnabled(selectedObj != nullptr);
+  actionOption_->setEnabled(!active && selectedObj != nullptr);
 }
 
 void GGraphWidget::stop() {
