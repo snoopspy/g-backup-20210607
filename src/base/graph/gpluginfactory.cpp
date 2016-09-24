@@ -28,23 +28,23 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
   }
 
   typedef int (*CountFunc)();
-  typedef char* (*NameFunc)(int index);
+  typedef char* (*MetaFunc)(int index);
   typedef void* (*CreateFunc)(int index);
 
   CountFunc countFunc = (CountFunc)library->resolve("count");
-  if (!countFunc) {
+  if (countFunc == nullptr) {
     qWarning() << QString("can not file 'count' function for (%1)").arg(fileName);
     delete library;
     return;
   }
-  NameFunc nameFunc = (NameFunc)library->resolve("name");
-  if (!nameFunc) {
+  MetaFunc metaFunc = (MetaFunc)library->resolve("meta");
+  if (metaFunc == nullptr) {
     qWarning() << QString("can not file 'name' function for (%1)").arg(fileName);
     delete library;
     return;
   }
   CreateFunc createFunc = (CreateFunc)library->resolve("create");
-  if (!createFunc) {
+  if (createFunc == nullptr) {
     qWarning() << QString("can not file 'create' function for (%1)").arg(fileName);
     delete library;
     return;
@@ -52,12 +52,11 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
 
   int count = countFunc();
   for (int i = 0; i < count; i++) {
-    GGraph::Node* node = dynamic_cast<GGraph::Node*>((GGraph::Node*)createFunc(i));
+    QMetaObject* mobj = (QMetaObject*)metaFunc(i);
     if (category == nullptr)
-      this->items_.push_back(new ItemNode(node->metaObject()));
+      this->items_.push_back(new ItemNode(mobj));
     else
-      category->items_.push_back(new ItemNode(node->metaObject()));
-    delete node;
+      category->items_.push_back(new ItemNode(mobj));
   }
 
   this->libraries_.push_back(library);

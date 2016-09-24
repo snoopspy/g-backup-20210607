@@ -21,7 +21,7 @@ GGraphWidget::~GGraphWidget() {
 void GGraphWidget::init() {
   resize(QSize(640, 480));
 
-  QStringList filters; filters << "graph files(*.graph)" << "any files(*)";
+  QStringList filters; filters << "snoopspy files(*.ss)" << "any files(*)";
   fileDialog_.setNameFilters(filters);
   fileDialog_.setDefaultSuffix("graph");
   fileDialog_.setViewMode(QFileDialog::Detail);
@@ -319,6 +319,10 @@ void GGraphWidget::setControl() {
   actionSaveFileAs_->setEnabled(!active);
   actionStart_->setEnabled(!active);
   actionStop_->setEnabled(active);
+
+  factoryWidget_->setEnabled(!active);
+  propWidget_->setEnabled(!active);
+  graphView_->setEnabled(!active);
 
   bool selected = scene_->selectedItems().count() > 0;
   actionDelete_->setEnabled(selected);
