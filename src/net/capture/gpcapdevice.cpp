@@ -1,5 +1,6 @@
 #include "gpcapdevice.h"
 #include "net/grtm.h"
+#include "base/prop/gpropitem_device.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
@@ -33,3 +34,15 @@ bool GPcapDevice::doOpen() {
 bool GPcapDevice::doClose() {
   return GPcap::doClose();
 }
+
+#ifdef QT_GUI_LIB
+
+GPropItem* GPcapDevice::propCreateItem(GPropItemParam param) {
+  if (QString(param.mpro_.name()) == "dev") {
+    GPropItemDevice* res = new GPropItemDevice(param);
+    return res;
+  }
+  return GObj::propCreateItem(param);
+}
+
+#endif // QT_GUI_LIB

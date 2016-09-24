@@ -1,4 +1,5 @@
 #include "gpcapfile.h"
+#include <GPropItemFilePath>
 
 // ----------------------------------------------------------------------------
 // GPcapFile
@@ -26,6 +27,19 @@ bool GPcapFile::doOpen() {
 bool GPcapFile::doClose() {
   return GPcap::doClose();
 }
+
+#ifdef QT_GUI_LIB
+
+GPropItem* GPcapFile::propCreateItem(GPropItemParam param) {
+  if (QString(param.mpro_.name()) == "fileName") {
+    GPropItemFilePath* res = new GPropItemFilePath(param);
+    res->fd_->setNameFilter("pcap files - *.pcap(*.pcap);Any files - * (*)");
+    return res;
+  }
+  return GObj::propCreateItem(param);
+}
+
+#endif // QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
 // GTEST

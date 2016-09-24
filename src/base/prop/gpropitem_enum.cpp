@@ -1,4 +1,5 @@
 #include "gpropitem_enum.h"
+#include <QMetaEnum>
 
 #ifdef QT_GUI_LIB
 

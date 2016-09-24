@@ -15,13 +15,13 @@
 #include "gpropitem_combobox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemEnum
+// GPropItemDevice
 // ----------------------------------------------------------------------------
-struct GPropItemEnum : public GPropItemComboBox {
+struct GPropItemDevice : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemEnum(GPropItemParam param);
+  GPropItemDevice(GPropItemParam param);
   void update() override;
 
 protected slots:

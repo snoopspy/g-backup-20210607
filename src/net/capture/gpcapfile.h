@@ -29,4 +29,8 @@ public:
 protected:
   bool doOpen() override;
   bool doClose() override;
+
+#ifdef QT_GUI_LIB
+  GPropItem* propCreateItem(GPropItemParam param) override;
+#endif // QT_GUI_LIB
 };
