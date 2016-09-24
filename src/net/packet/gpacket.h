@@ -19,6 +19,13 @@
 // ----------------------------------------------------------------------------
 struct GCapture;
 struct GPacket {
+  typedef enum {
+    Eof = -2,    // read
+    Fail = -1,   // read write
+    TimeOut = 0, // read
+    Ok = 1,      // read write
+  } Result;
+
   friend struct GParser;
 
 public:

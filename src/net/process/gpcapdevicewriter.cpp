@@ -3,15 +3,41 @@
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GPcapDevice(parent) {
-  dev_ = "";
-  autoRead_= false;
-  autoParse_ = false;
+GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GStateObj(parent) {
+
 }
 
 GPcapDeviceWriter::~GPcapDeviceWriter() {
+  close();
 }
 
-GCapture::Result GPcapDeviceWriter::write(GPacket* packet) {
-  return GPcapDevice::write(packet);
+bool GPcapDeviceWriter::doOpen() {
+  if (dev_ == "") {
+    SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
+    return false;
+  }
+
+  char errBuf[PCAP_ERRBUF_SIZE];
+  pcap_ = pcap_open_live(qPrintable(dev_), 0, 0, 0, errBuf);
+  if (pcap_ == nullptr) {
+    SET_ERR(GErr::RETURN_NULL, errBuf);
+    return false;
+  }
+
+  return true;
+}
+
+bool GPcapDeviceWriter::doClose()  {
+  if (pcap_ != nullptr) {
+    pcap_close(pcap_);
+    pcap_ = nullptr;
+  }
+  return true;
+}
+
+GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
+  int i = pcap_sendpacket(pcap_, packet->buf_, packet->len_);
+  if (i == 0) return GPacket::Ok;
+  qWarning() << QString("pcap_sendpacket return %1").arg(i);
+  return GPacket::Fail;
 }

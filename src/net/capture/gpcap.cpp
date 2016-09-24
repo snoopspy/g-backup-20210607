@@ -52,50 +52,50 @@ bool GPcap::doClose() {
   return res;
 }
 
-GCapture::Result GPcap::read(GPacket* packet) {
+GPacket::Result GPcap::read(GPacket* packet) {
   struct pcap_pkthdr* hdr;
   int i = pcap_next_ex(pcap_, &hdr, (const u_char**)(&(packet->buf_)));
-  Result res;
+  GPacket::Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
       SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))); // gilgi temp 2016.09.09
-      res = Eof;
+      res = GPacket::Eof;
       break;
     case -1: // if an error occurred
       SET_ERR(ERROR_IN_PCAP_NEXT_EX, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_)));
-      res = Fail;
+      res = GPacket::Fail;
       break;
     case 0 : // if a timeout occured
-      res = TimeOut;
+      res = GPacket::TimeOut;
       break;
     default: // packet captured
       packet->ts_ = hdr->ts;
       packet->len_ = hdr->caplen;
-      res = Ok;
+      res = GPacket::Ok;
       break;
   }
   return res;
 }
 
-GCapture::Result GPcap::write(GPacket* packet) {
+GPacket::Result GPcap::write(GPacket* packet) {
   //int i = pcap_sendpacket(pcap_, (const u_char*)packet->buf_, (int)packet->len_);
   int i = pcap_sendpacket(pcap_, packet->buf_, packet->len_);
-  if (i == 0) return Ok;
+  if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
-  return Fail;
+  return GPacket::Fail;
 }
 
-GCapture::Result GPcap::write(u_char* buf, size_t len) {
+GPacket::Result GPcap::write(u_char* buf, size_t len) {
   int i = pcap_sendpacket(pcap_, (const u_char*)buf, (int)len);
-  if (i == 0) return Ok;
+  if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
-  return Fail;
+  return GPacket::Fail;
 }
 
-GCapture::Result GPcap::relay(GPacket* packet) {
+GPacket::Result GPcap::relay(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::NOT_SUPPORTED, "not supported");
-  return Fail;
+  return GPacket::Fail;
 }
 
 #include <netinet/in.h>

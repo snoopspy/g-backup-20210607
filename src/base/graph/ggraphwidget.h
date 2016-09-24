@@ -66,7 +66,10 @@ public:
     "objectNameChanged(QString)",
     "opened()",
     "closed()"};
-  QStringList ignoreSlotNames_{"deleteLater()"};
+  QStringList ignoreSlotNames_{
+    "deleteLater()",
+    "open()",
+    "close()"};
 
 public:
   void propLoad(QJsonObject jo) override;

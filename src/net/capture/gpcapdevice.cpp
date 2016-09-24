@@ -16,7 +16,7 @@ GPcapDevice::~GPcapDevice() {
 
 bool GPcapDevice::doOpen() {
   if (dev_ == "") {
-    SET_ERR(DEVICE_NOT_SPECIFIED, "device is not specified");
+    SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
   }
 

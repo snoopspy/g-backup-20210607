@@ -55,13 +55,6 @@ public:
     Null   // DLT_NULL
   } DataLinkType;
 
-  typedef enum {
-    Eof = -2,
-    Fail = -1,
-    TimeOut = 0,
-    Ok = 1,
-  } Result;
-
 public:
   GCapture(QObject* parent = nullptr) : GStateObj(parent) {}
   ~GCapture() override;
@@ -71,10 +64,10 @@ protected:
   bool doClose() override;
 
 public:
-  virtual Result read(GPacket* packet);
-  virtual Result write(GPacket* packet);
-  virtual Result write(u_char* buf, size_t len);
-  virtual Result relay(GPacket* packet);
+  virtual GPacket::Result read(GPacket* packet);
+  virtual GPacket::Result write(GPacket* packet);
+  virtual GPacket::Result write(u_char* buf, size_t len);
+  virtual GPacket::Result relay(GPacket* packet);
 
   virtual PathType pathType() { return OutOfPath; }
   virtual DataLinkType dataLinkType() { return Null; }

@@ -26,7 +26,6 @@ public:
 public:
   enum {
     ERROR_IN_PCAP_NEXT_EX = GErrCategory::PCAP,
-    DEVICE_NOT_SPECIFIED
   };
 
 public:
@@ -38,10 +37,10 @@ protected:
   bool doClose() override;
 
 public:
-  Result read(GPacket* packet) override;
-  Result write(GPacket* packet) override;
-  Result write(u_char* buf, size_t len) override;
-  Result relay(GPacket* packet) override;
+  GPacket::Result read(GPacket* packet) override;
+  GPacket::Result write(GPacket* packet) override;
+  GPacket::Result write(u_char* buf, size_t len) override;
+  GPacket::Result relay(GPacket* packet) override;
 
   PathType pathType() override { return OutOfPath; }
   DataLinkType dataLinkType() override { return dataLink_; }

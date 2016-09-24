@@ -44,29 +44,29 @@ bool GCapture::doClose() {
   return true;
 }
 
-GCapture::Result GCapture::read(GPacket* packet) {
+GPacket::Result GCapture::read(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return Fail;
+  return GPacket::Fail;
 }
 
-GCapture::Result GCapture::write(GPacket* packet) {
+GPacket::Result GCapture::write(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return Fail;
+  return GPacket::Fail;
 }
 
-GCapture::Result GCapture::write(u_char* buf, size_t len) {
+GPacket::Result GCapture::write(u_char* buf, size_t len) {
   (void)buf;
   (void)len;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return Fail;
+  return GPacket::Fail;
 }
 
-GCapture::Result GCapture::relay(GPacket* packet) {
+GPacket::Result GCapture::relay(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return Fail;
+  return GPacket::Fail;
 }
 
 void GCapture::run() {
@@ -77,16 +77,16 @@ void GCapture::run() {
     GPacket packet;
     packet.clear();
     packet.capture_ = this;
-    Result res = read(&packet);
-    if (res == TimeOut) continue;
-    if (res == Eof || res == Fail) {
+    GPacket::Result res = read(&packet);
+    if (res == GPacket::TimeOut) continue;
+    if (res == GPacket::Eof || res == GPacket::Fail) {
       break;
     }
     if (autoParse_) parser->parse(&packet);
     emit captured(&packet);
     if (this->pathType() == InPath) {
       res = relay(&packet);
-      if (res != Ok) {
+      if (res != GPacket::Ok) {
         qWarning() << "relay return %d" << (int)res; // gilgil temp 2015.10.29
       }
     }
