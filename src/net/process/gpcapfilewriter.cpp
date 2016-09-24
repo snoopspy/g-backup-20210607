@@ -46,10 +46,13 @@ bool GPcapFileWriter::doOpen() {
 
   QString path = QFileInfo(fileName_).path();
   QString fileName = QFileInfo(fileName_).fileName();
-  QDir dir;
-  dir.mkpath(path);
   QDateTime now = QDateTime::currentDateTime();
   QString newFileName = now.toString(fileName);
+  if (path != "") {
+    QDir dir;
+    dir.mkpath(path);
+    newFileName = path + QDir::separator() + newFileName;
+  }
 
   pcap_dumper_ = pcap_dump_open(pcap_, qPrintable(newFileName));
   if (pcap_dumper_ == nullptr) {
@@ -74,6 +77,6 @@ bool GPcapFileWriter::doClose() {
 }
 
 void GPcapFileWriter::write(GPacket* packet) {
-  pcap_dump((u_char*)pcap_, &packet->pkthdr_, packet->buf_);
+  pcap_dump((u_char*)pcap_dumper_, &packet->pkthdr_, packet->buf_);
   emit written(packet);
 }

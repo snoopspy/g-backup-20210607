@@ -26,7 +26,7 @@ struct GPcapFileWriter : GProcess {
 public:
   GPacket::DataLinkType dataLinkType_{GPacket::Eth};
   int snapLen_{65536};
-  QString fileName_{"pcap/%04d%02d%02d.%02d%02d.%02d.%03d.pcap"};
+  QString fileName_{"pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'"};
 
 public:
   Q_INVOKABLE GPcapFileWriter(QObject* parent = nullptr);
