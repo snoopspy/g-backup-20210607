@@ -1,6 +1,7 @@
 SOURCES += \
   $${PWD}/../src/base/*.cpp \
   $${PWD}/../src/base/graph/*.cpp \
+  $${PWD}/../src/base/other/*.cpp \
   $${PWD}/../src/base/prop/*.cpp \
   $${PWD}/../src/net/*.cpp \
   $${PWD}/../src/net/capture/*.cpp \
@@ -12,6 +13,7 @@ SOURCES += \
 HEADERS += \
   $${PWD}/../src/base/*.h \
   $${PWD}/../src/base/graph/*.h \
+  $${PWD}/../src/base/other/*.h \
   $${PWD}/../src/base/prop/*.h \
   $${PWD}/../src/net/*.h \
   $${PWD}/../src/net/capture/*.h \
