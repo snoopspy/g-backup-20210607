@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <QCoreApplication>
+#include <QFile>
 #include <GApp>
 #include <GBase>
 #include <GGraph>
@@ -76,6 +77,10 @@ int main(int argc, char* argv[]) {
   Param param;
   if (!param.parse(argc, argv)) {
     Param::usage();
+    return EXIT_FAILURE;
+  }
+  if (!QFile::exists(param.fileName_)) {
+    std::clog << "no such file " << qPrintable(param.fileName_) << std::endl;
     return EXIT_FAILURE;
   }
 
