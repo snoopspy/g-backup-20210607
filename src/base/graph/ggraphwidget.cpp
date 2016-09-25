@@ -44,7 +44,10 @@ void GGraphWidget::init() {
   toolBar_ = new QToolBar(this);
   midSplitter_ = new QSplitter(Qt::Horizontal, this);
   midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
-  (factoryWidget_ = new QTreeWidget(this))->setHeaderLabel("node");
+  factoryWidget_ = new QTreeWidget(this);
+  factoryWidget_->setHeaderLabel("node");
+  factoryWidget_->setIndentation(12);
+
   propWidget_ = new GPropWidget(this);
   scene_ = new GGScene(this);
   graphView_ = new QGraphicsView(this);
