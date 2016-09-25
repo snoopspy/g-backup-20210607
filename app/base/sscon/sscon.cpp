@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <iostream>
 #include <QCoreApplication>
 #include <GApp>
@@ -26,6 +27,48 @@ struct Param {
   }
 };
 
+struct SsCon : GStateObj {
+  Q_OBJECT
+
+public:
+  SsCon(Param* param) : GStateObj(nullptr), factory_(&graph_) {
+    factory_.load("plugin/");
+    QJsonObject jo = GJson::loadFromFile(param->fileName_);
+    graph_.propLoad(jo);
+    QObject::connect(&graph_, &GStateObj::closed, this, &SsCon::terminate);
+  }
+  ~SsCon() override {
+    close();
+  }
+
+protected:
+  bool doOpen() override {
+    bool res = graph_.open();
+    if (!res)
+      err = graph_.err;
+    return res;
+  }
+
+  bool doClose() override {
+    qDebug() << "bef graph_.close"; // gilgil temp 2016.09.25
+    return graph_.close();
+    qDebug() << "aft graph_.close"; // gilgil temp 2016.09.25
+  }
+
+public slots:
+  void terminate() {
+    qDebug() << "terminate"; // gilgil temp 2016.09.25
+    graph_.close();
+    qDebug() << "bef call _exit"; // gilgil temp 2016.09.25
+    _exit(EXIT_SUCCESS);
+    qDebug() << "aft call _exit";
+  }
+
+public:
+  GGraph graph_;
+  GPluginFactory factory_;
+};
+
 int main(int argc, char* argv[]) {
   QCoreApplication a(argc, argv);
   GApp::init();
@@ -36,21 +79,19 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  GGraph graph;
-  GPluginFactory factory(&graph);
-  factory.load("plugin/");
-
-  QJsonObject jo = GJson::loadFromFile(param.fileName_);
-  graph.propLoad(jo);
-  if (!graph.open()) {
-    std::clog << qPrintable(graph.err->msg()) << std::endl;
+  SsCon ssCon(&param);
+  if (!ssCon.open()) {
+    std::clog << qPrintable(ssCon.err->msg()) << std::endl;
     return EXIT_FAILURE;
   }
 
-  std::clog << "Press enter key to close\n";
-  while (std::cin.get() != '\n');
+  a.exec();
 
-  graph.close();
+  qDebug() << "bef call ssCon.close()"; // gilgil temp 2016.09.25
+  ssCon.close();
+  qDebug() << "aft call ssCon.close()"; // gilgil temp 2016.09.25
 
   return EXIT_SUCCESS;
 }
+
+#include "sscon.moc"
