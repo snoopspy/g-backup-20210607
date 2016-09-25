@@ -13,10 +13,10 @@
 #include "gpdu.h"
 
 // ----------------------------------------------------------------------------
-// IP_HDR
+// TCP_HDR
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct TCP_HDR {
+struct TCP_HDR { // libnet_tcp_hdr
   uint16_t th_sport;
   uint16_t th_dport;
   uint32_t th_seq;
