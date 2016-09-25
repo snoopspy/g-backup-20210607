@@ -10,6 +10,7 @@ GPcap::~GPcap() {
 bool GPcap::doOpen() {
   bool filtering = false;
   int dataLink = pcap_datalink(pcap_);
+  qDebug() << QString("pcap_datalink return %1").arg(dataLink);
   switch (dataLink) {
     case DLT_EN10MB:
       dataLinkType_ = GPacket::Eth;
@@ -17,10 +18,6 @@ bool GPcap::doOpen() {
       break;
     case DLT_IEEE802_11_RADIO:
       dataLinkType_ = GPacket::Dot11;
-      filtering = true;
-      break;
-    case DLT_RAW:
-      dataLinkType_ = GPacket::Raw;
       filtering = true;
       break;
     case DLT_NULL:

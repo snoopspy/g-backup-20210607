@@ -4,7 +4,6 @@
 #include "net/pdu/gethhdr.h"
 #include "net/pdu/giphdr.h"
 #include "net/pdu/gnullpdu.h"
-#include "net/pdu/grawpdu.h"
 #include "net/pdu/gtcphdr.h"
 
 #include "net/pdu/giphdr.h"
@@ -16,7 +15,6 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GDot11Parser*>();
   qRegisterMetaType<GEthParser*>();
   qRegisterMetaType<GNullParser*>();
-  qRegisterMetaType<GRawParser*>();
   qRegisterMetaType<GIpParser*>();
   qRegisterMetaType<GTcpParser*>();
 
@@ -27,7 +25,6 @@ GParserFactory::GParserFactory() {
   // root
   //
   root_->addChild("GParser", "GDot11Parser");
-  root_->addChild("GParser", "GRawParser");
   root_->addChild("GParser", "GNullParser");
 
   //
@@ -67,9 +64,6 @@ GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
     case GPacket::Dot11:
       res = map.root_->findFirstChild("GDot11Parser");
       break;
-    case GPacket::Raw:
-      res = map.root_->findFirstChild("GRawParser");
-      break;
     case GPacket::Null:
       res = map.root_->findFirstChild("GNullParser");
       break;
@@ -78,3 +72,4 @@ GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
     qCritical() << QString("parser is null. dataLinkType=(%1)").arg((int)dataLinkType);
   return res;
 }
+

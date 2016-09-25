@@ -33,7 +33,6 @@ public:
   typedef enum {
     Eth,   // DLT_EN10MB
     Dot11, // DLT_IEEE802_11_RADIO
-    Raw,   // DLT_RAW
     Null   // DLT_NULL
   } DataLinkType;
 
