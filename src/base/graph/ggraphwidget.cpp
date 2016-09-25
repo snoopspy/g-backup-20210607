@@ -23,7 +23,7 @@ void GGraphWidget::init() {
 
   QStringList filters; filters << "snoopspy files(*.ss)" << "any files(*)";
   fileDialog_.setNameFilters(filters);
-  fileDialog_.setDefaultSuffix("graph");
+  fileDialog_.setDefaultSuffix("ss");
   fileDialog_.setViewMode(QFileDialog::Detail);
 
   (actionNewFile_ = new QAction(this))->setText("New");

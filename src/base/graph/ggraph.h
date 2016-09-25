@@ -17,6 +17,9 @@
 // GGraph
 // ----------------------------------------------------------------------------
 struct GGraph : GStateObj {
+  Q_OBJECT
+
+public:
   typedef GObj Node;
 
   struct Nodes : public QList<Node*> {
