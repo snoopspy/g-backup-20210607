@@ -28,6 +28,9 @@ bool GPcapFileWriter::doOpen() {
     case GPacket::Dot11:
       dataLink = DLT_IEEE802_11_RADIO;
       break;
+    case GPacket::Ipv4:
+      dataLink = DLT_IPV4;
+      break;
     case GPacket::Null:
       dataLink = DLT_NULL;
       break;

@@ -20,6 +20,10 @@ bool GPcap::doOpen() {
       dataLinkType_ = GPacket::Dot11;
       filtering = true;
       break;
+    case DLT_IPV4:
+      dataLinkType_ = GPacket::Ipv4;
+      filtering = true;
+      break;
     case DLT_NULL:
       dataLinkType_ = GPacket::Null;
       filtering = true;
@@ -38,7 +42,7 @@ bool GPcap::doClose() {
   // ----- by gilgil 2009.09.01 -----
   // Strange to say, when pcap_next_ex is called after pcap_close is called, it occurs memory problem.
   // So waits until thread is terminated.
-  bool res = GCapture::doClose();
+  bool res = GCapture::doClose(); // wait thread
   if (pcap_ != nullptr) {
     pcap_close(pcap_);
     pcap_ = nullptr;
@@ -49,7 +53,10 @@ bool GPcap::doClose() {
 
 GPacket::Result GPcap::read(GPacket* packet) {
   pcap_pkthdr* pkthdr;
+  qDebug() << "bef pcap_next_ex"; // gilgil temp 2016.09.25
   int i = pcap_next_ex(pcap_, &pkthdr, (const u_char**)(&(packet->buf_)));
+  qDebug() << "aft pcap_next_ex return " << i << "state is" << (int)state_; // gilgil temp 2016.09.25
+  if (state_ != Opened) return GPacket::Fail; // may be pcap_close called
   GPacket::Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture

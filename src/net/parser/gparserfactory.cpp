@@ -19,12 +19,13 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GTcpParser*>();
 
   root_ = new GParser;
-  root_->addChild("GParser", "GEthParser");
 
   //
   // root
   //
+  root_->addChild("GParser", "GEthParser");
   root_->addChild("GParser", "GDot11Parser");
+  root_->addChild("GParser", "GIpParser");
   root_->addChild("GParser", "GNullParser");
 
   //
@@ -63,6 +64,9 @@ GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
       break;
     case GPacket::Dot11:
       res = map.root_->findFirstChild("GDot11Parser");
+      break;
+    case GPacket::Ipv4:
+      res = map.root_->findFirstChild("GIpParser");
       break;
     case GPacket::Null:
       res = map.root_->findFirstChild("GNullParser");
