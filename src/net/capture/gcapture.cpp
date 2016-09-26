@@ -17,7 +17,7 @@ GCapture::~GCapture() {
   close();
 }
 
-bool GCapture::doOpen() {
+bool GCapture::captureThreadOpen() {
   if (autoRead_)
   {
     // ----- by gilgil 2009.08.31 -----
@@ -33,13 +33,10 @@ bool GCapture::doOpen() {
   return true;
 }
 
-bool GCapture::doClose() {
+bool GCapture::captureThreadClose() {
   if (autoRead_) {
     thread_.quit();
-    if (!thread_.wait(G_TIMEOUT)) {
-      qCritical() << QString("thread_.wait return false(%1)").arg(this->metaObject()->className());
-      return false;
-    }
+    thread_.wait();
   }
   return true;
 }
@@ -70,13 +67,14 @@ GPacket::Result GCapture::relay(GPacket* packet) {
 }
 
 void GCapture::run() {
-  // qDebug() << "stt"; // gilgil temp 2015.10.28
+  qDebug() << "beg"; // gilgil temp 2015.10.28
   GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
+
+  GPacket packet;
+  packet.capture_ = this;
   while (active()) {
-    GPacket packet;
     packet.clear();
-    packet.capture_ = this;
     GPacket::Result res = read(&packet);
     if (res == GPacket::TimeOut) continue;
     if (res == GPacket::Eof || res == GPacket::Fail) break;
@@ -89,6 +87,6 @@ void GCapture::run() {
       }
     }
   }
-  // qDebug() << "end"; // gilgil temp 2015.10.28
+  qDebug() << "end"; // gilgil temp 2015.10.28
   emit closed();
 }

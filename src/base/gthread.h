@@ -11,10 +11,12 @@
 #pragma once
 
 #include <QThread>
+#include "gbase.h"
 
 // ----------------------------------------------------------------------------
 // GThread
 // ----------------------------------------------------------------------------
 struct GThread : QThread {
-  GThread(QObject *parent = nullptr);
+  GThread(QObject *parent = nullptr) : QThread(parent) {}
+  bool wait(unsigned long time = G_TIMEOUT);
 };

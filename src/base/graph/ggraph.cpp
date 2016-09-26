@@ -129,7 +129,7 @@ bool GGraph::doOpen() {
     if (stateObj != nullptr) {
       bool res = stateObj->open();
       if (!res) {
-        QString msg = QString("%1(%2)").arg(stateObj->err->msg(), stateObj->objectName());
+        QString msg = QString("%1 (%2)").arg(stateObj->err->msg(), stateObj->objectName());
         SET_ERR(stateObj->err->code(), msg);
         doClose();
         return false;

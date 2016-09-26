@@ -35,14 +35,14 @@ bool GPcap::doOpen() {
       return false;
   }
 
-  return GCapture::doOpen(); // start thread
+  return this->captureThreadOpen();
 }
 
 bool GPcap::doClose() {
   // ----- by gilgil 2009.09.01 -----
   // Strange to say, when pcap_next_ex is called after pcap_close is called, it occurs memory problem.
   // So waits until thread is terminated.
-  bool res = GCapture::doClose(); // wait thread
+  bool res = captureThreadClose();
   if (pcap_ != nullptr) {
     pcap_close(pcap_);
     pcap_ = nullptr;

@@ -18,10 +18,13 @@
 // GCaptureThread
 // ----------------------------------------------------------------------------
 struct GCaptureThread : GThread {
+  Q_OBJECT
+
+public:
   GCaptureThread(QObject* parent = nullptr) : GThread(parent) {}
 
 protected:
-  virtual void run();
+  void run() override;
 };
 
 // ----------------------------------------------------------------------------
@@ -53,8 +56,8 @@ public:
   ~GCapture() override;
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+  bool captureThreadOpen();
+  bool captureThreadClose();
 
 public:
   virtual GPacket::Result read(GPacket* packet);
