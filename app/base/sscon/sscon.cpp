@@ -1,6 +1,5 @@
 #include <unistd.h>
 #include <iostream>
-#include <QCoreApplication>
 #include <QFile>
 #include <GApp>
 #include <GBase>
@@ -36,7 +35,9 @@ public:
     factory_.load("plugin/");
     QJsonObject jo = GJson::loadFromFile(param->fileName_);
     graph_.propLoad(jo);
-    QObject::connect(&graph_, &GStateObj::closed, this, &SsCon::terminate);
+
+    QObject::connect(&graph_, &GStateObj::closed, this, &SsCon::processClose);
+    QObject::connect(GApp::instance(), &GApp::signaled, this, &SsCon::processSignal);
   }
   ~SsCon() override {
     close();
@@ -56,23 +57,29 @@ protected:
     qDebug() << "aft graph_.close"; // gilgil temp 2016.09.25
   }
 
-public slots:
-  void terminate() {
-    qDebug() << "terminate"; // gilgil temp 2016.09.25
-    graph_.close();
-    qDebug() << "bef call _exit"; // gilgil temp 2016.09.25
-    _exit(EXIT_SUCCESS);
-    qDebug() << "aft call _exit";
-  }
-
 public:
   GGraph graph_;
   GPluginFactory factory_;
+
+public slots:
+  void processClose() {
+    qDebug() << "processClose"; // gilgil temp 2016.09.25
+    qDebug() << "bef GApp::instance()->quit()"; // gilgil temp 2016.09.25
+    GApp::instance()->quit();
+    qDebug() << "aft GApp::instance()->quit()";
+  }
+
+  void processSignal(int signo) {
+    qDebug() << "beg processSignal" << signo; // gilgil temp 2016.09.25
+    if (signo == SIGINT) {
+      graph_.close();
+    }
+    qDebug() << "end processSignal" << signo; // gilgil temp 2016.09.25
+  }
 };
 
 int main(int argc, char* argv[]) {
-  QCoreApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   Param param;
   if (!param.parse(argc, argv)) {
@@ -90,13 +97,7 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  a.exec();
-
-  qDebug() << "bef call ssCon.close()"; // gilgil temp 2016.09.25
-  ssCon.close();
-  qDebug() << "aft call ssCon.close()"; // gilgil temp 2016.09.25
-
-  return EXIT_SUCCESS;
+  return a.exec();
 }
 
 #include "sscon.moc"

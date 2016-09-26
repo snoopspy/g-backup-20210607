@@ -1,5 +1,4 @@
 #include <iostream>
-#include <QCoreApplication>
 #include <GApp>
 #include <GEthHdr>
 #include <GIpHdr>
@@ -33,11 +32,17 @@ public slots:
       arg(++count).arg(smac, dmac, sip, sport, dip, dport);
     std::clog << qPrintable(msg);
   }
+
+  void processSignal(int signo) {
+    qDebug() << "processSignal" << signo;
+    if (signo == SIGINT) {
+      GApp::instance()->quit();
+    }
+  }
 };
 
 int main(int argc, char* argv[]) {
-  QCoreApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   GPcapDevice device;
 
@@ -48,16 +53,15 @@ int main(int argc, char* argv[]) {
 
   Obj obj;
   QObject::connect(&device, &GCapture::captured, &obj, &Obj::captured, Qt::DirectConnection);
+  QObject::connect(&a, &GApp::signaled, &obj, &Obj::processSignal);
 
   if (!device.open()) {
     std::clog << device.err;
     return EXIT_FAILURE;
   }
 
-  std::clog << "Press enter key to close\n";
-  while (std::cin.get() != '\n');
-
-  return EXIT_SUCCESS;
+  int res = a.exec();
+  return res;
 }
 
 #include "pcap_exam.moc"
