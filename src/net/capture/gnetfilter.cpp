@@ -159,16 +159,20 @@ int GNetFilter::_callback(
   void* data) {
   (void)nfmsg;
 
-  qDebug() << "beg _callback";
+  // qDebug() << "beg _callback"; // gilgil temp 2016.09.26
   int id = 0;
   struct nfqnl_msg_packet_hdr* ph = nfq_get_msg_packet_hdr(nfa);
   if (ph != nullptr)
     id = ntohl(ph->packet_id);
 
+  unsigned char* payload;
+  int payloadLen = nfq_get_payload(nfa, &payload);
+  qDebug() << "payloadLen=" << payloadLen;
   GNetFilter* netFilter = (GNetFilter*)data;
   u_int32_t verdictLen = (u_int32_t)netFilter->len_ - netFilter->skipLen_;
   unsigned char* verdictData = netFilter->buffer_ + netFilter->skipLen_;
-  int res = nfq_set_verdict(qh, id, NF_ACCEPT, verdictLen, verdictData);
-  qDebug() << "end _callback" << res;
+  //int res = nfq_set_verdict(qh, id, NF_ACCEPT, verdictLen, verdictData);
+  int res = nfq_set_verdict(qh, id, NF_ACCEPT, 0, nullptr);
+  // qDebug() << "end _callback" << res;  // gilgil temp 2016.09.26
   return res;
 }

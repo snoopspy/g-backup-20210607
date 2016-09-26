@@ -29,5 +29,8 @@ bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
 
 GPdu* GIpParser::doParse(GPacket* packet) {
   Q_ASSERT(packet->parseLen_ >= sizeof(IP_HDR));
+  if (*packet->parseBuf_ != 0x45) {
+    qWarning() << "packet start is not 0x45" << *packet->parseBuf_; // gilgil temp 2016.09.26
+  }
   return new GIpHdr(packet->parseBuf_);
 }
