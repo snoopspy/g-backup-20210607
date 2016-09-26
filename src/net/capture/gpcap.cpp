@@ -35,7 +35,7 @@ bool GPcap::doOpen() {
       return false;
   }
 
-  return GCapture::doOpen();
+  return GCapture::doOpen(); // start thread
 }
 
 bool GPcap::doClose() {

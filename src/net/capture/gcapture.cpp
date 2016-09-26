@@ -85,7 +85,7 @@ void GCapture::run() {
     if (this->pathType() == InPath) {
       res = relay(&packet);
       if (res != GPacket::Ok) {
-        qWarning() << "relay return %d" << (int)res; // gilgil temp 2015.10.29
+        qWarning() << "relay return " << (int)res; // gilgil temp 2015.10.29
       }
     }
   }

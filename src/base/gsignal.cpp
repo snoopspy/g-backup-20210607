@@ -15,7 +15,7 @@ GSignal::~GSignal() {
   }
 }
 
-void GSignal::sigFunc(int signo) {
+void GSignal::_sigFunc(int signo) {
   GSignal* signal = instance();
   emit signal->signaled(signo);
 
@@ -34,7 +34,7 @@ void GSignal::sigFunc(int signo) {
 
 bool GSignal::setup(int signo) {
   Handler* handler = new Handler;
-  handler->myAction_.sa_handler = sigFunc;
+  handler->myAction_.sa_handler = _sigFunc;
   int res = sigaction(signo, &handler->myAction_, &handler->oldAction_);
   if (res != 0) {
     qCritical() << QString("sigaction(%1) return %2").arg(signo).arg(res) << GLastErr();

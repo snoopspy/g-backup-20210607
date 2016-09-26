@@ -19,10 +19,13 @@ struct GNetFilter : GCapture {
   Q_OBJECT
   Q_PROPERTY(int num MEMBER num_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)
+  Q_PROPERTY(int skipLen MEMBER skipLen_)
+
 
 public:
   int num_{0};
   int snapLen_{65536}; // 65536 bytes
+  int skipLen_{44}; // 44 bytes
 
 public:
   Q_INVOKABLE GNetFilter(QObject* parent = nullptr);
@@ -42,5 +45,15 @@ public:
   PathType pathType() override { return InPath; }
 
 protected:
-  struct nfq_handle *h;
+  struct nfq_handle* h{nullptr};
+  struct nfq_q_handle* qh{nullptr};
+  int fd{0};
+  u_char* buffer_{nullptr};
+  int len_;
+
+  static int _callback(
+    struct nfq_q_handle* qh,
+    struct nfgenmsg* nfmsg,
+    struct nfq_data* nfa,
+    void* data);
 };

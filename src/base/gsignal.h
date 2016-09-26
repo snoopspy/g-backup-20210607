@@ -33,7 +33,7 @@ protected:
 
   Handlers handlers_;
 
-  static void sigFunc(int signo);
+  static void _sigFunc(int signo);
 
 public:
   bool setup(int signo);
