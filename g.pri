@@ -15,6 +15,7 @@ QMAKE_LFLAGS *= -pthread
 #------------------------------------------------------------------------------
 CONFIG(debug, debug|release) DEFINES *= _DEBUG
 CONFIG(release, debug|release) DEFINES *= _RELEASE
+DEFINES *= QT_MESSAGELOGCONTEXT
 
 #------------------------------------------------------------------------------
 # G_NAME
