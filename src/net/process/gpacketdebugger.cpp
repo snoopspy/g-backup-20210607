@@ -1,4 +1,5 @@
 #include "gpacketdebugger.h"
+#include <iostream>
 #include <GEthHdr>
 #include <GIpHdr>
 #include <GTcpHdr>
@@ -39,5 +40,5 @@ void GPacketDebugger::debug(GPacket* packet) {
   }
 
   msg = QString("%1:").arg(packet->pkthdr_.len) + msg;
-  qDebug() << msg;
+  std::clog << qPrintable(msg) << std::endl;
 }

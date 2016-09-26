@@ -1,11 +1,13 @@
 #include <unistd.h>
 #include <iostream>
+#include <QCoreApplication>
 #include <QFile>
 #include <GApp>
 #include <GBase>
 #include <GGraph>
 #include <GJson>
 #include <GPluginFactory>
+#include <GSignal>
 
 struct Param {
   QString fileName_;
@@ -33,12 +35,16 @@ struct SsCon : GStateObj {
 public:
   SsCon(Param* param) : GStateObj(nullptr), factory_(&graph_) {
     factory_.load("plugin/");
+
+    GSignal* signal = GSignal::instance();
+    signal->setup(SIGINT);
+    QObject::connect(signal, &GSignal::signaled, this, &SsCon::processSignal);
+
     QJsonObject jo = GJson::loadFromFile(param->fileName_);
     graph_.propLoad(jo);
-
     QObject::connect(&graph_, &GStateObj::closed, this, &SsCon::processClose);
-    QObject::connect(GApp::instance(), &GApp::signaled, this, &SsCon::processSignal);
   }
+
   ~SsCon() override {
     close();
   }
@@ -52,9 +58,9 @@ protected:
   }
 
   bool doClose() override {
-    qDebug() << "bef graph_.close"; // gilgil temp 2016.09.25
+    qDebug() << "bef call graph_.close"; // gilgil temp 2016.09.25
     return graph_.close();
-    qDebug() << "aft graph_.close"; // gilgil temp 2016.09.25
+    qDebug() << "aft call graph_.close"; // gilgil temp 2016.09.25
   }
 
 public:
@@ -64,22 +70,25 @@ public:
 public slots:
   void processClose() {
     qDebug() << "processClose"; // gilgil temp 2016.09.25
-    qDebug() << "bef GApp::instance()->quit()"; // gilgil temp 2016.09.25
-    GApp::instance()->quit();
-    qDebug() << "aft GApp::instance()->quit()";
+    qDebug() << "bef call QCoreApplication::quit()"; // gilgil temp 2016.09.25
+    QCoreApplication::quit();
+    qDebug() << "aft call QCoreApplication::quit()"; // gilgil temp 2016.09.25
   }
 
   void processSignal(int signo) {
     qDebug() << "beg processSignal" << signo; // gilgil temp 2016.09.25
     if (signo == SIGINT) {
+      qDebug() << "bef call graph_.close()" << signo; // gilgil temp 2016.09.25
       graph_.close();
+      qDebug() << "aft call graph_.close()" << signo; // gilgil temp 2016.09.25
     }
     qDebug() << "end processSignal" << signo; // gilgil temp 2016.09.25
   }
 };
 
 int main(int argc, char* argv[]) {
-  GApp a(argc, argv);
+  QCoreApplication a(argc, argv);
+  GApp::init();
 
   Param param;
   if (!param.parse(argc, argv)) {
@@ -97,7 +106,10 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  return a.exec();
+  qDebug() << "bef call a.exec()";
+  int res = a.exec();
+  qDebug() << "aft call a.exec()" << res;
+  return res;
 }
 
 #include "sscon.moc"
