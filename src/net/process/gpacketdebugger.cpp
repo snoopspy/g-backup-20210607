@@ -8,14 +8,6 @@
 // ----------------------------------------------------------------------------
 // GPacketDebugger
 // ----------------------------------------------------------------------------
-bool GPacketDebugger::doOpen() {
-  return true;
-}
-
-bool GPacketDebugger::doClose() {
-  return true;
-}
-
 void GPacketDebugger::debug(GPacket* packet) {
   QString msg;
 
@@ -39,6 +31,6 @@ void GPacketDebugger::debug(GPacket* packet) {
     msg += QString(" udp %1>%2").arg(udpHdr->sport()).arg(udpHdr->dport());
   }
 
-  msg = QString("%1:").arg(packet->pkthdr_.len) + msg;
+  msg = QString("%1:").arg(packet->pkthdr_.caplen) + msg;
   std::clog << qPrintable(msg) << std::endl;
 }

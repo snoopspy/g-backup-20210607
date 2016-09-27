@@ -24,8 +24,8 @@ public:
   ~GPacketDebugger() override {}
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+  bool doOpen() override { return true; }
+  bool doClose() override { return true; }
 
 public slots:
   void debug(GPacket* packet);
