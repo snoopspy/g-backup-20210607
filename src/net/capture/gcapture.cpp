@@ -80,7 +80,7 @@ void GCapture::run() {
     if (res == GPacket::Eof || res == GPacket::Fail) break;
     if (autoParse_) parser->parse(&packet);
     emit captured(&packet);
-    if (this->pathType() == InPath) {
+    if (this->pathType() == InPath && !packet.control.block_) {
       res = relay(&packet);
       if (res != GPacket::Ok) {
         qWarning() << "relay return " << (int)res; // gilgil temp 2015.10.29

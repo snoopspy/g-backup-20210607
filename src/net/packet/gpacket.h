@@ -51,6 +51,10 @@ public:
   pcap_pkthdr pkthdr_;
   u_char* buf_;
 
+  struct {
+    bool block_;
+  } control;
+
   u_char* parseBuf_; // for parsing
   size_t parseLen_;  // for parsing
 

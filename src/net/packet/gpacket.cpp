@@ -20,6 +20,7 @@ GPacket::~GPacket() {
 void GPacket::clear() {
   memset(&pkthdr_, 0, sizeof(pkthdr_));
   buf_ = nullptr;
+  control.block_ = false;
   parseBuf_ = nullptr;
   parseLen_ = 0;
   pdus_.clear();

@@ -1,22 +1,22 @@
-#include <GPacketDebugger>
+#include <GBlock>
 
 extern "C" {
 
 int count() {
-  qRegisterMetaType<GPacketDebugger*>();
+  qRegisterMetaType<GBlock*>();
   return 1;
 }
 
 void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GPacketDebugger::staticMetaObject;
+    case 0: return (void*)&GBlock::staticMetaObject;
     default: return nullptr;
   }
 }
 
 void* create(int index) {
   switch (index) {
-    case 0: return new GPacketDebugger;
+    case 0: return new GBlock;
     default: return nullptr;
   }
 }
