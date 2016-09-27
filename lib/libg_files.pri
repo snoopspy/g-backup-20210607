@@ -9,7 +9,8 @@ SOURCES += \
   $${PWD}/../src/net/packet/*.cpp \
   $${PWD}/../src/net/parser/*.cpp \
   $${PWD}/../src/net/pdu/*.cpp \
-  $${PWD}/../src/net/process/*.cpp
+  $${PWD}/../src/net/process/*.cpp \
+  $${PWD}/../src/net/write/*.cpp
 
 HEADERS += \
   $${PWD}/../src/base/*.h \
@@ -23,4 +24,5 @@ HEADERS += \
   $${PWD}/../src/net/packet/*.h \
   $${PWD}/../src/net/parser/*.h \
   $${PWD}/../src/net/pdu/*.h \
-  $${PWD}/../src/net/process/*.h
+  $${PWD}/../src/net/process/*.h \
+  $${PWD}/../src/net/write/*.h
