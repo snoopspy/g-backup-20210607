@@ -4,8 +4,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GProcess(parent) {
-
+GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GStateObj(parent) {
 }
 
 GPcapDeviceWriter::~GPcapDeviceWriter() {

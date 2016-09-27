@@ -10,17 +10,17 @@
 
 #pragma once
 
+#include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
-#include "gprocess.h"
 
 // ----------------------------------------------------------------------------
 // GPacketDebugger
 // ----------------------------------------------------------------------------
-struct GPacketDebugger : GProcess {
+struct GPacketDebugger : GStateObj {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE GPacketDebugger(QObject* parent = nullptr) : GProcess(parent) {}
+  Q_INVOKABLE GPacketDebugger(QObject* parent = nullptr) : GStateObj(parent) {}
   ~GPacketDebugger() override {}
 
 protected:

@@ -6,8 +6,7 @@
 // ----------------------------------------------------------------------------
 // GPcapFileWriter
 // ----------------------------------------------------------------------------
-GPcapFileWriter::GPcapFileWriter(QObject* parent) : GProcess(parent) {
-
+GPcapFileWriter::GPcapFileWriter(QObject* parent) : GStateObj(parent) {
 }
 
 GPcapFileWriter::~GPcapFileWriter() {

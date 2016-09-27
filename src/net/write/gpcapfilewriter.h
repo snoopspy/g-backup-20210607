@@ -10,13 +10,13 @@
 
 #pragma once
 
+#include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
-#include "gprocess.h"
 
 // ----------------------------------------------------------------------------
 // GPcapFileWriter
 // ----------------------------------------------------------------------------
-struct GPcapFileWriter : GProcess {
+struct GPcapFileWriter : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)

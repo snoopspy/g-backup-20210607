@@ -10,13 +10,13 @@
 
 #pragma once
 
+#include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
-#include "gprocess.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-struct GPcapDeviceWriter : GProcess {
+struct GPcapDeviceWriter : GStateObj {
   Q_OBJECT
   Q_PROPERTY(QString dev MEMBER dev_)
 
