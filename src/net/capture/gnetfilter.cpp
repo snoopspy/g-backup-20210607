@@ -18,6 +18,7 @@ GNetFilter::~GNetFilter()  {
 
 bool GNetFilter::doOpen() {
   qDebug() << "GNetFilter::doOpen"; // gilgil temp 2016.09.25
+  if (!enabled_) return true;
 
   if (!autoRead_) {
     SET_ERR(GErr::NOT_SUPPORTED, "autoRead must be true");
@@ -66,6 +67,8 @@ bool GNetFilter::doOpen() {
 }
 
 bool GNetFilter::doClose() {
+  if (!enabled_) return true;
+
   if (fd != 0) {
     qDebug() << "bef call ::shutdown"; // gilgil temp 2016.09.25
     ::shutdown(fd, SHUT_RDWR);

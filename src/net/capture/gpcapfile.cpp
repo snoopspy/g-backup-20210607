@@ -9,6 +9,8 @@ GPcapFile::~GPcapFile()  {
 }
 
 bool GPcapFile::doOpen() {
+  if (!enabled_) return true;
+
   if (fileName_ == "") {
     SET_ERR(GErr::FILE_NAME_NOT_SPECIFIED, "file name is not specified");
     return false;
@@ -25,6 +27,8 @@ bool GPcapFile::doOpen() {
 }
 
 bool GPcapFile::doClose() {
+  if (!enabled_) return true;
+
   return GPcap::doClose();
 }
 

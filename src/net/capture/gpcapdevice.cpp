@@ -16,6 +16,8 @@ GPcapDevice::~GPcapDevice() {
 }
 
 bool GPcapDevice::doOpen() {
+  if (!enabled_) return true;
+
   if (dev_ == "") {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
@@ -32,6 +34,8 @@ bool GPcapDevice::doOpen() {
 }
 
 bool GPcapDevice::doClose() {
+  if (!enabled_) return true;
+
   return GPcap::doClose();
 }
 

@@ -8,6 +8,8 @@ GPcap::~GPcap() {
 }
 
 bool GPcap::doOpen() {
+  if (!enabled_) return true;
+
   bool filtering = false;
   int dataLink = pcap_datalink(pcap_);
   qDebug() << QString("pcap_datalink return %1").arg(dataLink);
@@ -39,6 +41,8 @@ bool GPcap::doOpen() {
 }
 
 bool GPcap::doClose() {
+  if (!enabled_) return true;
+
   // ----- by gilgil 2009.09.01 -----
   // Strange to say, when pcap_next_ex is called after pcap_close is called, it occurs memory problem.
   // So waits until thread is terminated.
