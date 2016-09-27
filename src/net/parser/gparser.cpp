@@ -53,21 +53,25 @@ QVector<GParser*> GParser::findAll(QString className) {
   return res;
 }
 
-void GParser::addChild(QString myClassName, QString childClassName) {
-  QVector<GParser*> parsers = findAll(myClassName);
-  foreach (GParser* parser, parsers) {
-    QObject* obj = GObj::createInstance(childClassName);
-    if (obj == nullptr) {
+void GParser::addChild(QString parentClassName, QString childClassName) {
+  QVector<GParser*> parentParsets = findAll(parentClassName);
+  foreach (GParser* parser, parentParsets) {
+    if (parser->findFirstChild(childClassName) != nullptr) {
+      qWarning() << QString("already added parent=%1 child=%2").arg(parentClassName, childClassName);
+      continue;
+    }
+    QObject* childObj = GObj::createInstance(childClassName);
+    if (childObj == nullptr) {
       qCritical() << QString("createInstance failed for (%1)").arg(childClassName);
       continue;
     }
 
-    GParser* child = dynamic_cast<GParser*>(obj);
-    if (child == nullptr) {
+    GParser* childParser = dynamic_cast<GParser*>(childObj);
+    if (childParser == nullptr) {
       qCritical() << QString("dynamic_cast<GParser*> failed for (%1)").arg(childClassName);
       continue;
     }
-    child->setParent(parser);
+    childParser->setParent(parser);
   }
 }
 

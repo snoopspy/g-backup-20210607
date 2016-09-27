@@ -35,7 +35,7 @@ public:
 public:
   GParser* findFirstChild(QString className);
   QVector<GParser*> findAll(QString className);
-  void addChild(QString myClassName, QString childClassName);
+  void addChild(QString parentClassName, QString childClassName);
 
 protected:
   virtual bool isMatch(GPdu* prev, GPacket* packet);
