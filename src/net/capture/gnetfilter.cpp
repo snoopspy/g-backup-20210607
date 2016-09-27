@@ -19,6 +19,11 @@ GNetFilter::~GNetFilter()  {
 bool GNetFilter::doOpen() {
   qDebug() << "GNetFilter::doOpen"; // gilgil temp 2016.09.25
 
+  if (!autoRead_) {
+    SET_ERR(GErr::NOT_SUPPORTED, "autoRead must be true");
+    return false;
+  }
+
   // opening library handle
   h = nfq_open();
   if (!h) {
