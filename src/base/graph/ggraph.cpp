@@ -109,9 +109,6 @@ void GGraph::Connections::save(QJsonArray& ja) {
 // GGraph::Factory
 // ----------------------------------------------------------------------------
 GGraph::Factory::Factory(QObject* parent) : GObj(parent) {
-  GGraph* graph = dynamic_cast<GGraph*>(parent);
-  if (graph != nullptr)
-    graph->setFactory(this);
 }
 
 GGraph::Factory::~Factory() {

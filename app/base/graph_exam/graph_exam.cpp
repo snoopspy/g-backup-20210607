@@ -9,8 +9,10 @@ int main(int argc, char *argv[]) {
   QApplication a(argc, argv);
   GApp::init();
 
+  MyFactory myFactory;
+
   GGraph graph;
-  MyFactory myFactory(&graph);
+  graph.setFactory(&myFactory);
 
   GGraphWidget graphWidget;
   graphWidget.setGraph(&graph);

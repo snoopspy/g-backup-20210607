@@ -4,5 +4,5 @@
 // GBlock
 // ----------------------------------------------------------------------------
 void GBlock::block(GPacket* packet) {
-  packet->control.block_ = true;
+  packet->control.block_ = enabled_;
 }

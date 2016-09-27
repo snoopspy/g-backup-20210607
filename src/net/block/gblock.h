@@ -18,6 +18,10 @@
 // ----------------------------------------------------------------------------
 struct GBlock : GStateObj {
   Q_OBJECT
+  Q_PROPERTY(bool enabled MEMBER enabled_)
+
+public:
+  bool enabled_{true};
 
 public:
   Q_INVOKABLE GBlock(QObject* parent = nullptr) : GStateObj(parent) {}

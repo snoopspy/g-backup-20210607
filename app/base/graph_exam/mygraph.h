@@ -106,6 +106,6 @@ public slots:
 };
 
 struct MyFactory : GPluginFactory {
-  MyFactory(QObject* parent);
+  MyFactory(QObject* parent = nullptr);
   ~MyFactory() override;
 };
