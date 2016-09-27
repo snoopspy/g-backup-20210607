@@ -26,39 +26,39 @@ bool GNetFilter::doOpen() {
   }
 
   // opening library handle
-  h = nfq_open();
-  if (!h) {
+  h_ = nfq_open();
+  if (!h_) {
     SET_ERR(GErr::RETURN_NULL, "nfq_open return null");
     return false;
   }
 
   // unbinding existing nf_queue handler for AF_INET (if any)
-  if (nfq_unbind_pf(h, AF_INET) < 0) {
+  if (nfq_unbind_pf(h_, AF_INET) < 0) {
     SET_ERR(GErr::FAIL, "error during nfq_unbind_pf()");
     return false;
   }
 
   // binding nfnetlink_queue as nf_queue handler for AF_INET
-  if (nfq_bind_pf(h, AF_INET) < 0) {
+  if (nfq_bind_pf(h_, AF_INET) < 0) {
     SET_ERR(GErr::FAIL, "error during nfq_bind_pf()");
     return false;
   }
 
   // binding this socket to queue
-  qh = nfq_create_queue(h,  queueNum_, &_callback, this);
-  if (!qh) {
+  qh_ = nfq_create_queue(h_,  queueNum_, &_callback, this);
+  if (!qh_) {
     SET_ERR(GErr::FAIL, "error during nfq_create_queue()");
     return false;
   }
 
   // setting copy_packet mode
-  if (nfq_set_mode(qh, NFQNL_COPY_PACKET, 0xffff) < 0) {
+  if (nfq_set_mode(qh_, NFQNL_COPY_PACKET, 0xffff) < 0) {
     SET_ERR(GErr::FAIL, "can't set packet_copy mode");
     return false;
   }
 
-  fd = nfq_fd(h);
-  qDebug() << QString("fd=%1").arg(fd); // gilgil temp 2016.09.25
+  fd_ = nfq_fd(h_);
+  qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
 
   parser_ = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser_ != nullptr);
@@ -69,27 +69,27 @@ bool GNetFilter::doOpen() {
 bool GNetFilter::doClose() {
   if (!enabled_) return true;
 
-  if (fd != 0) {
+  if (fd_ != 0) {
     qDebug() << "bef call ::shutdown"; // gilgil temp 2016.09.25
-    ::shutdown(fd, SHUT_RDWR);
+    ::shutdown(fd_, SHUT_RDWR);
     qDebug() << "aft call ::shutdown"; // gilgil temp 2016.09.25
 
     qDebug() << "bef call ::close"; // gilgil temp 2016.09.25
-    ::close(fd);
+    ::close(fd_);
     qDebug() << "aft call ::close"; // gilgil temp 2016.09.25
-    fd = 0;
+    fd_ = 0;
   }
 
   captureThreadClose();
 
-  if (qh != nullptr) {
+  if (qh_ != nullptr) {
     qDebug() << "bef call nfq_destroy_queue"; // gilgil temp 2016.09.25
-    nfq_destroy_queue(qh);
+    nfq_destroy_queue(qh_);
     qDebug() << "aft call nfq_destroy_queue"; // gilgil temp 2016.09.25
-    qh = nullptr;
+    qh_ = nullptr;
   }
 
-  if (h != nullptr) {
+  if (h_ != nullptr) {
     #ifdef INSANE
     // normally, applications SHOULD NOT issue this command, since
     // it detaches other programs/sockets from AF_INET, too !
@@ -99,9 +99,9 @@ bool GNetFilter::doClose() {
 
     // closing library handle
     qDebug() << "bef call nfq_close"; // gilgil temp 2016.09.25
-    nfq_close(h);
+    nfq_close(h_);
     qDebug() << "aft call nfq_close"; // gilgil temp 2016.09.25
-    h = nullptr;
+    h_ = nullptr;
   }
 
   return true;
@@ -138,10 +138,10 @@ void GNetFilter::run() {
 
   while (true) {
     qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-    int res = recv(fd, buf, snapLen_, 0);
+    int res = recv(fd_, buf, snapLen_, 0);
     qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
     if (res >= 0) {
-      nfq_handle_packet(h, buf, res);
+      nfq_handle_packet(h_, buf, res);
       continue;
     } else {
       if (errno == ENOBUFS) {

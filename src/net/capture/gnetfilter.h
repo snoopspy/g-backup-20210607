@@ -19,12 +19,10 @@ struct GNetFilter : GCapture {
   Q_OBJECT
   Q_PROPERTY(int queueNum MEMBER queueNum_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)
-  Q_PROPERTY(int bufCnt MEMBER bufCnt_) // gilgil temp 2016.09.27
 
 public:
   int queueNum_{0};
   int snapLen_{65536}; // 65536 bytes
-  int bufCnt_{256}; // gilgil temp 2016.09.27
 
 public:
   Q_INVOKABLE GNetFilter(QObject* parent = nullptr);
@@ -47,14 +45,14 @@ protected:
   void run() override;
 
 protected:
-  struct nfq_handle* h{nullptr};
-  struct nfq_q_handle* qh{nullptr};
-  int fd{0};
+  struct nfq_handle* h_{nullptr};
+  struct nfq_q_handle* qh_{nullptr};
+  int fd_{0};
 
   GParser* parser_{nullptr};
 
   static int _callback(
-    struct nfq_q_handle* qh,
+    struct nfq_q_handle* qh_,
     struct nfgenmsg* nfmsg,
     struct nfq_data* nfad,
     void* data);
