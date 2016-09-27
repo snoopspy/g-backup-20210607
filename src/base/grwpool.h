@@ -30,8 +30,8 @@ struct GRwPool : GStateObj {
     }
   }
 
-  void setCount(int count) {
-    count_ = count;
+  void setSize(int size) {
+    size_ = size;
   }
 
   T read() {
@@ -60,7 +60,7 @@ struct GRwPool : GStateObj {
       return;
 
     mutex_.lock();
-    if (index_ + 1 >= count_)
+    if (index_ + 1 >= size_)
       notFull_.wait(&mutex_);
     mutex_.unlock();
 
@@ -68,7 +68,7 @@ struct GRwPool : GStateObj {
       return;
 
     mutex_.lock();
-    Q_ASSERT(index_ < count_);
+    Q_ASSERT(index_ < size_);
     items_[index_++] = t;
     notEmpty_.wakeAll();
     mutex_.unlock();
@@ -76,13 +76,13 @@ struct GRwPool : GStateObj {
 
 protected:
   bool doOpen() override {
-    if (count_ == 0) {
+    if (size_ == 0) {
       SET_ERR(GErr::VALUE_IS_ZERO, "count_ is zero");
       return false;
     }
     if (items_ != nullptr)
       delete[] items_;
-    items_ = new T[count_];
+    items_ = new T[size_];
     return true;
   }
 
@@ -93,7 +93,7 @@ protected:
   }
 
 protected:
-  size_t count_{0};
+  size_t size_{0};
   size_t index_{0};
   T* items_{nullptr};
 
