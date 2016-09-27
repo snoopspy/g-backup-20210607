@@ -14,6 +14,7 @@ bool GThread::wait(unsigned long time) {
     qCritical() << "*********************************************************";
     qCritical() << msg;
     qCritical() << "*********************************************************";
+    QThread::terminate();
   }
   return res;
 }
