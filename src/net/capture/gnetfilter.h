@@ -17,12 +17,12 @@
 // ----------------------------------------------------------------------------
 struct GNetFilter : GCapture {
   Q_OBJECT
-  Q_PROPERTY(int num MEMBER num_)
+  Q_PROPERTY(int queueNum MEMBER queueNum_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)
   Q_PROPERTY(int bufCnt MEMBER bufCnt_) // gilgil temp 2016.09.27
 
 public:
-  int num_{0};
+  int queueNum_{0};
   int snapLen_{65536}; // 65536 bytes
   int bufCnt_{256}; // gilgil temp 2016.09.27
 
