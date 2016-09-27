@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
   capture \
   other \
-  process
+  process \
+  write

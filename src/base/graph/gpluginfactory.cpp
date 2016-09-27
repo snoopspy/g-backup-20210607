@@ -53,6 +53,10 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
   int count = countFunc();
   for (int i = 0; i < count; i++) {
     QMetaObject* mobj = (QMetaObject*)metaFunc(i);
+    if (mobj == nullptr) {
+      qCritical() << QString("call metaFunc(%1) return nullptr file=%2").arg(i).arg(fileName);
+      break;
+    }
     if (category == nullptr)
       this->items_.push_back(new ItemNode(mobj));
     else
