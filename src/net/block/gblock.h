@@ -33,4 +33,7 @@ protected:
 
 public slots:
   void block(GPacket* packet);
+
+signals:
+  void blocked(GPacket* packet);
 };

@@ -34,6 +34,9 @@ protected:
 public slots:
   GPacket::Result write(GPacket* packet);
 
+signals:
+  void written(GPacket* packet);
+
 protected:
   pcap_t* pcap_{nullptr};
 

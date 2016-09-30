@@ -33,4 +33,6 @@ void GPacketDebugger::debug(GPacket* packet) {
 
   msg = QString("%1:").arg(packet->pkthdr_.caplen) + msg;
   std::clog << qPrintable(msg) << std::endl;
+
+  emit debugged(packet);
 }

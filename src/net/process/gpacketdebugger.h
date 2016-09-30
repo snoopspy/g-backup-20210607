@@ -29,4 +29,7 @@ protected:
 
 public slots:
   void debug(GPacket* packet);
+
+signals:
+  void debugged(GPacket* packet);
 };

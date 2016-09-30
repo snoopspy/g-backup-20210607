@@ -37,7 +37,10 @@ bool GPcapDeviceWriter::doClose()  {
 
 GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
   int i = pcap_sendpacket(pcap_, packet->buf_, packet->pkthdr_.caplen);
-  if (i == 0) return GPacket::Ok;
+  if (i == 0) {
+    emit written(packet);
+    return GPacket::Ok;
+  }
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;
 }
