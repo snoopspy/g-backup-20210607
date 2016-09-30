@@ -10,30 +10,12 @@ GPcap::~GPcap() {
 bool GPcap::doOpen() {
   if (!enabled_) return true;
 
-  bool filtering = false;
   int dataLink = pcap_datalink(pcap_);
   qDebug() << QString("pcap_datalink return %1").arg(dataLink);
-  switch (dataLink) {
-    case DLT_EN10MB:
-      dataLinkType_ = GPacket::Eth;
-      filtering = true;
-      break;
-    case DLT_IEEE802_11_RADIO:
-      dataLinkType_ = GPacket::Dot11;
-      filtering = true;
-      break;
-    case DLT_IPV4:
-      dataLinkType_ = GPacket::Ipv4;
-      filtering = true;
-      break;
-    case DLT_NULL:
-      dataLinkType_ = GPacket::Null;
-      filtering = true;
-      break;
-  }
+  dataLinkType_ = GPacket::intToDataLinkType(dataLink);
 
-  if (filtering && filter_ != "") {
-    if (!pcapProcessFilter(nullptr)) // gilgil temp 2015.10.28
+  if (filter_ != "") {
+    if (!pcapProcessFilter(nullptr)) // gilgil temp 2016.09.30
       return false;
   }
 

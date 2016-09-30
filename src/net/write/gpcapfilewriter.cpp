@@ -19,24 +19,7 @@ bool GPcapFileWriter::doOpen() {
     return false;
   }
 
-  int dataLink = 1;
-  switch (dataLinkType_) {
-    case GPacket::Eth:
-      dataLink = DLT_EN10MB;
-      break;
-    case GPacket::Dot11:
-      dataLink = DLT_IEEE802_11_RADIO;
-      break;
-    case GPacket::Ipv4:
-      dataLink = DLT_IPV4;
-      break;
-    case GPacket::Null:
-      dataLink = DLT_NULL;
-      break;
-    default:
-      dataLink = DLT_NULL;
-      break;
-  }
+  int dataLink = GPacket::dataLinkTypeToInt(dataLinkType_);
   pcap_ = pcap_open_dead(dataLink, snapLen_);
   if (pcap_ == nullptr) {
     SET_ERR(GErr::RETURN_NULL, QString("pcap_open_dead(%1, %2)) return null").arg(dataLink, snapLen_));

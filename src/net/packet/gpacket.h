@@ -36,6 +36,8 @@ public:
     Ipv4,  // DLT_IPV4 (228)
     Null,  // DLT_NULL (0)
   } DataLinkType;
+  static int dataLinkTypeToInt(DataLinkType dataLinkType);
+  static DataLinkType intToDataLinkType(int dataLink);
 
   friend struct GParser;
 
