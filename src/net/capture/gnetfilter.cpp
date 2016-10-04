@@ -172,12 +172,10 @@ int GNetFilter::_callback(
   packet.capture_ = netFilter;
 
   packet.clear();
-  packet.pkthdr_.caplen = (bpf_u_int32)nfq_get_payload(nfad, (unsigned char **)&packet.buf_);
-  qDebug() << "payloadLen =" << packet.pkthdr_.caplen; // gilgil temp 2016.09.27
+  packet.buf_.size_ = (size_t)nfq_get_payload(nfad, (unsigned char **)&packet.buf_.data_);
+  qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
-  packet.pkthdr_.len = packet.pkthdr_.caplen;
-  packet.parseBuf_ = packet.buf_;
-  packet.parseLen_ = (size_t)packet.pkthdr_.caplen;
+  packet.parse_ = packet.buf_;
   if (netFilter->autoParse_) netFilter->parser_->parse(&packet);
   emit netFilter->captured(&packet);
 

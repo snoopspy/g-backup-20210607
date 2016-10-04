@@ -23,7 +23,7 @@ bool GUdpParser::isMatch(GPdu* prev, GPacket* packet) {
         GIpHdr* ipHdr = (GIpHdr*)prev;
         if (ipHdr->p() != IPPROTO_UDP)
           return false;
-        if (packet->parseLen_ < sizeof(UDP_HDR))
+        if (packet->parse_.size_ < sizeof(UDP_HDR))
           return false;
         return true;
       }
@@ -36,6 +36,6 @@ bool GUdpParser::isMatch(GPdu* prev, GPacket* packet) {
 }
 
 GPdu* GUdpParser::doParse(GPacket* packet) {
-  Q_ASSERT(packet->parseLen_ >= sizeof(UDP_HDR));
-  return new GUdpHdr(packet->parseBuf_);
+  Q_ASSERT(packet->parse_.size_ >= sizeof(UDP_HDR));
+  return new GUdpHdr(packet->parse_.data_);
 }

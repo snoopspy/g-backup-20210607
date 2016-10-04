@@ -22,15 +22,17 @@ bool GIpParser::isMatch(GPdu* prev, GPacket* packet) {
   GEthHdr* ethHdr = (GEthHdr*)prev;
   if (ethHdr->type() != ETHERTYPE_IP)
     return false;
-  if (packet->parseLen_ < sizeof(IP_HDR))
+  if (packet->parse_.size_ < sizeof(IP_HDR))
     return false;
   return true;
 }
 
 GPdu* GIpParser::doParse(GPacket* packet) {
-  Q_ASSERT(packet->parseLen_ >= sizeof(IP_HDR));
-  if (*packet->parseBuf_ != 0x45) {
-    qWarning() << "packet start is not 0x45" << *packet->parseBuf_; // gilgil temp 2016.09.26
+  Q_ASSERT(packet->parse_.size_ >= sizeof(IP_HDR));
+#ifdef _DEBUG
+  if (*packet->parse_.data_ != 0x45) {
+    qWarning() << "packet start is not 0x45" << *packet->parse_.data_;
   }
-  return new GIpHdr(packet->parseBuf_);
+#endif // _DEBUG
+  return new GIpHdr(packet->parse_.data_);
 }

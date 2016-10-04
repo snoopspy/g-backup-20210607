@@ -23,6 +23,9 @@ struct GPacket : QObject {
   Q_ENUMS(DataLinkType)
 
 public:
+  // --------------------------------------------------------------------------
+  // Result
+  // --------------------------------------------------------------------------
   typedef enum {
     Eof = -2,    // read
     Fail = -1,   // read write
@@ -30,6 +33,9 @@ public:
     Ok = 1,      // read write
   } Result;
 
+  // --------------------------------------------------------------------------
+  // DataLinkType
+  // --------------------------------------------------------------------------
   typedef enum {
     Eth,   // DLT_EN10MB (1)
     Dot11, // DLT_IEEE802_11_RADIO (127)
@@ -39,41 +45,30 @@ public:
   static int dataLinkTypeToInt(DataLinkType dataLinkType);
   static DataLinkType intToDataLinkType(int dataLink);
 
-  friend struct GParser;
+  // --------------------------------------------------------------------------
+  // Buf
+  // --------------------------------------------------------------------------
+  struct Buf {
+    u_char* data_;
+    size_t size_;
+  };
+  // --------------------------------------------------------------------------
 
 public:
   GPacket();
   GPacket(GCapture* capture);
   ~GPacket() override;
-
   void clear();
 
   GCapture* capture_;
 
-  pcap_pkthdr pkthdr_;
-  u_char* buf_;
+  struct timeval ts_;
+  Buf buf_;
+  Buf parse_;
 
   struct {
     bool block_;
   } control;
 
-  u_char* parseBuf_; // for parsing
-  size_t parseLen_;  // for parsing
-
-protected:
   GPdus pdus_;
-
-public:
-  GPdu* first() { return pdus_.first(); }
-  GPdu* next() { return pdus_.next(); }
-  GPdu* prev() { return pdus_.prev(); }
-
-  template <typename T>
-  T* findFirst() { return pdus_.findFirst<T>(); }
-
-  template <typename T>
-  T* findNext() { return pdus_.findNext<T>(); }
-
-  template <typename T>
-  T* findPrev() { return pdus_.findPrev<T>(); }
 };

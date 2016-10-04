@@ -59,6 +59,9 @@ bool GPcapFileWriter::doClose() {
 }
 
 void GPcapFileWriter::write(GPacket* packet) {
-  pcap_dump((u_char*)pcap_dumper_, &packet->pkthdr_, packet->buf_);
+  struct pcap_pkthdr pkthdr;
+  pkthdr.ts = packet->ts_;
+  pkthdr.caplen = pkthdr.len = (bpf_u_int32)packet->buf_.size_;
+  pcap_dump((u_char*)pcap_dumper_, &pkthdr, packet->buf_.data_);
   emit written(packet);
 }

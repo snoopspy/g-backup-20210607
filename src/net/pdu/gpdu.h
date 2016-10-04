@@ -26,10 +26,15 @@ typedef enum {
   Eth,
   Ip,
   Ip6,
+
   Tcp,
-  TcpOption,
   Udp,
   Icmp,
+
+  TcpOption,
+  TcpData,
+  UdpData,
+
   Dns,
   None
 } GPduType;

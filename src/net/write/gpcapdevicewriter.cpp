@@ -36,7 +36,7 @@ bool GPcapDeviceWriter::doClose()  {
 }
 
 GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
-  int i = pcap_sendpacket(pcap_, packet->buf_, packet->pkthdr_.caplen);
+  int i = pcap_sendpacket(pcap_, packet->buf_.data_, (int)packet->buf_.size_);
   if (i == 0) {
     emit written(packet);
     return GPacket::Ok;

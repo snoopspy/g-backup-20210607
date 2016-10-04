@@ -24,7 +24,7 @@ bool GEthParser::isMatch(GPdu* prev, GPacket* packet) {
 }
 
 GPdu* GEthParser::doParse(GPacket* packet) {
-  if ((packet->parseLen_) < sizeof(ETH_HDR))
+  if ((packet->parse_.size_) < sizeof(ETH_HDR))
     return nullptr;
-  return new GEthHdr(packet->parseBuf_);
+  return new GEthHdr(packet->parse_.data_);
 }
