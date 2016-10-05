@@ -17,13 +17,13 @@ public slots:
 
     GEthHdr* ethHdr = pdus.findFirst<GEthHdr>();
     if (ethHdr == nullptr) return;
-    QString smac  = (QString)ethHdr->smac();
-    QString dmac  = (QString)ethHdr->dmac();
+    QString smac = (QString)ethHdr->smac();
+    QString dmac = (QString)ethHdr->dmac();
 
     GIpHdr* ipHdr = pdus.findNext<GIpHdr>();
     if (ipHdr == nullptr) return;
-    QString sip   = (QString)ipHdr->sip();
-    QString dip   = (QString)ipHdr->dip();
+    QString sip = (QString)ipHdr->sip();
+    QString dip = (QString)ipHdr->dip();
 
     QString proto, sport, dport;
     GTcpHdr* tcpHdr = pdus.findNext<GTcpHdr>();
