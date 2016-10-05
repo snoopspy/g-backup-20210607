@@ -58,6 +58,5 @@ public:
   Q_INVOKABLE GUdpParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  bool isMatch(GPdu* prev, GPacket* packet) override;
-  GPdu* doParse(GPacket* packet) override;
+  GPdu* doParse(GPacket* packet, GPdu* prev) override;
 };

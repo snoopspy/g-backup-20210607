@@ -16,26 +16,21 @@ GUdpHdr::GUdpHdr(u_char* buf) {
 // ----------------------------------------------------------------------------
 // GUdpParser
 // ----------------------------------------------------------------------------
-bool GUdpParser::isMatch(GPdu* prev, GPacket* packet) {
+GPdu* GUdpParser::doParse(GPacket* packet, GPdu* prev) {
   switch (prev->pduType()) {
     case GPduType::Ip: {
         Q_ASSERT(dynamic_cast<GIpHdr*>(prev) != nullptr);
         GIpHdr* ipHdr = (GIpHdr*)prev;
         if (ipHdr->p() != IPPROTO_UDP)
-          return false;
+          return nullptr;
         if (packet->parse_.size_ < sizeof(UDP_HDR))
-          return false;
-        return true;
+          return nullptr;
+        return new GUdpHdr(packet->parse_.data_);
       }
     case GPduType::Ip6:
       // TODO process ipv6 header // gilgil temp 2016.09.13
-      return false;
+      return nullptr;
     default:
-      return false;
+      return nullptr;
   }
-}
-
-GPdu* GUdpParser::doParse(GPacket* packet) {
-  Q_ASSERT(packet->parse_.size_ >= sizeof(UDP_HDR));
-  return new GUdpHdr(packet->parse_.data_);
 }

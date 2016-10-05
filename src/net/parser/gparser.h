@@ -30,14 +30,14 @@ public:
   GParser(QObject* parent = nullptr) : GObj(parent) {}
   ~GParser() override {}
 
-  virtual size_t parse(GPacket* packet);
-
 public:
   GParser* findFirstChild(QString className);
   QVector<GParser*> findAll(QString className);
   void addChild(QString parentClassName, QString childClassName);
 
+public:
+  virtual bool parse(GPacket* packet, GPdu* prev = nullptr);
+
 protected:
-  virtual bool isMatch(GPdu* prev, GPacket* packet);
-  virtual GPdu* doParse(GPacket* packet);
+  virtual GPdu* doParse(GPacket* packet, GPdu* prev);
 };

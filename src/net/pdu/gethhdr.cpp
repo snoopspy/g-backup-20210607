@@ -16,14 +16,8 @@ GEthHdr::GEthHdr(u_char* buf) {
 // ----------------------------------------------------------------------------
 // GEthParser
 // ----------------------------------------------------------------------------
-bool GEthParser::isMatch(GPdu* prev, GPacket* packet) {
-  (void)prev;
-  (void)packet;
-  SET_ERR(GErr::UNREACHABLE_CODE, "unreachable code");
-  return false;
-}
-
-GPdu* GEthParser::doParse(GPacket* packet) {
+GPdu* GEthParser::doParse(GPacket* packet, GPdu* prev) {
+  Q_ASSERT(prev == nullptr);
   if ((packet->parse_.size_) < sizeof(ETH_HDR))
     return nullptr;
   return new GEthHdr(packet->parse_.data_);

@@ -5,26 +5,6 @@
 // ----------------------------------------------------------------------------
 // GParser
 // ----------------------------------------------------------------------------
-size_t GParser::parse(GPacket* packet) {
-  GPdu* pdu = doParse(packet);
-  if (pdu == nullptr)
-    return 0;
-
-  size_t res = pdu->size();
-  packet->parse_.data_ += res;
-  packet->parse_.size_ -= res;
-  packet->pdus_.push_back(pdu);
-
-  foreach (QObject* obj, children()) {
-    GParser* child = (GParser*)obj;
-    if (child->isMatch(pdu, packet)) {
-      res += child->parse(packet);
-      return res;
-    }
-  }
-  return res;
-}
-
 GParser* GParser::findFirstChild(QString className) {
   foreach (QObject* obj, children()) {
     GParser* child = (GParser*)obj;
@@ -75,15 +55,27 @@ void GParser::addChild(QString parentClassName, QString childClassName) {
   }
 }
 
-bool GParser::isMatch(GPdu* prev, GPacket* packet) {
+bool GParser::parse(GPacket* packet, GPdu* prev) {
+  GPdu* pdu = doParse(packet, prev);
+  if (pdu == nullptr)
+    return false;
+
+  packet->pdus_.push_back(pdu);
+  size_t res = pdu->size();
+  packet->parse_.data_ += res;
+  packet->parse_.size_ -= res;
+
+  foreach (QObject* obj, children()) {
+    GParser* child = (GParser*)obj;
+    if (child->parse(packet, pdu))
+      return true;
+  }
+  return true;
+}
+
+GPdu* GParser::doParse(GPacket* packet, GPdu* prev) {
   (void)prev;
   (void)packet;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return false;
-}
-
-GPdu* GParser::doParse(GPacket* packet) {
-  (void)packet;
-  SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
-  return false;
+  return nullptr;
 }

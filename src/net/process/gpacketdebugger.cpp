@@ -2,8 +2,40 @@
 #include <iostream>
 #include <GEthHdr>
 #include <GIpHdr>
+#include <GTcpData>
 #include <GTcpHdr>
 #include <GUdpHdr>
+
+QString dump(u_char* data, size_t size) {
+  QString raw;
+  QString hexa;
+  if (size > 16) size = 16;
+  while (size > 0) {
+    char ch = *data;
+    if (isprint(ch))
+      raw += ch;
+    else
+      raw += '.';
+
+    char ch1 = (ch & 0xF0) >> 4;
+    if (ch1 >= 10)
+      ch1 += 'A' - 10;
+    else
+      ch1 += '0';
+    char ch2 = (ch & 0x0F);
+    if (ch2 >= 10)
+      ch2 += 'A' - 10;
+    else
+      ch2 += '0';
+    hexa += ch1;
+    hexa += ch2;
+    hexa += ' ';
+
+    data++;
+    size--;
+  }
+  return raw + " " + hexa;
+}
 
 // ----------------------------------------------------------------------------
 // GPacketDebugger
@@ -24,6 +56,11 @@ void GPacketDebugger::debug(GPacket* packet) {
   GTcpHdr* tcpHdr = packet->pdus_.findFirst<GTcpHdr>();
   if (tcpHdr != nullptr) {
     msg += QString(" tcp %1>%2").arg(tcpHdr->sport()).arg(tcpHdr->dport());
+  }
+
+  GTcpData* tcpData = packet->pdus_.findFirst<GTcpData>();
+  if (tcpData != nullptr) {
+    msg += " " + dump(tcpData->data(), tcpData->size());
   }
 
   GUdpHdr* udpHdr = packet->pdus_.findFirst<GUdpHdr>();
