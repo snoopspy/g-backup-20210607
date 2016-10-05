@@ -6,6 +6,7 @@
 #include "net/pdu/gnullpdu.h"
 #include "net/pdu/gtcpdata.h"
 #include "net/pdu/gtcphdr.h"
+#include "net/pdu/gudpdata.h"
 #include "net/pdu/gudphdr.h"
 
 // ----------------------------------------------------------------------------
@@ -18,6 +19,7 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GIpParser*>();
   qRegisterMetaType<GTcpDataParser*>();
   qRegisterMetaType<GTcpParser*>();
+  qRegisterMetaType<GUdpDataParser*>();
   qRegisterMetaType<GUdpParser*>();
 
   root_ = new GParser;
@@ -45,6 +47,7 @@ GParserFactory::GParserFactory() {
   // L7
   //
   root_->addChild("GTcpParser", "GTcpDataParser");
+  root_->addChild("GUdpParser", "GUdpDataParser");
 }
 
 GParserFactory::~GParserFactory() {
