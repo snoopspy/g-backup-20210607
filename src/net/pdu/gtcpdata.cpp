@@ -22,11 +22,11 @@ GTcpData::GTcpData(u_char* data, size_t size) {
 GPdu* GTcpDataParser::doParse(GPacket* packet, GPdu* prev) {
   Q_ASSERT(prev->pduType() == GPduType::Tcp);
   GTcpHdr* tcpHdr = (GTcpHdr*)prev;
-  GPdus::reverse_iterator rit = packet->pdus_.rbegin();
-  Q_ASSERT(*rit == prev); // tcpHdr
-  rit++;
-  Q_ASSERT(rit != packet->pdus_.rend());
-  GPdu* l3Hdr = *rit;
+
+  GPdus& pdus = packet->pdus_;
+  Q_ASSERT(pdus.rbegin() != pdus.rend()); // tcpHdr
+  Q_ASSERT(++pdus.rbegin() != pdus.rend()); // ipHdr
+  GPdu* l3Hdr = *(++pdus.rbegin());
   switch (l3Hdr->pduType()) {
     case GPduType::Ip: {
         GIpHdr* ipHdr = (GIpHdr*)l3Hdr;
