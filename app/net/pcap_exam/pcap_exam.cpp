@@ -13,24 +13,26 @@ struct Obj : QObject {
 
 public slots:
   void captured(GPacket* packet) {
-    GEthHdr* ethHdr = packet->findFirst<GEthHdr>();
+    GPdus& pdus = packet->pdus_;
+
+    GEthHdr* ethHdr = pdus.findFirst<GEthHdr>();
     if (ethHdr == nullptr) return;
     QString smac  = (QString)ethHdr->smac();
     QString dmac  = (QString)ethHdr->dmac();
 
-    GIpHdr* ipHdr = packet->findNext<GIpHdr>();
+    GIpHdr* ipHdr = pdus.findNext<GIpHdr>();
     if (ipHdr == nullptr) return;
     QString sip   = (QString)ipHdr->sip();
     QString dip   = (QString)ipHdr->dip();
 
     QString proto, sport, dport;
-    GTcpHdr* tcpHdr = packet->findNext<GTcpHdr>();
+    GTcpHdr* tcpHdr = pdus.findNext<GTcpHdr>();
     if (tcpHdr != nullptr) {
       proto = "tcp";
       sport = QString::number(tcpHdr->sport());
       dport = QString::number(tcpHdr->dport());
     } else {
-      GUdpHdr* udpHdr = packet->findNext<GUdpHdr>();
+      GUdpHdr* udpHdr = pdus.findNext<GUdpHdr>();
       if (udpHdr != nullptr) {
         proto = "udp";
         sport = QString::number(udpHdr->sport());
