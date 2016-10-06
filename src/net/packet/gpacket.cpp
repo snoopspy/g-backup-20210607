@@ -5,7 +5,7 @@
 // GPacket
 // ----------------------------------------------------------------------------
 int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
-  int res;
+  int res = DLT_NULL;
   switch (dataLinkType) {
     case GPacket::Eth:
       res = DLT_EN10MB;
@@ -27,7 +27,7 @@ int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
 }
 
 GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
-  DataLinkType res;
+  DataLinkType res = GPacket::Null;
   switch (dataLink) {
     case DLT_EN10MB:
       res = GPacket::Eth;
