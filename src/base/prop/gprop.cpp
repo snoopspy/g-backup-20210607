@@ -63,10 +63,12 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
     case QMetaType::Double:
     case QMetaType::Float:
     case QMetaType::Int:
+    case QMetaType::Long:
     case QMetaType::LongLong:
     case QMetaType::Short:
     case QMetaType::UChar:
     case QMetaType::UInt:
+    case QMetaType::ULong:
     case QMetaType::ULongLong:
     case QMetaType::UShort: {
         QString s = variant.toString();
@@ -147,10 +149,12 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
     case QMetaType::Double:
     case QMetaType::Float:
     case QMetaType::Int:
+    case QMetaType::Long:
     case QMetaType::LongLong:
     case QMetaType::Short:
     case QMetaType::UChar:
     case QMetaType::UInt:
+    case QMetaType::ULong:
     case QMetaType::ULongLong:
     case QMetaType::UShort: {
         QString s = variant.toString();
@@ -232,11 +236,13 @@ GPropItem* GProp::propCreateItem(GPropItemParam param) {
     case QMetaType::Double:
     case QMetaType::Float:
     case QMetaType::Int:
+    case QMetaType::Long:
     case QMetaType::LongLong:
     case QMetaType::QString:
     case QMetaType::Short:
     case QMetaType::UChar:
     case QMetaType::UInt:
+    case QMetaType::ULong:
     case QMetaType::ULongLong:
     case QMetaType::UShort:
       return new GPropItemVariant(param);
