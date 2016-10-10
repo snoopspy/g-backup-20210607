@@ -23,6 +23,6 @@ void GDnsProcessor::process(GPacket* packet) {
   if (!dns.decode(udpData->data(), udpData->size(), &offset))
     return;
 
-  qDebug() << "dnsCaptured"; // gilgil temp 2016.10.11
+  qDebug() << "dnsCaptured " << dns.questions.first().name; // gilgil temp 2016.10.11
   emit dnsCaptured(packet, &dns);
 }
