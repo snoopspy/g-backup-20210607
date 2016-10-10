@@ -17,10 +17,12 @@
 // ----------------------------------------------------------------------------
 struct GIpFlowMgr : GFlowMgr {
   Q_OBJECT
-  Q_PROPERTY(long ipFlowTimeout MEMBER ipFlowTimeout_)
+  Q_PROPERTY(long halfTimeout MEMBER halfTimeout_)
+  Q_PROPERTY(long fullTimeout MEMBER fullTimeout_)
 
 public:
-  long ipFlowTimeout_{60 * 5}; // 5 minutes
+  long halfTimeout_{60 * 1}; // 1 minutes
+  long fullTimeout_{60 * 3}; // 3 minutes
 
 protected:
   // --------------------------------------------------------------------------
@@ -28,17 +30,16 @@ protected:
   // --------------------------------------------------------------------------
   struct FlowMap : QMap<GFlow::IpFlowKey, GFlow::Value*> {
     void clear() {
-      for (FlowMap::iterator it = begin(); it != end(); it++) {
-        GFlow::Value* value = it.value();
-        free((void*)value);
+      foreach (GFlow::Value* value, *this) {
+        GFlow::Value::deallocate(value);
       }
       QMap<GFlow::IpFlowKey, GFlow::Value*>::clear();
     }
 
-    void erase(FlowMap::iterator it) {
+    FlowMap::iterator erase(FlowMap::iterator it) {
       GFlow::Value* value = it.value();
-      free((void*)value);
-      QMap<GFlow::IpFlowKey, GFlow::Value*>::erase(it);
+      GFlow::Value::deallocate(value);
+      return QMap<GFlow::IpFlowKey, GFlow::Value*>::erase(it);
     }
   };
   // --------------------------------------------------------------------------
@@ -49,7 +50,6 @@ public:
 
 protected:
   bool doOpen() override {
-    // requestItems_.clear(); // gilgil temp 2016.10.10
     flowMap_.clear();
     return GFlowMgr::doOpen();
   }
@@ -68,8 +68,8 @@ protected:
   void deleteOldFlowMaps(struct timeval ts);
 
 public:
-  GFlow::IpFlowKey* key_;
-  GFlow::Value* value_;
+  GFlow::IpFlowKey* key_{nullptr};
+  GFlow::Value* value_{nullptr};
 
 public slots:
   void process(GPacket* packet);

@@ -20,9 +20,27 @@ namespace GFlow {
   // Value
   // --------------------------------------------------------------------------
   struct Value {
+    enum State {
+      Half,
+      Full,
+      Rst,
+      Fin
+    };
     struct timeval ts_;
-    // bool           created; // gilgil temp 2016.10.10
+    State state_;
     u_char totalMem_[0];
+
+    static struct Value* allocate(struct timeval ts, State state, size_t totalMemSize) {
+      Value* res = (Value*)malloc(sizeof(struct Value) + totalMemSize);
+      res->ts_ = ts;
+      res->state_ = state;
+      return res;
+    }
+
+    static void deallocate(Value* value) {
+      free((void*)value);
+    }
+
     u_char* mem(size_t offset) { return totalMem_ + offset; }
   };
 
@@ -57,15 +75,6 @@ namespace GFlow {
       totalMemSize_ += memSize;
 
       return currentOffset;
-    }
-
-    Value* allocate() {
-      Value* res = (Value*)malloc(sizeof(struct Value) + totalMemSize_);
-      return res;
-    }
-
-    static void deallocate(Value* value) {
-      free((void*)value);
     }
   };
 }

@@ -16,6 +16,8 @@ bool GIpFlowMgrTest::doOpen() {
 }
 
 bool GIpFlowMgrTest::doClose() {
+  QObject::disconnect(flowMgr_, &GIpFlowMgr::_flowCreated, this, &GIpFlowMgrTest::_flowCreated);
+  QObject::disconnect(flowMgr_, &GIpFlowMgr::_flowDeleted, this, &GIpFlowMgrTest::_flowDeleted);
   return true;
 }
 
