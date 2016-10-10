@@ -31,11 +31,11 @@ typedef enum {
   Udp,
   Icmp,
 
-  TcpOption,
+  // TcpOption, // gilgil temp 2016.10.11
   TcpData,
   UdpData,
 
-  Dns,
+  // Dns, // gilgil temp 2016.10.11
   None
 } GPduType;
 
