@@ -35,12 +35,10 @@ protected:
       QMap<GFlow::IpFlowKey, GFlow::Value*>::clear();
     }
 
-    int remove(GFlow::IpFlowKey& key) {
-      FlowMap::iterator it = find(key);
-      Q_ASSERT(it != end());
+    void erase(FlowMap::iterator it) {
       GFlow::Value* value = it.value();
       free((void*)value);
-      return QMap<GFlow::IpFlowKey, GFlow::Value*>::remove(key);
+      QMap<GFlow::IpFlowKey, GFlow::Value*>::erase(it);
     }
   };
   // --------------------------------------------------------------------------

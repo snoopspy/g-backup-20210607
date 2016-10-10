@@ -5,11 +5,13 @@
 // GIpFlowMgr
 // ----------------------------------------------------------------------------
 void GIpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
-  for (FlowMap::iterator it = flowMap_.begin(); it != flowMap_.end(); it++) {
+  FlowMap::iterator it = flowMap_.begin();
+  while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
     long elapsed = ts.tv_sec - value->ts_.tv_sec;
     if (elapsed >= this->ipFlowTimeout_) {
       emit _flowDeleted(&it.key(), value);
+      flowMap_.erase(it);
     } else
       break;
   }
@@ -33,9 +35,12 @@ void GIpFlowMgr::process(GPacket* packet) {
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {
     GFlow::Value* value = requestItems_.allocate();
+    value->ts_ = packet->ts_;
     it = flowMap_.insert(key, value);
     emit _flowCreated(&it.key(), value);
   }
 
+  this->key_ = (GFlow::IpFlowKey*)&it.key();
+  this->value_ = it.value();
   emit processed(packet);
 }

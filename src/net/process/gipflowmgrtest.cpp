@@ -10,8 +10,8 @@ bool GIpFlowMgrTest::doOpen() {
   }
 
   ipFlowOffset_ = flowMgr_->requestItems_.request((void*)"GIpFlowMgrTest", sizeof(FlowItem));
-  QObject::connect(flowMgr_, &GIpFlowMgr::_flowCreated, this, &GIpFlowMgrTest::_flowCreated);
-  QObject::connect(flowMgr_, &GIpFlowMgr::_flowDeleted, this, &GIpFlowMgrTest::_flowDeleted);
+  QObject::connect(flowMgr_, &GIpFlowMgr::_flowCreated, this, &GIpFlowMgrTest::_flowCreated, Qt::DirectConnection);
+  QObject::connect(flowMgr_, &GIpFlowMgr::_flowDeleted, this, &GIpFlowMgrTest::_flowDeleted, Qt::DirectConnection);
   return true;
 }
 
@@ -20,10 +20,10 @@ bool GIpFlowMgrTest::doClose() {
 }
 
 void GIpFlowMgrTest::test(GPacket* packet) {
-  qDebug() << "size=" << packet->buf_.size_; // gilgil temp 2016.10.10
   FlowItem* flowItem = (FlowItem*)flowMgr_->value_->mem(ipFlowOffset_);
   flowItem->packets++;
   flowItem->bytes += packet->buf_.size_;
+  qDebug() << QString("size=%1 packets=%2 bytes=%3").arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes); // gilgil temp 2016.10.10
   emit tested(packet);
 }
 

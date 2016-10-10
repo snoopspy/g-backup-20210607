@@ -64,7 +64,7 @@ namespace GFlow {
       return res;
     }
 
-    void deallocate(Value* value) {
+    static void deallocate(Value* value) {
       free((void*)value);
     }
   };
