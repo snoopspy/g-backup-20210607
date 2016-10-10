@@ -20,11 +20,9 @@ namespace GFlow {
   // Value
   // --------------------------------------------------------------------------
   struct Value {
-    // size_t         packets; // gilgil temp 2016.10.10
-    // size_t         bytes; // gilgil temp 2016.10.10
     struct timeval ts_;
     // bool           created; // gilgil temp 2016.10.10
-    u_char* totalMem_;
+    u_char totalMem_[0];
     u_char* mem(size_t offset) { return totalMem_ + offset; }
   };
 
@@ -43,7 +41,7 @@ namespace GFlow {
   struct RequestItems : QVector<RequestItem> {
     size_t totalMemSize_{0};
 
-    size_t requestMemory(void* id, size_t memSize) {
+    size_t request(void* id, size_t memSize) {
       size_t currentOffset = 0;
       foreach (const RequestItem& item, *this) {
         if (item.id_ == id) return currentOffset;
@@ -59,6 +57,15 @@ namespace GFlow {
       totalMemSize_ += memSize;
 
       return currentOffset;
+    }
+
+    Value* allocate() {
+      Value* res = (Value*)malloc(sizeof(struct Value) + totalMemSize_);
+      return res;
+    }
+
+    void deallocate(Value* value) {
+      free((void*)value);
     }
   };
 }

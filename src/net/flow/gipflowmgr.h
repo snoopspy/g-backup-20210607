@@ -26,21 +26,21 @@ protected:
   // --------------------------------------------------------------------------
   // FlowMap
   // --------------------------------------------------------------------------
-  struct FlowMap : QMap<GFlow::IpFlowKey, GFlow::Value> {
+  struct FlowMap : QMap<GFlow::IpFlowKey, GFlow::Value*> {
     void clear() {
       for (FlowMap::iterator it = begin(); it != end(); it++) {
-        u_char* totalMem = it.value().totalMem_;
-        delete[] totalMem;
+        GFlow::Value* value = it.value();
+        free((void*)value);
       }
-      QMap<GFlow::IpFlowKey, GFlow::Value>::clear();
+      QMap<GFlow::IpFlowKey, GFlow::Value*>::clear();
     }
 
     int remove(GFlow::IpFlowKey& key) {
       FlowMap::iterator it = find(key);
       Q_ASSERT(it != end());
-      u_char* totalMem = it.value().totalMem_;
-      delete[] totalMem;
-      return QMap<GFlow::IpFlowKey, GFlow::Value>::remove(key);
+      GFlow::Value* value = it.value();
+      free((void*)value);
+      return QMap<GFlow::IpFlowKey, GFlow::Value*>::remove(key);
     }
   };
   // --------------------------------------------------------------------------
@@ -78,6 +78,6 @@ public slots:
 
 signals:
   void processed(GPacket* packet);
-  void created(GFlow::IpFlowKey* key, GFlow::Value* value);
-  void deleted(GFlow::IpFlowKey* key, GFlow::Value* value);
+  void _flowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value);
+  void _flowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value);
 };

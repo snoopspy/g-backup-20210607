@@ -25,9 +25,9 @@ struct GIpFlowMgrTest : GStateObj {
 
 public:
   // --------------------------------------------------------------------------
-  // Item
+  // FlowItem
   // --------------------------------------------------------------------------
-  struct Item {
+  struct FlowItem {
     int packets;
     int bytes;
   };
@@ -35,19 +35,23 @@ public:
 
 public:
   Q_INVOKABLE GIpFlowMgrTest(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GIpFlowMgrTest() override {}
+  ~GIpFlowMgrTest() override { close(); }
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+  bool doOpen() override;
+  bool doClose() override;
 
 public:
   GIpFlowMgr* flowMgr_{nullptr};
+  size_t ipFlowOffset_{0};
 
 public slots:
   void test(GPacket* packet);
+  void _flowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value);
+  void _flowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value);
 
 signals:
   void tested(GPacket* packet);
+
 };
 
