@@ -19,9 +19,13 @@ GPropItemObjPtr::GPropItemObjPtr(GPropItemParam param) : GPropItemComboBox(param
 }
 
 void GPropItemObjPtr::update() {
-  QMetaEnum menum = mpro_.enumerator();
-  QString key = menum.valueToKey(object_->property(mpro_.name()).toInt());
-  comboBox_->setCurrentText(key);
+  GGraph* graph = dynamic_cast<GGraph*>(object_->parent());
+  if (graph != nullptr) {
+    QVariant variant = object_->property(mpro_.name());
+    GObj* obj = qvariant_cast<GObjPtr>(variant);
+    if (obj != nullptr)
+      comboBox_->setCurrentText(obj->objectName());
+  }
 }
 
 void GPropItemObjPtr::myCurrentIndexChanged(int index) {
