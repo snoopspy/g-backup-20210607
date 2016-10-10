@@ -9,7 +9,13 @@ void GIpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
     long elapsed = ts.tv_sec - value->ts_.tv_sec;
-    long timeout = value->state_ == GFlow::Value::Half ? this->halfTimeout_ : fullTimeout_;
+    long timeout;
+    switch (value->state_) {
+      case GFlow::Value::Half: timeout = halfTimeout_; break;
+      case GFlow::Value::Full: timeout = fullTimeout_; break;
+      case GFlow::Value::Rst: qCritical() << "unrecheable Rst"; timeout = 0; break;
+      case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
+    }
     if (elapsed >= timeout) {
       emit _flowDeleted(&it.key(), value);
       it = flowMap_.erase(it);
@@ -47,7 +53,8 @@ void GIpFlowMgr::process(GPacket* packet) {
       reverseIt.value()->state_ = GFlow::Value::Full;
     }
   } else {
-    it.value()->ts_ = packet->ts_;
+    GFlow::Value* value = it.value();
+    value->ts_ = packet->ts_;
   }
 
   this->key_ = (GFlow::IpFlowKey*)&it.key();

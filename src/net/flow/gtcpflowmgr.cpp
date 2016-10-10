@@ -1,11 +1,11 @@
-#include "gudpflowmgr.h"
+#include "gtcpflowmgr.h"
 #include "net/pdu/giphdr.h"
-#include "net/pdu/gudphdr.h"
+#include "net/pdu/gtcphdr.h"
 
 // ----------------------------------------------------------------------------
-// GUdpFlowMgr
+// GTcpFlowMgr
 // ----------------------------------------------------------------------------
-void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GTcpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
@@ -14,8 +14,8 @@ void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
     switch (value->state_) {
       case GFlow::Value::Half: timeout = halfTimeout_; break;
       case GFlow::Value::Full: timeout = fullTimeout_; break;
-      case GFlow::Value::Rst: qCritical() << "unrecheable Rst"; timeout = 0; break;
-      case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
+      case GFlow::Value::Rst: timeout = rstTimeout_; break;
+      case GFlow::Value::Fin: timeout = finTimeout_; break;
     }
     if (elapsed >= timeout) {
       emit _flowDeleted(&it.key(), value);
@@ -26,7 +26,7 @@ void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
   }
 }
 
-void GUdpFlowMgr::process(GPacket* packet) {
+void GTcpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
@@ -37,14 +37,14 @@ void GUdpFlowMgr::process(GPacket* packet) {
   GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
   if (ipHdr == nullptr) return;
 
-  GUdpHdr* udpHdr = packet->pdus_.findFirst<GUdpHdr>();
-  if (udpHdr == nullptr) return;
+  GTcpHdr* tcpHdr = packet->pdus_.findFirst<GTcpHdr>();
+  if (tcpHdr == nullptr) return;
 
-  GFlow::UdpFlowKey key;
+  GFlow::TcpFlowKey key;
   key.sip = ipHdr->sip();
   key.dip = ipHdr->dip();
-  key.sport = udpHdr->sport();
-  key.dport = udpHdr->dport();
+  key.sport = tcpHdr->sport();
+  key.dport = tcpHdr->dport();
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {
@@ -52,7 +52,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
     it = flowMap_.insert(key, value);
     emit _flowCreated(&it.key(), value);
 
-    GFlow::UdpFlowKey reverseKey = GFlow::UdpFlowKey(it.key()).reverse();
+    GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);
     if (reverseIt != flowMap_.end()) {
       it.value()->state_ = GFlow::Value::Full;
@@ -63,7 +63,18 @@ void GUdpFlowMgr::process(GPacket* packet) {
     value->ts_ = packet->ts_;
   }
 
-  this->key_ = (GFlow::UdpFlowKey*)&it.key();
+  if ((tcpHdr->flags() & (TH_RST | TH_FIN)) != 0) {
+    GFlow::Value* value = it.value();
+    GFlow::Value::State state = (tcpHdr->flags() & TH_RST) ? GFlow::Value::Rst : GFlow::Value::Fin;
+    value->state_ = state;
+    GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
+    FlowMap::iterator reverseIt = flowMap_.find(reverseKey);
+    if (reverseIt != flowMap_.end()) {
+      reverseIt.value()->state_ = state;
+    }
+  }
+
+  this->key_ = (GFlow::TcpFlowKey*)&it.key();
   this->value_ = it.value();
   emit processed(packet);
 }
