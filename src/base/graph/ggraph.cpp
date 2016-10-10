@@ -32,6 +32,7 @@ void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
       qWarning() << QString("GGraph::createInstance(%1) return null").arg(className);
       continue;
     }
+    node->setParent(graph);
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr)
       QObject::connect(stateObj, &GStateObj::closed, graph, &GGraph::stop);

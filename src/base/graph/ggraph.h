@@ -103,7 +103,10 @@ public:
 
   public:
     Factory(QObject* parent = nullptr);
-    ~Factory() override;
+    ~Factory() override;// ----- gilgil temp 2016.10.10 -----
+    /*
+    */
+    // ----------------------------------
 
   public:
     Items items_;

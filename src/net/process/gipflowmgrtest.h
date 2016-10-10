@@ -18,9 +18,10 @@
 // ----------------------------------------------------------------------------
 struct GIpFlowMgrTest : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(GObjPtr flowMgr READ getFlowMgr)
+  Q_PROPERTY(GObjPtr flowMgr READ getFlowMgr WRITE setFlowMgr)
 
   GObjPtr getFlowMgr() { return flowMgr_; }
+  void setFlowMgr(GObjPtr value) { flowMgr_ = dynamic_cast<GIpFlowMgr*>(value.data()); }
 
 public:
   // --------------------------------------------------------------------------
@@ -48,5 +49,5 @@ public slots:
 
 signals:
   void tested(GPacket* packet);
-
 };
+

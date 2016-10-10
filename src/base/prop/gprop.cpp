@@ -1,5 +1,6 @@
 #include "gprop.h"
 #include "base/gobj.h"
+#include "base/graph/ggraph.h"
 
 // ----------------------------------------------------------------------------
 // GProp
@@ -84,13 +85,28 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
       }
 
     case QMetaType::QStringList: {
-          QJsonArray array = jo[propName].toArray();
-          QStringList sl;
-          for (int i = 0; i < array.size(); i++)
-            sl.append(array.at(i).toString());
-          res = object->setProperty(propName, sl);
-          break;
+        QJsonArray array = jo[propName].toArray();
+        QStringList sl;
+        for (int i = 0; i < array.size(); i++)
+          sl.append(array.at(i).toString());
+        res = object->setProperty(propName, sl);
+        break;
+      }
+  }
+
+  if (userType == qMetaTypeId<GObjPtr>()) {
+    GGraph* graph = dynamic_cast<GGraph*>(object->parent());
+    if (graph != nullptr) {
+      QString s = variant.toString();
+      if (s != "") {
+        GGraph::Node* node = graph->nodes_.findNode(s);
+        if (node != nullptr) {
+          GObjPtr objPtr = node;
+          res = object->setProperty(propName, QVariant::fromValue<GObjPtr>(objPtr));
         }
+      } else
+        res = true;
+    }
   }
 
   if (userType == qMetaTypeId<GObjRef>()) {
@@ -176,6 +192,13 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
         jo[propName] = array;
         return true;
       }
+  }
+
+  if (userType == qMetaTypeId<GObjPtr>()) {
+    GObj* obj = qvariant_cast<GObjPtr>(variant);
+    QString s = obj != nullptr ? obj->objectName() : "";
+    jo[propName] = s;
+    return true;
   }
 
   if (userType == qMetaTypeId<GObjRef>()) {
