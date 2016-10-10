@@ -4,7 +4,7 @@
 // GIpFlowMgrTest
 // ----------------------------------------------------------------------------
 void GIpFlowMgrTest::test(GPacket* packet) {
-  // gilgil temp 2016.10.10
+  qDebug() << "size=" << packet->buf_.size_; // gilgil temp 2016.10.10
 
   emit tested(packet);
 }

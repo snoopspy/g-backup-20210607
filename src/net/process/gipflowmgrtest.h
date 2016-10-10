@@ -18,20 +18,27 @@
 // ----------------------------------------------------------------------------
 struct GIpFlowMgrTest : GStateObj {
   Q_OBJECT
-  // Q_PROPERTY(GObjP) // gilgil temp 2016.10.10
+  Q_PROPERTY(GObjPtr flowMgr READ getFlowMgr)
 
+  GObjPtr getFlowMgr() { return flowMgr_; }
+
+public:
   // --------------------------------------------------------------------------
   // Item
   // --------------------------------------------------------------------------
   struct Item {
-    int seq_{0};
+    int packets;
+    int bytes;
   };
-
   // --------------------------------------------------------------------------
 
 public:
   Q_INVOKABLE GIpFlowMgrTest(QObject* parent = nullptr) : GStateObj(parent) {}
   ~GIpFlowMgrTest() override {}
+
+protected:
+  bool doOpen() override { return true; }
+  bool doClose() override { return true; }
 
 public:
   GIpFlowMgr* flowMgr_{nullptr};
@@ -41,4 +48,5 @@ public slots:
 
 signals:
   void tested(GPacket* packet);
+
 };

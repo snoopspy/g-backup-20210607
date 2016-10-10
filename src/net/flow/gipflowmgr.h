@@ -20,7 +20,7 @@ struct GIpFlowMgr : GFlowMgr {
   Q_PROPERTY(long ipFlowTimeout MEMBER ipFlowTimeout_)
 
 public:
-  long ipFlowTimeout_{60 * 5}; // 1 hour
+  long ipFlowTimeout_{60 * 5}; // 5 minutes
 
 protected:
   // --------------------------------------------------------------------------
