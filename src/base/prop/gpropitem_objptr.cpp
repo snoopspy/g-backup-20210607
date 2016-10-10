@@ -23,8 +23,11 @@ void GPropItemObjPtr::update() {
   if (graph != nullptr) {
     QVariant variant = object_->property(mpro_.name());
     GObj* obj = qvariant_cast<GObjPtr>(variant);
-    if (obj != nullptr)
+    if (obj == nullptr) {
+      comboBox_->setCurrentIndex(-1);
+    } else {
       comboBox_->setCurrentText(obj->objectName());
+    }
   }
 }
 
@@ -39,6 +42,11 @@ void GPropItemObjPtr::myCurrentIndexChanged(int index) {
       bool res = object_->setProperty(this->mpro_.name(), QVariant::fromValue<GObjPtr>(objPtr));
       if (!res) {
         qWarning() << QString("object->setProperty(%1, %2) return false").arg(mpro_.name(), key);
+      }
+      QVariant variant = object_->property(mpro_.name());
+      GObj* obj = qvariant_cast<GObjPtr>(variant);
+      if (obj == nullptr) {
+        comboBox_->setCurrentIndex(-1);
       }
     }
   }
