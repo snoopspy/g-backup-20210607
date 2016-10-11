@@ -8,14 +8,13 @@ QStringList GObj::methodList(QMetaMethod::MethodType methodType) {
   QStringList res;
 
   int _count = metaObject()->methodCount();
-  for (int i = 0; i < _count; i++)
-  {
+  for (int i = 0; i < _count; i++) {
     QMetaMethod _method = metaObject()->method(i);
-    if (_method.access() == QMetaMethod::Public && _method.methodType() == methodType)
-    {
-      QString methodName = _method.methodSignature();
-      res.push_back(methodName);
-     }
+    if (_method.access() != QMetaMethod::Public) continue;
+    if (_method.methodType() != methodType) continue;
+    if (_method.name().startsWith(("_"))) continue;
+    QString methodName = _method.methodSignature();
+    res.push_back(methodName);
   }
   return res;
 }

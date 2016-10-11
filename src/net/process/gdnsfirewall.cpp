@@ -1,53 +1,53 @@
-#include "gflowmgrtest.h"
+#include "gdnsfirewall.h"
 #include "net/pdu/giphdr.h"
 #include "net/pdu/gtcphdr.h"
 #include "net/pdu/gudphdr.h"
 
 // ----------------------------------------------------------------------------
-// GFlowMgrTest
+// GDnsFirewall
 // ----------------------------------------------------------------------------
-bool GFlowMgrTest::doOpen() {
+bool GDnsFirewall::doOpen() {
   if (ipFlowMgr_ != nullptr) {
-    ipFlowOffset_ = ipFlowMgr_->requestItems_.request((void*)"GFlowMgrTest_ip", sizeof(FlowItem));
-    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GFlowMgrTest::_ipFlowCreated, Qt::DirectConnection);
-    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_ipFlowDeleted, Qt::DirectConnection);
+    ipFlowOffset_ = ipFlowMgr_->requestItems_.request((void*)"GDnsFirewall_ip", sizeof(FlowItem));
+    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GDnsFirewall::_ipFlowCreated, Qt::DirectConnection);
+    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GDnsFirewall::_ipFlowDeleted, Qt::DirectConnection);
   }
 
   if (tcpFlowMgr_ != nullptr) {
-    tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request((void*)"GFlowMgrTest_tcp", sizeof(FlowItem));
-    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GFlowMgrTest::_tcpFlowCreated, Qt::DirectConnection);
-    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_tcpFlowDeleted, Qt::DirectConnection);
+    tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request((void*)"GDnsFirewall_tcp", sizeof(FlowItem));
+    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GDnsFirewall::_tcpFlowCreated, Qt::DirectConnection);
+    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GDnsFirewall::_tcpFlowDeleted, Qt::DirectConnection);
   }
 
   if (udpFlowMgr_ != nullptr) {
-    udpFlowOffset_ = udpFlowMgr_->requestItems_.request((void*)"GFlowMgrTest_udp", sizeof(FlowItem));
-    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GFlowMgrTest::_udpFlowCreated, Qt::DirectConnection);
-    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_udpFlowDeleted, Qt::DirectConnection);
+    udpFlowOffset_ = udpFlowMgr_->requestItems_.request((void*)"GDnsFirewall_udp", sizeof(FlowItem));
+    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GDnsFirewall::_udpFlowCreated, Qt::DirectConnection);
+    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GDnsFirewall::_udpFlowDeleted, Qt::DirectConnection);
   }
 
   return true;
 }
 
-bool GFlowMgrTest::doClose() {
+bool GDnsFirewall::doClose() {
   if (ipFlowMgr_ != nullptr) {
-    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GFlowMgrTest::_ipFlowCreated);
-    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_ipFlowDeleted);
+    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GDnsFirewall::_ipFlowCreated);
+    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GDnsFirewall::_ipFlowDeleted);
   }
 
   if (tcpFlowMgr_ != nullptr) {
-    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GFlowMgrTest::_tcpFlowCreated);
-    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_tcpFlowDeleted);
+    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GDnsFirewall::_tcpFlowCreated);
+    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GDnsFirewall::_tcpFlowDeleted);
   }
 
   if (udpFlowMgr_ != nullptr) {
-    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GFlowMgrTest::_udpFlowCreated);
-    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GFlowMgrTest::_udpFlowDeleted);
+    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GDnsFirewall::_udpFlowCreated);
+    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GDnsFirewall::_udpFlowDeleted);
   }
 
   return true;
 }
 
-void GFlowMgrTest::test(GPacket* packet) {
+void GDnsFirewall::check(GPacket* packet) {
   GPdus& pdus = packet->pdus_;
 
   if (pdus.findFirst<GIpHdr>() != nullptr) {
@@ -56,9 +56,13 @@ void GFlowMgrTest::test(GPacket* packet) {
       FlowItem* flowItem = (FlowItem*)ipFlowMgr_->value_->mem(ipFlowOffset_);
       flowItem->packets++;
       flowItem->bytes += packet->buf_.size_;
+      // ----- gilgil temp 2016.10.11 -----
+      /*
       qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5").
         arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
         arg(qPrintable(key->sip)).arg(qPrintable(key->dip)); // gilgil temp 2016.10.10
+      */
+      // ----------------------------------
     }
 
     if (pdus.findNext<GTcpHdr>() != nullptr) {
@@ -86,41 +90,49 @@ void GFlowMgrTest::test(GPacket* packet) {
     }
   }
 
-  emit tested(packet);
+  emit notBlocked(packet);
 }
 
-void GFlowMgrTest::_ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value) {
   qDebug() << QString("_ipFlowCreated %1>%2").arg(qPrintable(key->sip), qPrintable(key->dip));
   FlowItem* flowItem = (FlowItem*)value->mem(ipFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value) {
   (void)value;
   qDebug() << QString("_ipFlowDeleted %1>%2").arg(qPrintable(key->sip), qPrintable(key->dip));
 }
 
-void GFlowMgrTest::_tcpFlowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_tcpFlowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value) {
   qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
   FlowItem* flowItem = (FlowItem*)value->mem(tcpFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_tcpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_tcpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
   (void)value;
   qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
 }
 
-void GFlowMgrTest::_udpFlowCreated(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_udpFlowCreated(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
   qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
   FlowItem* flowItem = (FlowItem*)value->mem(ipFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
+void GDnsFirewall::_udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
   (void)value;
   qDebug() << QString("_udpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
+}
+
+void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
+  (void)packet;
+  qDebug() << dns->questions.first().name;
+  if (dns->answers.count() > 1) {
+    qDebug() << dns->answers.first().name << dns->answers.first().data;
+  }
 }

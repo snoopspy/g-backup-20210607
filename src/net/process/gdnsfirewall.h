@@ -17,9 +17,9 @@
 #include "net/flow/gudpflowmgr.h"
 
 // ----------------------------------------------------------------------------
-// GAtekDnsFirewall
+// GDnsFirewall
 // ----------------------------------------------------------------------------
-struct GAtekDnsFirewall : GStateObj {
+struct GDnsFirewall : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
@@ -53,8 +53,8 @@ public:
   // --------------------------------------------------------------------------
 
 public:
-  Q_INVOKABLE GAtekDnsFirewall(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GAtekDnsFirewall() override { close(); }
+  Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GDnsFirewall() override { close(); }
 
 protected:
   bool doOpen() override;
@@ -66,7 +66,7 @@ public:
   size_t udpFlowOffset_{0};
 
 public slots:
-  void test(GPacket* packet);
+  void check(GPacket* packet);
 
   void _ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value);
   void _ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value);
@@ -80,5 +80,6 @@ public slots:
   void _dnsProcess(GPacket* packet, GDns* dns);
 
 signals:
-  void tested(GPacket* packet);
+  void blocked(GPacket* packet);
+  void notBlocked(GPacket* packet);
 };
