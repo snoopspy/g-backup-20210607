@@ -29,12 +29,12 @@ struct GAtekDnsFirewall : GStateObj {
   GObjPtr getIpFlowMgr() { return ipFlowMgr_; }
   GObjPtr getTcpFlowMgr() { return tcpFlowMgr_; }
   GObjPtr getUdpFlowMgr() { return udpFlowMgr_; }
-  GObjPtr getDnsProcessor() { return udpFlowMgr_; }
+  GObjPtr getDnsProcessor() { return dnsProcessor_; }
 
   void setIpFlowMgr(GObjPtr value) { ipFlowMgr_ = dynamic_cast<GIpFlowMgr*>(value.data()); }
   void setTcpFlowMgr(GObjPtr value) { tcpFlowMgr_ = dynamic_cast<GTcpFlowMgr*>(value.data()); }
   void setUdpFlowMgr(GObjPtr value) { udpFlowMgr_ = dynamic_cast<GUdpFlowMgr*>(value.data()); }
-  void setDnsProcessor(GObjPtr value) { udpFlowMgr_ = dynamic_cast<GUdpFlowMgr*>(value.data()); }
+  void setDnsProcessor(GObjPtr value) { dnsProcessor_ = dynamic_cast<GDnsProcessor*>(value.data()); }
 
 public:
   GIpFlowMgr* ipFlowMgr_{nullptr};
