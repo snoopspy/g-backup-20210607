@@ -56,6 +56,42 @@ bool GDnsFirewall::doClose() {
   return true;
 }
 
+void GDnsFirewall::deleteOldFlowMaps(struct timeval ts) {
+  DfMap::iterator it = dfMap_.begin();
+  while (it != dfMap_.end()) {
+    DfItems& items = it.value();
+
+    DfItems::iterator it2 = items.begin();
+    while (it2 != items.end()) {
+      DfItem& item = *it2;
+      long elapsed = ts.tv_sec - item.ts_.tv_sec;
+      if (elapsed >= item.ttl_) {
+        it2 = items.erase(it2);
+        continue;
+      }
+      it2++;
+    }
+
+    if (items.empty())
+
+        GFlow::Value* value = it.value();
+    long elapsed = ts.tv_sec - value->ts_.tv_sec;
+    long timeout;
+    switch (value->state_) {
+      case GFlow::Value::Half: timeout = halfTimeout_; break;
+      case GFlow::Value::Full: timeout = fullTimeout_; break;
+      case GFlow::Value::Rst: qCritical() << "unrecheable Rst"; timeout = 0; break;
+      case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
+    }
+    if (elapsed >= timeout) {
+      emit _flowDeleted(&it.key(), value);
+      it = flowMap_.erase(it);
+      continue;
+    }
+    it++;
+  }
+}
+
 void GDnsFirewall::check(GPacket* packet) {
   GPdus& pdus = packet->pdus_;
 

@@ -55,7 +55,7 @@ protected:
   bool doOpen() override;
   bool doClose() override;
 
-public:
+protected:
   size_t ipFlowOffset_{0};
   size_t tcpFlowOffset_{0};
   size_t udpFlowOffset_{0};

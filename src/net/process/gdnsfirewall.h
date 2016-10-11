@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "base/gstateobj.h"
 #include "gdnsprocessor.h"
+#include "net/flow/gflowmgr.h"
 #include "net/flow/gipflowmgr.h"
 #include "net/flow/gtcpflowmgr.h"
 #include "net/flow/gudpflowmgr.h"
@@ -19,7 +19,7 @@
 // ----------------------------------------------------------------------------
 // GDnsFirewall
 // ----------------------------------------------------------------------------
-struct GDnsFirewall : GStateObj {
+struct GDnsFirewall : GFlowMgr {
   Q_OBJECT
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
@@ -46,24 +46,43 @@ public:
   // --------------------------------------------------------------------------
   // FlowItem
   // --------------------------------------------------------------------------
-  struct FlowItem {
+  struct FlowItem { // gilgil temp 2016.10.11
     int packets;
     int bytes;
   };
   // --------------------------------------------------------------------------
 
+  // --------------------------------------------------------------------------
+  struct DfItem {
+    struct timeval ts_;
+    long ttl_;
+    QString name_;
+  };
+
+  struct DfItems : QList<DfItem> {
+  };
+
+  struct DfMap : QMap<GFlow::IpFlowKey, DfItems> {
+  };
+
+  // --------------------------------------------------------------------------
+
 public:
-  Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr) : GStateObj(parent) {}
+  Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr) : GFlowMgr(parent) {}
   ~GDnsFirewall() override { close(); }
 
 protected:
   bool doOpen() override;
   bool doClose() override;
 
-public:
+protected:
   size_t ipFlowOffset_{0};
   size_t tcpFlowOffset_{0};
   size_t udpFlowOffset_{0};
+
+protected:
+  DfMap dfMap_;
+  void deleteOldFlowMaps(struct timeval ts);
 
 public slots:
   void check(GPacket* packet);
