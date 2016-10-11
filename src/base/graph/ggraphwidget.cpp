@@ -299,12 +299,13 @@ void GGraphWidget::propSave(QJsonObject& jo) {
 }
 
 void GGraphWidget::setControl() {
-  QString title = "SnoopSpy";
+  QString title = ""; // "SnoopSpy"; // gilgil temp 2016.10.11
   if (fileName_ != "") {
     QFileInfo fi(fileName_);
     title = fi.completeBaseName();
   }
-  setWindowTitle(title);
+  if (title != "")
+    setWindowTitle(title);
 
   GGScene::Mode mode = scene_->mode();
 
