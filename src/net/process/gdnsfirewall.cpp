@@ -25,6 +25,10 @@ bool GDnsFirewall::doOpen() {
     QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GDnsFirewall::_udpFlowDeleted, Qt::DirectConnection);
   }
 
+  if (dnsProcessor_ != nullptr) {
+    QObject::connect(dnsProcessor_, &GDnsProcessor::dnsCaptured, this, &GDnsFirewall::_dnsProcess, Qt::DirectConnection);
+  }
+
   return true;
 }
 
@@ -44,6 +48,11 @@ bool GDnsFirewall::doClose() {
     QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GDnsFirewall::_udpFlowDeleted);
   }
 
+
+  if (dnsProcessor_ != nullptr) {
+    QObject::disconnect(dnsProcessor_, &GDnsProcessor::dnsCaptured, this, &GDnsFirewall::_dnsProcess);
+  }
+
   return true;
 }
 
@@ -56,13 +65,9 @@ void GDnsFirewall::check(GPacket* packet) {
       FlowItem* flowItem = (FlowItem*)ipFlowMgr_->value_->mem(ipFlowOffset_);
       flowItem->packets++;
       flowItem->bytes += packet->buf_.size_;
-      // ----- gilgil temp 2016.10.11 -----
-      /*
       qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5").
         arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
         arg(qPrintable(key->sip)).arg(qPrintable(key->dip)); // gilgil temp 2016.10.10
-      */
-      // ----------------------------------
     }
 
     if (pdus.findNext<GTcpHdr>() != nullptr) {
@@ -131,8 +136,11 @@ void GDnsFirewall::_udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* v
 
 void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
   (void)packet;
-  qDebug() << dns->questions.first().name;
-  if (dns->answers.count() > 1) {
-    qDebug() << dns->answers.first().name << dns->answers.first().data;
+  if (dns->answers.count() == 0) return;
+  foreach (GDns::ResourceRecord answer, dns->answers) {
+    if (answer.class_ != 1) // IN
+      continue;
+    GIp ip = ntohl(*(uint32_t*)answer.data.data());
+    qDebug() << QString("name=%1 ttl=%2 data=%3").arg(answer.name).arg(answer.ttl).arg(qPrintable(ip));
   }
 }
