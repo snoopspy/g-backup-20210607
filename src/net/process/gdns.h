@@ -38,9 +38,9 @@ struct DNS_HDR { // libnet_dnsv4_hdr
 // --------------------------------------------------------------------------
 struct GDns {
   // ------------------------------------------------------------------------
-  // SnoopDnsQuestion
+  // Question
   // ------------------------------------------------------------------------
-  struct SnoopDnsQuestion {
+  struct Question {
     QString name;
     uint16_t type;
     uint16_t class_;
@@ -49,15 +49,15 @@ struct GDns {
     bool decode(u_char* udpData, size_t dataLen, size_t* offset);
   };
 
-  struct SnoopDnsQuestions : QList<SnoopDnsQuestion> {
+  struct Questions : QList<Question> {
     QByteArray encode();
     bool decode(u_char* udpData, size_t dataLen, int count, size_t* offset);
   };
 
   // ------------------------------------------------------------------------
-  // SnoopDnsResourceRecord
+  // ResourceRecord
   // ------------------------------------------------------------------------
-  struct SnoopDnsResourceRecord {
+  struct ResourceRecord {
     QString name;
     uint16_t type;
     uint16_t class_;
@@ -70,19 +70,19 @@ struct GDns {
   };
 
   // ------------------------------------------------------------------------
-  // SnoopDnsResourceRecords
+  // ResourceRecords
   // ------------------------------------------------------------------------
-  struct SnoopDnsResourceRecords : QList<SnoopDnsResourceRecord> {
+  struct ResourceRecords : QList<ResourceRecord> {
     QByteArray encode();
     bool decode(u_char* udpData, size_t dataLen, int count, size_t* offset);
   };
   // ------------------------------------------------------------------------
 
   DNS_HDR dnsHdr;
-  SnoopDnsQuestions questions;
-  SnoopDnsResourceRecords answers;
-  SnoopDnsResourceRecords authorities;
-  SnoopDnsResourceRecords additionals;
+  Questions questions;
+  ResourceRecords answers;
+  ResourceRecords authorities;
+  ResourceRecords additionals;
 
   QByteArray encode();
   bool decode(u_char* udpData, size_t dataLen, size_t* offset);

@@ -1,9 +1,9 @@
 #include "gdns.h"
 
 // ----------------------------------------------------------------------------
-// SnoopDnsQuestion
+// GDns::Question
 // ----------------------------------------------------------------------------
-QByteArray GDns::SnoopDnsQuestion::encode() {
+QByteArray GDns::Question::encode() {
   QByteArray res;
 
   res = GDns::encodeName(this->name);
@@ -17,7 +17,7 @@ QByteArray GDns::SnoopDnsQuestion::encode() {
   return res;
 }
 
-bool GDns::SnoopDnsQuestion::decode(u_char* udpData, size_t dataLen, size_t* offset)
+bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset)
 {
   this->name = GDns::decodeName(udpData, dataLen, offset);
   if (this->name == "") return false;
@@ -37,23 +37,23 @@ bool GDns::SnoopDnsQuestion::decode(u_char* udpData, size_t dataLen, size_t* off
 }
 
 // ----------------------------------------------------------------------------
-// SnoopDnsQuestions
+// GDns::Questions
 // ----------------------------------------------------------------------------
-QByteArray GDns::SnoopDnsQuestions::encode()
+QByteArray GDns::Questions::encode()
 {
   QByteArray res;
-  foreach (SnoopDnsQuestion question, *this)
+  foreach (Question question, *this)
   {
     res += question.encode();
   }
   return res;
 }
 
-bool GDns::SnoopDnsQuestions::decode(u_char* udpData, size_t dataLen, int count, size_t* offset)
+bool GDns::Questions::decode(u_char* udpData, size_t dataLen, int count, size_t* offset)
 {
   for (int i = 0; i < count; i++)
   {
-    SnoopDnsQuestion question;
+    Question question;
     if (!question.decode(udpData, dataLen, offset)) return false;
     push_back(question);
   }
@@ -61,9 +61,9 @@ bool GDns::SnoopDnsQuestions::decode(u_char* udpData, size_t dataLen, int count,
 }
 
 // ----------------------------------------------------------------------------
-// SnoopDnsResourceRecord
+// GDns::ResourceRecord
 // ----------------------------------------------------------------------------
-QByteArray GDns::SnoopDnsResourceRecord::encode()
+QByteArray GDns::ResourceRecord::encode()
 {
   QByteArray res;
 
@@ -89,7 +89,7 @@ QByteArray GDns::SnoopDnsResourceRecord::encode()
   return res;
 }
 
-bool GDns::SnoopDnsResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offset)
+bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offset)
 {
   this->name = GDns::decodeName(udpData, dataLen, offset);
   if (this->name == "") return false;
@@ -123,23 +123,23 @@ bool GDns::SnoopDnsResourceRecord::decode(u_char* udpData, size_t dataLen, size_
 }
 
 // ----------------------------------------------------------------------------
-// SnoopDnsResourceRecords
+// GDns::ResourceRecords
 // ----------------------------------------------------------------------------
-QByteArray GDns::SnoopDnsResourceRecords::encode()
+QByteArray GDns::ResourceRecords::encode()
 {
   QByteArray res;
-  foreach (SnoopDnsResourceRecord record, *this)
+  foreach (ResourceRecord record, *this)
   {
     res += record.encode();
   }
   return res;
 }
 
-bool GDns::SnoopDnsResourceRecords::decode(u_char* udpData, size_t dataLen, int count, size_t* offset)
+bool GDns::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, size_t* offset)
 {
   for (int i = 0; i < count; i++)
   {
-    SnoopDnsResourceRecord record;
+    ResourceRecord record;
     if (!record.decode(udpData, dataLen, offset)) return false;
     push_back(record);
   }
@@ -147,7 +147,7 @@ bool GDns::SnoopDnsResourceRecords::decode(u_char* udpData, size_t dataLen, int 
 }
 
 // ----------------------------------------------------------------------------
-// SnoopDns
+// GDns
 // ----------------------------------------------------------------------------
 QByteArray GDns::encode()
 {
