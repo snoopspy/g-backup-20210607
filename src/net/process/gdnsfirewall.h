@@ -21,50 +21,42 @@
 // ----------------------------------------------------------------------------
 struct GDnsFirewall : GFlowMgr {
   Q_OBJECT
+  Q_PROPERTY(GObjPtr dnsProcessor READ getDnsProcessor WRITE setDnsProcessor)
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
   Q_PROPERTY(GObjPtr udpFlowMgr READ getUdpFlowMgr WRITE setUdpFlowMgr)
-  Q_PROPERTY(GObjPtr dnsProcessor READ getDnsProcessor WRITE setDnsProcessor)
 
+  GObjPtr getDnsProcessor() { return dnsProcessor_; }
   GObjPtr getIpFlowMgr() { return ipFlowMgr_; }
   GObjPtr getTcpFlowMgr() { return tcpFlowMgr_; }
   GObjPtr getUdpFlowMgr() { return udpFlowMgr_; }
-  GObjPtr getDnsProcessor() { return dnsProcessor_; }
 
+  void setDnsProcessor(GObjPtr value) { dnsProcessor_ = dynamic_cast<GDnsProcessor*>(value.data()); }
   void setIpFlowMgr(GObjPtr value) { ipFlowMgr_ = dynamic_cast<GIpFlowMgr*>(value.data()); }
   void setTcpFlowMgr(GObjPtr value) { tcpFlowMgr_ = dynamic_cast<GTcpFlowMgr*>(value.data()); }
   void setUdpFlowMgr(GObjPtr value) { udpFlowMgr_ = dynamic_cast<GUdpFlowMgr*>(value.data()); }
-  void setDnsProcessor(GObjPtr value) { dnsProcessor_ = dynamic_cast<GDnsProcessor*>(value.data()); }
 
 public:
+  GDnsProcessor* dnsProcessor_{nullptr};
   GIpFlowMgr* ipFlowMgr_{nullptr};
   GTcpFlowMgr* tcpFlowMgr_{nullptr};
   GUdpFlowMgr* udpFlowMgr_{nullptr};
-  GDnsProcessor* dnsProcessor_{nullptr};
 
 public:
   // --------------------------------------------------------------------------
-  // FlowItem
-  // --------------------------------------------------------------------------
-  struct FlowItem { // gilgil temp 2016.10.11
-    int packets;
-    int bytes;
-  };
-  // --------------------------------------------------------------------------
-
-  // --------------------------------------------------------------------------
-  struct DfItem {
+  struct DnsItem {
     struct timeval ts_;
     long ttl_;
     QString name_;
   };
 
-  struct DfItems : QList<DfItem> {
-  };
+  struct DnsItems : QList<DnsItem> {};
 
-  struct DfMap : QMap<GFlow::IpFlowKey, DfItems> {
-  };
+  struct DnsMap : QMap<GFlow::IpFlowKey, DnsItems> {};
 
+  struct IpBlockMap : QMap<GFlow::IpFlowKey, bool> {};
+  struct TcpBlockMap : QMap<GFlow::TcpFlowKey, bool> {};
+  struct UdpBlockMap : QMap<GFlow::UdpFlowKey, bool> {};
   // --------------------------------------------------------------------------
 
 public:
@@ -76,25 +68,26 @@ protected:
   bool doClose() override;
 
 protected:
-  size_t ipFlowOffset_{0};
-  size_t tcpFlowOffset_{0};
-  size_t udpFlowOffset_{0};
+  DnsMap dnsMap_;
+  IpBlockMap ipBlockMap_;
+  TcpBlockMap tcpBlockMap_;
+  UdpBlockMap udpBlockMap_;
 
-protected:
-  DfMap dfMap_;
-  void deleteOldFlowMaps(struct timeval ts);
+  void deleteOldDnsMaps(GPacket* packet /* struct timeval ts */);
+  bool checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timeval ts);
+  void debugPacket(QString msg, GPacket* packet);
 
 public slots:
   void check(GPacket* packet);
 
-  void _ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value);
-  void _ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value);
+  void _ipFlowCreated(GPacket* packet);
+  void _ipFlowDeleted(GPacket* packet);
 
-  void _tcpFlowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value);
-  void _tcpFlowDeleted(const GFlow::TcpFlowKey* key, GFlow::Value* value);
+  void _tcpFlowCreated(GPacket* packet);
+  void _tcpFlowDeleted(GPacket* packet);
 
-  void _udpFlowCreated(const GFlow::UdpFlowKey* key, GFlow::Value* value);
-  void _udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value);
+  void _udpFlowCreated(GPacket* packet);
+  void _udpFlowDeleted(GPacket* packet);
 
   void _dnsProcess(GPacket* packet, GDns* dns);
 

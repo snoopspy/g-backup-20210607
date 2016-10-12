@@ -4,7 +4,8 @@
 // ----------------------------------------------------------------------------
 // GIpFlowMgr
 // ----------------------------------------------------------------------------
-void GIpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GIpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
+  struct timeval ts = packet->ts_;
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
@@ -17,7 +18,9 @@ void GIpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
       case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
     }
     if (elapsed >= timeout) {
-      emit _flowDeleted(&it.key(), value);
+      key_ = (GFlow::IpFlowKey*)&it.key();
+      value_ = value;
+      emit _flowDeleted(packet);
       it = flowMap_.erase(it);
       continue;
     }
@@ -29,22 +32,22 @@ void GIpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
-    deleteOldFlowMaps(packet->ts_);
+    deleteOldFlowMaps(packet);
     lastCheckTick_ = now;
   }
 
   GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
   if (ipHdr == nullptr) return;
 
-  GFlow::IpFlowKey key;
-  key.sip = ipHdr->sip();
-  key.dip = ipHdr->dip();
+  GFlow::IpFlowKey key{ipHdr->sip(), ipHdr->dip()};
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {
     GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
     it = flowMap_.insert(key, value);
-    emit _flowCreated(&it.key(), value);
+    key_ = (GFlow::IpFlowKey*)&it.key();
+    value_ = value;
+    emit _flowCreated(packet);
 
     GFlow::IpFlowKey reverseKey = GFlow::IpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);

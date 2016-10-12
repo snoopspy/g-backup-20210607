@@ -58,7 +58,7 @@ void GFlowMgrTest::test(GPacket* packet) {
       flowItem->bytes += packet->buf_.size_;
       qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5").
         arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-        arg(qPrintable(key->sip)).arg(qPrintable(key->dip)); // gilgil temp 2016.10.10
+        arg(qPrintable(key->sip_)).arg(qPrintable(key->dip_)); // gilgil temp 2016.10.10
     }
 
     if (pdus.findNext<GTcpHdr>() != nullptr) {
@@ -69,7 +69,7 @@ void GFlowMgrTest::test(GPacket* packet) {
         flowItem->bytes += packet->buf_.size_;
         qDebug() << QString("tcp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
           arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-          arg(qPrintable(key->sip)).arg(key->sport).arg(qPrintable(key->dip)).arg(key->dport); // gilgil temp 2016.10.10
+          arg(qPrintable(key->sip_)).arg(key->sport_).arg(qPrintable(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
       }
     }
 
@@ -81,7 +81,7 @@ void GFlowMgrTest::test(GPacket* packet) {
         flowItem->bytes += packet->buf_.size_;
         qDebug() << QString("udp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
           arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-          arg(qPrintable(key->sip)).arg(key->sport).arg(qPrintable(key->dip)).arg(key->dport); // gilgil temp 2016.10.10
+          arg(qPrintable(key->sip_)).arg(key->sport_).arg(qPrintable(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
       }
     }
   }
@@ -89,38 +89,50 @@ void GFlowMgrTest::test(GPacket* packet) {
   emit tested(packet);
 }
 
-void GFlowMgrTest::_ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value) {
-  qDebug() << QString("_ipFlowCreated %1>%2").arg(qPrintable(key->sip), qPrintable(key->dip));
+void GFlowMgrTest::_ipFlowCreated(GPacket* packet) {
+  (void)packet;
+  GFlow::IpFlowKey* key = ipFlowMgr_->key_;
+  GFlow::Value* value = ipFlowMgr_->value_;
+  qDebug() << QString("_ipFlowCreated %1>%2").arg(qPrintable(key->sip_), qPrintable(key->dip_));
   FlowItem* flowItem = (FlowItem*)value->mem(ipFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value) {
-  (void)value;
-  qDebug() << QString("_ipFlowDeleted %1>%2").arg(qPrintable(key->sip), qPrintable(key->dip));
+void GFlowMgrTest::_ipFlowDeleted(GPacket* packet) {
+  (void)packet;
+  GFlow::IpFlowKey* key = ipFlowMgr_->key_;
+  qDebug() << QString("_ipFlowDeleted %1>%2").arg(qPrintable(key->sip_), qPrintable(key->dip_));
 }
 
-void GFlowMgrTest::_tcpFlowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value) {
-  qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
+void GFlowMgrTest::_tcpFlowCreated(GPacket* packet) {
+  (void)packet;
+  GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
+  GFlow::Value* value = tcpFlowMgr_->value_;
+  qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip_), QString::number(key->sport_), qPrintable(key->dip_), QString::number(key->dport_));
   FlowItem* flowItem = (FlowItem*)value->mem(tcpFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_tcpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
-  (void)value;
-  qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
+void GFlowMgrTest::_tcpFlowDeleted(GPacket* packet) {
+  (void)packet;
+  GFlow::TcpFlowKey* key = udpFlowMgr_->key_;
+  qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip_), QString::number(key->sport_), qPrintable(key->dip_), QString::number(key->dport_));
 }
 
-void GFlowMgrTest::_udpFlowCreated(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
-  qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
+void GFlowMgrTest::_udpFlowCreated(GPacket* packet) {
+  (void)packet;
+  GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
+  GFlow::Value* value = udpFlowMgr_->value_;
+  qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(qPrintable(key->sip_), QString::number(key->sport_), qPrintable(key->dip_), QString::number(key->dport_));
   FlowItem* flowItem = (FlowItem*)value->mem(ipFlowOffset_);
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
 
-void GFlowMgrTest::_udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value) {
-  (void)value;
-  qDebug() << QString("_udpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip), QString::number(key->sport), qPrintable(key->dip), QString::number(key->dport));
+void GFlowMgrTest::_udpFlowDeleted(GPacket* packet) {
+  (void)packet;
+  GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
+  qDebug() << QString("_udpFlowDeleted %1:%2>%3:%4").arg(qPrintable(key->sip_), QString::number(key->sport_), qPrintable(key->dip_), QString::number(key->dport_));
 }

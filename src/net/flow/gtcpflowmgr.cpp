@@ -5,7 +5,8 @@
 // ----------------------------------------------------------------------------
 // GTcpFlowMgr
 // ----------------------------------------------------------------------------
-void GTcpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GTcpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
+  struct timeval ts = packet->ts_;
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
@@ -18,7 +19,9 @@ void GTcpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
       case GFlow::Value::Fin: timeout = finTimeout_; break;
     }
     if (elapsed >= timeout) {
-      emit _flowDeleted(&it.key(), value);
+      key_ = (GFlow::TcpFlowKey*)&it.key();
+      value_ = value;
+      emit _flowDeleted(packet);
       it = flowMap_.erase(it);
       continue;
     }
@@ -30,7 +33,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
-    deleteOldFlowMaps(packet->ts_);
+    deleteOldFlowMaps(packet);
     lastCheckTick_ = now;
   }
 
@@ -40,17 +43,15 @@ void GTcpFlowMgr::process(GPacket* packet) {
   GTcpHdr* tcpHdr = packet->pdus_.findFirst<GTcpHdr>();
   if (tcpHdr == nullptr) return;
 
-  GFlow::TcpFlowKey key;
-  key.sip = ipHdr->sip();
-  key.dip = ipHdr->dip();
-  key.sport = tcpHdr->sport();
-  key.dport = tcpHdr->dport();
+  GFlow::TcpFlowKey key{ipHdr->sip(), ipHdr->dip(), tcpHdr->sport(), tcpHdr->dport()};
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {
     GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
     it = flowMap_.insert(key, value);
-    emit _flowCreated(&it.key(), value);
+    key_ = (GFlow::TcpFlowKey*)&it.key();
+    value_ = value;
+    emit _flowCreated(packet);
 
     GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);

@@ -5,7 +5,8 @@
 // ----------------------------------------------------------------------------
 // GUdpFlowMgr
 // ----------------------------------------------------------------------------
-void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GUdpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
+  struct timeval ts = packet->ts_;
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
@@ -18,7 +19,9 @@ void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
       case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
     }
     if (elapsed >= timeout) {
-      emit _flowDeleted(&it.key(), value);
+      key_ = (GFlow::UdpFlowKey*)&it.key();
+      value_ = value;
+      emit _flowDeleted(packet);
       it = flowMap_.erase(it);
       continue;
     }
@@ -30,7 +33,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
-    deleteOldFlowMaps(packet->ts_);
+    deleteOldFlowMaps(packet);
     lastCheckTick_ = now;
   }
 
@@ -40,17 +43,15 @@ void GUdpFlowMgr::process(GPacket* packet) {
   GUdpHdr* udpHdr = packet->pdus_.findFirst<GUdpHdr>();
   if (udpHdr == nullptr) return;
 
-  GFlow::UdpFlowKey key;
-  key.sip = ipHdr->sip();
-  key.dip = ipHdr->dip();
-  key.sport = udpHdr->sport();
-  key.dport = udpHdr->dport();
+  GFlow::UdpFlowKey key(ipHdr->sip(), ipHdr->dip(), udpHdr->sport(), udpHdr->dport());
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {
     GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
     it = flowMap_.insert(key, value);
-    emit _flowCreated(&it.key(), value);
+    key_ = (GFlow::UdpFlowKey*)&it.key();
+    value_ = value;
+    emit _flowCreated(packet);
 
     GFlow::UdpFlowKey reverseKey = GFlow::UdpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);

@@ -63,12 +63,12 @@ protected:
 public slots:
   void test(GPacket* packet);
 
-  void _ipFlowCreated(const GFlow::IpFlowKey* key, GFlow::Value* value);
-  void _ipFlowDeleted(const GFlow::IpFlowKey* key, GFlow::Value* value);
-  void _tcpFlowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value);
-  void _tcpFlowDeleted(const GFlow::TcpFlowKey* key, GFlow::Value* value);
-  void _udpFlowCreated(const GFlow::UdpFlowKey* key, GFlow::Value* value);
-  void _udpFlowDeleted(const GFlow::UdpFlowKey* key, GFlow::Value* value);
+  void _ipFlowCreated(GPacket* packet);
+  void _ipFlowDeleted(GPacket* packet);
+  void _tcpFlowCreated(GPacket* packet);
+  void _tcpFlowDeleted(GPacket* packet);
+  void _udpFlowCreated(GPacket* packet);
+  void _udpFlowDeleted(GPacket* packet);
 
 signals:
   void tested(GPacket* packet);

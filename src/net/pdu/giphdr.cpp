@@ -18,16 +18,12 @@ GIpHdr::GIpHdr(u_char* buf) {
 // GIpParser
 // ----------------------------------------------------------------------------
 GPdu* GIpParser::doParse(GPacket* packet, GPdu* prev) {
-  // gilgil temp 2016.10.05 if first pdu?
-  Q_ASSERT(dynamic_cast<GEthHdr*>(prev) != nullptr);
-  GEthHdr* ethHdr = (GEthHdr*)prev;
-  if (ethHdr->type() != ETHERTYPE_IP)
-    return nullptr;
+  (void)prev;
   if (packet->parse_.size_ < sizeof(IP_HDR))
     return nullptr;
 #ifdef _DEBUG
   if (*packet->parse_.data_ != 0x45) {
-    qWarning() << "packet start is not 0x45" << *packet->parse_.data_;
+    qWarning() << QString("packet start is not 0x45 0x%1").arg(QString::number(*packet->parse_.data_, 16));
   }
 #endif // _DEBUG
   return new GIpHdr(packet->parse_.data_);

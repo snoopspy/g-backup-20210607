@@ -69,7 +69,7 @@ public:
 
 protected:
   FlowMap flowMap_;
-  void deleteOldFlowMaps(struct timeval ts);
+  void deleteOldFlowMaps(GPacket* packet /* struct timeval ts */);
 
 public:
   GFlow::TcpFlowKey* key_{nullptr};
@@ -80,6 +80,6 @@ public slots:
 
 signals:
   void processed(GPacket* packet);
-  void _flowCreated(const GFlow::TcpFlowKey* key, GFlow::Value* value);
-  void _flowDeleted(const GFlow::TcpFlowKey* key, GFlow::Value* value);
+  void _flowCreated(GPacket* packet);
+  void _flowDeleted(GPacket* packet);
 };

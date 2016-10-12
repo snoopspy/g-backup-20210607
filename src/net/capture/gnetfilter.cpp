@@ -137,9 +137,9 @@ void GNetFilter::run() {
   char* buf = (char*)malloc(snapLen_);
 
   while (true) {
-    qDebug() << "bef call recv"; // gilgil temp 2016.09.27
+    //qDebug() << "bef call recv"; // gilgil temp 2016.09.27
     int res = recv(fd_, buf, snapLen_, 0);
-    qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
+    //qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
     if (res >= 0) {
       nfq_handle_packet(h_, buf, res);
       continue;
@@ -173,7 +173,7 @@ int GNetFilter::_callback(
 
   packet.clear();
   packet.buf_.size_ = (size_t)nfq_get_payload(nfad, (unsigned char **)&packet.buf_.data_);
-  qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
+  // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
   packet.parse_ = packet.buf_;
   if (netFilter->autoParse_) netFilter->parser_->parse(&packet);
