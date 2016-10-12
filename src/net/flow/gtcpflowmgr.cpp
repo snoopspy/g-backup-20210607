@@ -43,7 +43,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
   GTcpHdr* tcpHdr = packet->pdus_.findFirst<GTcpHdr>();
   if (tcpHdr == nullptr) return;
 
-  GFlow::TcpFlowKey key{ipHdr->sip(), ipHdr->dip(), tcpHdr->sport(), tcpHdr->dport()};
+  GFlow::TcpFlowKey key{ipHdr->sip(), tcpHdr->sport(), ipHdr->dip(), tcpHdr->dport()};
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {

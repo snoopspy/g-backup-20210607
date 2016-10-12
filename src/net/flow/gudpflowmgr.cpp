@@ -43,7 +43,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
   GUdpHdr* udpHdr = packet->pdus_.findFirst<GUdpHdr>();
   if (udpHdr == nullptr) return;
 
-  GFlow::UdpFlowKey key(ipHdr->sip(), ipHdr->dip(), udpHdr->sport(), udpHdr->dport());
+  GFlow::UdpFlowKey key(ipHdr->sip(), udpHdr->sport(), ipHdr->dip(), udpHdr->dport());
 
   FlowMap::iterator it = flowMap_.find(key);
   if (it == flowMap_.end()) {

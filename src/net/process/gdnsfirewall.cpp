@@ -173,7 +173,7 @@ void GDnsFirewall::check(GPacket* packet) {
       if (it != tcpBlockMap_.end()) {
         block = it.value();
       } else {
-        debugPacket("can not find tcp", packet);
+        debugPacket("check can not find tcp", packet);
         decided = true;
         block = true;
       }
@@ -185,7 +185,7 @@ void GDnsFirewall::check(GPacket* packet) {
     // UDP
     //
     if (udpHdr->sport() == 53 || udpHdr->dport() == 53) {
-      debugPacket("dns", packet);
+      debugPacket("check dns", packet);
       decided = true;
       block = false;
     } else {
@@ -200,7 +200,7 @@ void GDnsFirewall::check(GPacket* packet) {
           decided = true;
           block = it.value();
         } else {
-          debugPacket("can not find udp", packet);
+          debugPacket("check can not find udp", packet);
           decided = true;
           block = true;
         }
@@ -221,11 +221,12 @@ void GDnsFirewall::check(GPacket* packet) {
       if (it != ipBlockMap_.end()) {
         block = it.value();
       } else {
-        debugPacket("can not find ip", packet);
+        debugPacket("check can not find ip", packet);
         block = true;
       }
     }
   }
+
   packet->control.block_ = block;
   if (block) {
     debugPacket("check block", packet);
@@ -240,7 +241,7 @@ void GDnsFirewall::_ipFlowCreated(GPacket* packet) {
   GFlow::IpFlowKey ipFlowKey = *ipFlowMgr_->key_;
   bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   ipBlockMap_[ipFlowKey] = block;
-  debugPacket("_ipFlowCreated" + block ? "block:" : "pass ", packet);
+  debugPacket("_ipFlowCreated " + QString(block ? "block" : "pass "), packet);
 }
 
 void GDnsFirewall::_ipFlowDeleted(GPacket* packet) {
@@ -255,7 +256,7 @@ void GDnsFirewall::_tcpFlowCreated(GPacket* packet) {
   GFlow::IpFlowKey ipFlowKey{tcpFlowKey->sip_, tcpFlowKey->dip_};
   bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   tcpBlockMap_[*tcpFlowKey] = block;
-  debugPacket("_tcpFlowCreated" + block ? "block:" : "pass ", packet);
+  debugPacket("_tcpFlowCreated " + QString(block ? "block" : "pass "), packet);
 }
 
 void GDnsFirewall::_tcpFlowDeleted(GPacket* packet) {
@@ -270,7 +271,7 @@ void GDnsFirewall::_udpFlowCreated(GPacket* packet) {
   GFlow::IpFlowKey ipFlowKey{udpFlowKey->sip_, udpFlowKey->dip_};
   bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   udpBlockMap_[*udpFlowKey] = block;
-  debugPacket("_udpFlowCreated" + block ? "block:" : "pass ", packet);
+  debugPacket("_udpFlowCreated " + QString(block ? "block" : "pass "), packet);
 }
 
 void GDnsFirewall::_udpFlowDeleted(GPacket* packet) {
