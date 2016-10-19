@@ -53,8 +53,8 @@
                 "iptables -D OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -D OUTPUT -j NFQUEUE --queue-num 0",
                 "",
-                "iptables -D INPUT -i eth0 -m mark --mark 1234 -j ACCEPT",
-                "iptables -D INPUT -i eth0 -j NFQUEUE --queue-num 0",
+                "iptables -D INPUT -m mark --mark 1234 -j ACCEPT",
+                "iptables -D INPUT -j NFQUEUE --queue-num 0",
                 ""
             ],
             "objectName": "command1",
@@ -62,8 +62,8 @@
                 "iptables -A OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -A OUTPUT -j NFQUEUE --queue-num 0",
                 "",
-                "iptables -A INPUT -i eth0 -m mark --mark 1234 -j ACCEPT",
-                "iptables -A INPUT -i eth0 -j NFQUEUE --queue-num 0",
+                "iptables -A INPUT -m mark --mark 1234 -j ACCEPT",
+                "iptables -A INPUT -j NFQUEUE --queue-num 0",
                 ""
             ]
         },
