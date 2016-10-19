@@ -36,7 +36,7 @@
             "_class": "GNetFilter",
             "_x": -66,
             "_y": -299,
-            "acceptVerdict": "ACCEPT",
+            "acceptVerdict": "REPEAT",
             "autoParse": true,
             "autoRead": true,
             "enabled": true,
