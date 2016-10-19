@@ -19,10 +19,21 @@ struct GNetFilter : GCapture {
   Q_OBJECT
   Q_PROPERTY(int queueNum MEMBER queueNum_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)
+  Q_PROPERTY(Verdict acceptVerdict MEMBER acceptVerdict_)
+  Q_PROPERTY(int mark MEMBER mark_)
+  Q_ENUMS(Verdict)
+
+public:
+  enum Verdict {
+    ACCEPT = 1,
+    REPEAT = 4
+  };
 
 public:
   int queueNum_{0};
   int snapLen_{65536}; // 65536 bytes
+  Verdict acceptVerdict_{ACCEPT};
+  int mark_{0};
 
 public:
   Q_INVOKABLE GNetFilter(QObject* parent = nullptr);

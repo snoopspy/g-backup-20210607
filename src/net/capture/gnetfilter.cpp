@@ -183,7 +183,14 @@ int GNetFilter::_callback(
   struct nfqnl_msg_packet_hdr* ph = nfq_get_msg_packet_hdr(nfad);
   if (ph != nullptr)
     id = ntohl(ph->packet_id);
-  u_int32_t verdict = packet.control.block_ ? NF_DROP : NF_ACCEPT;
-  int res = nfq_set_verdict(qh, id, verdict, 0, nullptr);
+
+  u_int32_t verdict;
+  if (packet.control.block_) {
+    verdict = NF_DROP;
+  } else {
+    verdict = (u_int32_t)netFilter->acceptVerdict_;
+  }
+
+  int res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);
   return res;
 }

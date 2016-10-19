@@ -36,9 +36,11 @@
             "_class": "GNetFilter",
             "_x": -66,
             "_y": -299,
+            "acceptVerdict": "ACCEPT",
             "autoParse": true,
             "autoRead": true,
             "enabled": true,
+            "mark": "1234",
             "objectName": "netFilter1",
             "queueNum": "0",
             "snapLen": "65536"
@@ -48,15 +50,20 @@
             "_x": -72,
             "_y": -340,
             "closeCommandList": [
-                "iptables -D INPUT  -j NFQUEUE --queue-num 0",
+                "iptables -D OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -D OUTPUT -j NFQUEUE --queue-num 0",
+                "",
+                "iptables -D INPUT -i eth0 -m mark --mark 1234 -j ACCEPT",
+                "iptables -D INPUT -i eth0 -j NFQUEUE --queue-num 0",
                 ""
             ],
             "objectName": "command1",
             "openCommandList": [
-                "iptables -F",
-                "iptables -A INPUT  -j NFQUEUE --queue-num 0",
+                "iptables -A OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -A OUTPUT -j NFQUEUE --queue-num 0",
+                "",
+                "iptables -A INPUT -i eth0 -m mark --mark 1234 -j ACCEPT",
+                "iptables -A INPUT -i eth0 -j NFQUEUE --queue-num 0",
                 ""
             ]
         },
