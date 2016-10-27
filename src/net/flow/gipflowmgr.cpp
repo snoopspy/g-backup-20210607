@@ -10,7 +10,7 @@ void GIpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
     long elapsed = ts.tv_sec - value->ts_.tv_sec;
-    long timeout;
+    long timeout = 0;
     switch (value->state_) {
       case GFlow::Value::Half: timeout = halfTimeout_; break;
       case GFlow::Value::Full: timeout = fullTimeout_; break;
