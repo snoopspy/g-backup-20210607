@@ -4,6 +4,7 @@
 #include "gg_text.h"
 #include "gg_scene.h"
 #include "ggraphwidget.h"
+#include <cmath>
 
 static const qreal Pi = 3.14;
 
