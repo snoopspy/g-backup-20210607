@@ -228,19 +228,19 @@ QString GDns::decodeName(u_char* udpData, size_t dataLen, size_t* offset)
   bool first = true;
   while (true)
   {
-    if (p - udpData > (int)dataLen) return false;
+    if (p - udpData > (int)dataLen) return "";
     uint8_t count = *p++;
     if (count == 0) break;
 
     if (count == 0xC0)
     {
-      if (p - udpData > (int)dataLen) return false;
+      if (p - udpData > (int)dataLen) return "";
       size_t tempOffset = *p++;
       res = decodeName(udpData, dataLen, &tempOffset);
       *offset += 2;
       return res;
     }
-    if (p - udpData + count > (int)dataLen) return false;
+    if (p - udpData + count > (int)dataLen) return "";
     QByteArray label((const char*)p, (int)count);
     p += count;
 
