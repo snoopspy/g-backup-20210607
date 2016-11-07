@@ -288,7 +288,7 @@ void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
   GFlow::IpFlowKey ipFlowKey(ipHdr->dip(), uint32_t(0)); // ipHdr-dip() is dns query client ip
 
   foreach (GDns::ResourceRecord answer, dns->answers) {
-    if (answer.class_ != 1) // IN
+    if (answer.type != 0x0001) // Host Address
       continue;
     GIp ip = ntohl(*(uint32_t*)answer.data.data());
     ipFlowKey.dip_ = ip; // dns response ip(server ip)
