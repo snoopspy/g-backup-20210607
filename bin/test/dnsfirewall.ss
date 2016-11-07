@@ -59,6 +59,8 @@
             ],
             "objectName": "command1",
             "openCommandList": [
+                "/etc/init.d/nscd restart",
+                "",
                 "iptables -A OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -A OUTPUT -j NFQUEUE --queue-num 0",
                 "",
