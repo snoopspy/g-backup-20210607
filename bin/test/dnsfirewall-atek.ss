@@ -40,7 +40,7 @@
     "nodes": [
         {
             "_class": "GNetFilter",
-            "_x": -68,
+            "_x": -69,
             "_y": -297,
             "acceptVerdict": "REPEAT",
             "autoParse": true,
@@ -53,7 +53,7 @@
         },
         {
             "_class": "GCommand",
-            "_x": -72,
+            "_x": -73,
             "_y": -340,
             "closeCommandList": [
                 "iptables -F",
@@ -103,13 +103,17 @@
                 "#",
                 "# Forward",
                 "#",
+                "iptables -A FORWARD -i eth1 -m mark --mark 1234 -j ACCEPT",
                 "iptables -A FORWARD -i eth1 -j NFQUEUE --queue-num 0",
+                "iptables -A FORWARD -o eth1 -m mark --mark 1234 -j ACCEPT",
                 "iptables -A FORWARD -o eth1 -j NFQUEUE --queue-num 0",
                 "",
                 "#",
                 "# My",
                 "#",
+                "iptables -A INPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -A INPUT  -j NFQUEUE --queue-num 0",
+                "iptables -A OUTPUT -m mark --mark 1234 -j ACCEPT",
                 "iptables -A OUTPUT -j NFQUEUE --queue-num 0",
                 ""
             ]
