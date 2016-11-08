@@ -5,7 +5,7 @@
             "sender": "netFilter1",
             "signal": "captured(GPacket*)",
             "slot": "write(GPacket*)"
-        }
+        },
         {
             "receiver": "dnsProcessor1",
             "sender": "netFilter1",
@@ -35,7 +35,7 @@
             "sender": "netFilter1",
             "signal": "captured(GPacket*)",
             "slot": "check(GPacket*)"
-        },
+        }
     ],
     "nodes": [
         {
