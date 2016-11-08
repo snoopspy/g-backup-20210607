@@ -214,9 +214,9 @@ QString GDns::decodeName(u_char* udpData, size_t dataLen, size_t* offset) {
     uint8_t count = *p++;
     if (count == 0) break;
 
-    if (count == 0xC0) {
+    if ((count & 0xC0) == 0xC0) {
       if (p - udpData > (int)dataLen) return "";
-      size_t tempOffset = *p++;
+      size_t tempOffset = ((count & 0x3) << 8) + *p++;
       res += decodeName(udpData, dataLen, &tempOffset);
       *offset += 2;
       return res;
