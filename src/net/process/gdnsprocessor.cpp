@@ -21,7 +21,12 @@ void GDnsProcessor::process(GPacket* packet) {
   GDns dns;
   size_t offset = 0;
   if (!dns.decode(udpData->data(), udpData->size(), &offset)) {
-    qDebug() << "dns.decode return false";
+    QString queryName;
+    if (dns.questions_.count() != 0)
+      queryName = dns.questions_.at(0).name_;
+    qCritical() << "*******************************";
+    qCritical() << QString("dns(%1).decode return false").arg(queryName);
+    qCritical() << "*******************************";
     return;
   }
 
