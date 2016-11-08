@@ -1,0 +1,48 @@
+#
+# Delete all entries
+#
+iptables -F
+
+#
+# Accept all DHCP messages
+#
+iptables -A INPUT -i eth1 -p udp --sport 67 --dport 68 -j ACCEPT
+iptables -A INPUT -i eth1 -p udp --sport 68 --dport 67 -j ACCEPT
+iptables -A OUTPUT -o eth1 -p udp --sport 68 --dport 67 -j ACCEPT
+iptables -A OUTPUT -o eth1 -p udp --sport 67 --dport 68 -j ACCEPT
+
+#
+# Accept RDP
+#
+# iptables -A OUTPUT -p tcp --dport 3389 -m state --state NEW -j ACCEPT
+
+#
+# DNS Redirect(UDP)
+#
+iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -m mark --mark 1234 -j DNAT --to-destination 8.8.8.8:53
+iptables -t nat -A PREROUTING -p udp -m udp --dport 53 -j NFQUEUE --queue-num 0
+
+#
+# DNS Redirect(TCP)
+#
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 53 -m mark --mark 1234 -j DNAT --to-destination 8.8.8.8:53
+iptables -t nat -A PREROUTING -p tcp -m tcp --dport 53 -j NFQUEUE --queue-num 0
+
+#
+# NAT
+#
+iptables -t nat -A POSTROUTING -o eth0 -m mark --mark 1234  -j SNAT --to-source 192.168.1.119
+iptables -t nat -A POSTROUTING -o eth0 -j NFQUEUE --queue-num 0
+
+#
+# Forward
+#
+iptables -A FORWARD -i eth1 -j NFQUEUE --queue-num 0
+iptables -A FORWARD -o eth1 -j NFQUEUE --queue-num 0
+
+#
+# My
+#
+iptables -A INPUT  -j NFQUEUE --queue-num 0
+iptables -A OUTPUT -j NFQUEUE --queue-num 0
+
