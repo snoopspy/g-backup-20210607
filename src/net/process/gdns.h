@@ -41,8 +41,8 @@ struct GDns {
   // Question
   // ------------------------------------------------------------------------
   struct Question {
-    QString name;
-    uint16_t type;
+    QString name_;
+    uint16_t type_;
     uint16_t class_;
 
     QByteArray encode();
@@ -58,12 +58,12 @@ struct GDns {
   // ResourceRecord
   // ------------------------------------------------------------------------
   struct ResourceRecord {
-    QString name;
-    uint16_t type;
+    QString name_;
+    uint16_t type_;
     uint16_t class_;
-    uint32_t ttl;
-    uint16_t dataLength;
-    QByteArray data;
+    uint32_t ttl_;
+    uint16_t dataLength_;
+    QByteArray data_;
 
     QByteArray encode();
     bool decode(u_char* udpData, size_t dataLen, size_t* offset);
@@ -78,11 +78,11 @@ struct GDns {
   };
   // ------------------------------------------------------------------------
 
-  DNS_HDR dnsHdr;
-  Questions questions;
-  ResourceRecords answers;
-  ResourceRecords authorities;
-  ResourceRecords additionals;
+  DNS_HDR dnsHdr_;
+  Questions questions_;
+  ResourceRecords answers_;
+  ResourceRecords authorities_;
+  ResourceRecords additionals_;
 
   QByteArray encode();
   bool decode(u_char* udpData, size_t dataLen, size_t* offset);

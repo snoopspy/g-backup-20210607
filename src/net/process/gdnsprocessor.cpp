@@ -20,8 +20,10 @@ void GDnsProcessor::process(GPacket* packet) {
 
   GDns dns;
   size_t offset = 0;
-  if (!dns.decode(udpData->data(), udpData->size(), &offset))
+  if (!dns.decode(udpData->data(), udpData->size(), &offset)) {
+    qDebug() << "dns.decode return false";
     return;
+  }
 
   // qDebug() << "dnsCaptured " << dns.questions.first().name; // gilgil temp 2016.10.11
   emit dnsCaptured(packet, &dns);

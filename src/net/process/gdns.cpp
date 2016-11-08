@@ -6,9 +6,9 @@
 QByteArray GDns::Question::encode() {
   QByteArray res;
 
-  res = GDns::encodeName(this->name);
+  res = GDns::encodeName(this->name_);
 
-  uint16_t _type = htons(this->type);
+  uint16_t _type = htons(this->type_);
   res.append((const char*)&_type, sizeof(uint16_t));
 
   uint16_t _class_ = htons(this->class_);
@@ -18,12 +18,12 @@ QByteArray GDns::Question::encode() {
 }
 
 bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
-  this->name = GDns::decodeName(udpData, dataLen, offset);
-  if (this->name == "") return false;
+  this->name_ = GDns::decodeName(udpData, dataLen, offset);
+  if (this->name_ == "") return false;
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
   uint16_t* _type = (uint16_t*)(udpData + *offset);
-  this->type = ntohs(*_type);
+  this->type_ = ntohs(*_type);
   *offset += sizeof(uint16_t);
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
@@ -66,30 +66,30 @@ QByteArray GDns::ResourceRecord::encode()
   res.append((char)0xC0); // gilgil temp 2014.03.22
   res.append((char)0x0C);
 
-  uint16_t _type = htons(this->type);
+  uint16_t _type = htons(this->type_);
   res.append((const char*)&_type, sizeof(uint16_t));
 
   uint16_t _class_ = htons(this->class_);
   res.append((const char*)&_class_, sizeof(uint16_t));
 
-  uint32_t _ttl = htonl(this->ttl);
+  uint32_t _ttl = htonl(this->ttl_);
   res.append((const char*)&_ttl, sizeof(uint32_t));
 
-  uint16_t _dataLength = htons(this->dataLength);
+  uint16_t _dataLength = htons(this->dataLength_);
   res.append((const char*)&_dataLength, sizeof(uint16_t));
 
-  res += data;
+  res += data_;
 
   return res;
 }
 
 bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offset) {
-  this->name = GDns::decodeName(udpData, dataLen, offset);
-  if (this->name == "") return false;
+  this->name_ = GDns::decodeName(udpData, dataLen, offset);
+  if (this->name_ == "") return false;
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
   uint16_t* _type = (uint16_t*)(udpData + *offset);
-  this->type = ntohs(*_type);
+  this->type_ = ntohs(*_type);
   *offset += sizeof(uint16_t);
 
   if (*offset  + sizeof(uint16_t) > dataLen) return false;
@@ -99,18 +99,18 @@ bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offse
 
   if (*offset  + sizeof(uint32_t) > dataLen) return false;
   uint32_t* _ttl = (uint32_t*)(udpData + *offset);
-  this->ttl = ntohl(*_ttl);
+  this->ttl_ = ntohl(*_ttl);
   *offset += sizeof(uint32_t);
 
   if (*offset  + sizeof(uint16_t) > dataLen) return false;
   uint16_t* _dataLength = (uint16_t*)(udpData + *offset);
-  this->dataLength= ntohs(*_dataLength);
+  this->dataLength_= ntohs(*_dataLength);
   *offset += sizeof(uint16_t);
 
-  if (*offset + this->dataLength > dataLen) return false;
+  if (*offset + dataLength_ > dataLen) return false;
   const char* data = (const char*)(udpData + *offset);
-  this->data = QByteArray::fromRawData(data, this->dataLength);
-  *offset += this->dataLength;
+  this->data_ = QByteArray::fromRawData(data, this->dataLength_);
+  *offset += this->dataLength_;
 
   return true;
 }
@@ -140,7 +140,7 @@ bool GDns::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, s
 // ----------------------------------------------------------------------------
 QByteArray GDns::encode() {
   QByteArray res;
-  res.append((const char*)&dnsHdr, sizeof(DNS_HDR));
+  res.append((const char*)&dnsHdr_, sizeof(DNS_HDR));
 
   // ----- gilgil temp 2014.03.22 -----
   /*
@@ -164,23 +164,23 @@ QByteArray GDns::encode() {
   */
   // ----------------------------------
 
-  res += questions.encode();
-  res += answers.encode();
-  res += authorities.encode();
-  res += additionals.encode();
+  res += questions_.encode();
+  res += answers_.encode();
+  res += authorities_.encode();
+  res += additionals_.encode();
 
   return res;
 }
 
 bool GDns::decode(u_char* udpData, size_t dataLen, size_t* offset) {
   if (*offset + sizeof(DNS_HDR) > dataLen) return false;
-  memcpy(&this->dnsHdr, udpData, sizeof(DNS_HDR));
+  memcpy(&this->dnsHdr_, udpData, sizeof(DNS_HDR));
   *offset += sizeof(DNS_HDR);
 
-  if (!questions.decode(udpData,   dataLen, ntohs(dnsHdr.num_q),       offset)) return false;
-  if (!answers.decode(udpData,     dataLen, ntohs(dnsHdr.num_answ_rr), offset)) return false;
-  if (!authorities.decode(udpData, dataLen, ntohs(dnsHdr.num_auth_rr), offset)) return false;
-  if (!additionals.decode(udpData, dataLen, ntohs(dnsHdr.num_addi_rr), offset)) return false;
+  if (!questions_.decode(udpData,   dataLen, ntohs(dnsHdr_.num_q),       offset)) return false;
+  if (!answers_.decode(udpData,     dataLen, ntohs(dnsHdr_.num_answ_rr), offset)) return false;
+  if (!authorities_.decode(udpData, dataLen, ntohs(dnsHdr_.num_auth_rr), offset)) return false;
+  if (!additionals_.decode(udpData, dataLen, ntohs(dnsHdr_.num_addi_rr), offset)) return false;
 
   return true;
 }
@@ -211,26 +211,28 @@ QString GDns::decodeName(u_char* udpData, size_t dataLen, size_t* offset) {
   bool first = true;
   while (true) {
     if (p - udpData > (int)dataLen) return "";
-    uint8_t count = *p++;
-    if (count == 0) break;
+    uint8_t size = *p++;
+    if (size == 0) break;
 
-    if ((count & 0xC0) == 0xC0) {
+    if ((size & 0xC0) == 0xC0) {
       if (p - udpData > (int)dataLen) return "";
-      size_t tempOffset = ((count & 0x3) << 8) + *p++;
+      size_t tempOffset = (((size_t)size & 0x3) << 8) + *p++;
       res += decodeName(udpData, dataLen, &tempOffset);
-      *offset += 2;
+      *offset = p - udpData;
       return res;
-    }
-    if (p - udpData + count > (int)dataLen) return "";
-    QByteArray label((const char*)p, (int)count);
-    p += count;
+    } else
+    {
+      if (p - udpData + size > (int)dataLen) return "";
+      QByteArray label((const char*)p, (int)size);
+      p += size;
 
-    if (first) {
-      res += label;
-      first = false;
-    } else {
-      res += ".";
-      res += label;
+      if (first) {
+        res += label;
+        first = false;
+      } else {
+        res += ".";
+        res += label;
+      }
     }
   }
   *offset = p - udpData;

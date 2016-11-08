@@ -281,22 +281,22 @@ void GDnsFirewall::_udpFlowDeleted(GPacket* packet) {
 
 void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
   (void)packet;
-  if (dns->answers.count() == 0) return;
+  if (dns->answers_.count() == 0) return;
 
   GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
   Q_ASSERT(ipHdr != nullptr);
   GFlow::IpFlowKey ipFlowKey(ipHdr->dip(), uint32_t(0)); // ipHdr-dip() is dns query client ip
 
-  foreach (GDns::ResourceRecord answer, dns->answers) {
-    if (answer.type != 0x0001) // Host Address
+  foreach (GDns::ResourceRecord answer, dns->answers_) {
+    if (answer.type_ != 0x0001) // Host Address
       continue;
-    GIp ip = ntohl(*(uint32_t*)answer.data.data());
+    GIp ip = ntohl(*(uint32_t*)answer.data_.data());
     ipFlowKey.dip_ = ip; // dns response ip(server ip)
-    qDebug() << QString("name=%1 ttl=%2 data=%3 %4").arg(answer.name).arg(answer.ttl).arg(qPrintable(ip), QString::number(ip, 16));
+    qDebug() << QString("name=%1 ttl=%2 data=%3 %4").arg(answer.name_).arg(answer.ttl_).arg(qPrintable(ip), QString::number(ip, 16));
 
     DnsItem newItem;
-    newItem.name_ = answer.name;
-    newItem.ttl_ = answer.ttl;
+    newItem.name_ = answer.name_;
+    newItem.ttl_ = answer.ttl_;
     newItem.ts_ = packet->ts_;
 
     DnsItems& items = dnsMap_[ipFlowKey];
