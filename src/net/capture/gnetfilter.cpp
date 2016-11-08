@@ -172,6 +172,7 @@ int GNetFilter::_callback(
   packet.capture_ = netFilter;
 
   packet.clear();
+  gettimeofday(&packet.ts_, nullptr);
   packet.buf_.size_ = (size_t)nfq_get_payload(nfad, (unsigned char **)&packet.buf_.data_);
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
