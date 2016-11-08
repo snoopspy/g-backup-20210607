@@ -1,6 +1,12 @@
 {
     "connections": [
         {
+            "receiver": "pcapFileWriter1",
+            "sender": "netFilter1",
+            "signal": "captured(GPacket*)",
+            "slot": "write(GPacket*)"
+        }
+        {
             "receiver": "dnsProcessor1",
             "sender": "netFilter1",
             "signal": "captured(GPacket*)",
@@ -29,13 +35,13 @@
             "sender": "netFilter1",
             "signal": "captured(GPacket*)",
             "slot": "check(GPacket*)"
-        }
+        },
     ],
     "nodes": [
         {
             "_class": "GNetFilter",
-            "_x": -66,
-            "_y": -299,
+            "_x": -68,
+            "_y": -297,
             "acceptVerdict": "REPEAT",
             "autoParse": true,
             "autoRead": true,
@@ -70,16 +76,25 @@
             ]
         },
         {
+            "_class": "GPcapFileWriter",
+            "_x": -310,
+            "_y": -237,
+            "dataLinkType": "Ipv4",
+            "fileName": "pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'",
+            "objectName": "pcapFileWriter1",
+            "snapLen": "65536"
+        },
+        {
             "_class": "GDnsProcessor",
-            "_x": -174,
-            "_y": -242,
+            "_x": -181,
+            "_y": -238,
             "objectName": "dnsProcessor1",
             "port": "53"
         },
         {
             "_class": "GIpFlowMgr",
-            "_x": -70,
-            "_y": -246,
+            "_x": -65,
+            "_y": -241,
             "checkInterval": "1",
             "fullTimeout": "180",
             "halfTimeout": "60",
@@ -107,7 +122,7 @@
         },
         {
             "_class": "GDnsFirewall",
-            "_x": 61,
+            "_x": 40,
             "_y": -239,
             "checkInterval": "1",
             "dnsProcessor": "dnsProcessor1",
