@@ -1,16 +1,12 @@
 # opengl
-sudo apt-get install libglu1-mesa-dev
-
-# glog
-# sudo apt-get install libgoogle-glog-dev # gilgil temp 2015.10.25
-
-# gflags
-# sudo apt-get install libgflags-dev # gilgil temp 2015.10.25
-
-# libevent-dev
-# sudo apt-get install libevent-dev # gilgil temp 2015.10.25
+sudo apt install libglu1-mesa-dev
 
 # libpcap-dev
-sudo apt-get install libpcap-dev
+sudo apt install libpcap-dev
 
+# libssl-dev
+suto apt install libssl-dev
+
+# libnetfilter-queue
+sudo apt install libnetfilter-queue-dev
 
