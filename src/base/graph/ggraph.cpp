@@ -1,4 +1,5 @@
 #include "ggraph.h"
+#include "base/gthread.h"
 
 // ----------------------------------------------------------------------------
 // GGraph::Nodes
@@ -122,6 +123,7 @@ GGraph::Factory::~Factory() {
 // GGraph
 // ----------------------------------------------------------------------------
 bool GGraph::doOpen() {
+  GThreadMgr::suspendStart();
   foreach (Node* node, nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
@@ -134,6 +136,7 @@ bool GGraph::doOpen() {
       }
     }
   }
+  GThreadMgr::resumeStart();
   return true;
 }
 
