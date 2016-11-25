@@ -26,6 +26,7 @@ struct GDnsFirewall : GFlowMgr {
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
   Q_PROPERTY(GObjPtr udpFlowMgr READ getUdpFlowMgr WRITE setUdpFlowMgr)
   Q_PROPERTY(QStringList exceptionIpList MEMBER exceptionIpList_)
+  Q_PROPERTY(long extraTtlTime MEMBER extraTtlTime_)
 
   GObjPtr getDnsProcessor() { return dnsProcessor_; }
   GObjPtr getIpFlowMgr() { return ipFlowMgr_; }
@@ -44,6 +45,7 @@ public:
   GUdpFlowMgr* udpFlowMgr_{nullptr};
   QStringList exceptionIpList_;
   QSet<GIp> exceptionIps_; // for exceptionIpList_
+  long extraTtlTime_{10};
 
 public:
   // --------------------------------------------------------------------------

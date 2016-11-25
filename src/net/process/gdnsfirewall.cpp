@@ -82,7 +82,7 @@ void GDnsFirewall::deleteOldDnsMaps(GPacket* packet /* struct timeval ts */) {
     while (it2 != items.end()) {
       DnsItem& item = *it2;
       long elapsed = ts.tv_sec - item.ts_.tv_sec;
-      if (elapsed >= item.ttl_) {
+      if (elapsed >= item.ttl_ + extraTtlTime_) {
         it2 = items.erase(it2);
         continue;
       }
@@ -103,7 +103,7 @@ bool GDnsFirewall::checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timev
   if (it != dnsMap_.end()) {
     DnsItems& items = it.value();
     foreach (const DnsItem& item, items) {
-      if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_) {
+      if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_ + extraTtlTime_) {
         block = false;
         break;
       }
@@ -113,7 +113,7 @@ bool GDnsFirewall::checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timev
     if (it != dnsMap_.end()) {
       DnsItems& items = it.value();
       foreach (const DnsItem& item, items) {
-        if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_) {
+        if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_ + extraTtlTime_) {
           block = false;
           break;
         }
