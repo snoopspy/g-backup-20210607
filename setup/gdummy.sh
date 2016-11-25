@@ -2,12 +2,12 @@ COMMAND=$1
 INTERFACE=$2
 
 function usage() {
-	echo "usage : dummy <start|stop|add|del> [<interface>]"
+	echo "usage : gdummy.sh <start|stop|add|del> [<interface>]"
 	echo "example :"
-	echo "  dummy.sh start"
-	echo "  dummy.sh stop"
-	echo "  dummy.sh add dum0"
-	echo "  dummy.sh del dum0"
+	echo "  gdummy.sh start"
+	echo "  gdummy.sh stop"
+	echo "  gdummy.sh add dum0"
+	echo "  gdummy.sh del dum0"
 }
 
 if [ -z "$COMMAND" ]; then
