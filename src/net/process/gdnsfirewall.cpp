@@ -6,6 +6,14 @@
 // ----------------------------------------------------------------------------
 // GDnsFirewall
 // ----------------------------------------------------------------------------
+GDnsFirewall::GDnsFirewall(QObject* parent) : GFlowMgr(parent) {
+  exceptionIpList_
+      << "127.0.0.1"
+      << "224.0.0.1"
+      << "224.0.0.255"
+      << "255.255.255.255";
+}
+
 bool GDnsFirewall::doOpen() {
     if (dnsProcessor_ != nullptr) {
     QObject::connect(dnsProcessor_, &GDnsProcessor::dnsCaptured, this, &GDnsFirewall::_dnsProcess, Qt::DirectConnection);
@@ -24,6 +32,13 @@ bool GDnsFirewall::doOpen() {
   if (udpFlowMgr_ != nullptr) {
     QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GDnsFirewall::_udpFlowCreated, Qt::DirectConnection);
     QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GDnsFirewall::_udpFlowDeleted, Qt::DirectConnection);
+  }
+
+  exceptionIps_.clear();
+  foreach (QString exceptionIp, exceptionIpList_) {
+    if (exceptionIp == "") continue;
+    GIp ip = exceptionIp;
+    exceptionIps_.insert(ip);
   }
 
   dnsMap_.clear();
@@ -237,7 +252,11 @@ void GDnsFirewall::check(GPacket* packet) {
 
 void GDnsFirewall::_ipFlowCreated(GPacket* packet) {
   GFlow::IpFlowKey ipFlowKey = *ipFlowMgr_->key_;
-  bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
+  bool block;
+  if (exceptionIps_.find(ipFlowKey.sip_) != exceptionIps_.end() || exceptionIps_.find(ipFlowKey.dip_) != exceptionIps_.end())
+    block = false;
+  else
+    block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   ipBlockMap_[ipFlowKey] = block;
   // debugPacket("_ipFlowCreated " + QString(block ? "block" : "pass "), packet); // gilgil temp 2016.11.08
 }
@@ -252,7 +271,11 @@ void GDnsFirewall::_ipFlowDeleted(GPacket* packet) {
 void GDnsFirewall::_tcpFlowCreated(GPacket* packet) {
   GFlow::TcpFlowKey* tcpFlowKey = tcpFlowMgr_->key_;
   GFlow::IpFlowKey ipFlowKey{tcpFlowKey->sip_, tcpFlowKey->dip_};
-  bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
+  bool block;
+  if (exceptionIps_.find(ipFlowKey.sip_) != exceptionIps_.end() || exceptionIps_.find(ipFlowKey.dip_) != exceptionIps_.end())
+    block = false;
+  else
+    block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   tcpBlockMap_[*tcpFlowKey] = block;
   // debugPacket("_tcpFlowCreated " + QString(block ? "block" : "pass "), packet); // gilgil temp 2016.11.08
 }
@@ -267,7 +290,11 @@ void GDnsFirewall::_tcpFlowDeleted(GPacket* packet) {
 void GDnsFirewall::_udpFlowCreated(GPacket* packet) {
   GFlow::UdpFlowKey* udpFlowKey = udpFlowMgr_->key_;
   GFlow::IpFlowKey ipFlowKey{udpFlowKey->sip_, udpFlowKey->dip_};
-  bool block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
+  bool block;
+  if (exceptionIps_.find(ipFlowKey.sip_) != exceptionIps_.end() || exceptionIps_.find(ipFlowKey.dip_) != exceptionIps_.end())
+    block = false;
+  else
+    block = checkBlockFromDnsMap(ipFlowKey, packet->ts_);
   udpBlockMap_[*udpFlowKey] = block;
   // debugPacket("_udpFlowCreated " + QString(block ? "block" : "pass "), packet); // gilgil temp 2016.11.08
 }

@@ -25,6 +25,7 @@ struct GDnsFirewall : GFlowMgr {
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
   Q_PROPERTY(GObjPtr udpFlowMgr READ getUdpFlowMgr WRITE setUdpFlowMgr)
+  Q_PROPERTY(QStringList exceptionIpList MEMBER exceptionIpList_)
 
   GObjPtr getDnsProcessor() { return dnsProcessor_; }
   GObjPtr getIpFlowMgr() { return ipFlowMgr_; }
@@ -41,6 +42,8 @@ public:
   GIpFlowMgr* ipFlowMgr_{nullptr};
   GTcpFlowMgr* tcpFlowMgr_{nullptr};
   GUdpFlowMgr* udpFlowMgr_{nullptr};
+  QStringList exceptionIpList_;
+  QSet<GIp> exceptionIps_; // for exceptionIpList_
 
 public:
   // --------------------------------------------------------------------------
@@ -60,7 +63,7 @@ public:
   // --------------------------------------------------------------------------
 
 public:
-  Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr) : GFlowMgr(parent) {}
+  Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr);
   ~GDnsFirewall() override { close(); }
 
 protected:
