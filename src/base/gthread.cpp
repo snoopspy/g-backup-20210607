@@ -38,7 +38,7 @@ void GThreadMgr::suspendStart() {
 void GThreadMgr::resumeStart() {
   GThreadMgr& threadMgr = instance();
   foreach (GThreadInfo threadInfo, threadMgr.threadInfos_) {
-    threadInfo.thread_->start(threadInfo.priority_);
+    ((QThread*)(threadInfo.thread_))->start(threadInfo.priority_);
   }
   threadMgr.threadInfos_.clear();
   threadMgr.suspended_ = false;
