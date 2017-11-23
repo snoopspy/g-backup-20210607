@@ -16,8 +16,8 @@
 // GTcpData
 // ----------------------------------------------------------------------------
 struct GTcpData : GPdu {
-  static const GPduType staticType = GPduType::TcpData;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::TcpData;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GTcpData(u_char* data, size_t size);
@@ -32,6 +32,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GTcpDataParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GTcpDataParser : GParser {
   Q_OBJECT
 

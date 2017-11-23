@@ -32,8 +32,8 @@ struct ETH_HDR { // libnet_ethernet_hdr
 // GEthHdr
 // ----------------------------------------------------------------------------
 struct GEthHdr : GPdu {
-  static const GPduType staticType = GPduType::Eth;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::Eth;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GEthHdr(u_char* buf);
@@ -49,6 +49,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GEthParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GEthParser : GParser {
   Q_OBJECT
 

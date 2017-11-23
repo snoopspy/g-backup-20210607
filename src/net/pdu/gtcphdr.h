@@ -45,8 +45,8 @@ struct TCP_HDR { // libnet_tcp_hdr
 // GTcpHdr
 // ----------------------------------------------------------------------------
 struct GTcpHdr : GPdu {
-  static const GPduType staticType = GPduType::Tcp;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::Tcp;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GTcpHdr(u_char* buf);
@@ -69,6 +69,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GTcpParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GTcpParser : GParser {
   Q_OBJECT
 

@@ -19,7 +19,7 @@ GTcpHdr::GTcpHdr(u_char* buf) {
 // ----------------------------------------------------------------------------
 GPdu* GTcpParser::doParse(GPacket* packet, GPdu* prev) {
   switch (prev->pduType()) {
-    case GPduType::Ip: {
+    case GPdu::Type::Ip: {
         Q_ASSERT(dynamic_cast<GIpHdr*>(prev) != nullptr);
         GIpHdr* ipHdr = (GIpHdr*)prev;
         if (ipHdr->p() != IPPROTO_TCP)
@@ -28,7 +28,7 @@ GPdu* GTcpParser::doParse(GPacket* packet, GPdu* prev) {
           return nullptr;
         return new GTcpHdr(packet->parse_.data_);
       }
-    case GPduType::Ip6:
+    case GPdu::Type::Ip6:
       // TODO process ipv6 header // gilgil temp 2016.09.13
       return nullptr;
     default:

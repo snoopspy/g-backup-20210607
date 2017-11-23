@@ -33,8 +33,8 @@ struct UDP_HDR { // libnet_tcp_hdr
 // GUdpHdr
 // ----------------------------------------------------------------------------
 struct GUdpHdr : GPdu {
-  static const GPduType staticType = GPduType::Udp;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::Udp;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GUdpHdr(u_char* buf);
@@ -51,6 +51,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GUdpParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GUdpParser : GParser {
   Q_OBJECT
 

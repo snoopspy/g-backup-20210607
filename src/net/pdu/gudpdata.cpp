@@ -20,7 +20,7 @@ GUdpData::GUdpData(u_char* data, size_t size) {
 // GUdpDataParser
 // ----------------------------------------------------------------------------
 GPdu* GUdpDataParser::doParse(GPacket* packet, GPdu* prev) {
-  Q_ASSERT(prev->pduType() == GPduType::Udp);
+  Q_ASSERT(prev->pduType() == GPdu::Type::Udp);
   GUdpHdr* udpHdr = (GUdpHdr*)prev;
 
   GPdus& pdus = packet->pdus_;
@@ -28,14 +28,14 @@ GPdu* GUdpDataParser::doParse(GPacket* packet, GPdu* prev) {
   Q_ASSERT(++pdus.rbegin() != pdus.rend()); // ipHdr
   GPdu* l3Hdr = *(++pdus.rbegin());
   switch (l3Hdr->pduType()) {
-    case GPduType::Ip: {
+    case GPdu::Type::Ip: {
         GIpHdr* ipHdr = (GIpHdr*)l3Hdr;
         size_t size = ipHdr->len() - ipHdr->size() - udpHdr->size();
         if ((ssize_t)size <= 0)
           return nullptr;
         return new GUdpData(packet->parse_.data_, size);
       }
-    case GPduType::Ip6:
+    case GPdu::Type::Ip6:
       // TODO process ipv6 header // gilgil temp 2016.09.13
       return nullptr;
     default:

@@ -1,3 +1,4 @@
+#include <QDebug>
 #include "gpacket.h"
 #include "net/pdu/gpdu.h"
 

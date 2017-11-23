@@ -48,8 +48,8 @@ struct IP_HDR { // libnet_ipv4_hdr
 // GIpHdr
 // ----------------------------------------------------------------------------
 struct GIpHdr : GPdu {
-  static const GPduType staticType = GPduType::Ip;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::Ip;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GIpHdr(u_char* buf);
@@ -73,6 +73,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GIpParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GIpParser : GParser {
   Q_OBJECT
 

@@ -17,36 +17,35 @@
 #include "net/libnet/libnet-headers.h"
 #pragma pack(pop)
 #include <QVector>
-#include "net/parser/gparser.h"
-
-// ----------------------------------------------------------------------------
-// GPduType
-// ----------------------------------------------------------------------------
-typedef enum {
-  Eth,
-  Ip,
-  Ip6,
-
-  Tcp,
-  Udp,
-  Icmp,
-
-  // TcpOption, // gilgil temp 2016.10.11
-  TcpData,
-  UdpData,
-
-  // Dns, // gilgil temp 2016.10.11
-  None
-} GPduType;
 
 // ----------------------------------------------------------------------------
 // GPdu
 // ----------------------------------------------------------------------------
 struct GPdu {
+  typedef enum {
+    Eth,
+    Ip,
+    Ip6,
+
+    Tcp,
+    Udp,
+    Icmp,
+
+    // TcpOption, // gilgil temp 2016.10.11
+    TcpData,
+    UdpData,
+
+    // Dns, // gilgil temp 2016.10.11
+    None
+  } Type;
+
+  typedef uint32_t Id;
+  static const Id NULL_PDU_ID = 0;
+
   virtual ~GPdu() {}
 
-  static const GPduType staticType = None;
-  virtual GPduType pduType() { return staticType; }
+  static const GPdu::Type staticType = None;
+  virtual GPdu::Type pduType() { return staticType; }
   virtual size_t size() { return 0; }
 };
 
@@ -86,7 +85,7 @@ public:
   }
 
   template <typename T>
-  T* findFirst(GPduType findType = T::staticType) {
+  T* findFirst(GPdu::Type findType = T::staticType) {
     int count = size();
     for (int i = 0; i < count; i++) {
       GPdu* pdu = at(i);
@@ -99,7 +98,7 @@ public:
   }
 
   template <typename T>
-  T* findNext(GPduType findType = T::staticType) {
+  T* findNext(GPdu::Type findType = T::staticType) {
     Q_ASSERT(current_ >= 0 && current_ < size());
     int count = size();
     for (int i = current_ + 1; i < count; i++) {
@@ -113,7 +112,7 @@ public:
   }
 
   template <typename T>
-  T* findPrev(GPduType findType = T::staticType) {
+  T* findPrev(GPdu::Type findType = T::staticType) {
     Q_ASSERT(current_ >= 0 && current_ < size());
     for (int i = current_ - 1; i >= 0; i--) {
       GPdu* pdu = at(i);

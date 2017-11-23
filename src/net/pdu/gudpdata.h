@@ -16,8 +16,8 @@
 // GUdpData
 // ----------------------------------------------------------------------------
 struct GUdpData : GPdu {
-  static const GPduType staticType = GPduType::UdpData;
-  GPduType pduType() override { return staticType; }
+  static const GPdu::Type staticType = GPdu::Type::UdpData;
+  GPdu::Type pduType() override { return staticType; }
   size_t size() override;
 
   GUdpData(u_char* data, size_t size);
@@ -32,6 +32,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GUdpDataParser
 // ----------------------------------------------------------------------------
+#include "net/parser/gparser.h"
 struct GUdpDataParser : GParser {
   Q_OBJECT
 
