@@ -41,7 +41,7 @@ public:
   typedef enum {
     Eth,   // DLT_EN10MB (1)
     Dot11, // DLT_IEEE802_11_RADIO (127)
-    Ipv4,  // DLT_IPV4 (228)
+    Ip,  // DLT_IPV4 (228)
     Null,  // DLT_NULL (0)
   } DataLinkType;
   static int dataLinkTypeToInt(DataLinkType dataLinkType);

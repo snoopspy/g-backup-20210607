@@ -76,7 +76,7 @@ GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
     case GPacket::Dot11:
       res = map.root_->findFirstChild("GDot11Parser");
       break;
-    case GPacket::Ipv4:
+    case GPacket::Ip:
       res = map.root_->findFirstChild("GIpParser");
       break;
     case GPacket::Null:

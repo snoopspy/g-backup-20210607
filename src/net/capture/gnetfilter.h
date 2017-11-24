@@ -49,7 +49,7 @@ public:
   GPacket::Result write(u_char* buf, size_t len) override;
   GPacket::Result relay(GPacket* packet) override;
 
-  GPacket::DataLinkType dataLinkType() override { return GPacket::Ipv4; }
+  GPacket::DataLinkType dataLinkType() override { return GPacket::Ip; }
   PathType pathType() override { return InPath; }
 
 protected:
