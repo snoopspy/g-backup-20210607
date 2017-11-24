@@ -1,6 +1,5 @@
 #include "giphdr.h"
 #include "gethhdr.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GIpHdr

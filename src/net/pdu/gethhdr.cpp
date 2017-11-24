@@ -1,5 +1,4 @@
 #include "gethhdr.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GEthHdr

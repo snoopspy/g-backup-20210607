@@ -1,7 +1,6 @@
 #include "gtcpdata.h"
 #include "giphdr.h"
 #include "gtcphdr.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GTcpData

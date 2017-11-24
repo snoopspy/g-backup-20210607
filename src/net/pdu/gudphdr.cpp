@@ -1,6 +1,5 @@
 #include "gudphdr.h"
 #include "giphdr.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GUdpHdr

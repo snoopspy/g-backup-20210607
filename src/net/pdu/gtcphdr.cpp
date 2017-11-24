@@ -1,6 +1,5 @@
 #include "gtcphdr.h"
 #include "giphdr.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GTcpHdr
