@@ -45,6 +45,5 @@ public:
   virtual bool parse(GPacket* packet);
 
 protected:
-  virtual GPdu::Id getNextPduId();
   virtual GPdu* doParse(GPacket* packet);
 };

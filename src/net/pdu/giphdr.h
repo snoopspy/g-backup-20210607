@@ -50,7 +50,7 @@ struct IP_HDR { // libnet_ipv4_hdr
 struct GIpHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Ip;
   GPdu::Type pduType() override { return staticType; }
-  GPdu::Id pduId() override { return (GPdu::Id)p(); }
+  GPdu::Id nextPduId() override { return (GPdu::Id)p(); }
   size_t size() override;
 
   GIpHdr(u_char* buf);
@@ -82,6 +82,5 @@ public:
   Q_INVOKABLE GIpParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  GPdu::Id getNextPduId() override;
   GPdu* doParse(GPacket* packet) override;
 };

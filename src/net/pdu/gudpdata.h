@@ -18,7 +18,7 @@
 struct GUdpData : GPdu {
   static const GPdu::Type staticType = GPdu::Type::UdpData;
   GPdu::Type pduType() override { return staticType; }
-  GPdu::Id pduId() override { return NULL_PDU_ID; }
+  GPdu::Id nextPduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GUdpData(u_char* data, size_t size);

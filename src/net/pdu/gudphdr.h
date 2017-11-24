@@ -35,7 +35,7 @@ struct UDP_HDR { // libnet_tcp_hdr
 struct GUdpHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Udp;
   GPdu::Type pduType() override { return staticType; }
-  GPdu::Id pduId() override { return NULL_PDU_ID; }
+  GPdu::Id nextPduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GUdpHdr(u_char* buf);

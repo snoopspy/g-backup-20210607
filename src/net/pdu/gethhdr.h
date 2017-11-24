@@ -34,7 +34,7 @@ struct ETH_HDR { // libnet_ethernet_hdr
 struct GEthHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Eth;
   GPdu::Type pduType() override { return staticType; }
-  GPdu::Id pduId() override { return (GPdu::Id)type(); }
+  GPdu::Id nextPduId() override { return (GPdu::Id)type(); }
   size_t size() override;
 
   GEthHdr(u_char* buf);
@@ -58,6 +58,5 @@ public:
   Q_INVOKABLE GEthParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  GPdu::Id getNextPduId() override;
   GPdu* doParse(GPacket* packet) override;
 };

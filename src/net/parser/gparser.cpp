@@ -69,7 +69,7 @@ bool GParser::parse(GPacket* packet) {
   packet->parse_.data_ += res;
   packet->parse_.size_ -= res;
 
-  GPdu::Id id = getNextPduId();
+  GPdu::Id id = pdu->nextPduId();
   GParser* parser = parsersMap_[id];
   if (parser != nullptr && parser->parse(packet))
     return true;

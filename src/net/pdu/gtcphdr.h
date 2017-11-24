@@ -47,7 +47,7 @@ struct TCP_HDR { // libnet_tcp_hdr
 struct GTcpHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Tcp;
   GPdu::Type pduType() override { return staticType; }
-  GPdu::Id pduId() override { return NULL_PDU_ID; }
+  GPdu::Id nextPduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GTcpHdr(u_char* buf);
