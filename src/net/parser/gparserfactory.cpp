@@ -70,19 +70,18 @@ GParserFactory::~GParserFactory() {
     delete ethParser_;
     ethParser_ = nullptr;
   }
-  if (ipParser_ != nullptr) {
-    delete ipParser_;
-    ipParser_ = nullptr;
+  if (dot11Parser_ != nullptr) {
+    delete dot11Parser_;
+    dot11Parser_ = nullptr;
   }
   if (ethParser_ != nullptr) {
     delete ethParser_;
     ethParser_ = nullptr;
   }
-  if (ethParser_ != nullptr) {
-    delete ethParser_;
-    ethParser_ = nullptr;
+  if (nullParser_ != nullptr) {
+    delete nullParser_;
+    nullParser_ = nullptr;
   }
-
 }
 
 GParserFactory& GParserFactory::instance() {

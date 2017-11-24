@@ -67,7 +67,7 @@ GPacket::Result GCapture::relay(GPacket* packet) {
 }
 
 void GCapture::run() {
-  qDebug() << "beg"; // gilgil temp 2015.10.28
+  qCritical() << "beg"; // gilgil temp 2017.11.25
   GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
 
@@ -87,6 +87,6 @@ void GCapture::run() {
       }
     }
   }
-  qDebug() << "end"; // gilgil temp 2015.10.28
+  qDebug() << "end"; // gilgil temp 2017.11.25
   emit closed();
 }
