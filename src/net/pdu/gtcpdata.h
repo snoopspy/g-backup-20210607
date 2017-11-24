@@ -18,6 +18,7 @@
 struct GTcpData : GPdu {
   static const GPdu::Type staticType = GPdu::Type::TcpData;
   GPdu::Type pduType() override { return staticType; }
+  GPdu::Id pduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GTcpData(u_char* data, size_t size);
@@ -40,5 +41,5 @@ public:
   Q_INVOKABLE GTcpDataParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  GPdu* doParse(GPacket* packet, GPdu* prev) override;
+  GPdu* doParse(GPacket* packet) override;
 };

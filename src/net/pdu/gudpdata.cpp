@@ -19,8 +19,9 @@ GUdpData::GUdpData(u_char* data, size_t size) {
 // ----------------------------------------------------------------------------
 // GUdpDataParser
 // ----------------------------------------------------------------------------
-GPdu* GUdpDataParser::doParse(GPacket* packet, GPdu* prev) {
-  Q_ASSERT(prev->pduType() == GPdu::Type::Udp);
+GPdu* GUdpDataParser::doParse(GPacket* packet) {
+  GPdu* prev = packet->pdus_.last();
+  Q_ASSERT(prev != nullptr && prev->pduType() == GPdu::Type::Udp);
   GUdpHdr* udpHdr = (GUdpHdr*)prev;
 
   GPdus& pdus = packet->pdus_;

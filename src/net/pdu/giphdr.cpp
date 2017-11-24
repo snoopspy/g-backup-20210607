@@ -17,8 +17,7 @@ GIpHdr::GIpHdr(u_char* buf) {
 // ----------------------------------------------------------------------------
 // GIpParser
 // ----------------------------------------------------------------------------
-GPdu* GIpParser::doParse(GPacket* packet, GPdu* prev) {
-  (void)prev;
+GPdu* GIpParser::doParse(GPacket* packet) {
   if (packet->parse_.size_ < sizeof(IP_HDR))
     return nullptr;
 #ifdef _DEBUG

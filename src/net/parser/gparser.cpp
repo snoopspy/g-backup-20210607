@@ -5,6 +5,8 @@
 // ----------------------------------------------------------------------------
 // GParser
 // ----------------------------------------------------------------------------
+// ----- gilgil temp 2017.11.24 -----
+/*
 GParser* GParser::findFirstChild(QString className) {
   foreach (QObject* obj, children()) {
     GParser* child = (GParser*)obj;
@@ -54,9 +56,11 @@ void GParser::addChild(QString parentClassName, QString childClassName) {
     childParser->setParent(parser);
   }
 }
+*/
+// ----------------------------------
 
-bool GParser::parse(GPacket* packet, GPdu* prev) {
-  GPdu* pdu = doParse(packet, prev);
+bool GParser::parse(GPacket* packet) {
+  GPdu* pdu = doParse(packet);
   if (pdu == nullptr)
     return false;
 
@@ -65,16 +69,20 @@ bool GParser::parse(GPacket* packet, GPdu* prev) {
   packet->parse_.data_ += res;
   packet->parse_.size_ -= res;
 
-  foreach (QObject* obj, children()) {
-    GParser* child = (GParser*)obj;
-    if (child->parse(packet, pdu))
+  GPdu::Id id = getNextPduId();
+  GParser* parser = parsersMap_[id];
+  if (parser != nullptr && parser->parse(packet))
+    return true;
+
+  foreach(GParser* parser, parserList_) {
+    if (parser->parse(packet))
       return true;
   }
+
   return true;
 }
 
-GPdu* GParser::doParse(GPacket* packet, GPdu* prev) {
-  (void)prev;
+GPdu* GParser::doParse(GPacket* packet) {
   (void)packet;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return nullptr;

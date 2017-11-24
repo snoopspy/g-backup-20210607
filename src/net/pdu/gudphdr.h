@@ -35,6 +35,7 @@ struct UDP_HDR { // libnet_tcp_hdr
 struct GUdpHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Udp;
   GPdu::Type pduType() override { return staticType; }
+  GPdu::Id pduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GUdpHdr(u_char* buf);
@@ -59,5 +60,5 @@ public:
   Q_INVOKABLE GUdpParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  GPdu* doParse(GPacket* packet, GPdu* prev) override;
+  GPdu* doParse(GPacket* packet) override;
 };

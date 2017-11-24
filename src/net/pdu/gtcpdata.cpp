@@ -19,8 +19,9 @@ GTcpData::GTcpData(u_char* data, size_t size) {
 // ----------------------------------------------------------------------------
 // GTcpDataParser
 // ----------------------------------------------------------------------------
-GPdu* GTcpDataParser::doParse(GPacket* packet, GPdu* prev) {
-  Q_ASSERT(prev->pduType() == GPdu::Type::Tcp);
+GPdu* GTcpDataParser::doParse(GPacket* packet) {
+  GPdu* prev = packet->pdus_.last();
+  Q_ASSERT(prev != nullptr && prev->pduType() == GPdu::Type::Tcp);
   GTcpHdr* tcpHdr = (GTcpHdr*)prev;
 
   GPdus& pdus = packet->pdus_;

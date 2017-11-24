@@ -16,8 +16,7 @@ GEthHdr::GEthHdr(u_char* buf) {
 // ----------------------------------------------------------------------------
 // GEthParser
 // ----------------------------------------------------------------------------
-GPdu* GEthParser::doParse(GPacket* packet, GPdu* prev) {
-  Q_ASSERT(prev == nullptr);
+GPdu* GEthParser::doParse(GPacket* packet) {
   if ((packet->parse_.size_) < sizeof(ETH_HDR))
     return nullptr;
   return new GEthHdr(packet->parse_.data_);

@@ -46,6 +46,7 @@ struct GPdu {
 
   static const GPdu::Type staticType = None;
   virtual GPdu::Type pduType() { return staticType; }
+  virtual GPdu::Id pduId() { return NULL_PDU_ID; }
   virtual size_t size() { return 0; }
 };
 

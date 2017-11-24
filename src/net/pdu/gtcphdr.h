@@ -47,6 +47,7 @@ struct TCP_HDR { // libnet_tcp_hdr
 struct GTcpHdr : GPdu {
   static const GPdu::Type staticType = GPdu::Type::Tcp;
   GPdu::Type pduType() override { return staticType; }
+  GPdu::Id pduId() override { return NULL_PDU_ID; }
   size_t size() override;
 
   GTcpHdr(u_char* buf);
@@ -77,5 +78,5 @@ public:
   Q_INVOKABLE GTcpParser(QObject* parent = nullptr) : GParser(parent) {}
 
 protected:
-  GPdu* doParse(GPacket* packet, GPdu* prev) override;
+  GPdu* doParse(GPacket* packet) override;
 };
