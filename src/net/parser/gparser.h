@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <QMap>
 #include "base/gobj.h"
 #include "net/packet/gpacket.h"
 
@@ -40,7 +39,7 @@ public:
   // ----------------------------------
 
 public:
-  QMap<GPdu::Id, GParser*> parsersMap_;
+  QMap<GPdu::Id, GParser*> parserMap_;
   QVector<GParser*> parserList_;
   virtual bool parse(GPacket* packet);
 

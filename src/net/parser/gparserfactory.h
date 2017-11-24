@@ -27,5 +27,8 @@ public:
   static GParser* getDefaultParser(GPacket::DataLinkType dataLinkType);
 
 protected:
-  GParser* root_;
+  GParser* ethParser_;
+  GParser* dot11Parser_;
+  GParser* ipParser_;
+  GParser* nullParser_;
 };

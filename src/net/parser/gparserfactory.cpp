@@ -22,44 +22,72 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GUdpDataParser*>();
   qRegisterMetaType<GUdpParser*>();
 
-  root_ = new GParser;
+  ethParser_ = new GEthParser;
+  dot11Parser_ = new GDot11Parser;
+  ipParser_ = new GIpParser;
+  nullParser_ = new GNullParser;
 
   //
   // root
   //
+  // ----- gilgil temp 2017.11.25 -----
+  /*
   root_->addChild("GParser", "GEthParser");
   root_->addChild("GParser", "GDot11Parser");
   root_->addChild("GParser", "GIpParser");
   root_->addChild("GParser", "GNullParser");
+  */
+  // ----------------------------------
 
   //
   // L3
   //
-  root_->addChild("GEthParser", "GIpParser");
+  // root_->addChild("GEthParser", "GIpParser"); // gilgil temp 2017.11.25
+  ethParser_->parserMap_[ETHERTYPE_IP] = ipParser_;
 
   //
   // L4
   //
-  root_->addChild("GIpParser", "GTcpParser");
-  root_->addChild("GIpParser", "GUdpParser");
+  // root_->addChild("GIpParser", "GTcpParser"); // gilgil temp 2017.11.25
+  // root_->addChild("GIpParser", "GUdpParser"); // gilgil temp 2017.11.25
+  GTcpParser* tcpParser = new GTcpParser;
+  ipParser_->parserMap_[IPPROTO_TCP] = tcpParser;
+  GUdpParser* udpParser = new GUdpParser;
+  ipParser_->parserMap_[IPPROTO_UDP] = udpParser;
 
   //
   // L7
   //
-  root_->addChild("GTcpParser", "GTcpDataParser");
-  root_->addChild("GUdpParser", "GUdpDataParser");
+  // root_->addChild("GTcpParser", "GTcpDataParser"); // gilgil temp 2017.11.25
+  // root_->addChild("GUdpParser", "GUdpDataParser"); // gilgil temp 2017.11.25
+  tcpParser->parserList_.push_back(new GTcpDataParser);
+  udpParser->parserList_.push_back(new GUdpDataParser);
+
 }
 
 GParserFactory::~GParserFactory() {
-  if (root_ != nullptr) {
-    delete root_;
-    root_ = nullptr;
+  if (ethParser_ != nullptr) {
+    delete ethParser_;
+    ethParser_ = nullptr;
   }
+  if (ipParser_ != nullptr) {
+    delete ipParser_;
+    ipParser_ = nullptr;
+  }
+  if (ethParser_ != nullptr) {
+    delete ethParser_;
+    ethParser_ = nullptr;
+  }
+  if (ethParser_ != nullptr) {
+    delete ethParser_;
+    ethParser_ = nullptr;
+  }
+
 }
 
 GParserFactory& GParserFactory::instance() {
-  static GParserFactory parserMap;
-  return parserMap;
+  static GParserFactory parserFactory;
+  return parserFactory;
 }
 
 void GParserFactory::init() {
@@ -67,20 +95,20 @@ void GParserFactory::init() {
 }
 
 GParser* GParserFactory::getDefaultParser(GPacket::DataLinkType dataLinkType) {
-  GParserFactory& map = instance();
+  GParserFactory& factory = instance();
   GParser* res = nullptr;
   switch (dataLinkType) {
     case GPacket::Eth:
-      res = map.root_->findFirstChild("GEthParser");
+      res = factory.ethParser_;
       break;
     case GPacket::Dot11:
-      res = map.root_->findFirstChild("GDot11Parser");
+      res = factory.dot11Parser_;
       break;
     case GPacket::Ip:
-      res = map.root_->findFirstChild("GIpParser");
+      res = factory.ipParser_;
       break;
     case GPacket::Null:
-      res = map.root_->findFirstChild("GNullParser");
+      res = factory.nullParser_;
       break;
   }
   if (res == nullptr)
