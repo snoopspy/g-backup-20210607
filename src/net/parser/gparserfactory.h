@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GParserFactory
 // ----------------------------------------------------------------------------
-struct GParserFactory {
+struct GParserFactory : GObj {
 private:
   GParserFactory();
   virtual  ~GParserFactory();

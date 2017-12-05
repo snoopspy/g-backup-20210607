@@ -22,10 +22,10 @@ GParserFactory::GParserFactory() {
   qRegisterMetaType<GUdpDataParser*>();
   qRegisterMetaType<GUdpParser*>();
 
-  ethParser_ = new GEthParser;
-  dot11Parser_ = new GDot11Parser;
-  ipParser_ = new GIpParser;
-  nullParser_ = new GNullParser;
+  ethParser_ = new GEthParser(this);
+  dot11Parser_ = new GDot11Parser(this);
+  ipParser_ = new GIpParser(this);
+  nullParser_ = new GNullParser(this);
 
   //
   // root
@@ -50,9 +50,9 @@ GParserFactory::GParserFactory() {
   //
   // root_->addChild("GIpParser", "GTcpParser"); // gilgil temp 2017.11.25
   // root_->addChild("GIpParser", "GUdpParser"); // gilgil temp 2017.11.25
-  GTcpParser* tcpParser = new GTcpParser;
+  GTcpParser* tcpParser = new GTcpParser(this);
   ipParser_->parserMap_[IPPROTO_TCP] = tcpParser;
-  GUdpParser* udpParser = new GUdpParser;
+  GUdpParser* udpParser = new GUdpParser(this);
   ipParser_->parserMap_[IPPROTO_UDP] = udpParser;
 
   //
@@ -60,8 +60,8 @@ GParserFactory::GParserFactory() {
   //
   // root_->addChild("GTcpParser", "GTcpDataParser"); // gilgil temp 2017.11.25
   // root_->addChild("GUdpParser", "GUdpDataParser"); // gilgil temp 2017.11.25
-  tcpParser->parserList_.push_back(new GTcpDataParser);
-  udpParser->parserList_.push_back(new GUdpDataParser);
+  tcpParser->parserList_.push_back(new GTcpDataParser(this));
+  udpParser->parserList_.push_back(new GUdpDataParser(this));
 
 }
 
