@@ -67,11 +67,11 @@ TEST(GPcapFile, icmpFileTest) {
 
   GPacket packet;
   for (int i = 0; i < 8; i++) {
-    GCapture::Result res = file.read(&packet);
-    ASSERT_TRUE(res == GCapture::Ok);
+    GPacket::Result res = file.read(&packet);
+    ASSERT_TRUE(res == GPacket::Ok);
   }
-  GCapture::Result res = file.read(&packet);
-  ASSERT_TRUE(res == GCapture::Eof);
+  GPacket::Result res = file.read(&packet);
+  ASSERT_TRUE(res == GPacket::Eof);
 
   ASSERT_TRUE(file.close());
 }
