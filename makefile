@@ -6,10 +6,10 @@ lib:
 	cd lib && make && cd ..
 
 app:
-	cd app && qmake && make -j 4 && cd ..
+	cd app && qmake "CONFIG+=release" && make -j 4 && cd ..
 
 plugin:
-	cd plugin && qmake && make -j 4 && cd ..
+	cd plugin && qmake "CONFIG+=release" && make -j 4 && cd ..
 
 clean:
 	cd lib && make clean; true
