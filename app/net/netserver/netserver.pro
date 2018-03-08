@@ -1,4 +1,4 @@
-QT += gui network widgets
+QT += widgets network
 include(../../../g.pri)
 SOURCES += *.cpp
 HEADERS += *.h
