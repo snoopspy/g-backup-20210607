@@ -59,8 +59,7 @@ bool GDns::Questions::decode(u_char* udpData, size_t dataLen, int count, size_t*
 // ----------------------------------------------------------------------------
 // GDns::ResourceRecord
 // ----------------------------------------------------------------------------
-QByteArray GDns::ResourceRecord::encode()
-{
+QByteArray GDns::ResourceRecord::encode() {
   QByteArray res;
 
   //res = GDns::encodeName(this->name);

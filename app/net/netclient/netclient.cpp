@@ -5,8 +5,7 @@
 
 Q_DECLARE_METATYPE(QSsl::SslProtocol)
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   QApplication a(argc, argv);
   GApp::init();
   Widget w;

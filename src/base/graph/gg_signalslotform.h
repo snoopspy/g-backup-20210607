@@ -20,8 +20,7 @@
 // ----------------------------------------------------------------------------
 // GGSignalSlotForm
 // ----------------------------------------------------------------------------
-class GGSignalSlotForm : public QDialog
-{
+class GGSignalSlotForm : public QDialog {
 	Q_OBJECT
 	
 public:

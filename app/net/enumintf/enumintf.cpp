@@ -1,8 +1,7 @@
 #include <GNetIntf>
 #include <GRtm>
 
-int main()
-{
+int main() {
   GRtmEntry* entry = GRtm::instance().getBestEntry("8.8.8.8");
   GNetIntfs& intfs = GNetIntf::all();
 

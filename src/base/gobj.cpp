@@ -28,8 +28,7 @@ QStringList GObj::slotList() {
 }
 
 
-bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type)
-{
+bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type) {
   qDebug() << QString("connect %1::%2 > %3::%4 %5").
     arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg((int)type);
 
@@ -57,15 +56,13 @@ bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const
   return res;
 }
 
-bool GObj::connect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot, Qt::ConnectionType type)
-{
+bool GObj::connect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot, Qt::ConnectionType type) {
   QByteArray baSignal = signal.methodSignature();
   QByteArray baSlot  = slot.methodSignature();
   return GObj::connect(sender, baSignal.data(), receiver, baSlot.data(), type);
 }
 
-bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, const char* slot)
-{
+bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, const char* slot) {
   qDebug() << QString("disconnect %1::%2 > %3::%4").
     arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot);
 
@@ -93,8 +90,7 @@ bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, co
   return res;
 }
 
-bool GObj::disconnect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot)
-{
+bool GObj::disconnect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot) {
   QByteArray baSignal = signal.methodSignature();
   QByteArray baSlot = slot.methodSignature();
   return GObj::disconnect(sender, baSignal.data(), receiver, baSlot.data());

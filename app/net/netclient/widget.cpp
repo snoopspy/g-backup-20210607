@@ -10,23 +10,20 @@
 // ----------------------------------------------------------------------------
 Widget::Widget(QWidget *parent) :
   QWidget(parent),
-  ui(new Ui::Widget)
-{
+  ui(new Ui::Widget) {
   ui->setupUi(this);
   initControl();
   loadControl();
   setControl();
 }
 
-Widget::~Widget()
-{
+Widget::~Widget() {
   saveControl();
   finiControl();
   delete ui;
 }
 
-void Widget::initControl()
-{
+void Widget::initControl() {
   move(0, 0); resize(640, 480);
 
   ui->mainLayout->setSpacing(0);
@@ -46,13 +43,11 @@ void Widget::initControl()
   QObject::connect(&sslSocket_, &QTcpSocket::readyRead, this, &Widget::readyRead);
 }
 
-void Widget::finiControl()
-{
+void Widget::finiControl() {
   on_pbClose_clicked();
 }
 
-void Widget::loadControl()
-{
+void Widget::loadControl() {
   QJsonObject jo = GJson::loadFromFile();
 
   jo["widget"] >> GJson::rect(this);
@@ -71,8 +66,7 @@ void Widget::loadControl()
   ui->pteSend->insertPlainText(jo["sendText"].toString());
 }
 
-void Widget::saveControl()
-{
+void Widget::saveControl() {
   QJsonObject jo = GJson::loadFromFile();
 
   jo["widget"] << GJson::rect(this);
@@ -93,8 +87,7 @@ void Widget::saveControl()
   GJson::saveToFile(jo);
 }
 
-void Widget::setControl()
-{
+void Widget::setControl() {
   bool active = false;
   if (netClient_) {
     switch (netClient_->state()) {
@@ -149,8 +142,7 @@ void Widget::showOption(NetClient* netClient) {
   GProp::showDialog(netClient);
 }
 
-void Widget::on_pbOpen_clicked()
-{
+void Widget::on_pbOpen_clicked() {
   int currentIndex = ui->tabOption->currentIndex();
   switch (currentIndex)
   {
@@ -170,8 +162,7 @@ void Widget::on_pbOpen_clicked()
   setControl();
 }
 
-void Widget::on_pbClose_clicked()
-{
+void Widget::on_pbClose_clicked() {
   if (netClient_ != nullptr) {
     netClient_->disconnectFromHost();
     netClient_->abort();
@@ -179,13 +170,11 @@ void Widget::on_pbClose_clicked()
   setControl();
 }
 
-void Widget::on_pbClear_clicked()
-{
+void Widget::on_pbClear_clicked() {
   ui->pteRecv->clear();
 }
 
-void Widget::on_tbTcpAdvance_clicked()
-{
+void Widget::on_tbTcpAdvance_clicked() {
   option_.tcpClient_.host_ = ui->leTcpHost->text();
   option_.tcpClient_.port_ = ui->leTcpPort->text().toInt();
   showOption(&option_.tcpClient_);
@@ -193,8 +182,7 @@ void Widget::on_tbTcpAdvance_clicked()
   ui->leTcpPort->setText(QString::number(option_.tcpClient_.port_));
 }
 
-void Widget::on_tbUdpAdvance_clicked()
-{
+void Widget::on_tbUdpAdvance_clicked() {
   option_.udpClient_.host_ = ui->leUdpHost->text();
   option_.udpClient_.port_ = ui->leUdpPort->text().toInt();
   showOption(&option_.udpClient_);
@@ -202,8 +190,7 @@ void Widget::on_tbUdpAdvance_clicked()
   ui->leUdpPort->setText(QString::number(option_.udpClient_.port_));
 }
 
-void Widget::on_tbSslAdvanced_clicked()
-{
+void Widget::on_tbSslAdvanced_clicked() {
   option_.sslClient_.host_ = ui->leSslHost->text();
   option_.sslClient_.port_ = ui->leSslPort->text().toInt();
   showOption(&option_.sslClient_);
@@ -211,8 +198,7 @@ void Widget::on_tbSslAdvanced_clicked()
   ui->leSslPort->setText(QString::number(option_.sslClient_.port_));
 }
 
-void Widget::on_pbSend_clicked()
-{
+void Widget::on_pbSend_clicked() {
   if (netClient_ == nullptr) return;
   QByteArray ba = qPrintable(ui->pteSend->toPlainText());
   ba = ba.replace("\n", "\r\n");

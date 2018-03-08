@@ -23,8 +23,7 @@
 // ----------------------------------------------------------------------------
 // GGText
 // ----------------------------------------------------------------------------
-struct GGText : QGraphicsTextItem
-{
+struct GGText : QGraphicsTextItem {
 public:
 	enum { Type = UserType + 5 };
 	int type() const { return Type; }
