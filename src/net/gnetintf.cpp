@@ -15,6 +15,8 @@ GNetIntfs& GNetIntf::all() {
 #include <unistd.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
+#include <sys/socket.h>
+
 static GMac getMac(char* name) {
   int s;
   struct ifreq buffer;
