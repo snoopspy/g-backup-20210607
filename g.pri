@@ -27,6 +27,7 @@ INCLUDEPATH += $${G_DIR}/src
 !CONFIG(G_BUILD) {
   PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
   LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
+  ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
 }
 
 #------------------------------------------------------------------------------
