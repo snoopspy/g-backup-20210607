@@ -12,13 +12,13 @@ GPcapDeviceWriter::~GPcapDeviceWriter() {
 }
 
 bool GPcapDeviceWriter::doOpen() {
-  if (dev_ == "") {
+  if (devName_ == "") {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
   }
 
   char errBuf[PCAP_ERRBUF_SIZE];
-  pcap_ = pcap_open_live(qPrintable(dev_), 0, 0, 0, errBuf);
+  pcap_ = pcap_open_live(qPrintable(devName_), 0, 0, 0, errBuf);
   if (pcap_ == nullptr) {
     SET_ERR(GErr::RETURN_NULL, errBuf);
     return false;

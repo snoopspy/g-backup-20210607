@@ -18,10 +18,10 @@
 // ----------------------------------------------------------------------------
 struct GPcapDeviceWriter : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(QString dev MEMBER dev_)
+  Q_PROPERTY(QString devName MEMBER devName_)
 
 public:
-  QString dev_{""};
+  QString devName_{""};
 
 public:
   Q_INVOKABLE GPcapDeviceWriter(QObject* parent = nullptr);
