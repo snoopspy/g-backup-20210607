@@ -153,9 +153,9 @@ void GDnsFirewall::debugPacket(QString msg, GPacket* packet) {
   }
 
   if (sport == 0 && dport == 0)
-    qDebug() << QString("%1 %2 %3>%4").arg(msg, proto, qPrintable(sip), qPrintable(dip));
+    qDebug() << QString("%1 %2 %3>%4").arg(msg, proto, QString(sip), QString(dip));
   else
-    qDebug() << QString("%1 %2 %3:%4>:%5:%6").arg(msg, proto, qPrintable(sip), QString::number(sport), qPrintable(dip), QString::number(dport));
+    qDebug() << QString("%1 %2 %3:%4>:%5:%6").arg(msg, proto, QString(sip), QString::number(sport), QString(dip), QString::number(dport));
 }
 
 void GDnsFirewall::check(GPacket* packet) {
@@ -319,7 +319,7 @@ void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
       continue;
     GIp ip = ntohl(*(uint32_t*)answer.data_.data());
     ipFlowKey.dip_ = ip; // dns response ip(server ip)
-    qDebug() << QString("name=%1 ttl=%2 data=%3 %4").arg(answer.name_).arg(answer.ttl_).arg(qPrintable(ip), QString::number(ip, 16));
+    qDebug() << QString("name=%1 ttl=%2 data=%3 %4").arg(answer.name_).arg(answer.ttl_).arg(QString(ip), QString::number(ip, 16));
 
     DnsItem newItem;
     newItem.name_ = answer.name_;
