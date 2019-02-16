@@ -41,7 +41,7 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
   }
   const char* propName = mpro.name();
   int userType = mpro.userType();
-  QVariant variant = ((const QJsonObject)jo)[propName];
+  QVariant variant = (static_cast<const QJsonObject>(jo))[propName];
   bool res = false;
 
   if (mpro.isEnumType()) {
