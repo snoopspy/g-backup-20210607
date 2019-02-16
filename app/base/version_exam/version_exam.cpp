@@ -2,6 +2,6 @@
 #include <GBase>
 
 int main() {
-  std::cout << G_VERSION << std::endl;
+  std::cout << G::VERSION << std::endl;
   return 0;
 }

@@ -10,5 +10,7 @@
 
 #pragma once
 
-extern const char* G_VERSION;
-extern unsigned long G_TIMEOUT;
+struct G {
+  static const char* VERSION;
+  static const unsigned long TIMEOUT;
+};

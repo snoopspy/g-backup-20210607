@@ -19,7 +19,7 @@ struct Param {
   }
 
   static void usage() {
-    std::clog << "snoopspy console " << G_VERSION << std::endl;
+    std::clog << "snoopspy console " << G::VERSION << std::endl;
     std::clog << "Copyright (c) Gilbert Lee All rights reserved\n";
     std::clog << "\n";
     std::clog << "usage : sscon <filename>\n";
@@ -59,8 +59,9 @@ protected:
 
   bool doClose() override {
     qDebug() << "bef call graph_.close"; // gilgil temp 2016.09.25
-    return graph_.close();
+    bool res = graph_.close();
     qDebug() << "aft call graph_.close"; // gilgil temp 2016.09.25
+    return res;
   }
 
 public:
