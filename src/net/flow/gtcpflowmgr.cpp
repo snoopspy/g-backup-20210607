@@ -19,7 +19,8 @@ void GTcpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
       case GFlow::Value::Fin: timeout = finTimeout_; break;
     }
     if (elapsed >= timeout) {
-      key_ = (GFlow::TcpFlowKey*)&it.key();
+      //key_ = (GFlow::TcpFlowKey*)&it.key();
+      key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
       value_ = value;
       emit _flowDeleted(packet);
       it = flowMap_.erase(it);
@@ -49,7 +50,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
   if (it == flowMap_.end()) {
     GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
     it = flowMap_.insert(key, value);
-    key_ = (GFlow::TcpFlowKey*)&it.key();
+    key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
     value_ = value;
     emit _flowCreated(packet);
 
@@ -75,7 +76,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
     }
   }
 
-  this->key_ = (GFlow::TcpFlowKey*)&it.key();
+  this->key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
   this->value_ = it.value();
   emit processed(packet);
 }
