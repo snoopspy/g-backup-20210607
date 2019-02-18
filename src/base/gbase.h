@@ -11,6 +11,6 @@
 #pragma once
 
 struct G {
-  static const char* VERSION;
-  static const unsigned long TIMEOUT;
+  static const char* Version;
+  static const unsigned long Timeout;
 };

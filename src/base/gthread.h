@@ -19,7 +19,7 @@
 struct GThread : QThread {
   GThread(QObject *parent = nullptr) : QThread(parent) {}
   void start(Priority = InheritPriority);
-  bool wait(unsigned long time = G::TIMEOUT);
+  bool wait(unsigned long time = G::Timeout);
 };
 
 // ----------------------------------------------------------------------------

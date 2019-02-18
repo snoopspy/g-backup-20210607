@@ -6,7 +6,7 @@ extern "C" {
 
 int count() {
   qRegisterMetaType<GIpFlowMgr*>();
-  qRegisterMetaType<GUdpFlowMgr*>();
+  qRegisterMetaType<GIpFlowMgr*>();
   qRegisterMetaType<GTcpFlowMgr*>();
   return 3;
 }
