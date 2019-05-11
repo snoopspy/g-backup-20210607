@@ -45,7 +45,6 @@ struct GErr {
     WRITE_FAILED
   };
 
-
   GErr() : code_(OK) {}
   GErr(int code) : code_(code) {}
   GErr(int code, QString msg) : code_(code), msg_(msg) {}

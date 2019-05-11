@@ -10,7 +10,6 @@
 
 #pragma once
 
-//#include <netinet/in.h> // gilgil temp 2019.05.11
 #include <QString>
 
 // ----------------------------------------------------------------------------
@@ -28,7 +27,7 @@ public:
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
   GIp(const uint32_t rhs) : ip_(rhs) {}
   GIp(const char* rhs);
-  GIp(const QString& rhs) { GIp(qPrintable(rhs)); }
+  GIp(const QString& rhs) : GIp(qPrintable(rhs)) {}
 
   //
   // casting operator

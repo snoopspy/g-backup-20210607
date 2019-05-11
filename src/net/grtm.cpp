@@ -2,6 +2,7 @@
 #include <QProcess>
 #include <QTextStream>
 #include "grtm.h"
+#include <arpa/inet.h>
 
 // ----------------------------------------------------------------------------
 // GRtm
@@ -49,11 +50,11 @@ bool GRtm::loadFromSystem() {
         if (field == "Iface")
           entry.intf_ = value;
         else if (field == "Destination")
-          entry.dst_ = ntohl(value.toInt(nullptr, 16));
+          entry.dst_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Gateway")
-          entry.gateway_ = ntohl(value.toInt(nullptr, 16));
+          entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Mask")
-          entry.mask_ = ntohl(value.toInt(nullptr, 16));
+          entry.mask_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Metric")
           entry.metric_ = value.toInt(nullptr, 16);
       }
@@ -70,7 +71,7 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
 
   int _count = count();
   for (int i = 0; i < _count; i++) {
-    GRtmEntry& entry = (GRtmEntry&)at(i);
+    GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
 
     if ((entry.dst_ & entry.mask_) != (ip & entry.mask_)) continue;
     if (res == nullptr) {

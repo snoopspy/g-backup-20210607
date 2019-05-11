@@ -3,13 +3,12 @@
 // ----------------------------------------------------------------------------
 // GMac
 // ----------------------------------------------------------------------------
-GMac::GMac(const QString s) {
+GMac::GMac(const char* rhs) {
   int i;
-  char* p;
-  char ch1, ch2;
+  u_char* p;
+  u_char ch1, ch2;
 
-  QByteArray arr = s.toLatin1();
-  p = (char*)arr.constData();
+  p = reinterpret_cast<u_char*>(const_cast<char*>(rhs));
   for (i = 0 ; i < SIZE; i++)
   {
     ch1 = *p++;
@@ -27,7 +26,7 @@ GMac::GMac(const QString s) {
       ch2 = ch2 - 'A' + 10;
     else
       ch2 = ch2 - '0';
-    value[i] = (ch1 << 4) + ch2;
+    mac_[i] = static_cast<u_char>((ch1 << 4) + ch2);
     while (*p == '-' || *p == ':') p++;
   }
 }
@@ -35,18 +34,18 @@ GMac::GMac(const QString s) {
 GMac::operator QString() const {
   u_char ch1, ch2;
   int i, index;
-  char buf[SIZE * 3]; // enough size
+  u_char buf[SIZE * 3]; // enough size
 
   index = 0;
   for (i = 0; i < SIZE; i++)
   {
-    ch1 = value[i] & 0xF0;
+    ch1 = mac_[i] & 0xF0;
     ch1 = ch1 >> 4;
     if (ch1 > 9)
       ch1 = ch1 + 'A' - 10;
     else
       ch1 = ch1 + '0';
-    ch2 = value[i] & 0x0F;
+    ch2 = mac_[i] & 0x0F;
     if (ch2 > 9)
       ch2 = ch2 + 'A' - 10;
     else
@@ -57,14 +56,14 @@ GMac::operator QString() const {
       buf[index++] = '-';
   }
   buf[index] = '\0';
-  return (QString(buf));
+  return (QString(reinterpret_cast<char*>(buf)));
 }
 
 GMac GMac::randomMac() {
   GMac res;
   for (int i = 0; i < SIZE; i++)
-    res.value[i] = rand() % 256;
-  res.value[0] &= 0x7F;
+    res.mac_[i] = static_cast<u_char>(rand() % 256);
+  res.mac_[0] &= 0x7F;
   return res;
 }
 
@@ -79,3 +78,57 @@ GMac& GMac::broadcastMac() {
   static GMac res(_value);
   return res;
 }
+
+// ----------------------------------------------------------------------------
+// GTEST
+// ----------------------------------------------------------------------------
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+static u_char _temp[GMac::SIZE] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55};
+
+TEST(GMac, ctorTest) {
+  GMac mac1; // ()
+
+  GMac mac2{mac1}; // (const GMac& rhs)
+
+  GMac mac3(_temp); // (const u_char* rhs)
+  EXPECT_EQ(mac3, _temp);
+
+  GMac mac4("001122-334455"); // (const char* rhs)
+  EXPECT_EQ(mac4, _temp);
+
+  GMac mac5(QString("001122-334455")); // (const QString& rhs)
+  EXPECT_EQ(mac5, _temp);
+}
+
+TEST(GMac, castingTest) {
+  GMac mac("001122-334455");
+
+  const u_char* uc = mac; // operator u_char*()
+  u_char temp[GMac::SIZE];
+  for (int i = 0; i < GMac::SIZE; i++)
+    temp[i] = *uc++;
+  EXPECT_EQ(mac, temp);
+
+  QString s1 = static_cast<const char*>(mac); // operator const char*()
+  EXPECT_EQ(s1, "001122-334455");
+
+  QString s2 = QString(mac); // operator QString()
+  EXPECT_EQ(s2, "001122-334455");
+}
+
+TEST(GMac, funcTest) {
+  GMac mac;
+
+  mac.clear();
+  EXPECT_TRUE(mac.isClean());
+
+  mac = "FF:FF:FF:FF:FF:FF";
+  EXPECT_TRUE(mac.isBroadcast());
+
+  mac = "01:00:5E:00:11:22";
+  EXPECT_TRUE(mac.isMulticast());
+}
+
+#endif // GTEST

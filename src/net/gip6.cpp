@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // GIp6
 // ----------------------------------------------------------------------------
-GIp6& GIp6::operator =(const char* rhs) {
+GIp6::GIp6(const char* rhs) {
   int res = inet_pton(AF_INET6, rhs, &ip6_);
   switch (res) {
     case 0:
@@ -16,7 +16,6 @@ GIp6& GIp6::operator =(const char* rhs) {
     default:
       qWarning() << "inet_pton return " << res << " " << GLastErr();
   }
-  return *this;
 }
 
 GIp6::operator QString() const {
@@ -26,7 +25,7 @@ GIp6::operator QString() const {
     qWarning() << "inet_ntop return null " << GLastErr();
     return QString();
   }
-  return QString{s};
+  return QString(s);
 }
 
 // ----------------------------------------------------------------------------
@@ -35,67 +34,50 @@ GIp6::operator QString() const {
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-static GIp6::Addr _loopback{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
+static u_char _loopback[GIp6::SIZE] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
 
 TEST(GIp6, ctorTest) {
   GIp6 ip61; // ()
 
-  GIp6 ip62{ip61}; // (const GIp& rhs)
+  GIp6 ip62{ip61}; // GIp6(const GIp6& rhs)
 
-  GIp6 ip63{_loopback}; // (const Addr&)
+  GIp6 ip63{_loopback}; // GIp6(const u_char* rhs)
+  EXPECT_EQ(ip63, _loopback);
 
-  GIp6 ip64{"::1"}; // (const char*)
+  GIp6 ip64{"::1"}; // GIp6(const char* rhs)
+  EXPECT_EQ(ip64, _loopback);
 
-  GIp6 ip65{(QString)"::2"}; // (const QString)
+  GIp6 ip65{QString("::1")}; // GIp6(const QString rhs)
+  EXPECT_EQ(ip65, _loopback);
 }
 
-TEST(GIp6, assignTest) {
-  GIp6 ip61{"::1"};
-  GIp6 ip62;
-
-  ip62 = ip61; // operator =(const GIp6&)
-  EXPECT_EQ(ip62, ip61);
-
-  ip62 = _loopback; // operator =(const Addr&)
-  EXPECT_EQ(ip62, _loopback);
-
-  ip62 = (QString)"::1"; // operator =(const char*)
-  EXPECT_EQ(ip62, _loopback);
-
-  ip62 = (QString)"::1"; // operator =(const QString&)
-  EXPECT_EQ(ip62, _loopback);
-}
-
-TEST(GIp6, operatorTest) {
+TEST(GIp6, castingTest) {
   GIp6 ip6{"::1"};
 
-  const u_char* ui = (const u_char*)ip6; // operator const u_char*()
-  GIp6::Addr temp;
+  const u_char* uc = ip6; // operator const u_char*()
+  u_char temp[GIp6::SIZE];
   for (int i = 0; i < GIp6::SIZE; i++)
-    temp[i] = *ui++;
+    temp[i] = *uc++;
   EXPECT_EQ(ip6, temp);
 
-  QString s1 = (const char*)ip6; // operator const char*()
+  QString s1 = static_cast<const char*>(ip6); // operator const char*()
   EXPECT_EQ(s1, "::1");
 
-  QString s2 = (QString)ip6; // operator QString()
+  QString s2 = QString(ip6); // operator QString()
   EXPECT_EQ(s2, "::1");
 }
 
-/*
-TEST(GIp, funcTest) {
+TEST(GIp6, funcTest) {
   GIp6 ip6;
 
-  ip = "127.0.0.1";
-  EXPECT_TRUE(ip.isLocalHost());
+  ip6 = "127.0.0.1";
+  EXPECT_TRUE(ip6.isLocalHost());
 
-  ip = "255.255.255.255";
-  EXPECT_TRUE(ip.isBroadcast());
+  ip6 = "255.255.255.255";
+  EXPECT_TRUE(ip6.isBroadcast());
 
-  ip = "224.0.0.0";
-  EXPECT_TRUE(ip.isMulticast());
+  ip6 = "224.0.0.0";
+  EXPECT_TRUE(ip6.isMulticast());
 }
-*/
-// ----------------------------------
 
 #endif // GTEST

@@ -39,46 +39,29 @@ GIp::operator QString() const {
 TEST(GIp, ctorTest) {
   GIp ip1; // ()
 
-  GIp ip2{ip1}; // (const GIp&)
+  GIp ip2{ip1}; // (const GIp& rhs)
 
-  GIp ip3{0x7F000001}; // (const uint32_t)
+  GIp ip3{0x7F000001}; // (const uint32_t rhs)
   EXPECT_EQ(ip3, 0x7F000001);
 
-  GIp ip4{"127.0.0.1"}; // (const char*)
+  GIp ip4{"127.0.0.1"}; // (const char* rhs)
   EXPECT_EQ(ip4, 0x7F000001);
 
-  GIp ip5{QString("127.0.0.1")}; // (const QString&)
+  GIp ip5{QString("127.0.0.1")}; // (const QString& rhs)
   EXPECT_EQ(ip5, 0x7F000001);
 }
 
 TEST(GIp, castingTest) {
   GIp ip{"127.0.0.1"};
 
-  uint32_t ui; ui = ip; // operator uint32_t() const
+  uint32_t ui; ui = ip; // operator uint32_t()
   EXPECT_EQ(ui, 0x7F000001);
 
-  QString s1; s1 = static_cast<const char*>(ip); //operator const char*()
+  QString s1; s1 = static_cast<const char*>(ip); // operator const char*()
   EXPECT_EQ(s1, "127.0.0.1");
 
   QString s2; s2 = QString(ip); // operator QString()
   EXPECT_EQ(s2, "127.0.0.1");
-}
-
-TEST(GIp, assignmentTest) {
-  GIp ip1{"127.0.0.1"};
-  GIp ip2;
-
-  ip2 = ip1; // GIp(const GIp&)
-  EXPECT_EQ(ip2, 0x7F000001);
-
-  ip2 = 0x7F000001; // GIp(const uint32_t)
-  EXPECT_EQ(ip2, 0x7F000001);
-
-  ip2 = "127.0.0.1"; // GIp(const char*)
-  EXPECT_EQ(ip2, 0x7F000001);
-
-  ip2 = QString("127.0.0.1"); // GIp(const QString&)
-  EXPECT_EQ(ip2, 0x7F000001);
 }
 
 TEST(GIp, funcTest) {
@@ -98,4 +81,3 @@ TEST(GIp, funcTest) {
 }
 
 #endif // GTEST
-

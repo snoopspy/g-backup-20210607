@@ -14,6 +14,7 @@ GNetIntfs& GNetIntf::all() {
 // ----------------------------------------------------------------------------
 #include <unistd.h>
 #include <net/if.h>
+#include <netinet/in.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 
@@ -28,7 +29,7 @@ static GMac getMac(char* name) {
   ioctl(s, SIOCGIFHWADDR, &buffer);
   close(s);
 
-  GMac res = (u_char*)buffer.ifr_ifru.ifru_hwaddr.sa_data;
+  GMac res = buffer.ifr_ifru.ifru_hwaddr.sa_data;
   return res;
 }
 
@@ -51,8 +52,7 @@ GNetIntfs::GNetIntfs() {
   //
   pcap_if_t* dev = allDevs_;
   i = 1;
-  while (dev != nullptr)
-  {
+  while (dev != nullptr) {
     GNetIntf intf;
 
     intf.index_ = i;
@@ -61,20 +61,20 @@ GNetIntfs::GNetIntfs() {
     intf.dev_ = dev;
 
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
-      sockaddr* addr;
-
       // mac_
       intf.mac_ = getMac(dev->name);
 
       // ip_
-      addr = pa->addr;
+      sockaddr* addr = pa->addr;
+      sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET)
-        intf.ip_ = ((struct sockaddr_in*)addr)->sin_addr;
+        intf.ip_ = ntohl(addr_in->sin_addr.s_addr);
 
       // mask_;
-      addr = pa->netmask;
+      addr = pa->addr;
+      addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET) {
-        intf.mask_ = ((struct sockaddr_in*)addr)->sin_addr;
+        intf.mask_ = ntohl(addr_in->sin_addr.s_addr);
       }
 
       // gateway_

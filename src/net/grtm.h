@@ -17,11 +17,11 @@
 // GRtmEntry
 // ----------------------------------------------------------------------------
 struct GRtmEntry {
-  GIp dst_{(uint32_t)0};
-  GIp mask_{(uint32_t)0};
-  GIp gateway_{(uint32_t)0};
+  GIp dst_{uint32_t(0)};
+  GIp mask_{uint32_t(0)};
+  GIp gateway_{uint32_t(0)};
   QString intf_;
-  int metric_{(uint32_t)0};
+  int metric_{0};
 };
 
 // ----------------------------------------------------------------------------
