@@ -147,15 +147,15 @@ void Widget::on_pbOpen_clicked() {
   switch (currentIndex)
   {
     case 0:
-      tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toInt());
+      tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toUShort());
       netClient_ = &tcpSocket_;
       break;
     case 1:
-      udpSocket_.connectToHost(ui->leUdpHost->text(), ui->leUdpPort->text().toInt());
+      udpSocket_.connectToHost(ui->leUdpHost->text(), ui->leUdpPort->text().toUShort());
       netClient_ = &udpSocket_;
       break;
     case 2:
-      sslSocket_.connectToHostEncrypted(ui->leSslHost->text(), ui->leSslPort->text().toInt());
+      sslSocket_.connectToHostEncrypted(ui->leSslHost->text(), ui->leSslPort->text().toUShort());
       netClient_ = &sslSocket_;
       break;
   }
