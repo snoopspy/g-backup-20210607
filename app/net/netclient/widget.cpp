@@ -176,7 +176,7 @@ void Widget::on_pbClear_clicked() {
 
 void Widget::on_tbTcpAdvance_clicked() {
   option_.tcpClient_.host_ = ui->leTcpHost->text();
-  option_.tcpClient_.port_ = ui->leTcpPort->text().toInt();
+  option_.tcpClient_.port_ = ui->leTcpPort->text().toUShort();
   showOption(&option_.tcpClient_);
   ui->leTcpHost->setText(option_.tcpClient_.host_);
   ui->leTcpPort->setText(QString::number(option_.tcpClient_.port_));
@@ -184,7 +184,7 @@ void Widget::on_tbTcpAdvance_clicked() {
 
 void Widget::on_tbUdpAdvance_clicked() {
   option_.udpClient_.host_ = ui->leUdpHost->text();
-  option_.udpClient_.port_ = ui->leUdpPort->text().toInt();
+  option_.udpClient_.port_ = ui->leUdpPort->text().toUShort();
   showOption(&option_.udpClient_);
   ui->leUdpHost->setText(option_.udpClient_.host_);
   ui->leUdpPort->setText(QString::number(option_.udpClient_.port_));
@@ -192,7 +192,7 @@ void Widget::on_tbUdpAdvance_clicked() {
 
 void Widget::on_tbSslAdvanced_clicked() {
   option_.sslClient_.host_ = ui->leSslHost->text();
-  option_.sslClient_.port_ = ui->leSslPort->text().toInt();
+  option_.sslClient_.port_ = ui->leSslPort->text().toUShort();
   showOption(&option_.sslClient_);
   ui->leSslHost->setText(option_.sslClient_.host_);
   ui->leSslPort->setText(QString::number(option_.sslClient_.port_));
