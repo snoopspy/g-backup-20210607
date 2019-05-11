@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <netinet/in.h>
+//#include <netinet/in.h> // gilgil temp 2019.05.11
 #include <QString>
 
 // ----------------------------------------------------------------------------
@@ -27,25 +27,15 @@ public:
   GIp() {}
   GIp(const GIp& rhs) : ip_(rhs.ip_) {}
   GIp(const uint32_t rhs) : ip_(rhs) {}
-  GIp(const char* rhs) { *this = rhs; }
-  GIp(const QString& rhs) { *this = rhs; }
-  GIp(const struct in_addr& rhs) { *this = rhs; }
+  GIp(const char* rhs);
+  GIp(const QString& rhs) { GIp(qPrintable(rhs)); }
 
   //
   // casting operator
   //
   operator uint32_t() const { return ip_; } // default casting operator
   explicit operator const char*() const { return qPrintable(QString(*this)); }
-  explicit operator const QString() const;
-
-  //
-  // assignment operator
-  //
-  GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
-  GIp& operator = (const uint32_t rhs) { ip_ = rhs; return *this; }
-  GIp& operator = (const char* rhs);
-  GIp& operator = (const QString& rhs) { *this = qPrintable(rhs); return *this; }
-  GIp& operator = (const struct in_addr& rhs) { ip_ = ntohl(rhs.s_addr);  return *this; }
+  explicit operator QString() const;
 
 public:
   void clear() { ip_ = 0; }

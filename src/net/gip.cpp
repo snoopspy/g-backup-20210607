@@ -5,18 +5,7 @@
 // ----------------------------------------------------------------------------
 // GIp
 // ----------------------------------------------------------------------------
-GIp::operator const QString() const {
-  uint32_t ip = htonl(ip_);
-  char s[INET_ADDRSTRLEN];
-  const char* res = inet_ntop(AF_INET, &ip, s, INET_ADDRSTRLEN);
-  if (res == nullptr) {
-    qWarning() << "inet_ntop return null " << GLastErr();
-    return QString();
-  }
-  return QString(s);
-}
-
-GIp& GIp::operator = (const char* rhs) {
+GIp::GIp(const char* rhs) {
   int res = inet_pton(AF_INET, rhs, &ip_);
   switch (res) {
     case 0:
@@ -28,7 +17,17 @@ GIp& GIp::operator = (const char* rhs) {
     default:
       qWarning() << "inet_pton return " << res << " " << GLastErr();
   }
-  return *this;
+}
+
+GIp::operator QString() const {
+  uint32_t ip = htonl(ip_);
+  char s[INET_ADDRSTRLEN];
+  const char* res = inet_ntop(AF_INET, &ip, s, INET_ADDRSTRLEN);
+  if (res == nullptr) {
+    qWarning() << "inet_ntop return null " << GLastErr();
+    return QString();
+  }
+  return QString(s);
 }
 
 // ----------------------------------------------------------------------------
@@ -50,10 +49,6 @@ TEST(GIp, ctorTest) {
 
   GIp ip5{QString("127.0.0.1")}; // (const QString&)
   EXPECT_EQ(ip5, 0x7F000001);
-
-  struct in_addr addr = { 0x0100007F }; // (const struct in_addr&)
-  GIp ip6(addr);
-  EXPECT_EQ(ip6, 0x7F000001);
 }
 
 TEST(GIp, castingTest) {
@@ -73,21 +68,24 @@ TEST(GIp, assignmentTest) {
   GIp ip1{"127.0.0.1"};
   GIp ip2;
 
-  ip2 = ip1; // operator =(const GIp&)
+  ip2 = ip1; // GIp(const GIp&)
   EXPECT_EQ(ip2, 0x7F000001);
 
-  ip2 = 0x7F000001; // operator =(const uint32_t)
+  ip2 = 0x7F000001; // GIp(const uint32_t)
   EXPECT_EQ(ip2, 0x7F000001);
 
-  ip2 = "127.0.0.1"; // operator =(const char*)
+  ip2 = "127.0.0.1"; // GIp(const char*)
   EXPECT_EQ(ip2, 0x7F000001);
 
-  ip2 = QString("127.0.0.1"); // operator =(const QString)
+  ip2 = QString("127.0.0.1"); // GIp(const QString&)
   EXPECT_EQ(ip2, 0x7F000001);
 }
 
 TEST(GIp, funcTest) {
   GIp ip;
+
+  ip.clear();
+  EXPECT_EQ(ip, 0);
 
   ip = "127.0.0.1";
   EXPECT_TRUE(ip.isLocalHost());
