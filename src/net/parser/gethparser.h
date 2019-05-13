@@ -10,24 +10,18 @@
 
 #pragma once
 
-#include "gparser.h"
-#include "net/capture/gcapture.h"
+#include "gipparser.h"
 
 // ----------------------------------------------------------------------------
-// GParserFactory
+// GEthParser
 // ----------------------------------------------------------------------------
-struct GParserFactory : GObj {
-private:
-  GParserFactory();
-  ~GParserFactory() override;
+struct GEthParser : GIpParser {
+  Q_OBJECT
 
 public:
-  static GParser* getDefaultParser(GPacket::DataLinkType dataLinkType);
-  static GParserFactory& instance();
+  Q_INVOKABLE GEthParser(QObject* parent = nullptr) : GIpParser(parent) {}
+  ~GEthParser() override {}
 
-protected:
-  GParser* ethParser_;
-  GParser* ipParser_;
-  GParser* dot11Parser_;
-  GParser* nullParser_;
+public:
+  bool parse(GPacket* packet) override;
 };

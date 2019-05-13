@@ -14,12 +14,6 @@
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GParsers
-// ----------------------------------------------------------------------------
-struct GParser;
-typedef QVector<GParser*> GParsers;
-
-// ----------------------------------------------------------------------------
 // GParser
 // ----------------------------------------------------------------------------
 struct GParser : GObj {
@@ -30,19 +24,14 @@ public:
   ~GParser() override {}
 
 public:
-  // ----- gilgil temp 2017.11.24 -----
-  /*
-  GParser* findFirstChild(QString className);
-  QVector<GParser*> findAll(QString className);
-  void addChild(QString parentClassName, QString childClassName);
-  */
-  // ----------------------------------
-
-public:
-  QMap<GPdu::Id, GParser*> parserMap_;
-  QVector<GParser*> parserList_;
   virtual bool parse(GPacket* packet);
-
-protected:
-  virtual GPdu* doParse(GPacket* packet);
 };
+
+// ----- gilgil temp 2019.05.13 -----
+/*
+// ----------------------------------------------------------------------------
+// GParsers
+// ----------------------------------------------------------------------------
+typedef QVector<GParser*> GParsers;
+*/
+// ----------------------------------

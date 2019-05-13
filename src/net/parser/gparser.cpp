@@ -59,6 +59,8 @@ void GParser::addChild(QString parentClassName, QString childClassName) {
 */
 // ----------------------------------
 
+// ----- gilgil temp 2019.05.13 -----
+/*
 bool GParser::parse(GPacket* packet) {
   GPdu* pdu = doParse(packet);
   if (pdu == nullptr)
@@ -87,3 +89,5 @@ GPdu* GParser::doParse(GPacket* packet) {
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return nullptr;
 }
+*/
+// ----------------------------------

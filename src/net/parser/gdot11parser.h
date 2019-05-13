@@ -11,23 +11,17 @@
 #pragma once
 
 #include "gparser.h"
-#include "net/capture/gcapture.h"
 
 // ----------------------------------------------------------------------------
-// GParserFactory
+// GDot11Parser
 // ----------------------------------------------------------------------------
-struct GParserFactory : GObj {
-private:
-  GParserFactory();
-  ~GParserFactory() override;
+struct GDot11Parser : GParser {
+  Q_OBJECT
 
 public:
-  static GParser* getDefaultParser(GPacket::DataLinkType dataLinkType);
-  static GParserFactory& instance();
+  Q_INVOKABLE GDot11Parser(QObject* parent = nullptr) : GParser(parent) {}
+  ~GDot11Parser() override {}
 
-protected:
-  GParser* ethParser_;
-  GParser* ipParser_;
-  GParser* dot11Parser_;
-  GParser* nullParser_;
+public:
+  bool parse(GPacket* packet) override;
 };
