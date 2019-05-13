@@ -19,8 +19,9 @@
 // GIpPacket
 // ----------------------------------------------------------------------------
 struct GIpPacket : GPacket {
-  GIpPacket() : GPacket() {}
-  GIpPacket(GCapture* capture) : GPacket(capture) {}
+  GIpPacket(QObject* parent = nullptr) : GPacket(parent) {
+    dataLinkType_ = GPacket::Ip;
+  }
 
 public:
   void clear() override {

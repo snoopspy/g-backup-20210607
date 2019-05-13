@@ -1,4 +1,8 @@
 #include "gcapture.h"
+#include "net/packet/gethpacket.h"
+#include "net/packet/gippacket.h"
+#include "net/packet/gdot11packet.h"
+#include "net/packet/gnullpacket.h"
 #include "net/parser/gparserfactory.h"
 
 // ----------------------------------------------------------------------------
@@ -71,17 +75,28 @@ void GCapture::run() {
   GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
 
-  GPacket packet;
-  packet.capture_ = this;
+  GEthPacket ethPacket(this);
+  GIpPacket ipPacket(this);
+  GDot11Packet dot11Packet(this);
+  GNullPacket nullPacket(this);
+
+  GPacket* packet;
+  switch(dataLinkType()) {
+    case GPacket::Eth: packet = &ethPacket; break;
+    case GPacket::Ip: packet = &ipPacket; break;
+    case GPacket::Dot11: packet = &dot11Packet; break;
+    case GPacket::Null: packet = &nullPacket; break;
+  }
+
   while (active()) {
-    packet.clear();
-    GPacket::Result res = read(&packet);
+    packet->clear();
+    GPacket::Result res = read(packet);
     if (res == GPacket::TimeOut) continue;
     if (res == GPacket::Eof || res == GPacket::Fail) break;
-    if (autoParse_) parser->parse(&packet);
-    emit captured(&packet);
-    if (this->pathType() == InPath && !packet.ctrl.block_) {
-      res = relay(&packet);
+    if (autoParse_) parser->parse(packet);
+    emit captured(packet);
+    if (this->pathType() == InPath && !packet->ctrl.block_) {
+      res = relay(packet);
       if (res != GPacket::Ok) {
         qWarning() << "relay return " << int(res); // gilgil temp 2015.10.29
       }

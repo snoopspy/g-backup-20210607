@@ -16,5 +16,7 @@
 // GEthPacket
 // ----------------------------------------------------------------------------
 struct GEthPacket : GIpPacket {
-
+  GEthPacket(QObject* parent = nullptr) : GIpPacket(parent) {
+    dataLinkType_ = GPacket::Eth;
+  }
 };

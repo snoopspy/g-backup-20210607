@@ -48,24 +48,26 @@ public:
   static DataLinkType intToDataLinkType(int dataLink);
 
 public:
-  GPacket() : QObject(nullptr), capture_(nullptr) {
-    clear();
-  }
-
-  GPacket(GCapture* capture) : QObject(nullptr) , capture_(capture) {
-    clear();
-  }
-
-  ~GPacket() override {}
+  GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
 
 public:
-  GCapture* capture_{nullptr};
+  //
+  // info
+  //
+  DataLinkType dataLinkType_{Null};
 
+  //
+  // sniffing
+  //
   struct timeval ts_;
   struct {
     u_char* data_{nullptr};
     size_t size_{0};
   } buf;
+
+  //
+  // control
+  //
   struct {
     bool block_{false};
   } ctrl;

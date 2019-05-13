@@ -1,6 +1,6 @@
 #include "gtcpflowmgr.h"
-#include "net/pdu/giphdr.h"
-#include "net/pdu/gtcphdr.h"
+#include "net/packet/gethpacket.h"
+#include "net/packet/gippacket.h"
 
 // ----------------------------------------------------------------------------
 // GTcpFlowMgr
@@ -31,6 +31,20 @@ void GTcpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
 }
 
 void GTcpFlowMgr::process(GPacket* packet) {
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
+
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
@@ -38,10 +52,10 @@ void GTcpFlowMgr::process(GPacket* packet) {
     lastCheckTick_ = now;
   }
 
-  GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr == nullptr) return;
 
-  GTcpHdr* tcpHdr = packet->pdus_.findFirst<GTcpHdr>();
+  GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
   if (tcpHdr == nullptr) return;
 
   GFlow::TcpFlowKey key{ipHdr->sip(), tcpHdr->sport(), ipHdr->dip(), tcpHdr->dport()};
@@ -65,9 +79,9 @@ void GTcpFlowMgr::process(GPacket* packet) {
     value->ts_ = packet->ts_;
   }
 
-  if ((tcpHdr->flags() & (TH_RST | TH_FIN)) != 0) {
+  if ((tcpHdr->flags() & (GTcpHdr::Rst | GTcpHdr::Fin)) != 0) {
     GFlow::Value* value = it.value();
-    GFlow::Value::State state = (tcpHdr->flags() & TH_RST) ? GFlow::Value::Rst : GFlow::Value::Fin;
+    GFlow::Value::State state = (tcpHdr->flags() & GTcpHdr::Rst) ? GFlow::Value::Rst : GFlow::Value::Fin;
     value->state_ = state;
     GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);

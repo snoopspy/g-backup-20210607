@@ -11,6 +11,7 @@
 #pragma once
 
 #include "gcapture.h"
+#include "net/packet/gippacket.h"
 
 // ----------------------------------------------------------------------------
 // GNetFilter
@@ -60,6 +61,7 @@ protected:
   struct nfq_q_handle* qh_{nullptr};
   int fd_{0};
 
+  GIpPacket ipPacket{this};
   GParser* parser_{nullptr};
 
   static int _callback(

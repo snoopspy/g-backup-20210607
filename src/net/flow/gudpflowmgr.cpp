@@ -1,6 +1,6 @@
 #include "gudpflowmgr.h"
-#include "net/pdu/giphdr.h"
-#include "net/pdu/gudphdr.h"
+#include "net/packet/gethpacket.h"
+#include "net/packet/gippacket.h"
 
 // ----------------------------------------------------------------------------
 // GUdpFlowMgr
@@ -19,7 +19,7 @@ void GUdpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
       case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
     }
     if (elapsed >= timeout) {
-      key_ = (GFlow::UdpFlowKey*)&it.key();
+      key_ = const_cast<GFlow::UdpFlowKey*>(&it.key());
       value_ = value;
       emit _flowDeleted(packet);
       it = flowMap_.erase(it);
@@ -30,6 +30,20 @@ void GUdpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
 }
 
 void GUdpFlowMgr::process(GPacket* packet) {
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
+
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
   {
@@ -37,10 +51,10 @@ void GUdpFlowMgr::process(GPacket* packet) {
     lastCheckTick_ = now;
   }
 
-  GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr == nullptr) return;
 
-  GUdpHdr* udpHdr = packet->pdus_.findFirst<GUdpHdr>();
+  GUdpHdr* udpHdr = ipPacket->udpHdr_;
   if (udpHdr == nullptr) return;
 
   GFlow::UdpFlowKey key(ipHdr->sip(), udpHdr->sport(), ipHdr->dip(), udpHdr->dport());
@@ -49,7 +63,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
   if (it == flowMap_.end()) {
     GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
     it = flowMap_.insert(key, value);
-    key_ = (GFlow::UdpFlowKey*)&it.key();
+    key_ = const_cast<GFlow::UdpFlowKey*>(&it.key());
     value_ = value;
     emit _flowCreated(packet);
 
@@ -64,7 +78,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
     value->ts_ = packet->ts_;
   }
 
-  this->key_ = (GFlow::UdpFlowKey*)&it.key();
+  this->key_ = const_cast<GFlow::UdpFlowKey*>(&it.key());
   this->value_ = it.value();
   emit processed(packet);
 }

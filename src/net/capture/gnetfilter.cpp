@@ -170,16 +170,15 @@ int GNetFilter::_callback(
   (void)nfad;
 
   GNetFilter* netFilter = static_cast<GNetFilter*>(data);
-  GPacket packet;
-  packet.capture_ = netFilter;
+  GIpPacket* ipPacket = &netFilter->ipPacket;
 
-  packet.clear();
-  gettimeofday(&packet.ts_, nullptr);
-  packet.buf.size_ = size_t(nfq_get_payload(nfad, &packet.buf.data_));
+  ipPacket->clear();
+  gettimeofday(&ipPacket->ts_, nullptr);
+  ipPacket->buf.size_ = size_t(nfq_get_payload(nfad, &ipPacket->buf.data_));
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
-  if (netFilter->autoParse_) netFilter->parser_->parse(&packet);
-  emit netFilter->captured(&packet);
+  if (netFilter->autoParse_) netFilter->parser_->parse(ipPacket);
+  emit netFilter->captured(ipPacket);
 
   uint32_t id = 0;
   struct nfqnl_msg_packet_hdr* ph = nfq_get_msg_packet_hdr(nfad);
@@ -187,7 +186,7 @@ int GNetFilter::_callback(
     id = ntohl(ph->packet_id);
 
   u_int32_t verdict;
-  if (packet.ctrl.block_) {
+  if (ipPacket->ctrl.block_) {
     verdict = NF_DROP;
   } else {
     verdict = u_int32_t(netFilter->acceptVerdict_);
