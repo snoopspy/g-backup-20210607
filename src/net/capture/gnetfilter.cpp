@@ -1,8 +1,10 @@
-#include "gnetfilter.h"
-#include <libnetfilter_queue/libnetfilter_queue.h>
-#include <linux/netfilter.h> /* for NF_ACCEPT */
+#include <cstdint>
 #include <unistd.h>
+#include <arpa/inet.h> // for htonl
+#include <linux/netfilter.h> // for NF_ACCEPT
+#include <libnetfilter_queue/libnetfilter_queue.h>
 #include "net/parser/gparserfactory.h"
+#include "gnetfilter.h"
 
 // ----------------------------------------------------------------------------
 // GNetFilter
@@ -45,7 +47,7 @@ bool GNetFilter::doOpen() {
   }
 
   // binding this socket to queue
-  qh_ = nfq_create_queue(h_,  queueNum_, &_callback, this);
+  qh_ = nfq_create_queue(h_,  uint16_t(queueNum_), &_callback, this);
   if (!qh_) {
     SET_ERR(GErr::FAIL, "error during nfq_create_queue()");
     return false;
@@ -134,14 +136,14 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 
 void GNetFilter::run() {
   qDebug() << "beg"; // gilgil temp 2016.09.27
-  char* buf = (char*)malloc(snapLen_);
+  char* buf = static_cast<char*>(malloc(snapLen_));
 
   while (true) {
     //qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-    int res = recv(fd_, buf, snapLen_, 0);
+    int res = int(recv(fd_, buf, snapLen_, 0));
     //qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
     if (res >= 0) {
-      nfq_handle_packet(h_, buf, res);
+      nfq_handle_packet(h_, buf, int(res));
       continue;
     } else {
       if (errno == ENOBUFS) {
@@ -167,20 +169,19 @@ int GNetFilter::_callback(
   (void)nfmsg;
   (void)nfad;
 
-  GNetFilter* netFilter = (GNetFilter*)data;
+  GNetFilter* netFilter = static_cast<GNetFilter*>(data);
   GPacket packet;
   packet.capture_ = netFilter;
 
   packet.clear();
   gettimeofday(&packet.ts_, nullptr);
-  packet.buf_.size_ = (size_t)nfq_get_payload(nfad, (unsigned char **)&packet.buf_.data_);
+  packet.buf_.size_ = size_t(nfq_get_payload(nfad, &packet.buf_.data_));
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
-  packet.parse_ = packet.buf_;
   if (netFilter->autoParse_) netFilter->parser_->parse(&packet);
   emit netFilter->captured(&packet);
 
-  int id = 0;
+  uint32_t id = 0;
   struct nfqnl_msg_packet_hdr* ph = nfq_get_msg_packet_hdr(nfad);
   if (ph != nullptr)
     id = ntohl(ph->packet_id);
@@ -189,7 +190,7 @@ int GNetFilter::_callback(
   if (packet.control.block_) {
     verdict = NF_DROP;
   } else {
-    verdict = (u_int32_t)netFilter->acceptVerdict_;
+    verdict = u_int32_t(netFilter->acceptVerdict_);
   }
 
   int res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);

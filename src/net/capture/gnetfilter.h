@@ -31,9 +31,9 @@ public:
 
 public:
   int queueNum_{0};
-  int snapLen_{65536}; // 65536 bytes
+  size_t snapLen_{65536}; // 65536 bytes
   Verdict acceptVerdict_{ACCEPT};
-  int mark_{0};
+  uint32_t mark_{0};
 
 public:
   Q_INVOKABLE GNetFilter(QObject* parent = nullptr);

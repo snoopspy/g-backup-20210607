@@ -40,17 +40,17 @@ bool GPcap::doClose() {
 GPacket::Result GPcap::read(GPacket* packet) {
   pcap_pkthdr* pkthdr;
   qDebug() << "bef pcap_next_ex"; // gilgil temp 2017.11.25
-  int i = pcap_next_ex(pcap_, &pkthdr, (const u_char**)(&(packet->buf_.data_)));
-  qDebug() << "aft pcap_next_ex return " << i << "state is" << (int)state_; // gilgil temp 2017.11.25
+  int i = pcap_next_ex(pcap_, &pkthdr, const_cast<const u_char**>(&(packet->buf_.data_)));
+  qDebug() << "aft pcap_next_ex return " << i << "state is" << int(state_); // gilgil temp 2017.11.25
   if (state_ != Opened) return GPacket::Fail; // may be pcap_close called
   GPacket::Result res;
   switch (i) {
     case -2: // if EOF was reached reading from an offline capture
-      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -2(%1)").arg(pcap_geterr(pcap_))); // gilgi temp 2016.09.09
+      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -2 error=%1").arg(pcap_geterr(pcap_)));
       res = GPacket::Eof;
       break;
     case -1: // if an error occurred
-      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -1(%1)").arg(pcap_geterr(pcap_)));
+      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -1 error=%1").arg(pcap_geterr(pcap_)));
       res = GPacket::Fail;
       break;
     case 0 : // if a timeout occured
@@ -59,7 +59,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
     default: // packet captured
       packet->ts_ = pkthdr->ts;
       packet->buf_.size_ = pkthdr->caplen;
-      packet->parse_ = packet->buf_;
+      // packet->parse_ = packet->buf_; // gilgil temp 2019.05.12
       res = GPacket::Ok;
       break;
   }
@@ -67,14 +67,14 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-  int i = pcap_sendpacket(pcap_, packet->buf_.data_, packet->buf_.size_);
+  int i = pcap_sendpacket(pcap_, packet->buf_.data_, int(packet->buf_.size_));
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;
 }
 
 GPacket::Result GPcap::write(u_char* buf, size_t len) {
-  int i = pcap_sendpacket(pcap_, (const u_char*)buf, (int)len);
+  int i = pcap_sendpacket(pcap_, const_cast<const u_char*>(buf), int(len));
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;
@@ -92,7 +92,7 @@ bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
   bpf_program code;
 
   if (dev != nullptr && dev->addresses != nullptr && dev->addresses->netmask != nullptr)
-    uNetMask = ((struct sockaddr_in*)(dev->addresses->netmask))->sin_addr.s_addr;
+    uNetMask = (reinterpret_cast<struct sockaddr_in*>(dev->addresses->netmask))->sin_addr.s_addr;
   else
     uNetMask = 0xFFFFFFFF;
   if (pcap_compile(pcap_, &code, qPrintable(filter_), 1, uNetMask) < 0) {
