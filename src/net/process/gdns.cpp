@@ -88,27 +88,27 @@ bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offse
   if (this->name_ == "") return false;
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
-  uint16_t* _type = (uint16_t*)(udpData + *offset);
+  uint16_t* _type = reinterpret_cast<uint16_t*>(udpData + *offset);
   this->type_ = ntohs(*_type);
   *offset += sizeof(uint16_t);
 
   if (*offset  + sizeof(uint16_t) > dataLen) return false;
-  uint16_t* _class_ = (uint16_t*)(udpData + *offset);
+  uint16_t* _class_ = reinterpret_cast<uint16_t*>(udpData + *offset);
   this->class_ = ntohs(*_class_);
   *offset += sizeof(uint16_t);
 
   if (*offset  + sizeof(uint32_t) > dataLen) return false;
-  uint32_t* _ttl = (uint32_t*)(udpData + *offset);
+  uint32_t* _ttl = reinterpret_cast<uint32_t*>(udpData + *offset);
   this->ttl_ = ntohl(*_ttl);
   *offset += sizeof(uint32_t);
 
   if (*offset  + sizeof(uint16_t) > dataLen) return false;
-  uint16_t* _dataLength = (uint16_t*)(udpData + *offset);
+  uint16_t* _dataLength = reinterpret_cast<uint16_t*>(udpData + *offset);
   this->dataLength_= ntohs(*_dataLength);
   *offset += sizeof(uint16_t);
 
   if (*offset + dataLength_ > dataLen) return false;
-  const char* data = (const char*)(udpData + *offset);
+  const char* data = const_cast<const char*>(reinterpret_cast<char*>(udpData + *offset));
   this->data_ = QByteArray::fromRawData(data, this->dataLength_);
   *offset += this->dataLength_;
 
@@ -140,7 +140,7 @@ bool GDns::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, s
 // ----------------------------------------------------------------------------
 QByteArray GDns::encode() {
   QByteArray res;
-  res.append((const char*)&dnsHdr_, sizeof(DNS_HDR));
+  res.append((const char*)&dnsHdr_, sizeof(GDnsHdr));
 
   // ----- gilgil temp 2014.03.22 -----
   /*
@@ -173,14 +173,14 @@ QByteArray GDns::encode() {
 }
 
 bool GDns::decode(u_char* udpData, size_t dataLen, size_t* offset) {
-  if (*offset + sizeof(DNS_HDR) > dataLen) return false;
-  memcpy(&this->dnsHdr_, udpData, sizeof(DNS_HDR));
-  *offset += sizeof(DNS_HDR);
+  if (*offset + sizeof(GDnsHdr) > dataLen) return false;
+  memcpy(&this->dnsHdr_, udpData, sizeof(GDnsHdr));
+  *offset += sizeof(GDnsHdr);
 
-  if (!questions_.decode(udpData,   dataLen, ntohs(dnsHdr_.num_q),       offset)) return false;
-  if (!answers_.decode(udpData,     dataLen, ntohs(dnsHdr_.num_answ_rr), offset)) return false;
-  if (!authorities_.decode(udpData, dataLen, ntohs(dnsHdr_.num_auth_rr), offset)) return false;
-  if (!additionals_.decode(udpData, dataLen, ntohs(dnsHdr_.num_addi_rr), offset)) return false;
+  if (!questions_.decode(udpData,   dataLen, dnsHdr_.q(),       offset)) return false;
+  if (!answers_.decode(udpData,     dataLen, dnsHdr_.answ(), offset)) return false;
+  if (!authorities_.decode(udpData, dataLen, dnsHdr_.auth(), offset)) return false;
+  if (!additionals_.decode(udpData, dataLen, dnsHdr_.addr(), offset)) return false;
 
   return true;
 }
