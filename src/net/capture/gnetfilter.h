@@ -18,7 +18,7 @@
 struct GNetFilter : GCapture {
   Q_OBJECT
   Q_PROPERTY(int queueNum MEMBER queueNum_)
-  Q_PROPERTY(int snapLen MEMBER snapLen_)
+  Q_PROPERTY(size_t snapLen MEMBER snapLen_)
   Q_PROPERTY(Verdict acceptVerdict MEMBER acceptVerdict_)
   Q_PROPERTY(int mark MEMBER mark_)
   Q_ENUMS(Verdict)
