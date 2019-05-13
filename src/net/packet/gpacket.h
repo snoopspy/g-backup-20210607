@@ -47,15 +47,6 @@ public:
   static int dataLinkTypeToInt(DataLinkType dataLinkType);
   static DataLinkType intToDataLinkType(int dataLink);
 
-  // --------------------------------------------------------------------------
-  // Buf
-  // --------------------------------------------------------------------------
-  struct Buf {
-    u_char* data_;
-    size_t size_;
-  };
-  // --------------------------------------------------------------------------
-
 public:
   GPacket() : QObject(nullptr), capture_(nullptr) {
     clear();
@@ -67,22 +58,24 @@ public:
 
   ~GPacket() override {}
 
-  void clear() {
-    bzero(&ts_, sizeof(ts_));
-    bzero(&buf_, sizeof(buf_));
-    // bzero(&parse_, sizeof(parse_)); // gilgil temp 2019.05.12
-    control.block_ = false;
-    // pdus_.clear(); // gilgil temp 2019.05.12
-  }
+public:
+  GCapture* capture_{nullptr};
 
-  GCapture* capture_;
   struct timeval ts_;
-  Buf buf_;
-  // Buf parse_; // gilgil temp 2019.05.12
-
   struct {
-    bool block_;
-  } control;
+    u_char* data_{nullptr};
+    size_t size_{0};
+  } buf;
+  struct {
+    bool block_{false};
+  } ctrl;
+
+public:
+  virtual void clear() {
+    buf.data_ = nullptr;
+    buf.size_ = 0;
+    ctrl.block_ = false;
+  }
 
   // GPdus pdus_; // gilgil temp 2019.05.12
 };

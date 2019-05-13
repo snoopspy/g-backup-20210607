@@ -19,15 +19,21 @@
 // GIpPacket
 // ----------------------------------------------------------------------------
 struct GIpPacket : GPacket {
-  Q_OBJECT
-
-public:
-  GIpHdr* ipHdr_;
-  // GIp6Hdr* ip6Hdr; // gilgil temp 2019.05.13
-  TCP_HDR* tcpHdr_;
-  UDP_HDR* udpHdr_;
-
-public:
   GIpPacket() : GPacket() {}
   GIpPacket(GCapture* capture) : GPacket(capture) {}
+
+public:
+  void clear() override {
+    GPacket::clear();
+
+    ipHdr_ = nullptr;
+    tcpHdr_ = nullptr;
+    udpHdr_ = nullptr;
+  }
+
+public:
+  GIpHdr* ipHdr_{nullptr};
+  // GIp6Hdr* ip6Hdr; // gilgil temp 2019.05.13
+  GTcpHdr* tcpHdr_{nullptr};
+  GUdpHdr* udpHdr_{nullptr};
 };

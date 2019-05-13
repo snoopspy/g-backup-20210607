@@ -20,7 +20,7 @@ bool GBpFilter::doOpen() {
     return false;
   }
 
-  code_ = (bpf_program*)malloc(sizeof(bpf_program));
+  code_ = static_cast<bpf_program*>(malloc(sizeof(bpf_program)));
   res = pcap_compile(pcap_, code_, qPrintable(filter_), 1, 0xFFFFFFFF);
   if (res < 0) {
     SET_ERR(GErr::FAIL, QString("error in pcap_compile(%1)").arg(pcap_geterr(pcap_)));
@@ -47,8 +47,8 @@ bool GBpFilter::doClose() {
 
 void GBpFilter::check(GPacket* packet) {
   Q_ASSERT(code_ != nullptr);
-  u_int len = packet->buf_.size_;
-  int res = bpf_filter(code_->bf_insns, (const u_char*)packet->buf_.data_, len, len);
+  u_int len = u_int(packet->buf.size_);
+  u_int res = bpf_filter(code_->bf_insns, const_cast<u_char*>(packet->buf.data_), len, len);
   if (res > 0)
     emit filtered(packet);
   else

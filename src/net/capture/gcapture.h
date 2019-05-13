@@ -37,6 +37,7 @@ struct GCapture : GStateObj {
   Q_PROPERTY(bool enabled MEMBER enabled_)
   Q_PROPERTY(bool autoRead MEMBER autoRead_)
   Q_PROPERTY(bool autoParse MEMBER autoParse_)
+  Q_PROPERTY(GParser*)
 
 public:
   bool enabled_{true};
@@ -44,7 +45,7 @@ public:
   bool autoParse_{true};
 
 public:
-  friend class GCaptureThread;
+  friend GCaptureThread;
 
   typedef enum {
     InPath,

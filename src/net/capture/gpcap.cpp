@@ -40,7 +40,7 @@ bool GPcap::doClose() {
 GPacket::Result GPcap::read(GPacket* packet) {
   pcap_pkthdr* pkthdr;
   qDebug() << "bef pcap_next_ex"; // gilgil temp 2017.11.25
-  int i = pcap_next_ex(pcap_, &pkthdr, const_cast<const u_char**>(&(packet->buf_.data_)));
+  int i = pcap_next_ex(pcap_, &pkthdr, const_cast<const u_char**>(&(packet->buf.data_)));
   qDebug() << "aft pcap_next_ex return " << i << "state is" << int(state_); // gilgil temp 2017.11.25
   if (state_ != Opened) return GPacket::Fail; // may be pcap_close called
   GPacket::Result res;
@@ -58,7 +58,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
       break;
     default: // packet captured
       packet->ts_ = pkthdr->ts;
-      packet->buf_.size_ = pkthdr->caplen;
+      packet->buf.size_ = pkthdr->caplen;
       // packet->parse_ = packet->buf_; // gilgil temp 2019.05.12
       res = GPacket::Ok;
       break;
@@ -67,7 +67,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-  int i = pcap_sendpacket(pcap_, packet->buf_.data_, int(packet->buf_.size_));
+  int i = pcap_sendpacket(pcap_, packet->buf.data_, int(packet->buf.size_));
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;

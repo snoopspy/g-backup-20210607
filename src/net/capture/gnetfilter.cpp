@@ -175,7 +175,7 @@ int GNetFilter::_callback(
 
   packet.clear();
   gettimeofday(&packet.ts_, nullptr);
-  packet.buf_.size_ = size_t(nfq_get_payload(nfad, &packet.buf_.data_));
+  packet.buf.size_ = size_t(nfq_get_payload(nfad, &packet.buf.data_));
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
   if (netFilter->autoParse_) netFilter->parser_->parse(&packet);
@@ -187,7 +187,7 @@ int GNetFilter::_callback(
     id = ntohl(ph->packet_id);
 
   u_int32_t verdict;
-  if (packet.control.block_) {
+  if (packet.ctrl.block_) {
     verdict = NF_DROP;
   } else {
     verdict = u_int32_t(netFilter->acceptVerdict_);

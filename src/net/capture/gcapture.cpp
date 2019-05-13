@@ -67,7 +67,7 @@ GPacket::Result GCapture::relay(GPacket* packet) {
 }
 
 void GCapture::run() {
-  qCritical() << "beg"; // gilgil temp 2017.11.25
+  qDebug() << "beg"; // gilgil temp 2017.11.25
   GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
 
@@ -80,10 +80,10 @@ void GCapture::run() {
     if (res == GPacket::Eof || res == GPacket::Fail) break;
     if (autoParse_) parser->parse(&packet);
     emit captured(&packet);
-    if (this->pathType() == InPath && !packet.control.block_) {
+    if (this->pathType() == InPath && !packet.ctrl.block_) {
       res = relay(&packet);
       if (res != GPacket::Ok) {
-        qWarning() << "relay return " << (int)res; // gilgil temp 2015.10.29
+        qWarning() << "relay return " << int(res); // gilgil temp 2015.10.29
       }
     }
   }
