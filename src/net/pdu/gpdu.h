@@ -10,14 +10,23 @@
 
 #pragma once
 
-#include <netinet/in.h>
+//#include <netinet/in.h>
+#include <arpa/inet.h> // for htonl
+
+// ----- gilgil temp 2019.05.13 -----
+/*
 #pragma pack(push, 1)
 #include "net/libnet/config.h"
 #include "net/libnet/libnet-macros.h"
 #include "net/libnet/libnet-headers.h"
 #pragma pack(pop)
-#include <QVector>
+*/
+// ----------------------------------
 
+//#include <QVector>
+
+// ----- gilgil temp 2019.05.13 -----
+/*
 // ----------------------------------------------------------------------------
 // GPdu
 // ----------------------------------------------------------------------------
@@ -125,3 +134,5 @@ public:
     return nullptr;
   }
 };
+*/
+// ----------------------------------

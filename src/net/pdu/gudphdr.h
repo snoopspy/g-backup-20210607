@@ -10,55 +10,23 @@
 
 #pragma once
 
-#include "gpdu.h"
-
-// ----------------------------------------------------------------------------
-// UDP_HDR
-// ----------------------------------------------------------------------------
-#pragma pack(push, 1)
-struct UDP_HDR { // libnet_tcp_hdr
-  uint16_t uh_sport;
-  uint16_t uh_dport;
-  uint16_t uh_len;
-  uint16_t uh_sum;
-
-  uint16_t sport() { return ntohs(uh_sport); }
-  uint16_t dport() { return ntohs(uh_dport); }
-  uint16_t len()   { return ntohs(uh_len);   }
-  uint16_t sum()   { return ntohs(uh_sum);   }
-};
-#pragma pack(pop)
+#include "giphdr.h"
 
 // ----------------------------------------------------------------------------
 // GUdpHdr
 // ----------------------------------------------------------------------------
-struct GUdpHdr : GPdu {
-  static const GPdu::Type staticType = GPdu::Type::Udp;
-  GPdu::Type pduType() override { return staticType; }
-  GPdu::Id nextPduId() override { return NULL_PDU_ID; }
-  size_t size() override;
+#pragma pack(push, 1)
+struct GUdpHdr final { // libnet_tcp_hdr // gilgil temp 2019.05.13
+  uint16_t sport_;
+  uint16_t dport_;
+  uint16_t len_;
+  uint16_t sum_;
 
-  GUdpHdr(u_char* buf);
+  uint16_t sport() { return ntohs(sport_); }
+  uint16_t dport() { return ntohs(dport_); }
+  uint16_t len()   { return ntohs(len_); }
+  uint16_t sum()   { return ntohs(sum_); }
 
-  uint16_t sport() { return udp_hdr_->sport(); }
-  uint16_t dport() { return udp_hdr_->dport(); }
-  uint16_t len()   { return udp_hdr_->len();   }
-  uint16_t sum()   { return udp_hdr_->sum();   }
-
-protected:
-  UDP_HDR* udp_hdr_;
+  static uint16_t calcChecksum(GIpHdr* ipHdr, GUdpHdr* udpHdr);
 };
-
-// ----------------------------------------------------------------------------
-// GUdpParser
-// ----------------------------------------------------------------------------
-#include "net/parser/gparser.h"
-struct GUdpParser : GParser {
-  Q_OBJECT
-
-public:
-  Q_INVOKABLE GUdpParser(QObject* parent = nullptr) : GParser(parent) {}
-
-protected:
-  GPdu* doParse(GPacket* packet) override;
-};
+#pragma pack(pop)
