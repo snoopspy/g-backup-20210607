@@ -38,7 +38,7 @@ struct GTcpHdr final { // libnet_tcp_hdr // gilgil temp 2019.05.13
   uint16_t sum()   { return ntohs(sum_); }
   uint16_t urp()   { return ntohs(urp_); }
 
-  typedef enum {
+  enum Flag {
     Urg = 0x20,
     Ack = 0x10,
     Psh = 0x08,
