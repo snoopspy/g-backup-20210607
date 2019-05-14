@@ -1,6 +1,5 @@
 #include "gipflowmgr.h"
-#include "net/packet/gethpacket.h"
-#include "net/packet/gippacket.h"
+#include <GEthPacket>
 
 // ----------------------------------------------------------------------------
 // GIpFlowMgr

@@ -37,7 +37,7 @@ struct GCapture : GStateObj {
   Q_PROPERTY(bool enabled MEMBER enabled_)
   Q_PROPERTY(bool autoRead MEMBER autoRead_)
   Q_PROPERTY(bool autoParse MEMBER autoParse_)
-  Q_PROPERTY(GParser*)
+  // Q_PROPERTY(GParser*) // gilgil temp 2019.05.14
 
 public:
   bool enabled_{true};

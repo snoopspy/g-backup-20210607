@@ -1,9 +1,9 @@
-#include "gnullparser.h"
+#include "gbuf.h"
 
 // ----------------------------------------------------------------------------
-// GNullParser
+// GTEST
 // ----------------------------------------------------------------------------
-void GNullParser::parse(GPacket* packet) {
-  (void)packet;
-  qDebug() << "doing nothing";
-}
+#ifdef GTEST
+#include <gtest/gtest.h>
+
+#endif // GTEST

@@ -13,7 +13,6 @@
 #include "base/gstateobj.h"
 #include "gdns.h"
 #include "net/pdu/gudphdr.h"
-#include "net/pdu/gudpdata.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor

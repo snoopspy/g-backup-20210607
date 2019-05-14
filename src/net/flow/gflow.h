@@ -31,14 +31,14 @@ namespace GFlow {
     u_char totalMem_[0];
 
     static struct Value* allocate(struct timeval ts, State state, size_t totalMemSize) {
-      Value* res = (Value*)malloc(sizeof(struct Value) + totalMemSize);
+      Value* res = reinterpret_cast<Value*>(malloc(sizeof(struct Value) + totalMemSize));
       res->ts_ = ts;
       res->state_ = state;
       return res;
     }
 
     static void deallocate(Value* value) {
-      free((void*)value);
+      free(static_cast<void*>(value));
     }
 
     u_char* mem(size_t offset) { return totalMem_ + offset; }
@@ -59,7 +59,7 @@ namespace GFlow {
   struct RequestItems : QVector<RequestItem> {
     size_t totalMemSize_{0};
 
-    size_t request(void* id, size_t memSize) {
+    size_t request(const char* id /* void* */, size_t memSize) {
       size_t currentOffset = 0;
       foreach (const RequestItem& item, *this) {
         if (item.id_ == id) return currentOffset;
@@ -67,7 +67,7 @@ namespace GFlow {
       }
 
       RequestItem newItem;
-      newItem.id_ = id;
+      newItem.id_ = const_cast<char*>(id);
       newItem.offset_ = currentOffset;
       newItem.memSize_ = memSize;
 

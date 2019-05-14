@@ -5,6 +5,11 @@
 // ----------------------------------------------------------------------------
 // GParser
 // ----------------------------------------------------------------------------
+void GParser::parse(GPacket* packet) {
+  (void)packet;
+  SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
+}
+
 // ----- gilgil temp 2017.11.24 -----
 /*
 GParser* GParser::findFirstChild(QString className) {

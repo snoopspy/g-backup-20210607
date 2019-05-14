@@ -47,8 +47,8 @@ bool GBpFilter::doClose() {
 
 void GBpFilter::check(GPacket* packet) {
   Q_ASSERT(code_ != nullptr);
-  u_int len = u_int(packet->buf.size_);
-  u_int res = bpf_filter(code_->bf_insns, const_cast<u_char*>(packet->buf.data_), len, len);
+  u_int len = u_int(packet->buf_.size_);
+  u_int res = bpf_filter(code_->bf_insns, const_cast<u_char*>(packet->buf_.data_), len, len);
   if (res > 0)
     emit filtered(packet);
   else

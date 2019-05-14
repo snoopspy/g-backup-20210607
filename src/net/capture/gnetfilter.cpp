@@ -174,7 +174,7 @@ int GNetFilter::_callback(
 
   ipPacket->clear();
   gettimeofday(&ipPacket->ts_, nullptr);
-  ipPacket->buf.size_ = size_t(nfq_get_payload(nfad, &ipPacket->buf.data_));
+  ipPacket->buf_.size_ = size_t(nfq_get_payload(nfad, &ipPacket->buf_.data_));
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
   if (netFilter->autoParse_) netFilter->parser_->parse(ipPacket);

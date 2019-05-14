@@ -23,5 +23,5 @@ public:
   ~GNullParser() override {}
 
 public:
-  bool parse(GPacket* packet) override;
+  void parse(GPacket* packet) override;
 };

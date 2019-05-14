@@ -10,18 +10,22 @@
 
 #pragma once
 
-#include "gparser.h"
+#include <cstddef> // for size_t
+#include <sys/types.h> // u_char
 
 // ----------------------------------------------------------------------------
-// GDot11Parser
+// GBuf
 // ----------------------------------------------------------------------------
-struct GDot11Parser : GParser {
-  Q_OBJECT
+struct GBuf final {
+  u_char* data_;
+  size_t size_;
 
-public:
-  Q_INVOKABLE GDot11Parser(QObject* parent = nullptr) : GParser(parent) {}
-  ~GDot11Parser() override {}
+  void clear() {
+    data_ = nullptr;
+    size_ = 0;
+  }
 
-public:
-  void parse(GPacket* packet) override;
+  bool valid() {
+    return data_  != nullptr;
+  }
 };

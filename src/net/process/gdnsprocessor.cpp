@@ -1,26 +1,41 @@
 #include "gdnsprocessor.h"
+#include <GEthPacket>
+#include <GIpPacket>
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor
 // ----------------------------------------------------------------------------
 void GDnsProcessor::process(GPacket* packet) {
-  GPdus& pdus = packet->pdus_;
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
+
+  GUdpHdr *udpHdr = ipPacket->udpHdr_;
+  if (udpHdr == nullptr)
+    return;
 
   if (port_ != 0) {
-    GUdpHdr *udpHdr = pdus.findFirst<GUdpHdr>();
-    if (udpHdr == nullptr)
-      return;
     if (udpHdr->sport() != port_ && udpHdr->dport() != port_)
       return;
   }
 
-  GUdpData* udpData = pdus.findNext<GUdpData>();
-  if (udpData == nullptr)
+  GBuf udpData = ipPacket->udpData_;
+  if (!udpData.valid())
     return;
 
   GDns dns;
   size_t offset = 0;
-  if (!dns.decode(udpData->data(), udpData->size(), &offset)) {
+  if (!dns.decode(udpData.data_, udpData.size_, &offset)) {
     QString queryName;
     if (dns.questions_.count() != 0)
       queryName = dns.questions_.at(0).name_;

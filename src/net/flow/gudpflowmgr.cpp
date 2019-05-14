@@ -1,6 +1,5 @@
 #include "gudpflowmgr.h"
-#include "net/packet/gethpacket.h"
-#include "net/packet/gippacket.h"
+#include <GEthPacket>
 
 // ----------------------------------------------------------------------------
 // GUdpFlowMgr

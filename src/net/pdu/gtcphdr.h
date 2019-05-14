@@ -45,8 +45,9 @@ struct GTcpHdr final { // libnet_tcp_hdr // gilgil temp 2019.05.13
     Rst = 0x04,
     Syn = 0x02,
     Fin = 0x01
-  } Flag;
+  };
 
   static uint16_t calcChecksum(GIpHdr* ipHdr, GTcpHdr* tcpHdr);
+  static GBuf parseData(GIpHdr* ipHdr, GTcpHdr* tcpHdr);
 };
 #pragma pack(pop)

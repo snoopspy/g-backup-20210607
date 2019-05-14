@@ -1,11 +1,7 @@
 #include "gpacketdebugger.h"
 #include <iostream>
-#include <GEthHdr>
-#include <GIpHdr>
-#include <GTcpData>
-#include <GTcpHdr>
-#include <GUdpData>
-#include <GUdpHdr>
+#include <GEthPacket>
+#include <GIpPacket>
 
 QString dump(u_char* data, size_t size) {
   QString raw;
@@ -42,38 +38,56 @@ QString dump(u_char* data, size_t size) {
 // GPacketDebugger
 // ----------------------------------------------------------------------------
 void GPacketDebugger::debug(GPacket* packet) {
-  QString msg;
-  GPdus& pdus = packet->pdus_;
-
-  GEthHdr* ethHdr = pdus.findFirst<GEthHdr>();
-  if (ethHdr != nullptr) {
-    msg += QString(" eth %1>%2").arg(QString(ethHdr->smac()), QString(ethHdr->dmac()));
+  GEthPacket* ethPacket = nullptr;
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ethPacket = static_cast<GEthPacket*>(packet);
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
   }
 
-  GIpHdr* ipHdr = pdus.findFirst<GIpHdr>();
+  QString msg;
+
+  if (ethPacket != nullptr) {
+    GEthHdr* ethHdr = ethPacket->ethHdr_;
+    if (ethHdr != nullptr) {
+      msg += QString(" eth %1>%2").arg(QString(ethHdr->smac()), QString(ethHdr->dmac()));
+    }
+  }
+
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr != nullptr) {
     msg += QString(" ip %1>%2").arg(QString(ipHdr->sip()), QString(ipHdr->dip()));
   }
 
-  GTcpHdr* tcpHdr = pdus.findFirst<GTcpHdr>();
+  GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
   if (tcpHdr != nullptr) {
     msg += QString(" tcp %1>%2").arg(tcpHdr->sport()).arg(tcpHdr->dport());
   }
 
-  GTcpData* tcpData = pdus.findFirst<GTcpData>();
-  if (tcpData != nullptr) {
-    msg += " " + dump(tcpData->data(), tcpData->size());
+  GBuf tcpData = ipPacket->tcpData_;
+  if (tcpData.valid()) {
+    msg += " " + dump(tcpData.data_, tcpData.size_);
   }
 
-  GUdpHdr* udpHdr = pdus.findFirst<GUdpHdr>();
+  GUdpHdr* udpHdr = ipPacket->udpHdr_;
   if (udpHdr != nullptr) {
     msg += QString(" udp %1>%2").arg(udpHdr->sport()).arg(udpHdr->dport());
   }
 
-  GUdpData* udpData = pdus.findFirst<GUdpData>();
-  if (udpData != nullptr) {
-    msg += " " + dump(udpData->data(), udpData->size());
+  GBuf udpData = ipPacket->udpData_;
+  if (udpData.valid()) {
+    msg += " " + dump(udpData.data_, udpData.size_);
   }
+
   msg = QString("%1:").arg(packet->buf_.size_) + msg;
   std::clog << qPrintable(msg) << std::endl;
 

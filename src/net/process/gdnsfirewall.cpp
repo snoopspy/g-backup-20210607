@@ -1,7 +1,6 @@
 #include "gdnsfirewall.h"
-#include "net/pdu/giphdr.h"
-#include "net/pdu/gtcphdr.h"
-#include "net/pdu/gudphdr.h"
+#include <GEthPacket>
+#include <GIpPacket>
 
 // ----------------------------------------------------------------------------
 // GDnsFirewall
@@ -125,26 +124,38 @@ bool GDnsFirewall::checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timev
 
 
 void GDnsFirewall::debugPacket(QString msg, GPacket* packet) {
-  GPdus& pdus = packet->pdus_;
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
 
   QString proto = "unknown";
   GIp sip, dip;
   uint16_t sport = 0, dport = 0;
 
-  GIpHdr* ipHdr = pdus.findFirst<GIpHdr>();
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr != nullptr) {
     proto = "ip";
     sip = ipHdr->sip();
     dip = ipHdr->dip();
 
-    GTcpHdr* tcpHdr = pdus.findNext<GTcpHdr>();
+    GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
     if (tcpHdr != nullptr) {
       proto = "tcp";
       sport = tcpHdr->sport();
       dport = tcpHdr->dport();
     }
 
-    GUdpHdr* udpHdr = pdus.findNext<GUdpHdr>();
+    GUdpHdr* udpHdr = ipPacket->udpHdr_;
     if (udpHdr != nullptr) {
       proto = "udp";
       sport = udpHdr->sport();
@@ -159,10 +170,23 @@ void GDnsFirewall::debugPacket(QString msg, GPacket* packet) {
 }
 
 void GDnsFirewall::check(GPacket* packet) {
-  GPdus& pdus = packet->pdus_;
-  GIpHdr* ipHdr = pdus.findFirst<GIpHdr>();
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
+
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr == nullptr) {
-    packet->control.block_ = false;
+    packet->ctrl.block_ = false;
     emit notBlocked(packet);
     return;
   }
@@ -172,7 +196,7 @@ void GDnsFirewall::check(GPacket* packet) {
 
   GTcpHdr* tcpHdr;
   GUdpHdr* udpHdr;
-  if ((tcpHdr = pdus.findNext<GTcpHdr>()) != nullptr) {
+  if ((tcpHdr = ipPacket->tcpHdr_) != nullptr) {
     //
     // TCP
     //
@@ -193,7 +217,7 @@ void GDnsFirewall::check(GPacket* packet) {
     }
   }
 
-  if (!decided && (udpHdr = pdus.findNext<GUdpHdr>()) != nullptr) {
+  if (!decided && (udpHdr = ipPacket->udpHdr_) != nullptr) {
     //
     // UDP
     //
@@ -240,7 +264,7 @@ void GDnsFirewall::check(GPacket* packet) {
     }
   }
 
-  packet->control.block_ = block;
+  packet->ctrl.block_ = block;
   if (block) {
     debugPacket("check block", packet);
     emit blocked(packet);
@@ -307,10 +331,23 @@ void GDnsFirewall::_udpFlowDeleted(GPacket* packet) {
 }
 
 void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
-  (void)packet;
   if (dns->answers_.count() == 0) return;
 
-  GIpHdr* ipHdr = packet->pdus_.findFirst<GIpHdr>();
+  GIpPacket* ipPacket;
+  switch (packet->dataLinkType_) {
+    case GPacket::Eth:
+      ipPacket = static_cast<GEthPacket*>(packet);
+      break;
+    case GPacket::Ip:
+      ipPacket = static_cast<GIpPacket*>(packet);
+      break;
+    case GPacket::Dot11:
+      return;
+    case GPacket::Null:
+      return;
+  }
+
+  GIpHdr* ipHdr = ipPacket->ipHdr_;
   Q_ASSERT(ipHdr != nullptr);
   GFlow::IpFlowKey ipFlowKey(ipHdr->dip(), uint32_t(0)); // ipHdr-dip() is dns query client ip
 

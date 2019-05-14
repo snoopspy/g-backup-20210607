@@ -10,18 +10,12 @@
 
 #pragma once
 
-#include "gparser.h"
+#include "gpdu.h"
 
 // ----------------------------------------------------------------------------
-// GDot11Parser
+// GArpHdr // gilgil temp 2019.05.14
 // ----------------------------------------------------------------------------
-struct GDot11Parser : GParser {
-  Q_OBJECT
-
-public:
-  Q_INVOKABLE GDot11Parser(QObject* parent = nullptr) : GParser(parent) {}
-  ~GDot11Parser() override {}
-
-public:
-  void parse(GPacket* packet) override;
+#pragma pack(push, 1)
+struct GArpHdr {
 };
+#pragma pack(pop)

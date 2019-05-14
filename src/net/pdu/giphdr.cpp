@@ -84,9 +84,9 @@ TEST(GIpHdr, checksumTest) {
     GIpHdr* ipHdr = reinterpret_cast<GIpHdr*>(temp);
 
     uint16_t oldChecksum = ipHdr->sum();
-    uint16_t oldValue = uint16_t(ipHdr->ttl() << 16) + ipHdr->p();
+    uint16_t oldValue = uint16_t(ipHdr->ttl() << 8) + ipHdr->p();
     ipHdr->ttl_--;
-    uint16_t newValue = uint16_t(ipHdr->ttl() << 16) + ipHdr->p();
+    uint16_t newValue = uint16_t(ipHdr->ttl() << 8) + ipHdr->p();
     uint16_t newChecksum = GIpHdr::calcChecksum(ipHdr);
     uint16_t recalcChecksum = GIpHdr::recalcChecksum(oldChecksum, oldValue, newValue);
     EXPECT_EQ(newChecksum, recalcChecksum);

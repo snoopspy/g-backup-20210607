@@ -46,19 +46,36 @@ uint16_t GUdpHdr::calcChecksum(GIpHdr* ipHdr, GUdpHdr* udpHdr) {
   return uint16_t(res);
 }
 
+GBuf GUdpHdr::parseData(GUdpHdr* udpHdr) {
+  GBuf res;
+  res.size_ = udpHdr->len() - sizeof(GUdpHdr);
+  if (res.size_ > 0)
+    res.data_ = reinterpret_cast<u_char*>(udpHdr) + sizeof(GUdpHdr);
+  else
+    res.data_ = nullptr;
+  return res;
+}
+
 // ----------------------------------------------------------------------------
 // GTEST
 // ----------------------------------------------------------------------------
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-static u_char _ipHdr[] = "\x45\x00\x00\x20\xea\xb2\x40\x00\x40\x11\x41\x12\x0a\x01\x01\x02\x01\x02\x03\x04";
-static u_char _udpHdr[] = "\x9d\xf5\x04\xd2\x00\x0c\xc9\x7f\x41\x42\x43\x44"; // last "ABCD"
+static u_char _ipHdr[] =
+  "\x45\x00\x00\x20\xea\xb2\x40\x00\x40\x11\x41\x12\x0a\x01\x01\x02" \
+  "\x01\x02\x03\x04";
+
+static u_char _udpHdr[] =
+  "\x9d\xf5\x04\xd2\x00\x0c\xc9\x7f" \
+  "\x41\x42\x43\x44"; // "ABCD"
 
 TEST(GUdpHdr, hdrTest) {
   GUdpHdr* udpHdr = reinterpret_cast<GUdpHdr*>(_udpHdr);
-  EXPECT_EQ(udpHdr->dport(), 1234);
-  EXPECT_EQ(udpHdr->len(), 12);
+  uint16_t dport = udpHdr->dport();
+  EXPECT_EQ(dport, 1234);
+  uint16_t len = udpHdr->len();
+  EXPECT_EQ(len, 12);
 }
 
 TEST(GUdpHdr, checksumTest) {
@@ -67,6 +84,13 @@ TEST(GUdpHdr, checksumTest) {
   uint16_t realSum = udpHdr->sum();
   uint16_t calcSum = GUdpHdr::calcChecksum(ipHdr, udpHdr);
   EXPECT_EQ(realSum, calcSum);
+}
+
+TEST(GUdpHdr, parseDataTest) {
+  GUdpHdr* udpHdr = reinterpret_cast<GUdpHdr*>(_udpHdr);
+  GBuf data = GUdpHdr::parseData(udpHdr);
+  EXPECT_NE(data.data_, nullptr);
+  EXPECT_EQ(data.size_, 4);
 }
 
 #endif // GTEST

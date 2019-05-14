@@ -12,6 +12,7 @@
 
 #include <pcap.h>
 #include <QObject>
+#include "base/gbuf.h"
 // #include <QVector> // gilgil temp 2019.05.13
 
 // #include "net/pdu/gpdu.h" // gilgil temp 2019.05.12
@@ -60,10 +61,7 @@ public:
   // sniffing
   //
   struct timeval ts_;
-  struct {
-    u_char* data_{nullptr};
-    size_t size_{0};
-  } buf;
+  GBuf buf_;
 
   //
   // control
@@ -74,8 +72,7 @@ public:
 
 public:
   virtual void clear() {
-    buf.data_ = nullptr;
-    buf.size_ = 0;
+    buf_.clear();
     ctrl.block_ = false;
   }
 

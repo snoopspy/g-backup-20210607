@@ -24,7 +24,7 @@ public:
   ~GParser() override {}
 
 public:
-  virtual bool parse(GPacket* packet);
+  virtual void parse(GPacket* packet);
 };
 
 // ----- gilgil temp 2019.05.13 -----
