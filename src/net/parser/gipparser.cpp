@@ -8,20 +8,24 @@ void GIpParser::parse(GPacket* packet) {
   GIpPacket* ipPacket = static_cast<GIpPacket*>(packet);
 
   u_char* p = ipPacket->buf_.data_;
+  uint8_t proto;
   switch (*p & 0xF0) {
     case 0x40: // version 4
       ipPacket->ipHdr_ = reinterpret_cast<GIpHdr*>(p);
+      proto = ipPacket->ipHdr_->p();
       p += ipPacket->ipHdr_->hl() * 4;
       break;
     case 0x60: // /version 6
       ipPacket->ip6Hdr_= reinterpret_cast<GIp6Hdr*>(p);
-      return; // gilgil temp 2019.05.14
+      proto = ipPacket->ip6Hdr_->nh();
+      p += sizeof(GIp6Hdr); // gilgil temp 2019.05.14
+      break;
     default:
       qWarning() << "invalid ip header version" << uint8_t(*p);
       return;
   }
 
-  switch (ipPacket->ipHdr_->p()) {
+  switch (proto) {
     case GIpHdr::Tcp: // Tcp
       ipPacket->tcpHdr_ = reinterpret_cast<GTcpHdr*>(p);
       p += ipPacket->tcpHdr_->off() * 4;
