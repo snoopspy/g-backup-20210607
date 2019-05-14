@@ -32,6 +32,10 @@ void GIpParser::parse(GPacket* packet) {
       p += sizeof(GUdpHdr);
       ipPacket->udpData_ = GUdpHdr::parseData(ipPacket->udpHdr_);
       break;
+    case GIpHdr::Icmp: // Idmp
+      ipPacket->icmpHdr_ = reinterpret_cast<GIcmpHdr*>(p);
+      p += sizeof(GIcmpHdr); // gilgil temp 2019.05.14
+      break;
     default:
       qDebug() << "unknown protocol" << uint8_t(*p);
       break;
