@@ -27,7 +27,7 @@ struct GIp6Hdr final {
   GIp6     dip_;      // destination ip
 
   uint8_t  v()     { return (v_pr_ & 0xF0) >> 4; }
-  uint8_t pr()     { return v_pr_ & 0x0F; }
+  uint8_t  pr()    { return v_pr_ & 0x0F; }
   uint8_t* flags() { return flags_; }
   uint8_t  nh()    { return nh_; }
   uint8_t  hl()    { return hl_; }
