@@ -16,6 +16,6 @@
 // GArpHdr // gilgil temp 2019.05.14
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct GArpHdr {
+struct GArpHdr final {
 };
 #pragma pack(pop)
