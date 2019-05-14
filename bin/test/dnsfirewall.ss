@@ -25,12 +25,6 @@
             "slot": "process(GPacket*)"
         },
         {
-            "receiver": "udpFlowMgr1",
-            "sender": "ipFlowMgr1",
-            "signal": "processed(GPacket*)",
-            "slot": "process(GPacket*)"
-        },
-        {
             "receiver": "dnsFirewall1",
             "sender": "netFilter1",
             "signal": "captured(GPacket*)",
@@ -46,10 +40,8 @@
             "autoParse": true,
             "autoRead": true,
             "enabled": true,
-            "mark": "1234",
             "objectName": "netFilter1",
-            "queueNum": "0",
-            "snapLen": "65536"
+            "queueNum": "0"
         },
         {
             "_class": "GCommand",
@@ -79,7 +71,7 @@
             "_class": "GPcapFileWriter",
             "_x": -310,
             "_y": -237,
-            "dataLinkType": "Ipv4",
+            "dataLinkType": "Ip",
             "fileName": "pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'",
             "objectName": "pcapFileWriter1",
             "snapLen": "65536"
@@ -112,24 +104,18 @@
             "rstTimeout": "10"
         },
         {
-            "_class": "GUdpFlowMgr",
-            "_x": -25,
-            "_y": -185,
-            "checkInterval": "1",
-            "fullTimeout": "180",
-            "halfTimeout": "60",
-            "objectName": "udpFlowMgr1"
-        },
-        {
             "_class": "GDnsFirewall",
             "_x": 40,
             "_y": -239,
             "checkInterval": "1",
             "dnsProcessor": "dnsProcessor1",
+            "exceptionIpList": [
+            ],
+            "extraTtlTime": "10",
             "ipFlowMgr": "ipFlowMgr1",
             "objectName": "dnsFirewall1",
             "tcpFlowMgr": "tcpFlowMgr1",
-            "udpFlowMgr": "udpFlowMgr1"
+            "udpFlowMgr": ""
         }
     ]
 }
