@@ -11,13 +11,12 @@
 #pragma once
 
 #include "gpdu.h"
-#include "net/gip6.h"
 
 // ----------------------------------------------------------------------------
-// GIpHdr
+// GIcmpHdr
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct GIp6Hdr final {
+struct GIcmpHdr final {
   // gilgil temp 2019.05.13
 };
 #pragma pack(pop)

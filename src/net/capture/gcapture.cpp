@@ -75,10 +75,10 @@ void GCapture::run() {
   GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser != nullptr);
 
-  GEthPacket ethPacket(this);
-  GIpPacket ipPacket(this);
-  GDot11Packet dot11Packet(this);
-  GNullPacket nullPacket(this);
+  GEthPacket ethPacket;
+  GIpPacket ipPacket;
+  GDot11Packet dot11Packet;
+  GNullPacket nullPacket;
 
   GPacket* packet;
   switch(dataLinkType()) {

@@ -12,8 +12,10 @@
 
 #include "net/packet/gpacket.h"
 #include "net/pdu/giphdr.h"
+#include "net/pdu/gip6hdr.h"
 #include "net/pdu/gtcphdr.h"
 #include "net/pdu/gudphdr.h"
+#include "net/pdu/gicmphdr.h"
 
 // ----------------------------------------------------------------------------
 // GIpPacket
@@ -26,17 +28,22 @@ struct GIpPacket : GPacket {
 public:
   void clear() override {
     GPacket::clear();
-    ipHdr_ = nullptr;
-    tcpHdr_ = nullptr;
-    udpHdr_ = nullptr;
+    ipHdr_   = nullptr;
+    ip6Hdr_  = nullptr;
+    tcpHdr_  = nullptr;
+    udpHdr_  = nullptr;
+    icmpHdr_ = nullptr;
+    tcpData_.clear();
+    udpData_.clear();
   }
 
 public:
-  GIpHdr* ipHdr_{nullptr};
-  // GIp6Hdr* ip6Hdr; // gilgil temp 2019.05.13
+  GIpHdr*   ipHdr_{nullptr};
+  GIp6Hdr*  ip6Hdr_{nullptr};
 
-  GTcpHdr* tcpHdr_{nullptr};
-  GUdpHdr* udpHdr_{nullptr};
+  GTcpHdr*  tcpHdr_{nullptr};
+  GUdpHdr*  udpHdr_{nullptr};
+  GIcmpHdr* icmpHdr_{nullptr};
 
   GBuf tcpData_;
   GBuf udpData_;

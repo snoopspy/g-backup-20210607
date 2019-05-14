@@ -27,9 +27,9 @@ struct GEthHdr { // libnet_ethernet_hdr // gilgil temp 2019.05.13
   uint16_t type() { return ntohs(type_); }
 
   typedef enum {
-    Ip   = 0x0800,
-    Arp  = 0x0806,
-    Ipv6 = 0x86DD
+    Ip  = 0x0800,
+    Arp = 0x0806,
+    Ip6 = 0x86DD
   } Type;
 };
 #pragma pack(pop)
