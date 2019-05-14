@@ -1,38 +1,55 @@
 #include <iostream>
 #include <QCoreApplication>
+#include <QDebug>
 #include <GApp>
-#include <GEthHdr>
-#include <GIpHdr>
+#include <GEthPacket>
+#include <GIpPacket>
 #include <GJson>
 #include <GPcapDevice>
-#include <GTcpHdr>
-#include <GUdpHdr>
 
 struct Obj : QObject {
   Q_OBJECT
 
 public slots:
   void captured(GPacket* packet) {
-    GPdus& pdus = packet->pdus_;
+    GEthPacket* ethPacket = nullptr;
+    GIpPacket* ipPacket;
+    switch (packet->dataLinkType_) {
+      case GPacket::Eth:
+        ethPacket = static_cast<GEthPacket*>(packet);
+        ipPacket = static_cast<GEthPacket*>(packet);
+        break;
+      case GPacket::Ip:
+        ipPacket = static_cast<GIpPacket*>(packet);
+        break;
+      case GPacket::Dot11:
+        return;
+      case GPacket::Null:
+        return;
+    }
 
-    GEthHdr* ethHdr = pdus.findFirst<GEthHdr>();
-    if (ethHdr == nullptr) return;
-    QString smac = (QString)ethHdr->smac();
-    QString dmac = (QString)ethHdr->dmac();
+    QString smac;
+    QString dmac;
+    if (ethPacket != nullptr) {
+      GEthHdr* ethHdr = ethPacket->ethHdr_;
+      if (ethHdr == nullptr) return;
+      smac = QString(ethHdr->smac());
+      dmac = QString(ethHdr->dmac());
+    }
 
-    GIpHdr* ipHdr = pdus.findNext<GIpHdr>();
+    GIpHdr* ipHdr = ipPacket->ipHdr_;
     if (ipHdr == nullptr) return;
-    QString sip = (QString)ipHdr->sip();
-    QString dip = (QString)ipHdr->dip();
+    QString sip = QString(ipHdr->sip());
+    QString dip = QString(ipHdr->dip());
 
     QString proto, sport, dport;
-    GTcpHdr* tcpHdr = pdus.findNext<GTcpHdr>();
+    GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
     if (tcpHdr != nullptr) {
       proto = "tcp";
       sport = QString::number(tcpHdr->sport());
       dport = QString::number(tcpHdr->dport());
     } else {
-      GUdpHdr* udpHdr = pdus.findNext<GUdpHdr>();
+      GUdpHdr* udpHdr = ipPacket->udpHdr_;
       if (udpHdr != nullptr) {
         proto = "udp";
         sport = QString::number(udpHdr->sport());
@@ -44,7 +61,7 @@ public slots:
 
     static int count = 0;
     QString msg = QString("%1 %2 %3 > %4 %5:%6 > %7:%8\n").
-      arg(++count).arg(proto, smac, dmac, sip, sport, dip, dport);
+        arg(++count).arg(proto, smac, dmac, sip, sport, dip, dport);
     std::clog << qPrintable(msg);
   }
 

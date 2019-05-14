@@ -5,7 +5,6 @@ using namespace std;
 
 struct Obj {
   GErr& err() {
-
     return err_;
   }
 private:

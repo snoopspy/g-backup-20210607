@@ -29,7 +29,8 @@ static GMac getMac(char* name) {
   ioctl(s, SIOCGIFHWADDR, &buffer);
   close(s);
 
-  GMac res = buffer.ifr_ifru.ifru_hwaddr.sa_data;
+  const u_char* p = const_cast<const u_char*>(reinterpret_cast<u_char*>(buffer.ifr_ifru.ifru_hwaddr.sa_data));
+  GMac res = p;
   return res;
 }
 
@@ -71,7 +72,7 @@ GNetIntfs::GNetIntfs() {
         intf.ip_ = ntohl(addr_in->sin_addr.s_addr);
 
       // mask_;
-      addr = pa->addr;
+      addr = pa->netmask;
       addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET) {
         intf.mask_ = ntohl(addr_in->sin_addr.s_addr);
