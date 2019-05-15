@@ -1,12 +1,9 @@
+#include "gnetfilter.h"
 #ifdef Q_OS_LINUX
 
-#include <cstdint>
-#include <unistd.h>
-#include <arpa/inet.h> // for htonl
 #include <linux/netfilter.h> // for NF_ACCEPT
 #include <libnetfilter_queue/libnetfilter_queue.h>
 #include "net/parser/gparserfactory.h"
-#include "gnetfilter.h"
 
 // ----------------------------------------------------------------------------
 // GNetFilter

@@ -36,9 +36,9 @@ public:
   SsCon(Param* param) : GStateObj(nullptr), factory_(&graph_) {
     factory_.load("plugin/");
 
-    GSignal* signal = GSignal::instance();
-    signal->setup(SIGINT);
-    QObject::connect(signal, &GSignal::signaled, this, &SsCon::processSignal);
+    GSignal& signal = GSignal::instance();
+    signal.setup(SIGINT);
+    QObject::connect(&signal, &GSignal::signaled, this, &SsCon::processSignal);
 
     QJsonObject jo = GJson::loadFromFile(param->fileName_);
     graph_.propLoad(jo);
