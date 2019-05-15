@@ -1,6 +1,5 @@
 #include "gsignal.h"
 #include <QDebug>
-#include "base/gerr.h"
 
 // ----------------------------------------------------------------------------
 // GSignal
