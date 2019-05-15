@@ -25,19 +25,14 @@ private: // singleton
   ~GSignal() override;
 
 protected:
-  struct Handler {
-    struct sigaction myAction_;
-    struct sigaction oldAction_;
-  };
-  typedef QHash<int, Handler*> Handlers;
-
+  typedef _crt_signal_t Handler;
+  typedef QHash<int, Handler> Handlers;
   Handlers handlers_;
-
-  static void _sigFunc(int signo);
+  static void _signalHandler(int signo);
 
 public:
-  bool setup(int signo);
-  static GSignal* instance();
+  void setup(int signo);
+  static GSignal& instance();
 
 signals:
   void signaled(int signo);
