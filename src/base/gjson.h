@@ -31,7 +31,7 @@ const QJsonValue operator >> (const QJsonValue val, QList<int>& intList);
 // ----------------------------------------------------------------------------
 // GProp
 // ----------------------------------------------------------------------------
-class GProp;
+struct GProp;
 QJsonValueRef operator << (QJsonValueRef ref, const GProp& prop);
 const QJsonValue operator >> (const QJsonValue val, GProp& prop);
 

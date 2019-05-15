@@ -12,6 +12,8 @@ GNetIntfs& GNetIntf::all() {
 // ----------------------------------------------------------------------------
 // GNetIntfs
 // ----------------------------------------------------------------------------
+static GMac getMac(char* name) { return GMac::cleanMac(); }; // gilgil temp 2019.05.15
+/*
 #include <net/if.h> // for ifreq
 #include <sys/ioctl.h> // for SIOCGIFHWADDR
 
@@ -30,6 +32,7 @@ static GMac getMac(char* name) {
   GMac res = p;
   return res;
 }
+*/
 
 GNetIntfs::GNetIntfs() {
   //

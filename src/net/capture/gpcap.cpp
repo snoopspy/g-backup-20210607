@@ -86,7 +86,6 @@ GPacket::Result GPcap::relay(GPacket* packet) {
   return GPacket::Fail;
 }
 
-#include <netinet/in.h>
 bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
   u_int uNetMask;
   bpf_program code;

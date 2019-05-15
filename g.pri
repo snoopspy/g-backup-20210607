@@ -2,7 +2,7 @@
 # c++11
 #------------------------------------------------------------------------------
 CONFIG *= c++11
-QMAKE_LFLAGS *= -pthread
+linux-g++: QMAKE_LFLAGS *= -pthread
 
 #------------------------------------------------------------------------------
 # debug and release
@@ -57,5 +57,4 @@ win32 {
   } else { # 32 bit
     LIBS *= -L$${PWD}/../npcap/Lib
   }
-  LIBS *= -lpacket -lwpcap
 }

@@ -11,6 +11,9 @@
 #pragma once
 
 #include <QVector>
+#ifdef Q_OS_WIN
+  #include <winsock2.h> // for u_char, struct timeval
+#endif
 
 // ----------------------------------------------------------------------------
 // GFlow
