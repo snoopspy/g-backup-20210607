@@ -10,11 +10,7 @@
 
 #pragma once
 
-#include <QString>
-
-#ifdef Q_OS_WIN
-  #include <winsock2.h> // for u_char
-#endif
+#include "net/gnet.h"
 
 // ----------------------------------------------------------------------------
 // GMac

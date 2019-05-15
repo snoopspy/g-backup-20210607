@@ -12,11 +12,8 @@ GNetIntfs& GNetIntf::all() {
 // ----------------------------------------------------------------------------
 // GNetIntfs
 // ----------------------------------------------------------------------------
-#include <unistd.h>
-#include <net/if.h>
-#include <netinet/in.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
+#include <net/if.h> // for ifreq
+#include <sys/ioctl.h> // for SIOCGIFHWADDR
 
 static GMac getMac(char* name) {
   int s;

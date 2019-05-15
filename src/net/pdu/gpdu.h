@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include <arpa/inet.h> // for htonl
+#include "net/gnet.h"
 #include "base/gbuf.h" // for GBuf
 
 // ----- gilgil temp 2019.05.13 -----

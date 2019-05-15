@@ -12,6 +12,7 @@
 
 #include <pcap.h>
 #include <QList>
+#include "net/gnet.h"
 #include "net/gip.h"
 #include "net/gmac.h"
 
