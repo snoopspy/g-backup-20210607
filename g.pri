@@ -52,11 +52,9 @@ CONFIG(gstacktrace) {
 #------------------------------------------------------------------------------
 win32 {
   INCLUDEPATH *= $${PWD}/../npcap/Include
-  contains(QMAKE_TARGET.arch, x86_64) {
-    message("x86_64 build") # gilgil temp 2019.05.15
+  contains(QMAKE_TARGET.arch, x86_64) { # 64 bit
     LIBS *= -L$${PWD}/../npcap/Lib/x64
-  } else {
-    message("x86 build") # gilgil temp 2019.05.15
+  } else { # 32 bit
     LIBS *= -L$${PWD}/../npcap/Lib
   }
   LIBS *= -lpacket -lwpcap
