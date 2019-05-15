@@ -2,7 +2,6 @@
 #include <QProcess>
 #include <QTextStream>
 #include "grtm.h"
-#include <arpa/inet.h>
 
 // ----------------------------------------------------------------------------
 // GRtm

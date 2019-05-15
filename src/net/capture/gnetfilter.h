@@ -10,6 +10,8 @@
 
 #pragma once
 
+#ifdef Q_OS_LINUX
+
 #include "gcapture.h"
 #include "net/packet/gippacket.h"
 
@@ -70,3 +72,5 @@ protected:
     struct nfq_data* nfad,
     void* data);
 };
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef Q_OS_LINUX
+
 #include <cstdint>
 #include <unistd.h>
 #include <arpa/inet.h> // for htonl
@@ -195,3 +197,5 @@ int GNetFilter::_callback(
   int res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);
   return res;
 }
+
+#endif
