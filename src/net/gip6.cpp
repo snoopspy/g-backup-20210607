@@ -1,6 +1,12 @@
-#include <arpa/inet.h>
 #include "base/gerr.h"
 #include "gip6.h"
+
+#ifdef Q_OS_LINUX
+  #include <arpa/inet.h> // for inet_pton...
+#endif
+#ifdef Q_OS_WIN
+  #include <ws2tcpip.h> // for inet_pton...
+#endif
 
 // ----------------------------------------------------------------------------
 // GIp6

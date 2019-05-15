@@ -10,8 +10,11 @@
 
 #pragma once
 
-// #include <netinet/in.h> // gilgil temp 2019.05.11
 #include <QString>
+
+#ifdef Q_OS_WIN
+  #include <winsock2.h> // for u_char
+#endif
 
 // ----------------------------------------------------------------------------
 // GIp6

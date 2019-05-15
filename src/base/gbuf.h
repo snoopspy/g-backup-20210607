@@ -10,8 +10,11 @@
 
 #pragma once
 
-#include <cstddef> // for size_t
-#include <sys/types.h> // u_char
+#include <QtCore>
+
+#ifdef Q_OS_WIN
+  #include <winsock2.h> // for u_char
+#endif
 
 // ----------------------------------------------------------------------------
 // GBuf

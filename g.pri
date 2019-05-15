@@ -23,7 +23,7 @@ CONFIG(debug, debug|release)  G_NAME = $${G_NAME}_d
 # G_DIR
 #------------------------------------------------------------------------------
 G_DIR = $${PWD}
-INCLUDEPATH += $${G_DIR}/src
+INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
   PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
   LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
@@ -38,11 +38,26 @@ mingw: DEFINES *= __USE_MINGW_ANSI_STDIO=1
 #------------------------------------------------------------------------------
 # rpath
 #------------------------------------------------------------------------------
-QMAKE_RPATHDIR += . $${PWD}/bin
+QMAKE_RPATHDIR *= . $${PWD}/bin
 
 #------------------------------------------------------------------------------
 # gstacktrace
 #------------------------------------------------------------------------------
 CONFIG(gstacktrace) {
   QMAKE_LFLAGS *= -rdynamic
+}
+
+#------------------------------------------------------------------------------
+# pcap
+#------------------------------------------------------------------------------
+win32 {
+  INCLUDEPATH *= $${PWD}/../npcap/Include
+  contains(QMAKE_TARGET.arch, x86_64) {
+    message("x86_64 build") # gilgil temp 2019.05.15
+    LIBS *= -L$${PWD}/../npcap/Lib/x64
+  } else {
+    message("x86 build") # gilgil temp 2019.05.15
+    LIBS *= -L$${PWD}/../npcap/Lib
+  }
+  LIBS *= -lpacket -lwpcap
 }
