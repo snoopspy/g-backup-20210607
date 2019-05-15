@@ -12,6 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "base/gthread.h"
+#include "net/gnet.h"
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
