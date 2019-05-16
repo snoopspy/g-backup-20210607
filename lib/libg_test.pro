@@ -9,4 +9,12 @@ android-g++: LIBS *= -lmnl -lnfnetlink
 DESTDIR = $${PWD}/../bin
 include(libg_files.pri)
 DEFINES *= GTEST
-LIBS *= -lgtest -lgtest_main -pthread
+win32 {
+  INCLUDEPATH *= $${PWD}/../../gtest/include
+  LIBS *= -L$${PWD}/../../gtest/lib
+  CONFIG(debug, debug|release) LIBS *= -lgtest_maind -lgtestd
+  CONFIG(release, debug|release) LIBS *= -lgtest_main -lgtest
+}
+linux {
+  LIBS *= -lgtest_main lgtest -pthread
+}
