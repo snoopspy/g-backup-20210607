@@ -58,4 +58,5 @@ win32 {
   } else { # 32 bit
     LIBS *= -L$${PWD}/../npcap/Lib
   }
+  LIBS *= -lpacket -lwpcap -lws2_32
 }
