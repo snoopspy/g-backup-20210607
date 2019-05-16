@@ -37,7 +37,7 @@ void GIpParser::parse(GPacket* packet) {
       p += sizeof(GUdpHdr);
       ipPacket->udpData_ = GUdpHdr::parseData(ipPacket->udpHdr_);
       break;
-    case GIpHdr::Icmp: // Idmp
+    case GIpHdr::Icmp: // Icmp
       ipPacket->icmpHdr_ = reinterpret_cast<GIcmpHdr*>(p);
       p += sizeof(GIcmpHdr); // gilgil temp 2019.05.14
       break;
