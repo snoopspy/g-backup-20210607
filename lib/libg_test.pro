@@ -4,7 +4,7 @@ CONFIG += G_BUILD
 include(../g.pri)
 TARGET = $${G_NAME}_test
 win32: LIBS *= -lpacket -lwpcap -lws2_32
-linux-g++: LIBS *= -lpcap -lnetfilter_queue
+linux: LIBS *= -lpcap -lnetfilter_queue
 android-g++: LIBS *= -lmnl -lnfnetlink
 DESTDIR = $${PWD}/../bin
 include(libg_files.pri)
@@ -16,5 +16,5 @@ win32 {
   CONFIG(release, debug|release) LIBS *= -lgtest_main -lgtest
 }
 linux {
-  LIBS *= -lgtest_main lgtest -pthread
+  LIBS *= -lgtest_main -lgtest
 }
