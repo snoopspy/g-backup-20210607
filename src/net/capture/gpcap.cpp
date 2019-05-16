@@ -38,10 +38,11 @@ bool GPcap::doClose() {
 }
 
 GPacket::Result GPcap::read(GPacket* packet) {
+  packet->clear();
+  // qDebug() << "bef pcap_next_ex"; // gilgil temp 2017.11.25
   pcap_pkthdr* pkthdr;
-  qDebug() << "bef pcap_next_ex"; // gilgil temp 2017.11.25
   int i = pcap_next_ex(pcap_, &pkthdr, const_cast<const u_char**>(&(packet->buf_.data_)));
-  qDebug() << "aft pcap_next_ex return " << i << "state is" << int(state_); // gilgil temp 2017.11.25
+  // qDebug() << "aft pcap_next_ex return " << i << "state is" << int(state_); // gilgil temp 2017.11.25
   if (state_ != Opened) return GPacket::Fail; // may be pcap_close called
   GPacket::Result res;
   switch (i) {

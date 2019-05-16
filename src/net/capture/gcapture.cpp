@@ -89,7 +89,6 @@ void GCapture::run() {
   }
 
   while (active()) {
-    packet->clear();
     GPacket::Result res = read(packet);
     if (res == GPacket::TimeOut) continue;
     if (res == GPacket::Eof || res == GPacket::Fail) break;
