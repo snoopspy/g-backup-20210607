@@ -25,7 +25,8 @@ CONFIG(debug, debug|release)  G_NAME = $${G_NAME}_d
 G_DIR = $${PWD}
 INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
-  PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
+  win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.lib
+  linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
   LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
   ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
 }

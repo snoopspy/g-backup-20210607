@@ -1,4 +1,5 @@
 TEMPLATE = lib
+win32: CONFIG += staticlib
 QT -= gui
 CONFIG += G_BUILD
 include(../g.pri)
