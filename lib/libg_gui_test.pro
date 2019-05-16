@@ -18,4 +18,3 @@ win32 {
 linux {
   LIBS *= -lgtest_main -lgtest
 }
-

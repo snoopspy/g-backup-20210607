@@ -6,4 +6,3 @@ SUBDIRS += \
   prop_exam \
   sscon \
   version_exam
-
