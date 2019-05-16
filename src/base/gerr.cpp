@@ -38,7 +38,7 @@ TEST(GErr, lastErrTest) {
   int lastErrIdx = EHWPOISON;
 #endif
 #ifdef Q_OS_WIN
-  int lastErrIdx = 100; // gilgil temp 2019.05.16
+  int lastErrIdx = 42; // "Illegal byte sequence"
 #endif
   for (int n = 0; n <= lastErrIdx + 10; n++) {
     errno = n;
