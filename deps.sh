@@ -13,3 +13,6 @@ sudo apt install libglu1-mesa-dev
 # libnetfilter-queue
 sudo apt install libnetfilter-queue-dev
 
+# google test
+sudo apt install libgtest-dev
+
