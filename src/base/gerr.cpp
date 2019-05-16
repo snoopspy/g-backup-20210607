@@ -34,7 +34,12 @@ QDebug operator << (QDebug os, QSharedPointer<GErr> err) {
 #include <gtest/gtest.h>
 
 TEST(GErr, lastErrTest) {
+#ifdef Q_OS_LINUX
   int lastErrIdx = EHWPOISON;
+#endif
+#ifdef Q_OS_WIN
+  int lastErrIdx = 100; // gilgil temp 2019.05.16
+#endif
   for (int n = 0; n <= lastErrIdx + 10; n++) {
     errno = n;
     GLastErr lastErr;
