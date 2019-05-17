@@ -14,6 +14,7 @@ GRtm::~GRtm() {
   clear();
 }
 
+#ifdef Q_OS_LINUX
 bool GRtm::loadFromSystem() {
   clear();
 
@@ -61,9 +62,54 @@ bool GRtm::loadFromSystem() {
         append(entry);
     }
   }
-
   return true;
 }
+#endif
+#ifdef Q_OS_WIN
+#include <iphlpapi.h>
+#pragma comment(lib, "iphlpapi.lib")
+
+bool GRtm::loadFromSystem() {
+  PMIB_IPFORWARDTABLE pIpForwardTable;
+
+  pIpForwardTable = PMIB_IPFORWARDTABLE(malloc(sizeof (MIB_IPFORWARDTABLE)));
+  if (pIpForwardTable == nullptr) {
+    qCritical() << "Error allocating memory";
+    return false;
+  }
+
+  DWORD dwSize = 0;
+  if (GetIpForwardTable(pIpForwardTable, &dwSize, 0) ==
+      ERROR_INSUFFICIENT_BUFFER) {
+    free(pIpForwardTable);
+    pIpForwardTable = PMIB_IPFORWARDTABLE(malloc(dwSize));
+    if (pIpForwardTable == nullptr) {
+      qCritical() << "Error allocating memory";
+      return false;
+    }
+  }
+
+  DWORD dwRetVal = GetIpForwardTable(pIpForwardTable, &dwSize, 0);
+  if (dwRetVal != NO_ERROR) {
+    qCritical() << "GetIpForwardTable failed";
+    free(pIpForwardTable);
+    return false;
+  }
+
+  for (DWORD i = 0; i < pIpForwardTable->dwNumEntries; i++) {
+    PMIB_IPFORWARDROW table = &pIpForwardTable->table[i];
+    GRtmEntry entry;
+    /* Convert IPv4 addresses to strings */
+    entry.dst_ = ntohl(table->dwForwardDest);
+    entry.mask_ = ntohl(table->dwForwardMask);
+    entry.gateway_ = ntohl(table->dwForwardNextHop);
+    entry.metric_ = int(table->dwForwardMetric1);
+    append(entry);
+  }
+  free(pIpForwardTable);
+  return true;
+}
+#endif
 
 GRtmEntry* GRtm::getBestEntry(GIp ip) {
   GRtmEntry* res = nullptr;
@@ -92,6 +138,7 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
   return res;
 }
 
+#ifdef Q_OS_LINUX
 GIp GRtm::getGateway(QString intf) {
   for (GRtm::iterator it = begin(); it != end(); it++) {
     GRtmEntry& entry = *it;
@@ -100,6 +147,17 @@ GIp GRtm::getGateway(QString intf) {
   }
   return GIp(uint32_t(0));
 }
+#endif
+#ifdef Q_OS_WIN
+GIp GRtm::getGateway(GIp intf) {
+  for (GRtm::iterator it = begin(); it != end(); it++) {
+    GRtmEntry& entry = *it;
+    if (entry.intf_ == intf && entry.gateway_ != 0)
+      return entry.gateway_;
+  }
+  return GIp(uint32_t(0));
+}
+#endif
 
 GRtm& GRtm::instance() {
   static GRtm rtm;
@@ -122,7 +180,7 @@ TEST(GRtm, loadTest) {
       QString(entry.mask_),
       QString(entry.gateway_),
       QString(entry.intf_),
-      QString(entry.metric_)
+      QString::number(entry.metric_)
     );
   }
 }
