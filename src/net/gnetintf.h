@@ -70,5 +70,4 @@ public:
   PIP_ADAPTER_INFO findByName(QString name);
   static GAdapterInfos& all();
 };
-
 #endif

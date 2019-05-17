@@ -13,10 +13,8 @@ GNetIntfs& GNetIntf::all() {
 // GNetIntfs
 // ----------------------------------------------------------------------------
 #ifdef Q_OS_LINUX
-static GMac getMac(char* name) {
 #include <net/if.h> // for ifreq
 #include <sys/ioctl.h> // for SIOCGIFHWADDR
-
 static GMac getMac(char* name) {
   int s;
   struct ifreq buffer;
@@ -78,7 +76,7 @@ GNetIntfs::GNetIntfs() {
 
 #ifdef Q_OS_LINUX
     // mac
-    intf.mac = getMac(intf);
+    intf.mac_ = getMac(dev->name);
 
     // gateway_
     intf.gateway_ = GRtm::instance().findGateway(intf.name_);
