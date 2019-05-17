@@ -3,4 +3,5 @@ SUBDIRS += \
 	enumintf \
         netclient \
         netserver \
-        pcap_exam
+        pcap_exam \
+	pcap_findalldevs_test
