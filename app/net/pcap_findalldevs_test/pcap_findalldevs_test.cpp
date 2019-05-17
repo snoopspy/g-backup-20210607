@@ -1,5 +1,18 @@
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#ifdef __linux
+  #include <arpa/inet.h>
+  #include <netdb.h>
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+  #include <unistd.h>
+#endif
+#ifdef WIN32
+  #ifndef NOMINMAX
+  #define NOMINMAX
+  #endif // NOMINMAX
+  #include <winsock2.h>
+  #include <windows.h>
+  #include <ws2tcpip.h>
+#endif
 #include <pcap.h>
 #include <iostream>
 #include <string>
@@ -25,8 +38,8 @@ void debug(struct sockaddr* addr) {
   switch (addr->sa_family) {
     case AF_INET:   clog << "AF_INET  "; debug_ip4(addr); break;
     case AF_INET6:  clog << "AF_INET6 "; debug_ip6(addr); break;
-    case AF_PACKET: clog << "AF_PACKET "; break;
-    default : clog << addr->sa_family << "? "; break;
+    // case AF_PACKET: clog << "AF_PACKET "; break;
+    default : clog << "? "; break;
   }
   clog << endl;
   //sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
@@ -64,7 +77,7 @@ int main() {
   i = 0;
   pcap_if_t* dev = allDevs_;
   while (dev != nullptr) {
-    clog << i << "================================" << endl;
+    clog << i << " ================================" << endl;
     debug(dev);
     dev = dev->next;
   }
