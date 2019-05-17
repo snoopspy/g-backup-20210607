@@ -139,17 +139,7 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
 }
 
 #ifdef Q_OS_LINUX
-GIp GRtm::getGateway(QString intf) {
-  for (GRtm::iterator it = begin(); it != end(); it++) {
-    GRtmEntry& entry = *it;
-    if (entry.intf_ == intf && entry.gateway_ != 0)
-      return entry.gateway_;
-  }
-  return GIp(uint32_t(0));
-}
-#endif
-#ifdef Q_OS_WIN
-GIp GRtm::getGateway(GIp intf) {
+GIp GRtm::findGateway(QString intf) {
   for (GRtm::iterator it = begin(); it != end(); it++) {
     GRtmEntry& entry = *it;
     if (entry.intf_ == intf && entry.gateway_ != 0)

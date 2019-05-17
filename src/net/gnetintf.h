@@ -52,3 +52,23 @@ struct GNetIntfs : QList<GNetIntf> {
   pcap_if_t* allDevs_{nullptr};
   static GNetIntfs& instance();
 };
+
+// ----------------------------------------------------------------------------
+// GAdapterInfo
+// ----------------------------------------------------------------------------
+#ifdef Q_OS_WIN
+#include <iphlpapi.h>
+struct GAdapterInfos {
+private: // singleton
+  GAdapterInfos();
+  virtual ~GAdapterInfos();
+
+protected:
+  PIP_ADAPTER_INFO pAdapterInfo;
+
+public:
+  PIP_ADAPTER_INFO findByName(QString name);
+  static GAdapterInfos& all();
+};
+
+#endif

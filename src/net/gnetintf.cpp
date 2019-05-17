@@ -12,8 +12,8 @@ GNetIntfs& GNetIntf::all() {
 // ----------------------------------------------------------------------------
 // GNetIntfs
 // ----------------------------------------------------------------------------
-static GMac getMac(char* name) { return GMac::cleanMac(); }; // gilgil temp 2019.05.15
-/*
+#ifdef Q_OS_LINUX
+static GMac getMac(char* name) {
 #include <net/if.h> // for ifreq
 #include <sys/ioctl.h> // for SIOCGIFHWADDR
 
@@ -32,7 +32,7 @@ static GMac getMac(char* name) {
   GMac res = p;
   return res;
 }
-*/
+#endif
 
 GNetIntfs::GNetIntfs() {
   //
@@ -62,9 +62,6 @@ GNetIntfs::GNetIntfs() {
     intf.dev_ = dev;
 
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
-      // mac_
-      intf.mac_ = getMac(dev->name);
-
       // ip_
       sockaddr* addr = pa->addr;
       sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
@@ -77,10 +74,22 @@ GNetIntfs::GNetIntfs() {
       if(addr != nullptr && addr->sa_family == AF_INET) {
         intf.mask_ = ntohl(addr_in->sin_addr.s_addr);
       }
-
-      // gateway_
-      intf.gateway_ = GRtm::instance().getGateway(intf.name_);
     }
+
+#ifdef Q_OS_LINUX
+    // mac
+    intf.mac = getMac(intf);
+
+    // gateway_
+    intf.gateway_ = GRtm::instance().findGateway(intf.name_);
+#endif
+#ifdef Q_OS_WIN
+    PIP_ADAPTER_INFO adapter = GAdapterInfos::all().findByName(intf.name_);
+    if (adapter != nullptr) {
+      intf.mac_ = adapter->Address;
+      intf.gateway_ = static_cast<char*>(adapter->GatewayList.IpAddress.String);
+    }
+#endif
 
     push_back(intf);
     dev = dev->next;
@@ -105,3 +114,54 @@ GNetIntfs& GNetIntfs::instance() {
   static GNetIntfs intfs;
   return intfs;
 }
+
+// ----------------------------------------------------------------------------
+// GAdapterInfo
+// ----------------------------------------------------------------------------
+#ifdef Q_OS_WIN
+GAdapterInfos::GAdapterInfos() {
+  ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
+  pAdapterInfo = PIP_ADAPTER_INFO(malloc(sizeof(IP_ADAPTER_INFO)));
+  if (pAdapterInfo == nullptr) {
+    qCritical() << "Error allocating memory needed to call GetAdaptersinfo";
+    return;
+  }
+
+  if (GetAdaptersInfo(pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) {
+    free(pAdapterInfo);
+    pAdapterInfo = PIP_ADAPTER_INFO(malloc(ulOutBufLen));
+    if (pAdapterInfo == nullptr) {
+      qCritical() << "Error allocating memory needed to call GetAdaptersinfo";
+      return;
+    }
+  }
+
+  DWORD dwRetVal = GetAdaptersInfo(pAdapterInfo, &ulOutBufLen);
+  if (dwRetVal != NO_ERROR) {
+    qCritical() << "GetAdaptersInfo failed with error: " << dwRetVal;
+  }
+}
+
+GAdapterInfos::~GAdapterInfos() {
+  if (pAdapterInfo != nullptr) {
+    free(pAdapterInfo);
+    pAdapterInfo = nullptr;
+  }
+}
+
+PIP_ADAPTER_INFO GAdapterInfos::findByName(QString name) {
+  PIP_ADAPTER_INFO res = pAdapterInfo;
+  while (res != nullptr) {
+    QString adapterName(res->AdapterName);
+    if (adapterName.indexOf(name) != -1)
+      return res;
+  }
+  return nullptr;
+}
+
+GAdapterInfos& GAdapterInfos::all() {
+  static GAdapterInfos adapterInfos;
+  return adapterInfos;
+}
+
+#endif
