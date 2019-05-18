@@ -1,7 +1,6 @@
-QT -= gui
+CONFIG -= qt
 CONFIG += console
 SOURCES += *.cpp
-linux : LIBS += -lpcap
 #------------------------------------------------------------------------------
 # pcap
 #------------------------------------------------------------------------------
@@ -14,4 +13,5 @@ win32 {
   }
   LIBS *= -lpacket -lwpcap -lws2_32
 }
+linux : LIBS += -lpcap
 DESTDIR = $${PWD}/../../../bin
