@@ -7,7 +7,6 @@
 bool GRtmLinux::init() {
   if (initialized_) return false;
   initialized_ = true;
-
   clear();
 
   QString command = "cat /proc/net/route";
@@ -33,12 +32,12 @@ bool GRtmLinux::init() {
         fields.append(field);
       }
     } else {
+      GRtmEntry entry;
       for (int i = 0; i < fields.count(); i++) {
         QString field = fields.at(i);
         QString value;
         ts >> value;
         if (value == "") break;
-        GRtmEntry entry;
         if (field == "Iface") {
           QString intfName = value;
           GNetIntf* netIntf = GNetIntfs::instance().findByName(intfName);
