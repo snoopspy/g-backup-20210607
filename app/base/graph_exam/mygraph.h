@@ -37,8 +37,8 @@ public:
   }
 
 protected:
-    bool doOpen() { emit signalMyObj(); return true; }
-    bool doClose() { emit signalMyObjA(); return true; }
+    bool doOpen() override { emit signalMyObj(); return true; }
+    bool doClose() override { emit signalMyObjA(); return true; }
 
 signals:
   void signalMyObjA();
@@ -65,8 +65,8 @@ public:
   }
 
 protected:
-    bool doOpen() { emit signalMyObj(); return true; }
-    bool doClose() { emit signalMyObjB(); return true; }
+    bool doOpen() override { emit signalMyObj(); return true; }
+    bool doClose() override { emit signalMyObjB(); return true; }
 
 signals:
   void signalMyObjB();
@@ -93,8 +93,8 @@ public:
   }
 
 protected:
-    bool doOpen() { emit signalMyObj(); return true; }
-    bool doClose() { emit signalMyObjC(); return true; }
+    bool doOpen() override { emit signalMyObj(); return true; }
+    bool doClose() override { emit signalMyObjC(); return true; }
 
 signals:
   void signalMyObjC();
