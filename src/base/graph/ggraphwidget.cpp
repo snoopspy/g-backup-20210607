@@ -427,6 +427,9 @@ void GGraphWidget::actionDeleteTriggered(bool) {
     graph_->nodes_.removeOne(node);
     delete node;
     delete text;
+
+    setControl();
+    return;
   }
 
   GGArrow* arrow = dynamic_cast<GGArrow*>(item);
@@ -437,10 +440,10 @@ void GGraphWidget::actionDeleteTriggered(bool) {
       connection->receiver_, qPrintable(connection->slot_));
     graph_->connections_.removeOne(connection);
     delete arrow;
+    setControl();
   }
-
-  setControl();
 }
+
 
 void GGraphWidget::actionOptionTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
