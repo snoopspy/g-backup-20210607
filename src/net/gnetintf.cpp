@@ -56,7 +56,7 @@ GNetIntfs::GNetIntfs() {
 
     intf.index_ = i;
     intf.name_ = dev->name;
-    intf.description_ = dev->description;
+    intf.desc_ = dev->description;
     intf.dev_ = dev;
 
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {

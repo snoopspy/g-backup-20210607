@@ -23,7 +23,7 @@ struct GNetIntfs;
 struct GNetIntf {
   int index_{-1};
   QString name_;
-  QString description_;
+  QString desc_;
   pcap_if_t* dev_{nullptr};
   GMac mac_{GMac::cleanMac()};
   GIp ip_{uint32_t(0)};
