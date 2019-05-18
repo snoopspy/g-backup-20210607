@@ -33,15 +33,20 @@ bool GRtmLinux::init() {
         fields.append(field);
       }
     } else {
-      GRtmEntry entry;
       for (int i = 0; i < fields.count(); i++) {
         QString field = fields.at(i);
         QString value;
         ts >> value;
         if (value == "") break;
+        GRtmEntry entry;
         if (field == "Iface") {
           QString intfName = value;
-          entry.intf_ = GNetIntfs::instance().findByName(intfName);
+          GNetIntf* netIntf = GNetIntfs::instance().findByName(intfName);
+          if (netIntf == nullptr) {
+            qCritical() << QString("GNetIntfs::instance().findByName(%1) return false").arg(intfName);
+            continue;
+          }
+          entry.intf_ = netIntf;
         } else if (field == "Destination")
           entry.dst_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Gateway")
