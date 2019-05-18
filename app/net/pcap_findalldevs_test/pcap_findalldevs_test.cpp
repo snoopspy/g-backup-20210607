@@ -77,7 +77,7 @@ int main() {
   i = 0;
   pcap_if_t* dev = allDevs_;
   while (dev != nullptr) {
-    clog << i << " ================================" << endl;
+    clog << i++ << " ================================" << endl;
     debug(dev);
     dev = dev->next;
   }

@@ -30,3 +30,12 @@ HEADERS += \
   $${PWD}/../src/net/pdu/*.h \
   $${PWD}/../src/net/process/*.h \
   $${PWD}/../src/net/write/*.h
+
+linux {
+SOURCES += $${PWD}/../src/net/_linux/*.cpp
+HEADERS += $${PWD}/../src/net/_linux/*.h
+}
+win32 {
+SOURCES += $${PWD}/../src/net/_win32/*.cpp
+HEADERS += $${PWD}/../src/net/_win32/*.h
+}
