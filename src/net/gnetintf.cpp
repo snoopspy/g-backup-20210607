@@ -1,6 +1,9 @@
 #include <QDebug>
 #include "gnetintf.h"
 #include "grtm.h"
+#ifdef Q_OS_WIN
+#include "net/_win32/gipadapterinfo.h"
+#endif
 
 // ----------------------------------------------------------------------------
 // GNetInft
@@ -59,8 +62,11 @@ GNetIntfs::GNetIntfs() {
     intf.desc_ = dev->description;
     intf.dev_ = dev;
 
+#ifdef Q_OS_LINUX
+    intf.mac_ = getMac(dev->name); // mac
+
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
-      // ip_
+      // ip
       sockaddr* addr = pa->addr;
       sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET)
@@ -74,23 +80,19 @@ GNetIntfs::GNetIntfs() {
       }
     }
 
-#ifdef Q_OS_LINUX
-    // mac
-    intf.mac_ = getMac(dev->name);
-
     // gateway_
     intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
 #endif
 #ifdef Q_OS_WIN
-    // ----- gilgil temp 2019.05.18 -----
-    /*
-    PIP_ADAPTER_INFO adapter = GAdapterInfos::all().findByName(intf.name_);
+    PIP_ADAPTER_INFO adapter = GIpAdapterInfo::instance().findByAdapterName(dev->name);
     if (adapter != nullptr) {
-      intf.mac_ = adapter->Address;
-      intf.gateway_ = static_cast<char*>(adapter->GatewayList.IpAddress.String);
+      intf.desc_ = adapter->Description;
+      if (adapter->AddressLength == GMac::SIZE)
+        intf.mac_ = adapter->Address;
+      intf.ip_ = adapter->IpAddressList.IpAddress.String;
+      intf.mask_ = adapter->IpAddressList.IpMask.String;
+      intf.gateway_ = adapter->GatewayList.IpAddress.String;
     }
-    */
-    // ----------------------------------
 #endif
 
     push_back(intf);
