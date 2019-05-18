@@ -112,8 +112,8 @@ TEST(GMac, castingTest) {
   EXPECT_EQ(mac, temp);
 
   // ----- gilgil temp 2019.05.18 -----
+  // Error occurrs on Windows
   /*
-   * Error occurred on Windows
   QString s1 = static_cast<const char*>(mac); // operator const char*()
   EXPECT_EQ(s1, "001122-334455");
   */
