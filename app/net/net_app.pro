@@ -4,5 +4,9 @@ SUBDIRS += \
   netclient \
   netserver \
   pcap_exam \
-  pcap_findalldevs_test \
-  getipforwardtable_test
+  pcap_findalldevs_test
+win32 {
+SUBDIRS += \
+  getipforwardtable_test \
+  getadaptersinfo_test
+}
