@@ -72,7 +72,13 @@ void GPluginFactory::loadFolder(GGraph::Factory::ItemCategory* category, QString
   //
   // file
   //
-  QFileInfoList fileList = dir.entryInfoList(QStringList("*.so"));
+#ifdef Q_OS_LINUX
+  QStringList files = QStringList("*.so");
+#endif
+#ifdef Q_OS_WIN
+  QStringList files = QStringList("*.dll");
+#endif
+  QFileInfoList fileList = dir.entryInfoList(files);
   foreach (QFileInfo fileInfo, fileList) {
     QString fileName = fileInfo.filePath();
     loadFile(category, fileName);
