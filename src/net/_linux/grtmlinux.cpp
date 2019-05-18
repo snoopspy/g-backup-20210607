@@ -4,10 +4,10 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
-GRtmLinux::GRtmLinux() {
-}
-
 bool GRtmLinux::init() {
+  if (initialized_) return false;
+  initialized_ = true;
+
   clear();
 
   QString command = "cat /proc/net/route";

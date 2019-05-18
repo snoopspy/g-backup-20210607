@@ -9,8 +9,7 @@ int main() {
     const GNetIntf& intf = intfs.at(i);
 
     bool best = false;
-    if (entry != nullptr && entry->intf_ == intf.name_) best = true;
-
+    if (entry != nullptr && entry->intf_->name_ == intf.name_) best = true;
     if (intf.name_ != "")
       printf("  name        = %s%s\n", intf.name_.toStdString().c_str(), best ? " (Best)" : "");
     if (intf.description_ !=  "")

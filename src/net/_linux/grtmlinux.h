@@ -18,9 +18,9 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 struct GRtmLinux : GRtm {
-public:
-  GRtmLinux();
-
 protected:
-  bool init();
+  bool initialized_{false};
+
+public:
+  bool init() override;
 };
