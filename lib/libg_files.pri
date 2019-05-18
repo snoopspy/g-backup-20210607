@@ -32,10 +32,11 @@ HEADERS += \
   $${PWD}/../src/net/write/*.h
 
 linux {
-SOURCES += $${PWD}/../src/net/_linux/*.cpp
-HEADERS += $${PWD}/../src/net/_linux/*.h
+  SOURCES += $${PWD}/../src/net/_linux/*.cpp
+  HEADERS += $${PWD}/../src/net/_linux/*.h
 }
 win32 {
-SOURCES += $${PWD}/../src/net/_win32/*.cpp
-HEADERS += $${PWD}/../src/net/_win32/*.h
+  SOURCES += $${PWD}/../src/net/_win32/*.cpp
+  HEADERS += $${PWD}/../src/net/_win32/*.h
 }
+

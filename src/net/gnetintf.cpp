@@ -79,7 +79,7 @@ GNetIntfs::GNetIntfs() {
     intf.mac_ = getMac(dev->name);
 
     // gateway_
-    intf.gateway_ = GRtm::instance().findGateway(intf.name_);
+    intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
 #endif
 #ifdef Q_OS_WIN
     PIP_ADAPTER_INFO adapter = GAdapterInfos::all().findByName(intf.name_);
@@ -106,6 +106,14 @@ GNetIntfs::~GNetIntfs() {
     pcap_freealldevs(allDevs_);
     allDevs_ = nullptr;
   }
+}
+
+GNetIntf* GNetIntfs::findByName(QString name) {
+  for (GNetIntf& intf: *this) {
+    if (intf.name_ == name)
+      return &intf;
+  }
+  return nullptr;
 }
 
 GNetIntfs& GNetIntfs::instance() {

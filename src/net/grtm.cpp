@@ -7,64 +7,14 @@
 // GRtm
 // ----------------------------------------------------------------------------
 GRtm::GRtm() {
-  loadFromSystem();
 }
 
 GRtm::~GRtm() {
   clear();
 }
 
-#ifdef Q_OS_LINUX
-bool GRtm::loadFromSystem() {
-  clear();
-
-  QString command = "cat /proc/net/route";
-  QProcess p;
-  p.start(command);
-  if (!p.waitForFinished()) {
-    qWarning() << QString("waitForFinished(%1) return false").arg(command);
-    return false;
-  }
-
-  QList<QByteArray> baList = p.readAll().split('\n');
-  bool firstLine = true;
-  QList<QString> fields;
-
-  foreach (QByteArray ba, baList) {
-    QTextStream ts(ba);
-    if (firstLine) {
-      firstLine = false;
-      while (true) {
-        QString field;
-        ts >> field;
-        if (field == "") break;
-        fields.append(field);
-      }
-    } else {
-      GRtmEntry entry;
-      for (int i = 0; i < fields.count(); i++) {
-        QString field = fields.at(i);
-        QString value;
-        ts >> value;
-        if (value == "") break;
-        if (field == "Iface")
-          entry.intf_ = value;
-        else if (field == "Destination")
-          entry.dst_ = ntohl(value.toUInt(nullptr, 16));
-        else if (field == "Gateway")
-          entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
-        else if (field == "Mask")
-          entry.mask_ = ntohl(value.toUInt(nullptr, 16));
-        else if (field == "Metric")
-          entry.metric_ = value.toInt(nullptr, 16);
-      }
-      if (entry.intf_ != "") // if not empty
-        append(entry);
-    }
-  }
-  return true;
-}
-#endif
+// ----- gilgil temp 2019.05.18 -----
+/*
 #ifdef Q_OS_WIN
 #include <iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
@@ -99,7 +49,7 @@ bool GRtm::loadFromSystem() {
   for (DWORD i = 0; i < pIpForwardTable->dwNumEntries; i++) {
     PMIB_IPFORWARDROW table = &pIpForwardTable->table[i];
     GRtmEntry entry;
-    /* Convert IPv4 addresses to strings */
+    // Convert IPv4 addresses to strings
     entry.dst_ = ntohl(table->dwForwardDest);
     entry.mask_ = ntohl(table->dwForwardMask);
     entry.gateway_ = ntohl(table->dwForwardNextHop);
@@ -109,7 +59,18 @@ bool GRtm::loadFromSystem() {
   free(pIpForwardTable);
   return true;
 }
-#endif
+*/
+// ----------------------------------
+
+GIp GRtm::findGateway(QString intfName, GIp ip) {
+  for (GRtmEntry& entry: *this) {
+    if (entry.intf_->name_ != intfName) continue;
+    if (entry.gateway_ == 0) continue;
+    if (entry.gateway_ == ip) continue;
+    return entry.gateway_;
+  }
+  return GIp(uint32_t(0));
+}
 
 GRtmEntry* GRtm::getBestEntry(GIp ip) {
   GRtmEntry* res = nullptr;
@@ -138,6 +99,8 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
   return res;
 }
 
+// ----- gilgil temp 2019.05.18 -----
+/*
 #ifdef Q_OS_LINUX
 GIp GRtm::findGateway(QString intf) {
   for (GRtm::iterator it = begin(); it != end(); it++) {
@@ -147,12 +110,23 @@ GIp GRtm::findGateway(QString intf) {
   }
   return GIp(uint32_t(0));
 }
-#endif
+*/
+// ----------------------------------
 
+#ifdef Q_OS_WIN
+#include "net/_linux/grtmwin32.h"
 GRtm& GRtm::instance() {
-  static GRtm rtm;
+  static GRtmWin32 rtm;
   return rtm;
 }
+#endif
+#ifdef Q_OS_LINUX
+#include "net/_linux/grtmlinux.h"
+GRtm& GRtm::instance() {
+  static GRtmLinux rtm;
+  return rtm;
+}
+#endif
 
 // ----------------------------------------------------------------------------
 // GTEST
@@ -162,6 +136,7 @@ GRtm& GRtm::instance() {
 
 TEST(GRtm, loadTest) {
   GRtm& rtm = GRtm::instance();
+  rtm.init();
   qDebug() << "Routing Table Manager : count =" << rtm.count();
   for (GRtm::iterator it = rtm.begin(); it != rtm.end(); it++) {
     GRtmEntry& entry = *it;
@@ -169,7 +144,7 @@ TEST(GRtm, loadTest) {
       QString(entry.dst_),
       QString(entry.mask_),
       QString(entry.gateway_),
-      QString(entry.intf_),
+      entry.intf_->name_,
       QString::number(entry.metric_)
     );
   }
@@ -177,6 +152,7 @@ TEST(GRtm, loadTest) {
 
 TEST(GRtm, bestTest) {
   GRtm& rtm = GRtm::instance();
+  rtm.init();
   GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
   EXPECT_NE(entry, nullptr);
   qDebug() << "best entry for 8.8.8.8 is" << entry->intf_;

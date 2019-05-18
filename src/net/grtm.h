@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QList>
-#include "net/gip.h"
+#include "net/gnetintf.h"
 
 // ----------------------------------------------------------------------------
 // GRtmEntry
@@ -20,7 +20,7 @@ struct GRtmEntry {
   GIp dst_{uint32_t(0)};
   GIp mask_{uint32_t(0)};
   GIp gateway_{uint32_t(0)};
-  QString intf_;
+  GNetIntf* intf_{nullptr};
   int metric_{0};
 };
 
@@ -28,15 +28,13 @@ struct GRtmEntry {
 // GRtm
 // ----------------------------------------------------------------------------
 struct GRtm : QList<GRtmEntry> {
-private:
+protected: // inherited singleton
   GRtm();
   virtual ~GRtm();
 
 public:
-  bool loadFromSystem();
+  virtual bool init() = 0;
   GRtmEntry* getBestEntry(GIp ip);
-#ifdef Q_OS_LINUX
-  GIp findGateway(QString intf);
-#endif
+  GIp findGateway(QString intfName, GIp ip);
   static GRtm& instance();
 };

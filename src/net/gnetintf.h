@@ -49,6 +49,7 @@ public:
 struct GNetIntfs : QList<GNetIntf> {
   GNetIntfs();
   virtual ~GNetIntfs();
+  GNetIntf* findByName(QString name);
   pcap_if_t* allDevs_{nullptr};
   static GNetIntfs& instance();
 };
