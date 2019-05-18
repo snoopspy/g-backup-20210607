@@ -10,24 +10,17 @@
 
 #pragma once
 
-#include <winsock2.h>
-#include <iphlpapi.h>
+#include "net/grtm.h"
+
+#include "net/grtm.h"
 
 // ----------------------------------------------------------------------------
-// GIpAdapterInfo
+// GRtmWin32
 // ----------------------------------------------------------------------------
-struct GIpAdapterInfo {
-private: // singleton
-  GIpAdapterInfo();
-  virtual ~GIpAdapterInfo();
-
+struct GRtmWin32 : GRtm {
 protected:
-  PIP_ADAPTER_INFO pAdapterInfo_{nullptr};
+  bool initialized_{false};
 
 public:
-  PIP_ADAPTER_INFO findByAdapterName(char* value);
-  PIP_ADAPTER_INFO findByComboIndex(DWORD comboIndex);
-
-  static GIpAdapterInfo& instance();
+  bool init() override;
 };
-

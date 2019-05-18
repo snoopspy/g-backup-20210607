@@ -43,11 +43,20 @@ GIpAdapterInfo::~GIpAdapterInfo() {
 
 PIP_ADAPTER_INFO GIpAdapterInfo::findByAdapterName(char* value) {
   QString name = value;
-  if (pAdapterInfo_ == nullptr) return nullptr;
   PIP_ADAPTER_INFO p = pAdapterInfo_;
   while (p != nullptr) {
     QString adapterName = p->AdapterName;
     if (name.indexOf(adapterName) != -1)
+      return p;
+    p = p->Next;
+  }
+  return nullptr;
+}
+
+PIP_ADAPTER_INFO GIpAdapterInfo::findByComboIndex(DWORD comboIndex) {
+  PIP_ADAPTER_INFO p = pAdapterInfo_;
+  while (p != nullptr) {
+    if (comboIndex == p->ComboIndex)
       return p;
     p = p->Next;
   }

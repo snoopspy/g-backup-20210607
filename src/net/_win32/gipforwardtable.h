@@ -23,6 +23,7 @@ private: // singleton
   virtual ~GIpForwardTable();
 
 protected:
+  friend struct GRtmWin32;
   PMIB_IPFORWARDTABLE ipForwardTable_{nullptr};
 
 public:

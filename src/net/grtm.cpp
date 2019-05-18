@@ -114,7 +114,7 @@ GIp GRtm::findGateway(QString intf) {
 // ----------------------------------
 
 #ifdef Q_OS_WIN
-#include "net/_linux/grtmwin32.h"
+#include "net/_win32/grtmwin32.h"
 GRtm& GRtm::instance() {
   static GRtmWin32 rtm;
   return rtm;

@@ -82,11 +82,15 @@ GNetIntfs::GNetIntfs() {
     intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
 #endif
 #ifdef Q_OS_WIN
+    // ----- gilgil temp 2019.05.18 -----
+    /*
     PIP_ADAPTER_INFO adapter = GAdapterInfos::all().findByName(intf.name_);
     if (adapter != nullptr) {
       intf.mac_ = adapter->Address;
       intf.gateway_ = static_cast<char*>(adapter->GatewayList.IpAddress.String);
     }
+    */
+    // ----------------------------------
 #endif
 
     push_back(intf);
@@ -108,6 +112,7 @@ GNetIntfs::~GNetIntfs() {
   }
 }
 
+#ifdef Q_OS_LINUX
 GNetIntf* GNetIntfs::findByName(QString name) {
   for (GNetIntf& intf: *this) {
     if (intf.name_ == name)
@@ -115,12 +120,24 @@ GNetIntf* GNetIntfs::findByName(QString name) {
   }
   return nullptr;
 }
+#endif
+#ifdef Q_OS_WIN
+GNetIntf* GNetIntfs::findByName(QString name) {
+  for (GNetIntf& intf: *this) {
+    if (intf.name_.indexOf(name) != -1)
+      return &intf;
+  }
+  return nullptr;
+}
+#endif
 
 GNetIntfs& GNetIntfs::instance() {
   static GNetIntfs intfs;
   return intfs;
 }
 
+// ----- gilgil temp 2019.05.18 -----
+/*
 // ----------------------------------------------------------------------------
 // GAdapterInfo
 // ----------------------------------------------------------------------------
@@ -171,3 +188,5 @@ GAdapterInfos& GAdapterInfos::all() {
 }
 
 #endif
+*/
+// ----------------------------------
