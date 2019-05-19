@@ -23,13 +23,17 @@ struct GSleep : GStateObj {
 public:
   ulong duration_{1000};
 
+protected:
+  QWaitCondition wc_;
+  QMutex m_;
+
 public:
   Q_INVOKABLE GSleep(QObject* parent = nullptr) : GStateObj(parent) {}
   ~GSleep() override {}
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+  bool doOpen() override;
+  bool doClose() override;
 
 public slots:
   void sleep(GPacket* packet);
