@@ -21,8 +21,8 @@
 // GGSignalSlotForm
 // ----------------------------------------------------------------------------
 class GGSignalSlotForm : public QDialog {
-	Q_OBJECT
-	
+  Q_OBJECT
+
 public:
   explicit GGSignalSlotForm(QWidget *parent = nullptr);
   ~GGSignalSlotForm() override;
@@ -34,8 +34,8 @@ public:
   QPushButton* btnCancel_;
 
 public:
-	void setControl();
-	
+  void setControl();
+
 private slots:
   void on_btnOK_clicked(bool);
   void on_btnCancel_clicked(bool);

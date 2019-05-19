@@ -69,7 +69,7 @@ public:
 
 public:
   bool parse(int argc, char* argv[]) {
-		int index = 1;
+    int index = 1;
     while (index < argc) {
       if (strcmp(argv[index], "-f") == 0) {
         index++;
@@ -85,9 +85,9 @@ public:
         nameFilters_.push_back(nameFilter);
       }
       index++;
-		}
+    }
     return nameFilters_.size() > 0;
-	}
+  }
 
   static void usage() {
     printf("getline version 9.0\n");
@@ -108,16 +108,16 @@ public:
 // main
 // ----------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
-	Param param;
+  Param param;
   if (!param.parse(argc, argv)) {
     Param::usage();
-		return 0;
-	}
+    return 0;
+  }
   int res = GetLine::scan(param.folder_, param.nameFilters_);
-	printf("\n");
-	printf("==================================================\n");
-	printf("Total File Line = %d\n", res);
-	printf("==================================================\n");
+  printf("\n");
+  printf("==================================================\n");
+  printf("Total File Line = %d\n", res);
+  printf("==================================================\n");
 
   return 0;
 }

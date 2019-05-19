@@ -34,41 +34,41 @@ GGSignalSlotForm::GGSignalSlotForm(QWidget *parent) : QDialog(parent) {
   QObject::connect(lwSignalList_, &QListWidget::clicked, this, &GGSignalSlotForm::on_lwSignalList_clicked);
   QObject::connect(lwSlotList_, &QListWidget::clicked, this, &GGSignalSlotForm::on_lwSlotList_clicked);
 
-	setControl();
+  setControl();
 }
 
 GGSignalSlotForm::~GGSignalSlotForm() {
 }
 
 void GGSignalSlotForm::setControl() {
-	bool ok = true;
+  bool ok = true;
   if (lwSignalList_->selectedItems().count() == 0) ok = false;
   if (lwSlotList_->selectedItems().count() == 0) ok = false;
   btnOK_->setEnabled(ok);
 }
 
 void GGSignalSlotForm::on_btnOK_clicked(bool) {
-	this->done(QDialog::Accepted);
+  this->done(QDialog::Accepted);
 }
 
 void GGSignalSlotForm::on_btnCancel_clicked(bool) {
-	this->done(QDialog::Rejected);
+  this->done(QDialog::Rejected);
 }
 
 void GGSignalSlotForm::on_lwSignalList_currentRowChanged(int) {
-	setControl();
+  setControl();
 }
 
 void GGSignalSlotForm::on_lwSlotList_currentRowChanged(int) {
-	setControl();
+  setControl();
 }
 
 void GGSignalSlotForm::on_lwSignalList_clicked(const QModelIndex&) {
-	setControl();
+  setControl();
 }
 
 void GGSignalSlotForm::on_lwSlotList_clicked(const QModelIndex&) {
-	setControl();
+  setControl();
 }
 
 #endif // QT_GUI_LIB

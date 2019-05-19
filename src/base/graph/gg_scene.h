@@ -27,22 +27,22 @@
 // ----------------------------------------------------------------------------
 struct GGraphWidget;
 struct GGScene : QGraphicsScene {
-	Q_OBJECT
+  Q_OBJECT
 
 public:
   GGScene(QObject *parent);
   virtual ~GGScene();
 
 public:
-	void clear();
+  void clear();
 
 public:
-	enum Mode { InsertItem, MoveItem, InsertLine };
-	Mode mode() { return m_mode; }
-	void setMode(Mode mode) { m_mode = mode; }
+  enum Mode { InsertItem, MoveItem, InsertLine };
+  Mode mode() { return m_mode; }
+  void setMode(Mode mode) { m_mode = mode; }
 
 protected:
-	Mode m_mode;
+  Mode m_mode;
 
 public:
   GGraphWidget* graphWidget_;
@@ -55,7 +55,7 @@ public:
   GGText*  findTextByObjectName(QString objectName);
 
 protected: // for drag and drop
-	QGraphicsLineItem *line;
+  QGraphicsLineItem *line;
 
 protected:
   void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

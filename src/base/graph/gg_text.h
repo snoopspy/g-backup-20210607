@@ -25,8 +25,8 @@
 // ----------------------------------------------------------------------------
 struct GGText : QGraphicsTextItem {
 public:
-	enum { Type = UserType + 5 };
-	int type() const { return Type; }
+  enum { Type = UserType + 5 };
+  int type() const { return Type; }
 
 public:
   GGText(GGraph::Node* node);
@@ -36,7 +36,7 @@ public:
   QList<GGArrow*> arrows_;
   void addArrow(GGArrow *arrow);
   void removeArrow(GGArrow *arrow);
-	void removeArrows();
+  void removeArrows();
 
 public:
   GGraph::Node* node_;

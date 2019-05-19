@@ -15,10 +15,10 @@ GGArrow::GGArrow(GGText *startText, GGText *endText, GGraph::Connection* connect
   myStartText = startText;
   myEndText   = endText;
 
-	setFlag(QGraphicsItem::ItemIsSelectable, true);
-	myColor = Qt::black;
-	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-	setZValue(-1000.0);
+  setFlag(QGraphicsItem::ItemIsSelectable, true);
+  myColor = Qt::black;
+  setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  setZValue(-1000.0);
 
   connection_ = connection;
 }
@@ -34,19 +34,19 @@ QRectF GGArrow::boundingRect() const {
 }
 
 QPainterPath GGArrow::shape() const {
-	QPainterPath path = QGraphicsLineItem::shape();
+  QPainterPath path = QGraphicsLineItem::shape();
   path.addPolygon(arrowHead);
-	return path;
+  return path;
 }
 
 void GGArrow::updatePosition() {
   QLineF line(mapFromItem(myStartText, 0, 0), mapFromItem(myEndText, 0, 0));
-	setLine(line);
+  setLine(line);
 }
 
 void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) {
   if (myStartText->collidesWithItem(myEndText))
-			return;
+    return;
 
   QPen myPen = pen();
   myPen.setColor(myColor);

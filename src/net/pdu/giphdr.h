@@ -42,11 +42,11 @@ struct GIpHdr final { // libnet_ipv4_hdr // gilgil temp 2019.05.13
   GIp      dip() { return ntohl(dip_); }
 
   enum Protocol {
-    Icmp = 1,		// Internet Control Message Protocol
-    Igmp = 2,		// Internet Group Management Protocol
-    Tcp = 0x06, // Transmission Control Protocol
-    Udp = 17,		// User Datagram Protocol
-    Sctp = 132,	// Stream Control Transport Protocol
+    Icmp = 1,   // Internet Control Message Protocol
+    Igmp = 2,   // Internet Group Management Protocol
+    Tcp  = 6,   // Transmission Control Protocol
+    Udp  = 17,  // User Datagram Protocol
+    Sctp = 132, // Stream Control Transport Protocol
   };
 
   static uint16_t calcChecksum(GIpHdr* ipHdr);
