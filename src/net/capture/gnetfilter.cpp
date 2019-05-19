@@ -134,7 +134,7 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 
 void GNetFilter::run() {
   qDebug() << "beg"; // gilgil temp 2016.09.27
-  char* buf = static_cast<char*>(malloc(size_t(snapLen_)));
+  char* buf = pchar(malloc(size_t(snapLen_)));
 
   while (true) {
     //qDebug() << "bef call recv"; // gilgil temp 2016.09.27
