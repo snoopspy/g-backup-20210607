@@ -72,8 +72,7 @@ public slots:
 };
 
 int main(int argc, char* argv[]) {
-  QCoreApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   GPcapDevice device;
   QJsonObject jo = GJson::loadFromFile();

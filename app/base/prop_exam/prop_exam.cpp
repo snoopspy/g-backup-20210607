@@ -7,8 +7,7 @@
 #include "person.h"
 
 int main(int argc, char *argv[]) {
-  QApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   Dept dept;
   GPropWidget propWidget(&dept);

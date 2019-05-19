@@ -6,8 +6,7 @@
 #include "mygraph.h"
 
 int main(int argc, char *argv[]) {
-  QApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   MyFactory myFactory;
 

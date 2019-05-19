@@ -87,8 +87,7 @@ public slots:
 };
 
 int main(int argc, char* argv[]) {
-  QCoreApplication a(argc, argv);
-  GApp::init();
+  GApp a(argc, argv);
 
   Param param;
   if (!param.parse(argc, argv)) {
