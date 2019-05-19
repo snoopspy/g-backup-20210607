@@ -14,24 +14,25 @@
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GDelay
+// GTimeStampDelay
 // ----------------------------------------------------------------------------
-struct GDelay : GStateObj {
+struct GTimeStampDelay : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(ulong duration MEMBER duration_) // msec
+  Q_PROPERTY(double speed MEMBER speed_) // ratio
 
 public:
-  ulong duration_{1000};
+  double speed_{1};
 
 protected:
   QWaitCondition wc_;
   QMutex m_;
   QElapsedTimer et_;
   qint64 lastClock_;
+  qint64 lastTs_;
 
 public:
-  Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GDelay() override {}
+  Q_INVOKABLE GTimeStampDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GTimeStampDelay() override {}
 
 protected:
   bool doOpen() override;
