@@ -15,8 +15,8 @@ struct G {
   static const unsigned long Timeout;
 };
 
-typedef void         *pvoid;
-typedef char         *pchar;
+typedef void *pvoid;
+typedef char *pchar;
 typedef unsigned char gbyte, *pbyte;
 #ifdef WIN32
   #ifdef _WIN64
