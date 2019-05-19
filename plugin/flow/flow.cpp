@@ -12,8 +12,8 @@ extern "C" {
 
 EXPORT int count() {
   qRegisterMetaType<GIpFlowMgr*>();
-  qRegisterMetaType<GIpFlowMgr*>();
   qRegisterMetaType<GTcpFlowMgr*>();
+  qRegisterMetaType<GUdpFlowMgr*>();
   return 3;
 }
 
