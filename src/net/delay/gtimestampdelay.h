@@ -21,7 +21,7 @@ struct GTimeStampDelay : GStateObj {
   Q_PROPERTY(double speed MEMBER speed_) // ratio
 
 public:
-  double speed_{1};
+  double speed_{1.};
 
 protected:
   QWaitCondition wc_;

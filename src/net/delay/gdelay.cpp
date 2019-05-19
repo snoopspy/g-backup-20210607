@@ -22,6 +22,7 @@ void GDelay::delay(GPacket* packet) {
   qint64 nowClock = et_.elapsed();
   qint64 remain = qint64(duration_) - (nowClock - lastClock_);
   // qDebug() << "remain=" << remain << "nowClock=" << nowClock << "lastClock_=" << lastClock_; // gilgil temp 2019.05.19
+
   if (remain < 0) {
     qCritical() << "remain is " << remain;
     remain = 0;
