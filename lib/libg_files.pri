@@ -6,6 +6,7 @@ SOURCES += \
   $${PWD}/../src/net/*.cpp \
   $${PWD}/../src/net/block/*.cpp \
   $${PWD}/../src/net/capture/*.cpp \
+  $${PWD}/../src/net/delay/*.cpp \
   $${PWD}/../src/net/filter/*.cpp \
   $${PWD}/../src/net/flow/*.cpp \
   $${PWD}/../src/net/packet/*.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
   $${PWD}/../src/net/*.h \
   $${PWD}/../src/net/block/*.h \
   $${PWD}/../src/net/capture/*.h \
+  $${PWD}/../src/net/delay/*.h \
   $${PWD}/../src/net/filter/*.h \
   $${PWD}/../src/net/flow/*.h \
   $${PWD}/../src/net/libnet/*.h \
