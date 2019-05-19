@@ -27,7 +27,7 @@ protected:
   QWaitCondition wc_;
   QMutex m_;
   QElapsedTimer et_;
-  qint64 last_{0};
+  qint64 last_;
 
 public:
   Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}

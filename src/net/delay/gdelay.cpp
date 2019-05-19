@@ -21,9 +21,9 @@ bool GDelay::doClose() {
 void GDelay::delay(GPacket* packet) {
   qint64 now = et_.elapsed();
   qint64 remain = qint64(duration_) - (now - last_);
-  qDebug() << "remain=" << remain << "now=" << now << "last_=" << last_; // gilgil temp 2019.05.19
+  // qDebug() << "remain=" << remain << "now=" << now << "last_=" << last_; // gilgil temp 2019.05.19
   if (remain < 0) {
-    // qDebug() << "remain is " << remain;
+    // qDebug() << "remain is " << remain; // gilgil temp 2019.05.20
     remain = 0;
   }
   QDeadlineTimer dt(remain);
