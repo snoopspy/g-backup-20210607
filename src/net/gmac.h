@@ -20,7 +20,7 @@ public:
   static const int SIZE = 6;
 
 protected:
-  u_char mac_[SIZE];
+  gbyte mac_[SIZE];
 
 public:
   //
@@ -28,14 +28,14 @@ public:
   //
   GMac() {}
   GMac(const GMac& rhs) { memcpy(this->mac_, rhs.mac_, SIZE); }
-  GMac(const u_char* rhs) { memcpy(this->mac_, rhs, SIZE); }
+  GMac(const gbyte* rhs) { memcpy(this->mac_, rhs, SIZE); }
   GMac(const char* rhs);
   GMac(const QString& rhs) : GMac(qPrintable(rhs)) {}
 
   //
   // casting operator
   //
-  operator u_char*() const { return const_cast<u_char*>(mac_); } // default casting operator
+  operator gbyte*() const { return const_cast<gbyte*>(mac_); } // default casting operator
   explicit operator const char*() const { return qPrintable(QString(*this)); }
   explicit operator QString() const;
 

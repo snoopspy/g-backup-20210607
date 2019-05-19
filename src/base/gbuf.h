@@ -16,8 +16,8 @@
 // GBuf
 // ----------------------------------------------------------------------------
 struct GBuf final {
-  pbyte data_;
-  gsize size_;
+  gbyte* data_;
+  size_t size_;
 
   void clear() {
     data_ = nullptr;

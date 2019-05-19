@@ -5,8 +5,8 @@
 // ----------------------------------------------------------------------------
 GMac::GMac(const char* rhs) {
   int i;
-  u_char* p;
-  u_char ch1, ch2;
+  gbyte* p;
+  gbyte ch1, ch2;
 
   p = reinterpret_cast<u_char*>(const_cast<char*>(rhs));
   for (i = 0 ; i < SIZE; i++)
@@ -26,15 +26,15 @@ GMac::GMac(const char* rhs) {
       ch2 = ch2 - 'A' + 10;
     else
       ch2 = ch2 - '0';
-    mac_[i] = static_cast<u_char>((ch1 << 4) + ch2);
+    mac_[i] = static_cast<gbyte>((ch1 << 4) + ch2);
     while (*p == '-' || *p == ':') p++;
   }
 }
 
 GMac::operator QString() const {
-  u_char ch1, ch2;
+  gbyte ch1, ch2;
   int i, index;
-  u_char buf[SIZE * 3]; // enough size
+  char buf[SIZE * 3]; // enough size
 
   index = 0;
   for (i = 0; i < SIZE; i++)
@@ -50,8 +50,8 @@ GMac::operator QString() const {
       ch2 = ch2 + 'A' - 10;
     else
       ch2 = ch2 + '0';
-    buf[index++] = ch1;
-    buf[index++] = ch2;
+    buf[index++] = char(ch1);
+    buf[index++] = char(ch2);
     if (i == 2)
       buf[index++] = '-';
   }
@@ -62,19 +62,19 @@ GMac::operator QString() const {
 GMac GMac::randomMac() {
   GMac res;
   for (int i = 0; i < SIZE; i++)
-    res.mac_[i] = static_cast<u_char>(rand() % 256);
+    res.mac_[i] = static_cast<gbyte>(rand() % 256);
   res.mac_[0] &= 0x7F;
   return res;
 }
 
 GMac& GMac::cleanMac() {
-  static u_char _value[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+  static gbyte _value[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
   static GMac res(_value);
   return res;
 }
 
 GMac& GMac::broadcastMac() {
-  static u_char _value[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+  static gbyte _value[] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
   static GMac res(_value);
   return res;
 }
@@ -105,8 +105,8 @@ TEST(GMac, ctorTest) {
 TEST(GMac, castingTest) {
   GMac mac("001122-334455");
 
-  const u_char* uc = mac; // operator u_char*()
-  u_char temp[GMac::SIZE];
+  const gbyte* uc = mac; // operator u_char*()
+  gbyte temp[GMac::SIZE];
   for (int i = 0; i < GMac::SIZE; i++)
     temp[i] = *uc++;
   EXPECT_EQ(mac, temp);
@@ -114,7 +114,7 @@ TEST(GMac, castingTest) {
   // ----- gilgil temp 2019.05.18 -----
   // Error occurrs on Windows
   /*
-  QString s1 = static_cast<const char*>(mac); // operator const char*()
+  QString s1 = static_cast<const char*>(mac); // operator const byte*()
   EXPECT_EQ(s1, "001122-334455");
   */
   // ----------------------------------

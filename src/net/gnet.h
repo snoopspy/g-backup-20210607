@@ -11,6 +11,7 @@
 #pragma once
 
 #include <QtCore>
+#include "base/gbase.h"
 
 #ifdef Q_OS_LINUX
   #include <arpa/inet.h>

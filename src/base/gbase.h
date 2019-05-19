@@ -21,4 +21,3 @@ struct G {
 typedef void    *pvoid;
 typedef char    *pchar;
 typedef uint8_t  gbyte, *pbyte;
-typedef size_t   gsize, *psize;
