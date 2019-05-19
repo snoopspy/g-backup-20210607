@@ -1,5 +1,5 @@
 TEMPLATE = lib
-QT -= gui
+QT += widgets
 include(../../g.pri)
 SOURCES += *.cpp
 DESTDIR = $${PWD}/../../bin/plugin/other
