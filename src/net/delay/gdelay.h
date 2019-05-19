@@ -14,26 +14,32 @@
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GPacketDebugger
+// GDelay
 // ----------------------------------------------------------------------------
-struct GPacketDebugger : GStateObj {
+struct GDelay : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(bool debug MEMBER debug_)
+  Q_PROPERTY(ulong duration MEMBER duration_) // msec
 
 public:
-  bool debug_{true};
-
-public:
-  Q_INVOKABLE GPacketDebugger(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GPacketDebugger() override {}
+  ulong duration_{1000};
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+  QWaitCondition wc_;
+  QMutex m_;
+  QElapsedTimer et_;
+  qint64 last_{0};
+
+public:
+  Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GDelay() override {}
+
+protected:
+  bool doOpen() override;
+  bool doClose() override;
 
 public slots:
-  void debug(GPacket* packet);
+  void delay(GPacket* packet);
 
 signals:
-  void debugged(GPacket* packet);
+  void delayed(GPacket* packet);
 };

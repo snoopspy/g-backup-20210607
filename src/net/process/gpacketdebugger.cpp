@@ -38,6 +38,8 @@ QString dump(u_char* data, size_t size) {
 // GPacketDebugger
 // ----------------------------------------------------------------------------
 void GPacketDebugger::debug(GPacket* packet) {
+  if (!debug_) return;
+
   GEthPacket* ethPacket = nullptr;
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
