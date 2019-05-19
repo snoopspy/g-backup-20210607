@@ -4,6 +4,8 @@
 
 #ifdef Q_OS_WIN
   #define EXPORT __declspec(dllexport)
+#else
+  #define EXPORT
 #endif
 
 extern "C" {
