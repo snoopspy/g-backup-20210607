@@ -64,7 +64,7 @@ protected:
 public:
   virtual GPacket::Result read(GPacket* packet);
   virtual GPacket::Result write(GPacket* packet);
-  virtual GPacket::Result write(u_char* buf, size_t len);
+  virtual GPacket::Result write(GBuf* buf);
   virtual GPacket::Result relay(GPacket* packet);
 
   virtual GPacket::DataLinkType dataLinkType() { return GPacket::Null; }

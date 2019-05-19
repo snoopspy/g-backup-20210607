@@ -10,18 +10,14 @@
 
 #pragma once
 
-#include <QtCore>
-
-#ifdef Q_OS_WIN
-  #include <winsock2.h> // for u_char
-#endif
+#include "base/gbase.h"
 
 // ----------------------------------------------------------------------------
 // GBuf
 // ----------------------------------------------------------------------------
 struct GBuf final {
-  u_char* data_;
-  size_t size_;
+  pbyte data_;
+  gsize size_;
 
   void clear() {
     data_ = nullptr;

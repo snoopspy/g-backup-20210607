@@ -33,7 +33,7 @@ public:
 
 public:
   int queueNum_{0};
-  size_t snapLen_{65536}; // 65536 bytes
+  int snapLen_{65536}; // 65536 bytes
   Verdict acceptVerdict_{ACCEPT};
   uint32_t mark_{0};
 
@@ -48,7 +48,7 @@ protected:
 public:
   GPacket::Result read(GPacket* packet) override;
   GPacket::Result write(GPacket* packet) override;
-  GPacket::Result write(u_char* buf, size_t len) override;
+  GPacket::Result write(GBuf* buf) override;
   GPacket::Result relay(GPacket* packet) override;
 
   GPacket::DataLinkType dataLinkType() override { return GPacket::Ip; }

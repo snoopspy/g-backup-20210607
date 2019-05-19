@@ -57,9 +57,8 @@ GPacket::Result GCapture::write(GPacket* packet) {
   return GPacket::Fail;
 }
 
-GPacket::Result GCapture::write(u_char* buf, size_t len) {
+GPacket::Result GCapture::write(GBuf* buf) {
   (void)buf;
-  (void)len;
   SET_ERR(GErr::VIRTUAL_FUNCTION_CALL, "virtual function call");
   return GPacket::Fail;
 }

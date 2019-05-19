@@ -120,9 +120,8 @@ GPacket::Result GNetFilter::write(GPacket* packet) {
   return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(u_char* buf, size_t len) {
+GPacket::Result GNetFilter::write(GBuf* buf) {
   (void)buf;
-  (void)len;
   SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
   return GPacket::Fail;
 }
@@ -135,11 +134,11 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 
 void GNetFilter::run() {
   qDebug() << "beg"; // gilgil temp 2016.09.27
-  char* buf = static_cast<char*>(malloc(snapLen_));
+  char* buf = static_cast<char*>(malloc(size_t(snapLen_)));
 
   while (true) {
     //qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-    int res = int(recv(fd_, buf, snapLen_, 0));
+    int res = int(recv(fd_, buf, size_t(snapLen_), 0));
     //qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
     if (res >= 0) {
       nfq_handle_packet(h_, buf, int(res));
