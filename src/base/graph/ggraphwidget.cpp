@@ -354,6 +354,7 @@ void GGraphWidget::actionOpenFileTriggered(bool) {
   fileDialog_.setAcceptMode(QFileDialog::AcceptOpen);
   fileDialog_.setFileMode(QFileDialog::ExistingFile);
   if (fileDialog_.exec() == QDialog::Accepted) {
+    clear();
     fileName_ = fileDialog_.selectedFiles().first();
     QJsonObject jo = GJson::loadFromFile(fileName_);
     loadGraph(jo);
@@ -443,7 +444,6 @@ void GGraphWidget::actionDeleteTriggered(bool) {
     setControl();
   }
 }
-
 
 void GGraphWidget::actionOptionTriggered(bool) {
   qDebug() << ""; // gilgil temp 2016.09.18
