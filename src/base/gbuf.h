@@ -25,6 +25,6 @@ struct GBuf final {
   }
 
   bool valid() {
-    return data_  != nullptr;
+    return data_ != nullptr;
   }
 };
