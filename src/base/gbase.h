@@ -18,4 +18,14 @@ struct G {
 typedef void         *pvoid;
 typedef char         *pchar;
 typedef unsigned char gbyte, *pbyte;
-typedef unsigned long size_t;
+#ifdef WIN32
+  #ifdef _WIN64
+    typedef unsigned __int64 size_t;
+  #else // 32
+    typedef unsigned int size_t;
+  #endif
+#endif
+#ifdef linux
+  typedef unsigned long size_t;
+#endif
+
