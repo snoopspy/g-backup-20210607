@@ -15,7 +15,7 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GBpFilter::staticMetaObject;
+    case 0: return pvoid(&GBpFilter::staticMetaObject);
     default: return nullptr;
   }
 }

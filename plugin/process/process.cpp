@@ -20,10 +20,10 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GDnsFirewall::staticMetaObject;
-    case 1: return (void*)&GDnsProcessor::staticMetaObject;
-    case 2: return (void*)&GPacketDebugger::staticMetaObject;
-    case 3: return (void*)&GFlowMgrTest::staticMetaObject;
+    case 0: return pvoid(&GDnsFirewall::staticMetaObject);
+    case 1: return pvoid(&GDnsProcessor::staticMetaObject);
+    case 2: return pvoid(&GPacketDebugger::staticMetaObject);
+    case 3: return pvoid(&GFlowMgrTest::staticMetaObject);
     default: return nullptr;
   }
 }

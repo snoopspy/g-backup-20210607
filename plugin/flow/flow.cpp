@@ -19,9 +19,9 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GIpFlowMgr::staticMetaObject;
-    case 1: return (void*)&GTcpFlowMgr::staticMetaObject;
-    case 2: return (void*)&GUdpFlowMgr::staticMetaObject;
+    case 0: return pvoid(&GIpFlowMgr::staticMetaObject);
+    case 1: return pvoid(&GTcpFlowMgr::staticMetaObject);
+    case 2: return pvoid(&GUdpFlowMgr::staticMetaObject);
     default: return nullptr;
   }
 }

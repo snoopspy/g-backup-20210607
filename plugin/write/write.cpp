@@ -17,8 +17,8 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GPcapDeviceWriter::staticMetaObject;
-    case 1: return (void*)&GPcapFileWriter::staticMetaObject;
+    case 0: return pvoid(&GPcapDeviceWriter::staticMetaObject);
+    case 1: return pvoid(&GPcapFileWriter::staticMetaObject);
     default: return nullptr;
   }
 }

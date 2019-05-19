@@ -15,7 +15,7 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GBlock::staticMetaObject;
+    case 0: return pvoid(&GBlock::staticMetaObject);
     default: return nullptr;
   }
 }

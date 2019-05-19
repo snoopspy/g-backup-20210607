@@ -19,9 +19,9 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GDelay::staticMetaObject;
-    case 1: return (void*)&GSleep::staticMetaObject;
-    case 2: return (void*)&GTimeStampDelay::staticMetaObject;
+    case 0: return pvoid(&GDelay::staticMetaObject);
+    case 1: return pvoid(&GSleep::staticMetaObject);
+    case 2: return pvoid(&GTimeStampDelay::staticMetaObject);
     default: return nullptr;
   }
 }

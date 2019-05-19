@@ -24,10 +24,10 @@ EXPORT int count() {
 
 EXPORT void* meta(int index) {
   switch (index) {
-    case 0: return (void*)&GPcapDevice::staticMetaObject;
-    case 1: return (void*)&GPcapFile::staticMetaObject;
+    case 0: return pvoid(&GPcapDevice::staticMetaObject);
+    case 1: return pvoid(&GPcapFile::staticMetaObject);
 #ifdef Q_OS_LINUX
-    case 2: return (void*)&GNetFilter::staticMetaObject;
+    case 2: return pvoid(&GNetFilter::staticMetaObject);
 #endif
     default: return nullptr;
   }
