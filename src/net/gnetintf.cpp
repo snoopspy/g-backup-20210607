@@ -63,24 +63,19 @@ GNetIntfs::GNetIntfs() {
     intf.dev_ = dev;
 
 #ifdef Q_OS_LINUX
-    intf.mac_ = getMac(dev->name); // mac
-
+    intf.mac_ = getMac(dev->name);
     for(pcap_addr_t* pa = dev->addresses; pa != nullptr; pa = pa->next) {
-      // ip
       sockaddr* addr = pa->addr;
       sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET)
         intf.ip_ = ntohl(addr_in->sin_addr.s_addr);
 
-      // mask_;
       addr = pa->netmask;
       addr_in = reinterpret_cast<sockaddr_in*>(addr);
       if(addr != nullptr && addr->sa_family == AF_INET) {
         intf.mask_ = ntohl(addr_in->sin_addr.s_addr);
       }
     }
-
-    // gateway_
     intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
 #endif
 #ifdef Q_OS_WIN
