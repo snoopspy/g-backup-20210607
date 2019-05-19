@@ -228,9 +228,7 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
   return false;
 }
 
-
 #ifdef QT_GUI_LIB
-
 #include "gpropitem_bool.h"
 #include "gpropitem_char.h"
 #include "gpropitem_enum.h"
@@ -301,7 +299,23 @@ void GProp::propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QO
     item->update();
   }
 }
+#else
+void* GProp::fake_propCreateItem(void* param) {
+  QString msg = QString("GProp::fake_propCreateItem invalid function call param = %1").arg(quintptr(param));
+  qCritical() << msg;
+  return nullptr;
+}
 
+void GProp::fake_propCreateItems(void* treeWidget, void* parent, QObject* object) {
+  QString className = object != nullptr ? "" : object->metaObject()->className();
+  QString msg = QString("GProp::fake_propCreateItems invalid function call treeWidget = %1 parent= %2 className = %3").
+      arg(quintptr(treeWidget)).arg(quintptr(parent)).arg(className);
+  qCritical() << msg;
+}
+
+#endif // QT_GUI_LIB
+
+#ifdef QT_GUI_LIB
 #include <QDialog>
 #include <QHBoxLayout>
 #include "base/prop/gpropwidget.h"
@@ -314,7 +328,6 @@ void GProp::showDialog(QObject* object) {
   dialog.setLayout(layout);
   dialog.exec();
 }
-
 #endif // QT_GUI_LIB
 
 // ----------------------------------------------------------------------------

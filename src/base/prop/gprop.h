@@ -29,7 +29,12 @@ struct GProp {
 #ifdef QT_GUI_LIB
   virtual GPropItem* propCreateItem(GPropItemParam* param);
   virtual void propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
+#else
+  virtual void* fake_propCreateItem(void* param);
+  virtual void fake_propCreateItems(void* treeWidget, void* parent, QObject* object);
+#endif
 
+#ifdef QT_GUI_LIB
   static void showDialog(QObject* object);
 #endif // QT_GUI_LIB
 
