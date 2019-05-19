@@ -13,55 +13,6 @@ GRtm::~GRtm() {
   clear();
 }
 
-// ----- gilgil temp 2019.05.18 -----
-/*
-#ifdef Q_OS_WIN
-#include <iphlpapi.h>
-#pragma comment(lib, "iphlpapi.lib")
-
-bool GRtm::loadFromSystem() {
-  PMIB_IPFORWARDTABLE pIpForwardTable;
-
-  pIpForwardTable = PMIB_IPFORWARDTABLE(malloc(sizeof (MIB_IPFORWARDTABLE)));
-  if (pIpForwardTable == nullptr) {
-    qCritical() << "Error allocating memory";
-    return false;
-  }
-
-  DWORD dwSize = 0;
-  if (GetIpForwardTable(pIpForwardTable, &dwSize, 0) ==
-      ERROR_INSUFFICIENT_BUFFER) {
-    free(pIpForwardTable);
-    pIpForwardTable = PMIB_IPFORWARDTABLE(malloc(dwSize));
-    if (pIpForwardTable == nullptr) {
-      qCritical() << "Error allocating memory";
-      return false;
-    }
-  }
-
-  DWORD dwRetVal = GetIpForwardTable(pIpForwardTable, &dwSize, 0);
-  if (dwRetVal != NO_ERROR) {
-    qCritical() << "GetIpForwardTable failed";
-    free(pIpForwardTable);
-    return false;
-  }
-
-  for (DWORD i = 0; i < pIpForwardTable->dwNumEntries; i++) {
-    PMIB_IPFORWARDROW table = &pIpForwardTable->table[i];
-    GRtmEntry entry;
-    // Convert IPv4 addresses to strings
-    entry.dst_ = ntohl(table->dwForwardDest);
-    entry.mask_ = ntohl(table->dwForwardMask);
-    entry.gateway_ = ntohl(table->dwForwardNextHop);
-    entry.metric_ = int(table->dwForwardMetric1);
-    append(entry);
-  }
-  free(pIpForwardTable);
-  return true;
-}
-*/
-// ----------------------------------
-
 GIp GRtm::findGateway(QString intfName, GIp ip) {
   for (GRtmEntry& entry: *this) {
     if (entry.intf_->name_ != intfName) continue;
@@ -99,31 +50,17 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
   return res;
 }
 
-// ----- gilgil temp 2019.05.18 -----
-/*
-#ifdef Q_OS_LINUX
-GIp GRtm::findGateway(QString intf) {
-  for (GRtm::iterator it = begin(); it != end(); it++) {
-    GRtmEntry& entry = *it;
-    if (entry.intf_ == intf && entry.gateway_ != 0)
-      return entry.gateway_;
-  }
-  return GIp(uint32_t(0));
-}
-*/
-// ----------------------------------
-
-#ifdef Q_OS_WIN
-#include "net/_win32/grtmwin32.h"
-GRtm& GRtm::instance() {
-  static GRtmWin32 rtm;
-  return rtm;
-}
-#endif
 #ifdef Q_OS_LINUX
 #include "net/_linux/grtmlinux.h"
 GRtm& GRtm::instance() {
   static GRtmLinux rtm;
+  return rtm;
+}
+#endif
+#ifdef Q_OS_WIN
+#include "net/_win32/grtmwin32.h"
+GRtm& GRtm::instance() {
+  static GRtmWin32 rtm;
   return rtm;
 }
 #endif
