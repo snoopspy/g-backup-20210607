@@ -64,8 +64,7 @@ GGArrow* GGScene::createArrow(QString startNodeName, QString endNodeName, GGraph
 
 GGText* GGScene::findTextByObjectName(QString objectName) {
   int _count = this->items().count();
-  for (int i = 0; i < _count; i++)
-  {
+  for (int i = 0; i < _count; i++) {
     QGraphicsItem* item = this->items().at(i);
     GGText* res = dynamic_cast<GGText*>(item);
     if (res == nullptr) continue;

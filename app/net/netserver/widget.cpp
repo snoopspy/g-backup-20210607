@@ -144,8 +144,7 @@ void Widget::showOption(NetClient* netClient) {
 
 void Widget::on_pbOpen_clicked() {
   int currentIndex = ui->tabOption->currentIndex();
-  switch (currentIndex)
-  {
+  switch (currentIndex) {
     case 0:
       tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toInt());
       netClient_ = &tcpSocket_;

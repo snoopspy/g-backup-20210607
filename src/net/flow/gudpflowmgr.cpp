@@ -44,8 +44,7 @@ void GUdpFlowMgr::process(GPacket* packet) {
   }
 
   long now = packet->ts_.tv_sec;
-  if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_)
-  {
+  if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_) {
     deleteOldFlowMaps(packet);
     lastCheckTick_ = now;
   }

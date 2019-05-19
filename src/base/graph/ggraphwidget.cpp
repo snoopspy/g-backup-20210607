@@ -329,8 +329,7 @@ void GGraphWidget::setControl() {
   bool selected = scene_->selectedItems().count() > 0;
   actionDelete_->setEnabled(!active && selected);
   GObj* selectedObj = nullptr;
-  if (selected)
-  {
+  if (selected) {
     QGraphicsItem* item = scene_->selectedItems().first();
     GGText* text = dynamic_cast<GGText*>(item);
     if (text != nullptr)
@@ -372,8 +371,7 @@ void GGraphWidget::actionSaveFileTriggered(bool) {
 void GGraphWidget::actionSaveFileAsTriggered(bool) {
   fileDialog_.setAcceptMode(QFileDialog::AcceptSave);
   fileDialog_.setFileMode(QFileDialog::AnyFile);
-  if (fileDialog_.exec() == QDialog::Accepted)
-  {
+  if (fileDialog_.exec() == QDialog::Accepted) {
     fileName_ = fileDialog_.selectedFiles().first();
     actionSaveFileTriggered(false);
   }

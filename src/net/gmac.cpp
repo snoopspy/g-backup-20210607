@@ -9,8 +9,7 @@ GMac::GMac(const char* rhs) {
   gbyte ch1, ch2;
 
   p = reinterpret_cast<u_char*>(const_cast<char*>(rhs));
-  for (i = 0 ; i < SIZE; i++)
-  {
+  for (i = 0 ; i < SIZE; i++) {
     ch1 = *p++;
     if (ch1 >= 'a')
       ch1 = ch1 - 'a' + 10;
@@ -37,8 +36,7 @@ GMac::operator QString() const {
   char buf[SIZE * 3]; // enough size
 
   index = 0;
-  for (i = 0; i < SIZE; i++)
-  {
+  for (i = 0; i < SIZE; i++) {
     ch1 = mac_[i] & 0xF0;
     ch1 = ch1 >> 4;
     if (ch1 > 9)

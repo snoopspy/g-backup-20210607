@@ -56,8 +56,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // IpFlowKey
   // ----------------------------------------------------------------------------
-  struct IpFlowKey
-  {
+  struct IpFlowKey {
   public:
     GIp sip_;
     GIp dip_;
@@ -79,8 +78,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // IpSessionKey
   // ----------------------------------------------------------------------------
-  struct IpSessionKey
-  {
+  struct IpSessionKey {
   public:
     GIp ip1_;
     GIp ip2_;
@@ -98,8 +96,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // PortFlowKey
   // ----------------------------------------------------------------------------
-  struct PortFlowKey
-  {
+  struct PortFlowKey {
   public:
     uint16_t sport_;
     uint16_t dport_;
@@ -121,8 +118,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // PortSessionKey
   // ----------------------------------------------------------------------------
-  struct PortSessionKey
-  {
+  struct PortSessionKey {
   public:
     uint16_t port1_;
     uint16_t port2_;
@@ -140,8 +136,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // TransportKey
   // ----------------------------------------------------------------------------
-  struct TransportKey
-  {
+  struct TransportKey{
   public:
     GIp      ip_;
     uint16_t port_;
@@ -162,8 +157,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // TransportFlowKey
   // ----------------------------------------------------------------------------
-  struct TransportFlowKey
-  {
+  struct TransportFlowKey {
   public:
     GIp      sip_;
     uint16_t sport_;
@@ -205,8 +199,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // TransportSessionKey
   // ----------------------------------------------------------------------------
-  struct TransportSessionKey
-  {
+  struct TransportSessionKey {
   public:
     GIp      ip1_;
     uint16_t port1_;
@@ -233,8 +226,7 @@ namespace GFlow {
   // ----------------------------------------------------------------------------
   // TupleFlowKey
   // ----------------------------------------------------------------------------
-  struct TupleFlowKey
-  {
+  struct TupleFlowKey {
   public:
     uint8_t          proto_;
     TransportFlowKey flow_;

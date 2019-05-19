@@ -22,8 +22,7 @@ GCapture::~GCapture() {
 }
 
 bool GCapture::captureThreadOpen() {
-  if (autoRead_)
-  {
+  if (autoRead_) {
     // ----- by gilgil 2009.08.31 -----
     //
     // There can be a case that even if thread starts,

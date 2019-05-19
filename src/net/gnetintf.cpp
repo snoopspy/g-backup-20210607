@@ -102,8 +102,7 @@ GNetIntfs::~GNetIntfs() {
   //
   // Finalize allDevs_
   //
-  if (allDevs_ != nullptr)
-  {
+  if (allDevs_ != nullptr) {
     pcap_freealldevs(allDevs_);
     allDevs_ = nullptr;
   }

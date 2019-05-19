@@ -220,8 +220,7 @@ QString GDns::decodeName(u_char* udpData, size_t dataLen, size_t* offset) {
       res += decodeName(udpData, dataLen, &tempOffset);
       *offset = p - udpData;
       return res;
-    } else
-    {
+    } else {
       if (p - udpData + size > (int)dataLen) return "";
       QByteArray label((const char*)p, (int)size);
       p += size;
