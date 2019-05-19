@@ -1,15 +1,19 @@
 #include <GPcapDeviceWriter>
 #include <GPcapFileWriter>
 
+#ifdef Q_OS_WIN
+  #define EXPORT __declspec(dllexport)
+#endif
+
 extern "C" {
 
-int count() {
+EXPORT int count() {
   qRegisterMetaType<GPcapDeviceWriter*>();
   qRegisterMetaType<GPcapFileWriter*>();
   return 2;
 }
 
-void* meta(int index) {
+EXPORT void* meta(int index) {
   switch (index) {
     case 0: return (void*)&GPcapDeviceWriter::staticMetaObject;
     case 1: return (void*)&GPcapFileWriter::staticMetaObject;
@@ -17,7 +21,7 @@ void* meta(int index) {
   }
 }
 
-void* create(int index) {
+EXPORT void* create(int index) {
   switch (index) {
     case 0: return new GPcapDeviceWriter;
     case 1: return new GPcapFileWriter;

@@ -3,9 +3,13 @@
 #include <GPacketDebugger>
 #include "net/process/gflowmgrtest.h"
 
+#ifdef Q_OS_WIN
+  #define EXPORT __declspec(dllexport)
+#endif
+
 extern "C" {
 
-int count() {
+EXPORT int count() {
   qRegisterMetaType<GDnsFirewall*>();
   qRegisterMetaType<GDnsProcessor*>();
   qRegisterMetaType<GPacketDebugger*>();
@@ -13,7 +17,7 @@ int count() {
   return 4;
 }
 
-void* meta(int index) {
+EXPORT void* meta(int index) {
   switch (index) {
     case 0: return (void*)&GDnsFirewall::staticMetaObject;
     case 1: return (void*)&GDnsProcessor::staticMetaObject;
@@ -23,7 +27,7 @@ void* meta(int index) {
   }
 }
 
-void* create(int index) {
+EXPORT void* create(int index) {
   switch (index) {
     case 0: return new GDnsFirewall;
     case 1: return new GDnsProcessor;

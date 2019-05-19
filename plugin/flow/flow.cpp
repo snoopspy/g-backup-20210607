@@ -2,16 +2,20 @@
 #include <GTcpFlowMgr>
 #include <GUdpFlowMgr>
 
+#ifdef Q_OS_WIN
+  #define EXPORT __declspec(dllexport)
+#endif
+
 extern "C" {
 
-int count() {
+EXPORT int count() {
   qRegisterMetaType<GIpFlowMgr*>();
   qRegisterMetaType<GIpFlowMgr*>();
   qRegisterMetaType<GTcpFlowMgr*>();
   return 3;
 }
 
-void* meta(int index) {
+EXPORT void* meta(int index) {
   switch (index) {
     case 0: return (void*)&GIpFlowMgr::staticMetaObject;
     case 1: return (void*)&GTcpFlowMgr::staticMetaObject;
@@ -20,7 +24,7 @@ void* meta(int index) {
   }
 }
 
-void* create(int index) {
+EXPORT void* create(int index) {
   switch (index) {
     case 0: return new GIpFlowMgr;
     case 1: return new GTcpFlowMgr;
