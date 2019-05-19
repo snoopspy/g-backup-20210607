@@ -20,7 +20,7 @@ public:
   static const int SIZE = 16;
 
 protected:
-  u_char ip6_[SIZE];
+  gbyte ip6_[SIZE];
 
 public:
   //
@@ -28,14 +28,14 @@ public:
   //
   GIp6() {}
   GIp6(const GIp6& rhs) { memcpy(ip6_, rhs.ip6_, SIZE); }
-  GIp6(const u_char* rhs) { memcpy(ip6_, rhs, SIZE); }
+  GIp6(const gbyte* rhs) { memcpy(ip6_, rhs, SIZE); }
   GIp6(const char* rhs);
   GIp6(const QString& rhs) : GIp6(qPrintable(rhs)) {}
 
   //
   // casting operator
   //
-  operator u_char*() const { return const_cast<u_char*>(ip6_); } // default casting operator
+  operator gbyte*() const { return const_cast<gbyte*>(ip6_); } // default casting operator
   explicit operator const char*() const { return qPrintable(QString(*this)); }
   explicit operator QString() const;
 

@@ -53,8 +53,8 @@ TEST(GIp6, ctorTest) {
 TEST(GIp6, castingTest) {
   GIp6 ip6{"::1"};
 
-  const u_char* uc = ip6; // operator const u_char*()
-  u_char temp[GIp6::SIZE];
+  const gbyte* uc = ip6; // operator const u_char*()
+  gbyte temp[GIp6::SIZE];
   for (int i = 0; i < GIp6::SIZE; i++)
     temp[i] = *uc++;
   EXPECT_EQ(ip6, temp);
