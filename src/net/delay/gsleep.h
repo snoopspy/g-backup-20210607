@@ -12,6 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
+#include "base/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GSleep
@@ -24,8 +25,7 @@ public:
   ulong duration_{1000};
 
 protected:
-  QWaitCondition wc_;
-  QMutex m_;
+  GWaitEvent we_;
 
 public:
   Q_INVOKABLE GSleep(QObject* parent = nullptr) : GStateObj(parent) {}

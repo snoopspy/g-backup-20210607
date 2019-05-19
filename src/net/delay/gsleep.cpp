@@ -9,16 +9,12 @@ bool GSleep::doOpen() {
 }
 
 bool GSleep::doClose() {
-  m_.lock();
-  wc_.wakeOne();
-  m_.unlock();
+  we_.wakeAll();
   return true;
 }
 
 void GSleep::sleep(GPacket* packet) {
-  m_.lock();
-  bool res = wc_.wait(&m_, duration_);
-  m_.unlock();
+  bool res = we_.wait(duration_);
   if (res == false) // time elapsed
     emit sleeped(packet);
 }

@@ -12,6 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
+#include "base/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GTimeStampDelay
@@ -24,8 +25,7 @@ public:
   double speed_{1.};
 
 protected:
-  QWaitCondition wc_;
-  QMutex m_;
+  GWaitEvent we_;
   QElapsedTimer et_;
   qint64 lastClock_;
   qint64 lastTs_;

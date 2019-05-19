@@ -13,9 +13,7 @@ bool GTimeStampDelay::doOpen() {
 }
 
 bool GTimeStampDelay::doClose() {
-  m_.lock();
-  wc_.wakeOne();
-  m_.unlock();
+  we_.wakeAll();
   return true;
 }
 
@@ -40,9 +38,7 @@ void GTimeStampDelay::delay(GPacket* packet) {
   }
 
   QDeadlineTimer dt(remainTs);
-  m_.lock();
-  bool res = wc_.wait(&m_, dt);
-  m_.unlock();
+  bool res = we_.wait(dt);
   lastClock_ = et_.elapsed();
   if (res == false) // time elapsed
     emit delayed(packet);

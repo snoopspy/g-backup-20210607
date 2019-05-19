@@ -12,6 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
+#include "base/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GDelay
@@ -24,8 +25,7 @@ public:
   ulong duration_{1000};
 
 protected:
-  QWaitCondition wc_;
-  QMutex m_;
+  GWaitEvent we_;
   QElapsedTimer et_;
   qint64 lastClock_;
 
