@@ -25,7 +25,7 @@ struct GPropItemFilePath : public GPropItemWidget {
   Q_OBJECT
 
 public:
-  GPropItemFilePath(GPropItemParam param);
+  GPropItemFilePath(GPropItemParam* param);
   void update() override;
 
 public:

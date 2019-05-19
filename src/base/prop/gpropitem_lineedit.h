@@ -19,7 +19,7 @@
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
 struct GPropItemLineEdit : public GPropItem {
-  GPropItemLineEdit(GPropItemParam param);
+  GPropItemLineEdit(GPropItemParam* param);
 
 public:
   QLineEdit* lineEdit_{nullptr};

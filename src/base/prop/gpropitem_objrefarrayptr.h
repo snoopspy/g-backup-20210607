@@ -21,7 +21,7 @@ struct GPropItemObjRefArrayPtr : public GPropItemToolButton {
   Q_OBJECT
 
 public:
-  GPropItemObjRefArrayPtr(GPropItemParam param);
+  GPropItemObjRefArrayPtr(GPropItemParam* param);
   void update() override;
 
 protected slots:

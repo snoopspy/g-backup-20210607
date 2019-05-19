@@ -41,7 +41,7 @@ protected slots:
 // ----------------------------------------------------------------------------
 // GPropItemObjRefArrayPtr
 // ----------------------------------------------------------------------------
-GPropItemObjRefArrayPtr::GPropItemObjRefArrayPtr(GPropItemParam param) : GPropItemToolButton(param) {
+GPropItemObjRefArrayPtr::GPropItemObjRefArrayPtr(GPropItemParam* param) : GPropItemToolButton(param) {
   toolButton_->setText("+");
   QObject::connect(toolButton_, SIGNAL(clicked(bool)), this, SLOT(myClicked(bool)));
 }

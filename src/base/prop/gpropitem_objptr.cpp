@@ -7,8 +7,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemObjPtr
 // ----------------------------------------------------------------------------
-GPropItemObjPtr::GPropItemObjPtr(GPropItemParam param) : GPropItemComboBox(param) {
-  GGraph* graph = dynamic_cast<GGraph*>(param.object_->parent());
+GPropItemObjPtr::GPropItemObjPtr(GPropItemParam* param) : GPropItemComboBox(param) {
+  GGraph* graph = dynamic_cast<GGraph*>(param->object_->parent());
   if (graph != nullptr) {
     const QObjectList& objectList = graph->children();
     foreach (QObject* object, objectList) {

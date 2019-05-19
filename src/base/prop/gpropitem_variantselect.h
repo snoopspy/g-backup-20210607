@@ -21,8 +21,8 @@ struct GPropItemVariantSelect : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemVariantSelect(GPropItemParam param);
-  GPropItemVariantSelect(GPropItemParam param, QStringList& items);
+  GPropItemVariantSelect(GPropItemParam* param);
+  GPropItemVariantSelect(GPropItemParam* param, QStringList& items);
   void update() override;
 
 protected slots:

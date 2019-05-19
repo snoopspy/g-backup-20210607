@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemStringList
 // ----------------------------------------------------------------------------
-GPropItemStringList::GPropItemStringList(GPropItemParam param) : GPropItemPlainTextEdit(param) {
+GPropItemStringList::GPropItemStringList(GPropItemParam* param) : GPropItemPlainTextEdit(param) {
   QObject::connect(plainTextEdit_, SIGNAL(editingFinished()), this, SLOT(myEditingFinished()));
 }
 

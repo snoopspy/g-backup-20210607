@@ -40,7 +40,7 @@ protected:
 // ----------------------------------------------------------------------------
 struct GPropItemPlainTextEdit_;
 struct GPropItemPlainTextEdit : public GPropItem {
-  GPropItemPlainTextEdit(GPropItemParam param);
+  GPropItemPlainTextEdit(GPropItemParam* param);
 
 protected:
   GPropItemPlainTextEdit_* plainTextEdit_{nullptr};

@@ -5,11 +5,11 @@
 // ----------------------------------------------------------------------------
 // GPropItemFilePath
 // ----------------------------------------------------------------------------
-GPropItemFilePath::GPropItemFilePath(GPropItemParam param) : GPropItemWidget(param) {
+GPropItemFilePath::GPropItemFilePath(GPropItemParam* param) : GPropItemWidget(param) {
   layout_ = new QHBoxLayout;
-  lineEdit_ = new QLineEdit(param.treeWidget_);
-  toolButton_ = new QToolButton(param.treeWidget_);
-  fd_ = new QFileDialog(param.treeWidget_);
+  lineEdit_ = new QLineEdit(param->treeWidget_);
+  toolButton_ = new QToolButton(param->treeWidget_);
+  fd_ = new QFileDialog(param->treeWidget_);
   layout_->setMargin(0);
   lineEdit_->setFrame(false);
   toolButton_->setText("...");

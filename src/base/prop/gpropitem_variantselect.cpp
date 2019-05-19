@@ -5,11 +5,11 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariantSelect
 // ----------------------------------------------------------------------------
-GPropItemVariantSelect::GPropItemVariantSelect(GPropItemParam param) : GPropItemComboBox(param) {
+GPropItemVariantSelect::GPropItemVariantSelect(GPropItemParam* param) : GPropItemComboBox(param) {
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(QString)), this, SLOT(myCurrentIndexChanged(QString)));
 }
 
-GPropItemVariantSelect::GPropItemVariantSelect(GPropItemParam param, QStringList& items) : GPropItemComboBox(param, items) {
+GPropItemVariantSelect::GPropItemVariantSelect(GPropItemParam* param, QStringList& items) : GPropItemComboBox(param, items) {
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(QString)), this, SLOT(myCurrentIndexChanged(QString)));
   comboBox_->addItems(items);
 }

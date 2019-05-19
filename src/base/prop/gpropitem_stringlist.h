@@ -21,7 +21,7 @@ struct GPropItemStringList : public GPropItemPlainTextEdit {
   Q_OBJECT
 
 public:
-  GPropItemStringList(GPropItemParam param);
+  GPropItemStringList(GPropItemParam* param);
   void update() override;
 
 protected slots:

@@ -19,7 +19,7 @@
 // GPropItemWidget
 // ----------------------------------------------------------------------------
 struct GPropItemWidget : public GPropItem {
-  GPropItemWidget(GPropItemParam param);
+  GPropItemWidget(GPropItemParam* param);
 
 public:
   QWidget* widget_{nullptr};

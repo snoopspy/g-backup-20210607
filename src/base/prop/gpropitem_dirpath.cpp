@@ -5,10 +5,10 @@
 // ----------------------------------------------------------------------------
 // GPropItemDirPath
 // ----------------------------------------------------------------------------
-GPropItemDirPath::GPropItemDirPath(GPropItemParam param) : GPropItemWidget(param) {
+GPropItemDirPath::GPropItemDirPath(GPropItemParam* param) : GPropItemWidget(param) {
   layout_ = new QHBoxLayout;
-  lineEdit_ = new QLineEdit(param.treeWidget_);
-  toolButton_ = new QToolButton(param.treeWidget_);
+  lineEdit_ = new QLineEdit(param->treeWidget_);
+  toolButton_ = new QToolButton(param->treeWidget_);
   layout_->setMargin(0);
   lineEdit_->setFrame(false);
   toolButton_->setText("...");

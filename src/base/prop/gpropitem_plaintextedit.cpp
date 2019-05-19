@@ -18,9 +18,9 @@ void GPropItemPlainTextEdit_::focusOutEvent(QFocusEvent * e) {
 // ----------------------------------------------------------------------------
 // GPropItemPlainTextEdit
 // ----------------------------------------------------------------------------
-GPropItemPlainTextEdit::GPropItemPlainTextEdit(GPropItemParam param) : GPropItem(param) {
-  plainTextEdit_ = new GPropItemPlainTextEdit_(param.treeWidget_, this);
-  param.treeWidget_->setItemWidget(item_, 1, plainTextEdit_);
+GPropItemPlainTextEdit::GPropItemPlainTextEdit(GPropItemParam* param) : GPropItem(param) {
+  plainTextEdit_ = new GPropItemPlainTextEdit_(param->treeWidget_, this);
+  param->treeWidget_->setItemWidget(item_, 1, plainTextEdit_);
 }
 
 #endif // QT_GUI_LIB

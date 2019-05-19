@@ -47,8 +47,8 @@ GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
 
 #ifdef QT_GUI_LIB
 
-GPropItem* GPcapDeviceWriter::propCreateItem(GPropItemParam param) {
-  if (QString(param.mpro_.name()) == "devName") {
+GPropItem* GPcapDeviceWriter::propCreateItem(GPropItemParam* param) {
+  if (QString(param->mpro_.name()) == "devName") {
     GPropItemDevice* res = new GPropItemDevice(param);
     return res;
   }

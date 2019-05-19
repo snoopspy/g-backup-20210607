@@ -19,8 +19,8 @@
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
 struct GPropItemComboBox : public GPropItem {
-  GPropItemComboBox(GPropItemParam param);
-  GPropItemComboBox(GPropItemParam param, QStringList& items);
+  GPropItemComboBox(GPropItemParam* param);
+  GPropItemComboBox(GPropItemParam* param, QStringList& items);
 
 public:
   QComboBox* comboBox_{nullptr};

@@ -41,6 +41,6 @@ protected:
   pcap_t* pcap_{nullptr};
 
 #ifdef QT_GUI_LIB
-  GPropItem* propCreateItem(GPropItemParam param) override;
+  GPropItem* propCreateItem(GPropItemParam* param) override;
 #endif // QT_GUI_LIB
 };

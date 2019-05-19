@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemDevice
 // ----------------------------------------------------------------------------
-GPropItemDevice::GPropItemDevice(GPropItemParam param) : GPropItemComboBox(param) {
+GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(param) {
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);

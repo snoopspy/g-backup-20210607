@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
-GPropItemUnknownType::GPropItemUnknownType(GPropItemParam param) : GPropItem(param) {
+GPropItemUnknownType::GPropItemUnknownType(GPropItemParam* param) : GPropItem(param) {
   item_->setBackground(1, QBrush(Qt::lightGray));
 }
 

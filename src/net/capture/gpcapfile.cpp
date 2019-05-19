@@ -34,8 +34,8 @@ bool GPcapFile::doClose() {
 
 #ifdef QT_GUI_LIB
 
-GPropItem* GPcapFile::propCreateItem(GPropItemParam param) {
-  if (QString(param.mpro_.name()) == "fileName") {
+GPropItem* GPcapFile::propCreateItem(GPropItemParam* param) {
+  if (QString(param->mpro_.name()) == "fileName") {
     GPropItemFilePath* res = new GPropItemFilePath(param);
     res->fd_->setNameFilter("pcap files - *.pcap(*.pcap);Any files - * (*)");
     return res;

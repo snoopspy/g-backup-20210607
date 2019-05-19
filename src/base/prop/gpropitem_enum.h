@@ -21,7 +21,7 @@ struct GPropItemEnum : public GPropItemComboBox {
   Q_OBJECT
 
 public:
-  GPropItemEnum(GPropItemParam param);
+  GPropItemEnum(GPropItemParam* param);
   void update() override;
 
 protected slots:

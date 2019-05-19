@@ -21,7 +21,7 @@ struct GPropItemVariant : public GPropItemLineEdit {
   Q_OBJECT
 
 public:
-  GPropItemVariant(GPropItemParam param);
+  GPropItemVariant(GPropItemParam* param);
   void update() override;
 
 protected slots:

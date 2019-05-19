@@ -43,8 +43,8 @@ bool GPcapDevice::doClose() {
 
 #ifdef QT_GUI_LIB
 
-GPropItem* GPcapDevice::propCreateItem(GPropItemParam param) {
-  if (QString(param.mpro_.name()) == "devName") {
+GPropItem* GPcapDevice::propCreateItem(GPropItemParam* param) {
+  if (QString(param->mpro_.name()) == "devName") {
     GPropItemDevice* res = new GPropItemDevice(param);
     return res;
   }

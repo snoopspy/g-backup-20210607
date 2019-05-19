@@ -6,8 +6,8 @@
 // ----------------------------------------------------------------------------
 // GPropItemEnum
 // ----------------------------------------------------------------------------
-GPropItemEnum::GPropItemEnum(GPropItemParam param) : GPropItemComboBox(param) {
-  QMetaEnum menum = param.mpro_.enumerator();
+GPropItemEnum::GPropItemEnum(GPropItemParam* param) : GPropItemComboBox(param) {
+  QMetaEnum menum = param->mpro_.enumerator();
   int count = menum.keyCount();
   for (int i = 0; i < count; i++) {
     comboBox_->addItem(menum.key(i));
