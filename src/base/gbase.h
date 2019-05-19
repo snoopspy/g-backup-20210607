@@ -18,6 +18,7 @@ struct G {
   static const unsigned long Timeout;
 };
 
+typedef void    *pvoid;
 typedef char    *pchar;
 typedef uint8_t  gbyte, *pbyte;
 typedef size_t   gsize, *psize;

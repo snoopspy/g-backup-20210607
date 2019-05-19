@@ -48,3 +48,4 @@ public:
   GBuf tcpData_;
   GBuf udpData_;
 };
+typedef GIpPacket *PIpPacket;

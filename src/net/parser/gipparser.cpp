@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 void GIpParser::parse(GPacket* packet) {
   Q_ASSERT(dynamic_cast<GIpPacket*>(packet) != nullptr);
-  GIpPacket* ipPacket = static_cast<GIpPacket*>(packet);
+  GIpPacket* ipPacket = PIpPacket(packet);
 
   u_char* p = ipPacket->buf_.data_;
   uint8_t proto;

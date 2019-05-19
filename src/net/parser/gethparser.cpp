@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------
 void GEthParser::parse(GPacket* packet) {
   Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
-  GEthPacket* ethPacket = static_cast<GEthPacket*>(packet);
+  GEthPacket* ethPacket = PEthPacket(packet);
 
   ethPacket->ethHdr_ = reinterpret_cast<GEthHdr*>(packet->buf_.data_);
   switch (ethPacket->ethHdr_->type()) {

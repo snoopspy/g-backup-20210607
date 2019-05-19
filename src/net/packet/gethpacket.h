@@ -33,3 +33,4 @@ public:
   GEthHdr* ethHdr_{nullptr};
   GArpHdr* arpHdr_{nullptr};
 };
+typedef GEthPacket *PEthPacket;

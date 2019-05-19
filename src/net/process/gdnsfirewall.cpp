@@ -127,10 +127,10 @@ void GDnsFirewall::debugPacket(QString msg, GPacket* packet) {
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      ipPacket = static_cast<GEthPacket*>(packet);
+      ipPacket = PEthPacket(packet);
       break;
     case GPacket::Ip:
-      ipPacket = static_cast<GIpPacket*>(packet);
+      ipPacket = PIpPacket(packet);
       break;
     case GPacket::Dot11:
       return;
@@ -173,10 +173,10 @@ void GDnsFirewall::check(GPacket* packet) {
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      ipPacket = static_cast<GEthPacket*>(packet);
+      ipPacket = PEthPacket(packet);
       break;
     case GPacket::Ip:
-      ipPacket = static_cast<GIpPacket*>(packet);
+      ipPacket = PIpPacket(packet);
       break;
     case GPacket::Dot11:
       return;
@@ -336,10 +336,10 @@ void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      ipPacket = static_cast<GEthPacket*>(packet);
+      ipPacket = PEthPacket(packet);
       break;
     case GPacket::Ip:
-      ipPacket = static_cast<GIpPacket*>(packet);
+      ipPacket = PIpPacket(packet);
       break;
     case GPacket::Dot11:
       return;

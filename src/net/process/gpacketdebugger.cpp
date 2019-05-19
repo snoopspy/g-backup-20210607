@@ -44,11 +44,11 @@ void GPacketDebugger::debug(GPacket* packet) {
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      ethPacket = static_cast<GEthPacket*>(packet);
-      ipPacket = static_cast<GEthPacket*>(packet);
+      ethPacket = PEthPacket(packet);
+      ipPacket = PEthPacket(packet);
       break;
     case GPacket::Ip:
-      ipPacket = static_cast<GIpPacket*>(packet);
+      ipPacket = PIpPacket(packet);
       break;
     case GPacket::Dot11:
       return;
