@@ -129,7 +129,7 @@ void GFlowMgrTest::_tcpFlowCreated(GPacket* packet) {
 
 void GFlowMgrTest::_tcpFlowDeleted(GPacket* packet) {
   (void)packet;
-  GFlow::TcpFlowKey* key = udpFlowMgr_->key_;
+  GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
   qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
 }
 
