@@ -10,8 +10,8 @@
 
 #pragma once
 
-#include "net/packet/gpacket.h"
 #include "base/gstateobj.h"
+#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GBlock
@@ -24,8 +24,8 @@ public:
   bool enabled_{true};
 
 public:
-  Q_INVOKABLE GBlock(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GBlock() override {}
+  Q_INVOKABLE GBlock(QObject* parent = nullptr);
+  ~GBlock() override;
 
 protected:
   bool doOpen() override { return true; }
