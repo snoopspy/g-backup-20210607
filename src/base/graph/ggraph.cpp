@@ -141,7 +141,8 @@ bool GGraph::doOpen() {
 }
 
 bool GGraph::doClose() {
-  foreach(Node* node, nodes_) {
+  for (Nodes::reverse_iterator it = nodes_.rbegin(); it != nodes_.rend(); it++) {
+    Node* node = *it;
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
       stateObj->close();
