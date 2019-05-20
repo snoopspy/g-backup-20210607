@@ -26,7 +26,7 @@ struct GMyObjA : GMyObj {
   Q_PROPERTY(QString propA MEMBER propA_)
 
 public:
-    QString propA_;
+  QString propA_;
 
 public:
   Q_INVOKABLE GMyObjA(QObject* parent = nullptr) : GMyObj(parent) {
@@ -37,8 +37,8 @@ public:
   }
 
 protected:
-    bool doOpen() override { emit signalMyObj(); return true; }
-    bool doClose() override { emit signalMyObjA(); return true; }
+  bool doOpen() override { emit signalMyObj(); return true; }
+  bool doClose() override { emit signalMyObjA(); return true; }
 
 signals:
   void signalMyObjA();
@@ -54,7 +54,7 @@ struct GMyObjB : GMyObj {
   Q_PROPERTY(QString propB MEMBER propB_)
 
 public:
-    QString propB_;
+  QString propB_;
 
 public:
   Q_INVOKABLE GMyObjB(QObject* parent = nullptr) : GMyObj(parent) {
@@ -65,8 +65,8 @@ public:
   }
 
 protected:
-    bool doOpen() override { emit signalMyObj(); return true; }
-    bool doClose() override { emit signalMyObjB(); return true; }
+  bool doOpen() override { emit signalMyObj(); return true; }
+  bool doClose() override { emit signalMyObjB(); return true; }
 
 signals:
   void signalMyObjB();
@@ -82,7 +82,7 @@ struct GMyObjC : GMyObj {
   Q_PROPERTY(QString propB MEMBER propB_)
 
 public:
-    QString propB_;
+  QString propB_;
 
 public:
   Q_INVOKABLE GMyObjC(QObject* parent = nullptr) : GMyObj(parent) {
@@ -93,8 +93,8 @@ public:
   }
 
 protected:
-    bool doOpen() override { emit signalMyObj(); return true; }
-    bool doClose() override { emit signalMyObjC(); return true; }
+  bool doOpen() override { emit signalMyObj(); return true; }
+  bool doClose() override { emit signalMyObjC(); return true; }
 
 signals:
   void signalMyObjC();
