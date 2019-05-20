@@ -8,7 +8,7 @@ QString dump(u_char* data, size_t size) {
   QString hexa;
   if (size > 16) size = 16;
   while (size > 0) {
-    char ch = *data;
+    char ch = char(*data);
     if (isprint(ch))
       raw += ch;
     else
