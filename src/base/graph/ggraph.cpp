@@ -129,8 +129,14 @@ bool GGraph::doOpen() {
     if (stateObj != nullptr) {
       bool res = stateObj->open();
       if (!res) {
-        QString msg = QString("%1 (%2)").arg(stateObj->err->msg(), stateObj->objectName());
-        SET_ERR(stateObj->err->code(), msg);
+        QString msg;
+        if (stateObj->err == nullptr) {
+          msg = QString("err is null ($1)").arg(stateObj->objectName());
+          SET_ERR(GErr::UNKNOWN, msg);
+        } else {
+          msg = QString("%1 (%2)").arg(stateObj->err->msg(), stateObj->metaObject()->className());
+          SET_ERR(stateObj->err->code(), msg);
+        }
         doClose();
         return false;
       }
