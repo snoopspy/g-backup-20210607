@@ -4,5 +4,5 @@
 int main(int argc, char *argv[]) {
   GApp a(argc, argv);
   Dept dept;
-  return a.exec_(&dept);
+  return a.exec(&dept);
 }

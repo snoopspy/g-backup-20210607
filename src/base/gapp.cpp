@@ -1,6 +1,4 @@
 #include "gapp.h"
-#include <QString>
-#include <GGraph>
 #include <GGraphWidget>
 
 // ----------------------------------------------------------------------------
@@ -19,11 +17,10 @@ void GApp::init() {
 }
 
 #ifdef QT_GUI_LIB
-bool GApp::exec_(GObj* obj) {
+bool GApp::exec(GObj* obj) {
   GPropWidget propWidget(obj);
 
   QJsonObject jo = GJson::loadFromFile();
-
   jo["dept"] >> *obj;
   jo["propWidget"] >> propWidget;
 
@@ -35,28 +32,21 @@ bool GApp::exec_(GObj* obj) {
   jo["propWidget"] << propWidget;
 
   GJson::saveToFile(jo);
-
   return res;
 }
 
-bool GApp::exec_(GGraph* graph, GPluginFactory* pluginFactory) {
-  bool deleteGraph = false;
-  if (graph == nullptr) {
-    graph = new GGraph;
-    deleteGraph = true;
-  }
-
+bool GApp::exec(GPluginFactory* pluginFactory) {
+  GGraph graph;
   if (pluginFactory == nullptr) {
     pluginFactory = &GPluginFactory::instance();
     pluginFactory->load("plugin");
   }
-  graph->setFactory(pluginFactory);
+  graph.setFactory(pluginFactory);
 
   GGraphWidget graphWidget;
-  graphWidget.setGraph(graph);
+  graphWidget.setGraph(&graph);
 
   QJsonObject jo = GJson::loadFromFile();
-
   jo["graphWidget"] >> graphWidget;
 
   graphWidget.update();
@@ -66,9 +56,6 @@ bool GApp::exec_(GGraph* graph, GPluginFactory* pluginFactory) {
   jo["graphWidget"] << graphWidget;
 
   GJson::saveToFile(jo);
-
-  if (deleteGraph) delete graph;
-
   return res;
 }
 #endif // QT_GUI_LIB

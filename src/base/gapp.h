@@ -31,7 +31,7 @@ public:
   static void init();
 
 #ifdef QT_GUI_LIB
-  static bool exec_(GObj* obj);
-  static bool exec_(GGraph* graph = nullptr, GPluginFactory* pluginFactory = nullptr);
+  static bool exec(GObj* obj);
+  static bool exec(GPluginFactory* pluginFactory = nullptr);
 #endif // QT_GUI_LIB
 };

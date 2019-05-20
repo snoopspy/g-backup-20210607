@@ -10,12 +10,10 @@ int main(int argc, char *argv[]) {
 // ----------------------------------
 
 #include <GApp>
-#include <GGraph>
 #include "mygraph.h"
 
 int main(int argc, char *argv[]) {
   GApp a(argc, argv);
-  GGraph graph;
   MyFactory factory;
-  return a.exec_(&graph, &factory);
+  return a.exec(&factory);
 }
