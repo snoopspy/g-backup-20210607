@@ -15,5 +15,5 @@ int main(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
   GApp a(argc, argv);
   MyFactory factory;
-  return a.exec(&factory);
+  return a.execFactory(&factory);
 }

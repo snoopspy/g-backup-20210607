@@ -17,7 +17,7 @@ void GApp::init() {
 }
 
 #ifdef QT_GUI_LIB
-bool GApp::exec(GObj* obj) {
+bool GApp::execObj(GObj* obj) {
   GPropWidget propWidget(obj);
 
   QJsonObject jo = GJson::loadFromFile();
@@ -35,7 +35,7 @@ bool GApp::exec(GObj* obj) {
   return res;
 }
 
-bool GApp::exec(GPluginFactory* pluginFactory) {
+bool GApp::execFactory(GPluginFactory* pluginFactory) {
   GGraph graph;
   if (pluginFactory == nullptr) {
     pluginFactory = &GPluginFactory::instance();
