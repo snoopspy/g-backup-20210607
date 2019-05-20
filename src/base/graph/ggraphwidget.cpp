@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 // GGraphWidget
 // ----------------------------------------------------------------------------
-GGraphWidget::GGraphWidget(QWidget *parent) : QWidget(parent) {
+GGraphWidget::GGraphWidget(QWidget *parent) : GPropWidget(parent) {
   init();
   setControl();
 }
@@ -142,8 +142,8 @@ void GGraphWidget::loadGraph(QJsonObject jo) {
       qWarning() << "node is null" << nodeJo;
       continue;
     }
-    qreal x = nodeJo["_x"].toVariant().toFloat();
-    qreal y = nodeJo["_y"].toVariant().toFloat();
+    qreal x = nodeJo["_x"].toVariant().toReal();
+    qreal y = nodeJo["_y"].toVariant().toReal();
     QPointF pos(x, y);
     scene_->createText(node, pos);
   }
@@ -187,7 +187,7 @@ void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* p
     newWidgetItem = new QTreeWidgetItem(factoryWidget_);
 
   newWidgetItem->setText(0, item->name_);
-  QVariant v = QVariant::fromValue((void*)item);
+  QVariant v = QVariant::fromValue(pvoid(item));
   newWidgetItem->setData(0, Qt::UserRole, v);
 
   GGraph::Factory::ItemCategory* category = dynamic_cast<GGraph::Factory::ItemCategory*>(item);
@@ -247,7 +247,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   QTreeWidgetItem* widgetItem = widgetItems.at(0);
   QVariant variant = widgetItem->data(0, Qt::UserRole);
   void* p = qvariant_cast<void*>(variant);
-  GGraph::Factory::Item* item = dynamic_cast<GGraph::Factory::Item*>((GGraph::Factory::Item*)p);
+  GGraph::Factory::Item* item = dynamic_cast<GGraph::Factory::Item*>(GGraph::Factory::PItem(p));
   GGraph::Factory::ItemNode* itemNode = dynamic_cast<GGraph::Factory::ItemNode*>(item);
   if (itemNode == nullptr)
     return nullptr;

@@ -65,6 +65,7 @@ public:
       virtual ~Item() {}
       QString name_;
     };
+    typedef Item *PItem;
 
     // ------------------------------------------------------------------------
     // Items
