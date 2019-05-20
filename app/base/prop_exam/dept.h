@@ -12,9 +12,6 @@ struct Dept : public GObj {
   GObjRefArrayPtr getMembers() { return &members_; }
 
 public:
-  ~Dept() override { members_.clear(); }
-
-public:
   Person boss_;
   QString deptName_;
   bool free_{false};

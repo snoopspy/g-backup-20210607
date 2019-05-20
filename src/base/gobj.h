@@ -93,6 +93,9 @@ Q_DECLARE_METATYPE(GObjRefArrayPtr)
 
 template <typename T>
 struct GObjRefArray : _GObjRefArray {
+  virtual ~GObjRefArray() {
+    clear();
+  }
   GObj* addObj() override {
     GObj* obj = new T;
     push_back(obj);
@@ -100,8 +103,15 @@ struct GObjRefArray : _GObjRefArray {
   }
   void delObj(GObj* obj) override {
     int index = indexOf(obj);
-    if (index != -1)
+    if (index != -1) {
+      delete obj;
       removeAt(index);
+    }
+  }
+  void clear() {
+    for (GObj* obj: *this)
+      delete obj;
+    _GObjRefArray::clear();
   }
 };
 
@@ -110,7 +120,7 @@ struct GObjRefArray : _GObjRefArray {
 // ----------------------------------------------------------------------------
 #define SET_ERR(CODE, MSG) { \
   if (err == nullptr) { \
-    err = QSharedPointer<GErr>(new GErr((CODE), (MSG))); \
-    qWarning() << err; \
+  err = QSharedPointer<GErr>(new GErr((CODE), (MSG))); \
+  qWarning() << err; \
   } \
-}
+  }
