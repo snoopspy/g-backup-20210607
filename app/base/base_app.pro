@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
   err_exam \
   getline \
-  graph_exam \
-  prop_exam \
+  factory_exam \
+  object_exam \
   sscon \
   version_exam
