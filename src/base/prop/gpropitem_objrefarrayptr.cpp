@@ -34,6 +34,7 @@ protected slots:
   void myClicked(bool checked) {
     (void)checked;
     array_->removeOne(obj_);
+    delete obj_;
     delete this;
   }
 };
