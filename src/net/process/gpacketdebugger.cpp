@@ -9,7 +9,7 @@ QString dump(u_char* data, size_t size) {
   if (size > 16) size = 16;
   while (size > 0) {
     char ch = char(*data);
-    if (isprint(ch))
+    if (isprint(u_char(ch)))
       raw += ch;
     else
       raw += '.';
