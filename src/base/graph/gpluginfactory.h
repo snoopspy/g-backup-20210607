@@ -29,4 +29,7 @@ protected:
 
 protected:
   QList<QLibrary*> libraries_;
+
+public:
+  static GPluginFactory& instance();
 };

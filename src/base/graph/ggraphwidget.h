@@ -29,7 +29,7 @@
 // ----------------------------------------------------------------------------
 // GGraphWidget
 // ----------------------------------------------------------------------------
-struct GGraphWidget : GPropWidget {
+struct GGraphWidget : QWidget, GProp {
 public:
   GGraphWidget(QWidget *parent = nullptr);
   ~GGraphWidget() override;

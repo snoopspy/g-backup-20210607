@@ -31,19 +31,19 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
   typedef char* (*MetaFunc)(int index);
   typedef void* (*CreateFunc)(int index);
 
-  CountFunc countFunc = (CountFunc)library->resolve("count");
+  CountFunc countFunc = CountFunc(library->resolve("count"));
   if (countFunc == nullptr) {
     qWarning() << QString("can not file 'count' function for (%1)").arg(fileName);
     delete library;
     return;
   }
-  MetaFunc metaFunc = (MetaFunc)library->resolve("meta");
+  MetaFunc metaFunc = MetaFunc(library->resolve("meta"));
   if (metaFunc == nullptr) {
     qWarning() << QString("can not file 'name' function for (%1)").arg(fileName);
     delete library;
     return;
   }
-  CreateFunc createFunc = (CreateFunc)library->resolve("create");
+  CreateFunc createFunc =CreateFunc(library->resolve("create"));
   if (createFunc == nullptr) {
     qWarning() << QString("can not file 'create' function for (%1)").arg(fileName);
     delete library;
@@ -98,4 +98,9 @@ void GPluginFactory::loadFolder(GGraph::Factory::ItemCategory* category, QString
       category->items_.push_back(subCategory);
     loadFolder(subCategory, subFolder);
   }
+}
+
+GPluginFactory& GPluginFactory::instance() {
+  static GPluginFactory pluginFactory;
+  return pluginFactory;
 }

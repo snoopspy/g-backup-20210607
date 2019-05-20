@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 // GGraphWidget
 // ----------------------------------------------------------------------------
-GGraphWidget::GGraphWidget(QWidget *parent) : GPropWidget(parent) {
+GGraphWidget::GGraphWidget(QWidget *parent) : QWidget(parent) {
   init();
   setControl();
 }

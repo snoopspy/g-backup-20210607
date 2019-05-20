@@ -1,32 +1,21 @@
-#include <QApplication>
+// ----- gilgil temp 2019.05.21 -----
+/*
 #include <GApp>
-#include <GGraphWidget>
-#include <GJson>
 
+int main(int argc, char *argv[]) {
+  GApp a(argc, argv);
+  return a.exec_();
+}
+*/
+// ----------------------------------
+
+#include <GApp>
+#include <GGraph>
 #include "mygraph.h"
 
 int main(int argc, char *argv[]) {
   GApp a(argc, argv);
-
-  MyFactory myFactory;
-
   GGraph graph;
-  graph.setFactory(&myFactory);
-
-  GGraphWidget graphWidget;
-  graphWidget.setGraph(&graph);
-
-  QJsonObject jo = GJson::loadFromFile();
-
-  jo["graphWidget"] >> graphWidget;
-
-  graphWidget.update();
-  graphWidget.show();
-  int res = a.exec();
-
-  jo["graphWidget"] << graphWidget;
-
-  GJson::saveToFile(jo);
-
-  return res;
+  MyFactory factory;
+  return a.exec_(&graph, &factory);
 }
