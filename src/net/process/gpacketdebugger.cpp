@@ -91,7 +91,7 @@ void GPacketDebugger::debug(GPacket* packet) {
   }
 
   msg = QString("%1:").arg(packet->buf_.size_) + msg;
-  std::clog << qPrintable(msg) << std::endl;
+  qDebug() << msg;
 
   emit debugged(packet);
 }

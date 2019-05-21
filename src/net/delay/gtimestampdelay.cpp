@@ -23,19 +23,20 @@ void GTimeStampDelay::delay(GPacket* packet) {
   qint64 remainTs = nowTs - lastTs_;
   // qDebug() << "remainTs=" << remainTs << "nowTs=" << nowTs << "lastTs_=" << lastTs_; // gilgil temp 2019.05.20
   lastTs_ = nowTs;
+  if (speed_ != 1.)
+    remainTs *= speed_;
 
   qint64 nowClock = et_.elapsed();
   qint64 remain = nowClock - lastClock_;
   // qDebug() << "remain=" << remain << "now=" << nowClock << "last_=" << lastClock_; // gilgil temp 2019.05.20
 
   remainTs -= remain;
-  if (speed_ != 1.)
-    remainTs *= speed_;
 
   if (remainTs < 0) {
     qCritical() << "remain is " << remain;
     remainTs = 0;
   }
+  qDebug() << "remainTs=" << remainTs; // gilgil temp 2019.05.21
 
   QDeadlineTimer dt(remainTs);
   bool res = we_.wait(dt);
