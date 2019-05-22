@@ -47,6 +47,7 @@ bool GJson::saveToFile(QJsonObject jo, QString fileName) {
 QString GJson::defaultFileName() {
   QString res;
   res = QCoreApplication::applicationFilePath();
+  if (res.endsWith(".exe")) res = res.left(res.length() - 4);
   res += ".json";
   return res;
 }
