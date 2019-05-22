@@ -17,11 +17,11 @@ EXPORT int count() {
   return 3;
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GDelay::staticMetaObject);
-    case 1: return pvoid(&GSleep::staticMetaObject);
-    case 2: return pvoid(&GTimeStampDelay::staticMetaObject);
+    case 0: return GDelay::staticMetaObject.className();
+    case 1: return GSleep::staticMetaObject.className();
+    case 2: return GTimeStampDelay::staticMetaObject.className();
     default: return nullptr;
   }
 }

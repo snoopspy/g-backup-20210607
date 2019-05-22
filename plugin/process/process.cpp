@@ -18,12 +18,12 @@ EXPORT int count() {
   return 4;
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GDnsFirewall::staticMetaObject);
-    case 1: return pvoid(&GDnsProcessor::staticMetaObject);
-    case 2: return pvoid(&GPacketDebugger::staticMetaObject);
-    case 3: return pvoid(&GFlowMgrTest::staticMetaObject);
+    case 0: return GDnsFirewall::staticMetaObject.className();
+    case 1: return GDnsProcessor::staticMetaObject.className();
+    case 2: return GPacketDebugger::staticMetaObject.className();
+    case 3: return GFlowMgrTest::staticMetaObject.className();
     default: return nullptr;
   }
 }

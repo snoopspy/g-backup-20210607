@@ -28,7 +28,7 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
   }
 
   typedef int (*CountFunc)();
-  typedef char* (*MetaFunc)(int index);
+  typedef const char* (*NameFunc)(int index);
   typedef void* (*CreateFunc)(int index);
 
   CountFunc countFunc = CountFunc(library->resolve("count"));
@@ -37,13 +37,13 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
     delete library;
     return;
   }
-  MetaFunc metaFunc = MetaFunc(library->resolve("meta"));
-  if (metaFunc == nullptr) {
+  NameFunc nameFunc= NameFunc(library->resolve("meta"));
+  if (nameFunc == nullptr) {
     qWarning() << QString("can not file 'name' function for (%1)").arg(fileName);
     delete library;
     return;
   }
-  CreateFunc createFunc =CreateFunc(library->resolve("create"));
+  CreateFunc createFunc = CreateFunc(library->resolve("create"));
   if (createFunc == nullptr) {
     qWarning() << QString("can not file 'create' function for (%1)").arg(fileName);
     delete library;
@@ -52,15 +52,15 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
 
   int count = countFunc();
   for (int i = 0; i < count; i++) {
-    QMetaObject* mobj = (QMetaObject*)metaFunc(i);
-    if (mobj == nullptr) {
-      qCritical() << QString("call metaFunc(%1) return nullptr file=%2").arg(i).arg(fileName);
+    const char* className = nameFunc(i);
+    if (className == nullptr) {
+      qCritical() << QString("call nameFunc(%1) return nullptr file=%2").arg(i).arg(fileName);
       break;
     }
     if (category == nullptr)
-      this->items_.push_back(new ItemNode(mobj));
+      this->items_.push_back(new ItemNode(className));
     else
-      category->items_.push_back(new ItemNode(mobj));
+      category->items_.push_back(new ItemNode(className));
   }
 
   this->libraries_.push_back(library);

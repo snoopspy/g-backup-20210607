@@ -17,11 +17,11 @@ EXPORT int count() {
   return 3;
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GIpFlowMgr::staticMetaObject);
-    case 1: return pvoid(&GTcpFlowMgr::staticMetaObject);
-    case 2: return pvoid(&GUdpFlowMgr::staticMetaObject);
+    case 0: return GIpFlowMgr::staticMetaObject.className();
+    case 1: return GTcpFlowMgr::staticMetaObject.className();
+    case 2: return GUdpFlowMgr::staticMetaObject.className();
     default: return nullptr;
   }
 }

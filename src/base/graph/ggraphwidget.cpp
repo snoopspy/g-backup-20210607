@@ -186,7 +186,7 @@ void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* p
   else
     newWidgetItem = new QTreeWidgetItem(factoryWidget_);
 
-  newWidgetItem->setText(0, item->name_);
+  newWidgetItem->setText(0, item->displayName_);
   QVariant v = QVariant::fromValue(pvoid(item));
   newWidgetItem->setData(0, Qt::UserRole, v);
 
@@ -251,7 +251,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
   GGraph::Factory::ItemNode* itemNode = dynamic_cast<GGraph::Factory::ItemNode*>(item);
   if (itemNode == nullptr)
     return nullptr;
-  QString className = itemNode->mobj_->className();
+  QString className = itemNode->displayName_;
   GGraph::Node* node = createInstance(className);
   if (node == nullptr) {
     QString msg = QString("createInstance failed for (%1)").arg(className);

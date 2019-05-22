@@ -22,12 +22,12 @@ EXPORT int count() {
 #endif
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GPcapDevice::staticMetaObject);
-    case 1: return pvoid(&GPcapFile::staticMetaObject);
+    case 0: return GPcapDevice::staticMetaObject.className();
+    case 1: return GPcapFile::staticMetaObject.className();
 #ifdef Q_OS_LINUX
-    case 2: return pvoid(&GNetFilter::staticMetaObject);
+    case 2: return GNetFilter::staticMetaObject.className();
 #endif
     default: return nullptr;
   }

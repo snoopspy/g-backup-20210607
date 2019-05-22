@@ -15,10 +15,10 @@ EXPORT int count() {
   return 2;
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GPcapDeviceWriter::staticMetaObject);
-    case 1: return pvoid(&GPcapFileWriter::staticMetaObject);
+    case 0: return GPcapDeviceWriter::staticMetaObject.className();
+    case 1: return GPcapFileWriter::staticMetaObject.className();
     default: return nullptr;
   }
 }

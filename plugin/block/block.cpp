@@ -13,9 +13,9 @@ EXPORT int count() {
   return 1;
 }
 
-EXPORT void* meta(int index) {
+EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return pvoid(&GBlock::staticMetaObject);
+    case 0: return GBlock::staticMetaObject.className();
     default: return nullptr;
   }
 }
