@@ -37,7 +37,7 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
     delete library;
     return;
   }
-  NameFunc nameFunc= NameFunc(library->resolve("meta"));
+  NameFunc nameFunc= NameFunc(library->resolve("name"));
   if (nameFunc == nullptr) {
     qWarning() << QString("can not file 'name' function for (%1)").arg(fileName);
     delete library;
