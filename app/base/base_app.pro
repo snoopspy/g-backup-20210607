@@ -4,5 +4,4 @@ SUBDIRS += \
   getline \
   factory_exam \
   object_exam \
-  sscon \
-  version_exam
+  sscon
