@@ -137,6 +137,9 @@ GNetIntfs& GNetIntfs::instance() {
 }
 
 void GNetIntfs::init() {
+  if (initialized_) return;
+  initialized_ = true;
+
   for (GNetIntf& intf: *this) {
     intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
   }
