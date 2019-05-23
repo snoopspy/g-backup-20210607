@@ -42,7 +42,6 @@ void GRtmWin32::init() {
     if (netIntf == nullptr) {
       QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(adapterName);
       qFatal("%s", qPrintable(msg));
-      continue;
     }
     entry.intf_ = netIntf;
   }
