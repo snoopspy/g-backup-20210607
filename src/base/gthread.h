@@ -31,16 +31,16 @@ struct GThreadMgr {
   static void suspendStart();
   static void resumeStart();
 
-protected:
+private: // singleton
+  GThreadMgr();
+  virtual ~GThreadMgr();
+
   bool suspended_{false};
 
-  struct GThreadInfo {
-    GThread* thread_;
+  struct ThreadInfo {
+    QThread* thread_;
     QThread::Priority priority_;
   };
-  QList<GThreadInfo> threadInfos_;
-  static GThreadMgr& instance() {
-    static GThreadMgr threadMgr;
-    return threadMgr;
-  }
+  QList<ThreadInfo> threadInfos_;
+  static GThreadMgr& instance();
 };

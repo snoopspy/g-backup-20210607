@@ -4,7 +4,7 @@
 void GThread::start(Priority priority) {
   GThreadMgr& threadMgr = GThreadMgr::instance();
   if (threadMgr.suspended_) {
-    GThreadMgr::GThreadInfo threadInfo;
+    GThreadMgr::ThreadInfo threadInfo;
     threadInfo.thread_ = this;
     threadInfo.priority_ = priority;
     threadMgr.threadInfos_.push_back(threadInfo);
@@ -30,6 +30,14 @@ bool GThread::wait(unsigned long time) {
 // ----------------------------------------------------------------------------
 // GThreadMgr
 // ----------------------------------------------------------------------------
+GThreadMgr::GThreadMgr() {
+  qDebug() << "GThreadMgr::GThreadMgr()" << static_cast<void*>(this);
+}
+
+GThreadMgr::~GThreadMgr() {
+  qDebug() << "GThreadMgr::~GThreadMgr()" << static_cast<void*>(this);
+}
+
 void GThreadMgr::suspendStart() {
   GThreadMgr& threadMgr = instance();
   threadMgr.suspended_ = true;
@@ -37,9 +45,14 @@ void GThreadMgr::suspendStart() {
 
 void GThreadMgr::resumeStart() {
   GThreadMgr& threadMgr = instance();
-  foreach (GThreadInfo threadInfo, threadMgr.threadInfos_) {
-    ((QThread*)(threadInfo.thread_))->start(threadInfo.priority_);
+  for (ThreadInfo& threadInfo: threadMgr.threadInfos_) {
+    threadInfo.thread_->start(threadInfo.priority_);
   }
   threadMgr.threadInfos_.clear();
   threadMgr.suspended_ = false;
+}
+
+GThreadMgr& GThreadMgr::instance() {
+  static GThreadMgr threadMgr;
+  return threadMgr;
 }
