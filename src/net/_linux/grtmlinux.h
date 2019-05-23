@@ -18,9 +18,12 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 struct GRtmLinux : GRtm {
+  friend struct GRtm;
 protected:
-  bool initialized_{false};
+  GRtmLinux();
+  ~GRtmLinux() override;
 
-public:
-  bool init() override;
+  QStringList intfNames_;
+  bool initialized_{false};
+  void init() override;
 };

@@ -4,6 +4,14 @@
 #include "grtm.h"
 
 // ----------------------------------------------------------------------------
+// GRtmEntry
+// ----------------------------------------------------------------------------
+GNetIntf* GRtmEntry::intf() {
+  GRtm::instance().init();
+  return intf_;
+}
+
+// ----------------------------------------------------------------------------
 // GRtm
 // ----------------------------------------------------------------------------
 GRtm::GRtm() {
@@ -15,7 +23,7 @@ GRtm::~GRtm() {
 
 GIp GRtm::findGateway(QString intfName, GIp ip) {
   for (GRtmEntry& entry: *this) {
-    if (entry.intf_->name_ != intfName) continue;
+    if (entry.intf_->name() != intfName) continue;
     if (entry.gateway_ == 0) continue;
     if (entry.gateway_ == ip) continue;
     return entry.gateway_;
@@ -73,26 +81,24 @@ GRtm& GRtm::instance() {
 
 TEST(GRtm, loadTest) {
   GRtm& rtm = GRtm::instance();
-  rtm.init();
   qDebug() << "Routing Table Manager : count =" << rtm.count();
   for (GRtm::iterator it = rtm.begin(); it != rtm.end(); it++) {
     GRtmEntry& entry = *it;
     qDebug() << QString("dst=%1 mask=%2 gateway=%3 intf=%4 metric=%5").arg(
-      QString(entry.dst_),
-      QString(entry.mask_),
-      QString(entry.gateway_),
-      entry.intf_->name_,
-      QString::number(entry.metric_)
+      QString(entry.dst()),
+      QString(entry.mask()),
+      QString(entry.gateway()),
+      entry.intf()->name(),
+      QString::number(entry.metric())
     );
   }
 }
 
 TEST(GRtm, bestTest) {
   GRtm& rtm = GRtm::instance();
-  rtm.init();
   GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
   EXPECT_NE(entry, nullptr);
-  qDebug() << "best entry for 8.8.8.8 is" << entry->intf_;
+  qDebug() << "best entry for 8.8.8.8 is" << entry->intf();
 }
 
 #endif // GTEST

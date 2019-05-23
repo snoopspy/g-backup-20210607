@@ -8,6 +8,11 @@
 // ----------------------------------------------------------------------------
 // GNetInft
 // ----------------------------------------------------------------------------
+GIp GNetIntf::gateway() {
+  GNetIntfs::instance().init();
+  return gateway_;
+}
+
 GNetIntfs& GNetIntf::all() {
   return GNetIntfs::instance();
 }
@@ -76,7 +81,6 @@ GNetIntfs::GNetIntfs() {
         intf.mask_ = ntohl(addr_in->sin_addr.s_addr);
       }
     }
-    intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
 #endif
 #ifdef Q_OS_WIN
     PIP_ADAPTER_INFO adapter = GIpAdapterInfo::instance().findByAdapterName(dev->name);
@@ -130,4 +134,10 @@ GNetIntf* GNetIntfs::findByName(QString name) {
 GNetIntfs& GNetIntfs::instance() {
   static GNetIntfs intfs;
   return intfs;
+}
+
+void GNetIntfs::init() {
+  for (GNetIntf& intf: *this) {
+    intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
+  }
 }

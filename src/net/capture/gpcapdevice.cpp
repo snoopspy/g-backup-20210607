@@ -7,10 +7,9 @@
 // ----------------------------------------------------------------------------
 GPcapDevice::GPcapDevice(QObject* parent) : GPcap(parent) {
   GRtm& rtm = GRtm::instance();
-  rtm.init();
   GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
   if (entry != nullptr)
-    devName_ = entry->intf_->name_;
+    devName_ = entry->intf()->name();
 }
 
 GPcapDevice::~GPcapDevice() {

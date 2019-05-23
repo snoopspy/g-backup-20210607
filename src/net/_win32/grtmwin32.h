@@ -18,9 +18,11 @@
 // GRtmWin32
 // ----------------------------------------------------------------------------
 struct GRtmWin32 : GRtm {
+  friend struct GRtm;
 protected:
-  bool initialized_{false};
+  GRtmWin32();
+  ~GRtmWin32 override();
 
-public:
+  bool initialized_{false};
   bool init() override;
 };

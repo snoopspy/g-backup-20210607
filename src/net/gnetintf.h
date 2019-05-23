@@ -21,6 +21,19 @@
 // ----------------------------------------------------------------------------
 struct GNetIntfs;
 struct GNetIntf {
+  friend struct GNetIntfs;
+
+public:
+  int index() { return index_; }
+  QString name() { return name_; }
+  QString desc() { return desc_; }
+  pcap_if_t* dev() { return dev_; }
+  GMac mac() { return mac_; }
+  GIp ip() { return ip_; }
+  GIp mask() {return mask_; }
+  GIp gateway();
+
+protected:
   int index_{-1};
   QString name_;
   QString desc_;
@@ -47,9 +60,18 @@ public:
 // GNetIntfs
 // ----------------------------------------------------------------------------
 struct GNetIntfs : QList<GNetIntf> {
+  friend struct GNetIntf;
+
+private: // singleton
   GNetIntfs();
   virtual ~GNetIntfs();
+
+public:
   GNetIntf* findByName(QString name);
   pcap_if_t* allDevs_{nullptr};
   static GNetIntfs& instance();
+
+protected:
+  bool initialized_{false};
+  void init();
 };
