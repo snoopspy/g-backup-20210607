@@ -20,7 +20,7 @@ struct G_EXPORT GDns {
   // ------------------------------------------------------------------------
   // Question
   // ------------------------------------------------------------------------
-  struct Question {
+  struct G_EXPORT Question {
     QString name_;
     uint16_t type_;
     uint16_t class_;
@@ -29,7 +29,7 @@ struct G_EXPORT GDns {
     bool decode(u_char* udpData, size_t dataLen, size_t* offset);
   };
 
-  struct Questions : QList<Question> {
+  struct G_EXPORT Questions : QList<Question> {
     QByteArray encode();
     bool decode(u_char* udpData, size_t dataLen, int count, size_t* offset);
   };
@@ -37,7 +37,7 @@ struct G_EXPORT GDns {
   // ------------------------------------------------------------------------
   // ResourceRecord
   // ------------------------------------------------------------------------
-  struct ResourceRecord {
+  struct G_EXPORT ResourceRecord {
     QString name_;
     uint16_t type_;
     uint16_t class_;
@@ -52,7 +52,7 @@ struct G_EXPORT GDns {
   // ------------------------------------------------------------------------
   // ResourceRecords
   // ------------------------------------------------------------------------
-  struct ResourceRecords : QList<ResourceRecord> {
+  struct G_EXPORT ResourceRecords : QList<ResourceRecord> {
     QByteArray encode();
     bool decode(u_char* udpData, size_t dataLen, int count, size_t* offset);
   };

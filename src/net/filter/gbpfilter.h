@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GBpFilter
 // ----------------------------------------------------------------------------
-struct GBpFilter : GStateObj {
+struct G_EXPORT GBpFilter : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
   Q_PROPERTY(QString filter MEMBER filter_)

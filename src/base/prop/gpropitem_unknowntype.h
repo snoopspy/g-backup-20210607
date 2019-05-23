@@ -18,7 +18,10 @@
 // ----------------------------------------------------------------------------
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPropItemUnknownType : public GPropItem {
+struct G_EXPORT GPropItemUnknownType : public GPropItem {\
+  Q_OBJECT
+
+public:
   GPropItemUnknownType(GPropItemParam* param);
   void update() override {}
 };

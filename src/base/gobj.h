@@ -49,7 +49,7 @@ public:
 // GPtr
 // ----------------------------------------------------------------------------
 template <typename T>
-struct GPtr {
+struct G_EXPORT GPtr {
   GPtr()              { p_ = nullptr; }
   GPtr(T* p)          { p_ = p;       }
   GPtr(T& t)          { p_ = &t;      }
@@ -64,7 +64,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GObjPtr
 // ----------------------------------------------------------------------------
-struct GObjPtr : GPtr<GObj> {
+struct G_EXPORT GObjPtr : GPtr<GObj> {
   GObjPtr() : GPtr(nullptr) {}
   GObjPtr(GObj* obj) : GPtr(obj) {}
   GObjPtr(GObj& obj) : GPtr(obj) {}
@@ -74,7 +74,7 @@ Q_DECLARE_METATYPE(GObjPtr)
 // ----------------------------------------------------------------------------
 // GObjRef
 // ----------------------------------------------------------------------------
-struct GObjRef : GPtr<GObj> {
+struct G_EXPORT GObjRef : GPtr<GObj> {
   GObjRef() : GPtr(nullptr) {}
   GObjRef(GObj* obj) : GPtr(obj) {}
   GObjRef(GObj& obj) : GPtr(obj) {}
@@ -84,7 +84,7 @@ Q_DECLARE_METATYPE(GObjRef)
 // ----------------------------------------------------------------------------
 // GObjRefArrayPtr
 // ----------------------------------------------------------------------------
-struct _GObjRefArray : QList<GObjRef> {
+struct G_EXPORT _GObjRefArray : QList<GObjRef> {
   virtual GObj* addObj() = 0;
   virtual void delObj(GObj* obj) = 0;
 };
@@ -92,7 +92,7 @@ typedef _GObjRefArray* GObjRefArrayPtr;
 Q_DECLARE_METATYPE(GObjRefArrayPtr)
 
 template <typename T>
-struct GObjRefArray : _GObjRefArray {
+struct G_EXPORT GObjRefArray : _GObjRefArray {
   virtual ~GObjRefArray() {
     clear();
   }

@@ -26,7 +26,7 @@
 // Scene
 // ----------------------------------------------------------------------------
 struct GGraphWidget;
-struct GGScene : QGraphicsScene {
+struct G_EXPORT GGScene : QGraphicsScene {
   Q_OBJECT
 
 public:

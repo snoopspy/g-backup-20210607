@@ -36,3 +36,6 @@ typedef unsigned char gbyte, *pbyte;
     #define G_EXPORT __declspec(dllimport)
   #endif
 #endif
+#ifdef linux
+  #define  G_EXPORT
+#endif

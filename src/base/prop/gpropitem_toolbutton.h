@@ -19,6 +19,9 @@
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemToolButton : public GPropItem {
+  Q_OBJECT
+
+public:
   GPropItemToolButton(GPropItemParam* param);
 
 public:

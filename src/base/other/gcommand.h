@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GCommand
 // ----------------------------------------------------------------------------
-struct GCommand : GStateObj {
+struct G_EXPORT GCommand : GStateObj {
   Q_OBJECT
   Q_PROPERTY(QStringList openCommandList MEMBER openCommandList_)
   Q_PROPERTY(QStringList closeCommandList MEMBER closeCommandList_)

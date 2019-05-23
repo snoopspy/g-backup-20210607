@@ -20,7 +20,7 @@
 // GGArrow
 // ----------------------------------------------------------------------------
 struct GGText;
-struct GGArrow : QGraphicsLineItem {
+struct G_EXPORT GGArrow : QGraphicsLineItem {
 public:
   enum { Type = UserType + 4 };
   GGArrow(GGText *startText, GGText *endText, GGraph::Connection* connection);

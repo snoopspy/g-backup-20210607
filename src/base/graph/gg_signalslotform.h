@@ -17,10 +17,12 @@
 #include <QModelIndex>
 #include <QPushButton>
 
+#include "base/gbase.h"
+
 // ----------------------------------------------------------------------------
 // GGSignalSlotForm
 // ----------------------------------------------------------------------------
-class GGSignalSlotForm : public QDialog {
+class G_EXPORT GGSignalSlotForm : public QDialog {
   Q_OBJECT
 
 public:

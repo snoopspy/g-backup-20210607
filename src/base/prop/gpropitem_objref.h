@@ -18,6 +18,9 @@
 // GPropItemObjRef
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemObjRef : public GPropItem {
+  Q_OBJECT
+
+public:
   GPropItemObjRef(GPropItemParam* param);
   void update() override {}
 };

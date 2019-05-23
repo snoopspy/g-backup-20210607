@@ -35,7 +35,7 @@ struct G_EXPORT GPropItemParam {
 // ----------------------------------------------------------------------------
 // GPropItem
 // ----------------------------------------------------------------------------
-struct GPropItem : public QObject {
+struct G_EXPORT GPropItem : public QObject {
   GPropItem(GPropItemParam* param);
   virtual void update() = 0;
 

@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GThread
 // ----------------------------------------------------------------------------
-struct GThread : QThread {
+struct G_EXPORT GThread : QThread {
   GThread(QObject *parent = nullptr) : QThread(parent) {}
   void start(Priority = InheritPriority);
   bool wait(unsigned long time = G::Timeout);
@@ -25,7 +25,7 @@ struct GThread : QThread {
 // ----------------------------------------------------------------------------
 // GThreadMgr
 // ----------------------------------------------------------------------------
-struct GThreadMgr {
+struct G_EXPORT GThreadMgr {
   friend struct GThread;
 
   static void suspendStart();
