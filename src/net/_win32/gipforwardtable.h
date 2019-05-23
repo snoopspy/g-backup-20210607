@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GIpForwardTable
 // ----------------------------------------------------------------------------
-struct GIpForwardTable {
+struct G_EXPORT GIpForwardTable {
 private: // singleton
   GIpForwardTable();
   virtual ~GIpForwardTable();

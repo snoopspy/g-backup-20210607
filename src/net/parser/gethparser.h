@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GEthParser
 // ----------------------------------------------------------------------------
-struct GEthParser : GIpParser {
+struct G_EXPORT GEthParser : GIpParser {
   Q_OBJECT
 
 public:

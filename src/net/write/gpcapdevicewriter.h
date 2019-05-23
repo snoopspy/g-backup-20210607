@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-struct GPcapDeviceWriter : GStateObj {
+struct G_EXPORT GPcapDeviceWriter : GStateObj {
   Q_OBJECT
   Q_PROPERTY(QString devName MEMBER devName_)
 

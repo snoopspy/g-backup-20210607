@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GRtmEntry
 // ----------------------------------------------------------------------------
-struct GRtmEntry {
+struct G_EXPORT GRtmEntry {
   friend struct GRtm;
 #ifdef Q_OS_LINUX
   friend struct GRtmLinux;
@@ -42,7 +42,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GRtm
 // ----------------------------------------------------------------------------
-struct GRtm : QList<GRtmEntry> {
+struct G_EXPORT GRtm : QList<GRtmEntry> {
   friend struct GRtmEntry;
 protected: // inherited singleton
   GRtm();

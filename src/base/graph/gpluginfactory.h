@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPluginFactory
 // ----------------------------------------------------------------------------
-struct GPluginFactory : GGraph::Factory {
+struct G_EXPORT GPluginFactory : GGraph::Factory {
   GPluginFactory(QObject* parent = nullptr);
   ~GPluginFactory() override;
 

@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GDnsProcessor
 // ----------------------------------------------------------------------------
-struct GDnsProcessor : GStateObj {
+struct G_EXPORT GDnsProcessor : GStateObj {
   Q_OBJECT
   Q_PROPERTY(quint16 port MEMBER port_)
 

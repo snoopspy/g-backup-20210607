@@ -21,7 +21,7 @@
 // GPacket
 // ----------------------------------------------------------------------------
 struct GCapture;
-struct GPacket : QObject {
+struct G_EXPORT GPacket : QObject {
   Q_OBJECT
   Q_ENUMS(DataLinkType)
 

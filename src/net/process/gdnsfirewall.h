@@ -19,7 +19,7 @@
 // ----------------------------------------------------------------------------
 // GDnsFirewall
 // ----------------------------------------------------------------------------
-struct GDnsFirewall : GFlowMgr {
+struct G_EXPORT GDnsFirewall : GFlowMgr {
   Q_OBJECT
   Q_PROPERTY(GObjPtr dnsProcessor READ getDnsProcessor WRITE setDnsProcessor)
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)

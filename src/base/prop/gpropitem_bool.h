@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemBool
 // ----------------------------------------------------------------------------
-struct GPropItemBool : public GPropItemCheckBox {
+struct G_EXPORT GPropItemBool : public GPropItemCheckBox {
   Q_OBJECT
 
 public:

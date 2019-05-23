@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GFlowMgr
 // ----------------------------------------------------------------------------
-struct GFlowMgr : GStateObj {
+struct G_EXPORT GFlowMgr : GStateObj {
   Q_OBJECT
   Q_PROPERTY(long checkInterval MEMBER checkInterval_)
 

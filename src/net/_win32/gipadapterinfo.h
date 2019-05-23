@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GIpAdapterInfo
 // ----------------------------------------------------------------------------
-struct GIpAdapterInfo {
+struct G_EXPORT GIpAdapterInfo {
 private: // singleton
   GIpAdapterInfo();
   virtual ~GIpAdapterInfo();

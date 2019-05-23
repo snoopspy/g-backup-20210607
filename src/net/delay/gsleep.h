@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GSleep
 // ----------------------------------------------------------------------------
-struct GSleep : GStateObj {
+struct G_EXPORT GSleep : GStateObj {
   Q_OBJECT
   Q_PROPERTY(ulong duration MEMBER duration_) // msec
 

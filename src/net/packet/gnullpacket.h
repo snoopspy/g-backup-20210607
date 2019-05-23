@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GEthPacket
 // ----------------------------------------------------------------------------
-struct GNullPacket : GPacket {
+struct G_EXPORT GNullPacket : GPacket {
   GNullPacket(QObject* parent = nullptr) : GPacket(parent) {
     dataLinkType_ = GPacket::Null;
   }

@@ -15,11 +15,12 @@
 #include <QSharedPointer>
 #include <QString>
 #include "gerrcategory.h"
+#include "base/gbase.h"
 
 // ----------------------------------------------------------------------------
 // GErr
 // ----------------------------------------------------------------------------
-struct GErr {
+struct G_EXPORT GErr {
   enum {
     OK = 0,
     FAIL = -1,
@@ -59,15 +60,15 @@ protected:
   QString msg_;
 };
 
-QDebug operator << (QDebug os, GErr& err);
-QDebug operator << (QDebug os, GErr&& err);
-QDebug operator << (QDebug os, GErr* err);
-QDebug operator << (QDebug os, QSharedPointer<GErr> err);
+QDebug G_EXPORT operator << (QDebug os, GErr& err);
+QDebug G_EXPORT operator << (QDebug os, GErr&& err);
+QDebug G_EXPORT operator << (QDebug os, GErr* err);
+QDebug G_EXPORT operator << (QDebug os, QSharedPointer<GErr> err);
 
 // ----------------------------------------------------------------------------
 // GLastErr
 // ----------------------------------------------------------------------------
-struct GLastErr : public GErr {
+struct G_EXPORT GLastErr : public GErr {
   GLastErr() {
     code_ = errno;
     msg_ = strerror(code_);
@@ -75,4 +76,3 @@ struct GLastErr : public GErr {
 
   const char* name() override { return "LastErr"; }
 };
-

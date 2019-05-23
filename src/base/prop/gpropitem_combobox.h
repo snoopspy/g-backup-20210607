@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemComboBox
 // ----------------------------------------------------------------------------
-struct GPropItemComboBox : public GPropItem {
+struct G_EXPORT GPropItemComboBox : public GPropItem {
   GPropItemComboBox(GPropItemParam* param);
   GPropItemComboBox(GPropItemParam* param, QStringList& items);
 

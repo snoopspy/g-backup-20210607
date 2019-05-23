@@ -16,10 +16,12 @@
 #include <QMetaProperty>
 #include "gpropitem.h"
 
+#include "base/gbase.h"
+
 // ----------------------------------------------------------------------------
 // GProp
 // ----------------------------------------------------------------------------
-struct GProp {
+struct G_EXPORT GProp {
   virtual void propLoad(QJsonObject jo);
   virtual void propSave(QJsonObject& jo);
 

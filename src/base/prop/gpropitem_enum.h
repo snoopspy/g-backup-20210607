@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemEnum
 // ----------------------------------------------------------------------------
-struct GPropItemEnum : public GPropItemComboBox {
+struct G_EXPORT GPropItemEnum : public GPropItemComboBox {
   Q_OBJECT
 
 public:

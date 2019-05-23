@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemChar
 // ----------------------------------------------------------------------------
-struct GPropItemChar : public GPropItemLineEdit {
+struct G_EXPORT GPropItemChar : public GPropItemLineEdit {
   Q_OBJECT
 
 public:

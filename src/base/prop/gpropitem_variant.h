@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariant
 // ----------------------------------------------------------------------------
-struct GPropItemVariant : public GPropItemLineEdit {
+struct G_EXPORT GPropItemVariant : public GPropItemLineEdit {
   Q_OBJECT
 
 public:

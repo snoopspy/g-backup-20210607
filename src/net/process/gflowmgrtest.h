@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GFlowMgrTest
 // ----------------------------------------------------------------------------
-struct GFlowMgrTest : GStateObj {
+struct G_EXPORT GFlowMgrTest : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)

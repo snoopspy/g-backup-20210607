@@ -33,19 +33,19 @@ void GPluginFactory::loadFile(GGraph::Factory::ItemCategory* category, QString f
 
   CountFunc countFunc = CountFunc(library->resolve("count"));
   if (countFunc == nullptr) {
-    qWarning() << QString("can not file 'count' function for (%1)").arg(fileName);
+    qWarning() << QString("can not find 'count' function for (%1)").arg(fileName);
     delete library;
     return;
   }
   NameFunc nameFunc= NameFunc(library->resolve("name"));
   if (nameFunc == nullptr) {
-    qWarning() << QString("can not file 'name' function for (%1)").arg(fileName);
+    qWarning() << QString("can not find 'name' function for (%1)").arg(fileName);
     delete library;
     return;
   }
   CreateFunc createFunc = CreateFunc(library->resolve("create"));
   if (createFunc == nullptr) {
-    qWarning() << QString("can not file 'create' function for (%1)").arg(fileName);
+    qWarning() << QString("can not find 'create' function for (%1)").arg(fileName);
     delete library;
     return;
   }

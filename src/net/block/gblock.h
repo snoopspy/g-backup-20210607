@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GBlock
 // ----------------------------------------------------------------------------
-struct GBlock : GStateObj {
+struct G_EXPORT GBlock : GStateObj {
   Q_OBJECT
   Q_PROPERTY(bool enabled MEMBER enabled_)
 

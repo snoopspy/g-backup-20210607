@@ -18,7 +18,7 @@
 // GRwPool
 // ----------------------------------------------------------------------------
 template <typename T>
-struct GRwPool : GStateObj {
+struct G_EXPORT GRwPool : GStateObj {
   GRwPool(QObject* parent = nullptr) : GStateObj(parent) {
   }
 

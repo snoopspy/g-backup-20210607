@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
-struct GPropItemCheckBox : public GPropItem {
+struct G_EXPORT GPropItemCheckBox : public GPropItem {
   GPropItemCheckBox(GPropItemParam* param);
 
 public:

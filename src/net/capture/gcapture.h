@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GCaptureThread
 // ----------------------------------------------------------------------------
-struct GCaptureThread : GThread {
+struct G_EXPORT GCaptureThread : GThread {
   Q_OBJECT
 
 public:
@@ -33,7 +33,7 @@ protected:
 // ----------------------------------------------------------------------------
 struct GPacket;
 struct GParser;
-struct GCapture : GStateObj {
+struct G_EXPORT GCapture : GStateObj {
   Q_OBJECT
   Q_PROPERTY(bool enabled MEMBER enabled_)
   Q_PROPERTY(bool autoRead MEMBER autoRead_)

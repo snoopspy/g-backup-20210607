@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemWidget
 // ----------------------------------------------------------------------------
-struct GPropItemWidget : public GPropItem {
+struct G_EXPORT GPropItemWidget : public GPropItem {
   GPropItemWidget(GPropItemParam* param);
 
 public:

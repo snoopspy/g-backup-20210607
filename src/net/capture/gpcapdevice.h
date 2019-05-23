@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
-struct GPcapDevice : GPcap {
+struct G_EXPORT GPcapDevice : GPcap {
   Q_OBJECT
   Q_PROPERTY(QString devName     MEMBER devName_)
   Q_PROPERTY(int     snapLen     MEMBER snapLen_)

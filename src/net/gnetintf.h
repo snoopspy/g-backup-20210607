@@ -20,7 +20,7 @@
 // GNetIntf
 // ----------------------------------------------------------------------------
 struct GNetIntfs;
-struct GNetIntf {
+struct G_EXPORT GNetIntf {
   friend struct GNetIntfs;
 
 public:
@@ -59,7 +59,7 @@ public:
 // ----------------------------------------------------------------------------
 // GNetIntfs
 // ----------------------------------------------------------------------------
-struct GNetIntfs : QList<GNetIntf> {
+struct G_EXPORT GNetIntfs : QList<GNetIntf> {
   friend struct GNetIntf;
 
 private: // singleton

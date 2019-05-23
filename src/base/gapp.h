@@ -17,13 +17,15 @@
   #include <QCoreApplication>
 #endif // QT_GUI_LIB
 
+#include "base/gbase.h"
+
 // ----------------------------------------------------------------------------
 // GApp
 // ----------------------------------------------------------------------------
 #ifdef QT_GUI_LIB
-struct GApp : QApplication {
+struct G_EXPORT GApp : QApplication {
 #else
-struct GApp : QCoreApplication {
+struct G_EXPORT GApp : QCoreApplication {
 #endif // QT_GUI_LIB
 
 public:

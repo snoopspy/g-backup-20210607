@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GPacketDebugger
 // ----------------------------------------------------------------------------
-struct GPacketDebugger : GStateObj {
+struct G_EXPORT GPacketDebugger : GStateObj {
   Q_OBJECT
   Q_PROPERTY(bool debug MEMBER debug_)
 

@@ -19,7 +19,7 @@
 // GPropItemPlainTextEdit_
 // ----------------------------------------------------------------------------
 struct GPropItemPlainTextEdit;
-struct GPropItemPlainTextEdit_ : QPlainTextEdit {
+struct G_EXPORT GPropItemPlainTextEdit_ : QPlainTextEdit {
   Q_OBJECT
 
 public:

@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropWidget
 // ----------------------------------------------------------------------------
-struct GPropWidget : public QTreeWidget, GProp {
+struct G_EXPORT GPropWidget : public QTreeWidget, GProp {
   GPropWidget(QWidget *parent = nullptr);
   GPropWidget(QObject* object);
   ~GPropWidget() override;

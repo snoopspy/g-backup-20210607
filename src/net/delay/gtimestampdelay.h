@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GTimeStampDelay
 // ----------------------------------------------------------------------------
-struct GTimeStampDelay : GStateObj {
+struct G_EXPORT GTimeStampDelay : GStateObj {
   Q_OBJECT
   Q_PROPERTY(double speed MEMBER speed_) // ratio
 

@@ -1,5 +1,4 @@
 TEMPLATE = lib
-win32: CONFIG += staticlib
 QT += widgets
 CONFIG *= G_BUILD
 DEFINES *= G_BUILD

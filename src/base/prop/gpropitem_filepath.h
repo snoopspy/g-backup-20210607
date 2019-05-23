@@ -21,7 +21,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemFilePath
 // ----------------------------------------------------------------------------
-struct GPropItemFilePath : public GPropItemWidget {
+struct G_EXPORT GPropItemFilePath : public GPropItemWidget {
   Q_OBJECT
 
 public:

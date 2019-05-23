@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemDevice
 // ----------------------------------------------------------------------------
-struct GPropItemDevice : public GPropItemComboBox {
+struct G_EXPORT GPropItemDevice : public GPropItemComboBox {
   Q_OBJECT
 
 public:

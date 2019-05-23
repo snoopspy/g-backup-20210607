@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
-struct GRtmLinux : GRtm {
+struct G_EXPORT GRtmLinux : GRtm {
   friend struct GRtm;
 protected:
   GRtmLinux();

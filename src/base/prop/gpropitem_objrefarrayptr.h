@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemObjRefArrayPtr
 // ----------------------------------------------------------------------------
-struct GPropItemObjRefArrayPtr : public GPropItemToolButton {
+struct G_EXPORT GPropItemObjRefArrayPtr : public GPropItemToolButton {
   Q_OBJECT
 
 public:

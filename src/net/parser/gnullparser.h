@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GNullParser
 // ----------------------------------------------------------------------------
-struct GNullParser : GParser {
+struct G_EXPORT GNullParser : GParser {
   Q_OBJECT
 
 public:

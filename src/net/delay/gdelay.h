@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GDelay
 // ----------------------------------------------------------------------------
-struct GDelay : GStateObj {
+struct G_EXPORT GDelay : GStateObj {
   Q_OBJECT
   Q_PROPERTY(ulong duration MEMBER duration_) // msec
 

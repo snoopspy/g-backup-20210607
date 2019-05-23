@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GIpFlowMgr
 // ----------------------------------------------------------------------------
-struct GIpFlowMgr : GFlowMgr {
+struct G_EXPORT GIpFlowMgr : GFlowMgr {
   Q_OBJECT
   Q_PROPERTY(long halfTimeout MEMBER halfTimeout_)
   Q_PROPERTY(long fullTimeout MEMBER fullTimeout_)

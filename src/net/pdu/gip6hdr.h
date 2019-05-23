@@ -17,7 +17,7 @@
 // GIpHdr
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct GIp6Hdr final {
+struct G_EXPORT GIp6Hdr final {
   uint8_t  v_pr_;     // version, priority
   uint8_t  flags_[3]; // traffic class, flow label
   uint16_t len_;      // total length

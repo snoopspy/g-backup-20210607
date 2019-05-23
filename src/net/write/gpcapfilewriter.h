@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GPcapFileWriter
 // ----------------------------------------------------------------------------
-struct GPcapFileWriter : GStateObj {
+struct G_EXPORT GPcapFileWriter : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)

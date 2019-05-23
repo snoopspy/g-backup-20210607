@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GPcap
 // ----------------------------------------------------------------------------
-struct GPcap : GCapture {
+struct G_EXPORT GPcap : GCapture {
   Q_OBJECT
   Q_PROPERTY(QString filter MEMBER filter_)
 

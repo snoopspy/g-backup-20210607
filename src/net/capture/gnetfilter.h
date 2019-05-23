@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GNetFilter
 // ----------------------------------------------------------------------------
-struct GNetFilter : GCapture {
+struct G_EXPORT GNetFilter : GCapture {
   Q_OBJECT
   Q_PROPERTY(int queueNum MEMBER queueNum_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)

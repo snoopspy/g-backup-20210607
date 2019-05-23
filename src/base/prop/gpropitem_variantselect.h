@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemVariantSelect
 // ----------------------------------------------------------------------------
-struct GPropItemVariantSelect : public GPropItemComboBox {
+struct G_EXPORT GPropItemVariantSelect : public GPropItemComboBox {
   Q_OBJECT
 
 public:

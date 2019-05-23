@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GPcapFile
 // ----------------------------------------------------------------------------
-struct GPcapFile : GPcap {
+struct G_EXPORT GPcapFile : GPcap {
   Q_OBJECT
   Q_PROPERTY(QString fileName MEMBER fileName_)
 

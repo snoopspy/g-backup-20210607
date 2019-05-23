@@ -17,10 +17,12 @@
 #include <QJsonObject>
 #include <QTreeWidgetItem>
 
+#include "base/gbase.h"
+
 // ----------------------------------------------------------------------------
 // GPropItemParam
 // ----------------------------------------------------------------------------
-struct GPropItemParam {
+struct G_EXPORT GPropItemParam {
   GPropItemParam(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object, QMetaProperty mpro)
     : treeWidget_(treeWidget), parent_(parent), object_(object), mpro_(mpro) {}
 

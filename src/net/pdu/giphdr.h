@@ -17,7 +17,7 @@
 // GIpHdr
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct GIpHdr final { // libnet_ipv4_hdr // gilgil temp 2019.05.13
+struct G_EXPORT GIpHdr final { // libnet_ipv4_hdr // gilgil temp 2019.05.13
   uint8_t  v_hl_;
   uint8_t  tos_;
   uint16_t len_;

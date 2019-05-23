@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemStringList
 // ----------------------------------------------------------------------------
-struct GPropItemStringList : public GPropItemPlainTextEdit {
+struct G_EXPORT GPropItemStringList : public GPropItemPlainTextEdit {
   Q_OBJECT
 
 public:

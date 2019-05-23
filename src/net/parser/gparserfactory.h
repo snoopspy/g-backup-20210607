@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------------
 // GParserFactory
 // ----------------------------------------------------------------------------
-struct GParserFactory : GObj {
+struct G_EXPORT GParserFactory : GObj {
 private:
   GParserFactory();
   ~GParserFactory() override;

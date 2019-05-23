@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
-struct GPropItemLineEdit : public GPropItem {
+struct G_EXPORT GPropItemLineEdit : public GPropItem {
   GPropItemLineEdit(GPropItemParam* param);
 
 public:
