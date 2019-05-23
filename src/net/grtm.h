@@ -25,11 +25,11 @@ struct GRtmEntry {
   friend struct GRtmWin32;
 #endif
 public:
-  GIp dst() { return dst_; }
-  GIp mask() { return mask_; }
-  GIp gateway() { return gateway_; }
-  int metric() { return metric_; }
-  GNetIntf* intf();
+  GIp dst() const { return dst_; }
+  GIp mask() const { return mask_; }
+  GIp gateway() const { return gateway_; }
+  int metric() const { return metric_; }
+  GNetIntf* intf() const;
 
 protected:
   GIp dst_{uint32_t(0)};

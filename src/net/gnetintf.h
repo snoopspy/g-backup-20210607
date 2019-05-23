@@ -24,14 +24,14 @@ struct GNetIntf {
   friend struct GNetIntfs;
 
 public:
-  int index() { return index_; }
-  QString name() { return name_; }
-  QString desc() { return desc_; }
-  pcap_if_t* dev() { return dev_; }
-  GMac mac() { return mac_; }
-  GIp ip() { return ip_; }
-  GIp mask() {return mask_; }
-  GIp gateway();
+  int index() const { return index_; }
+  QString name() const { return name_; }
+  QString desc() const { return desc_; }
+  pcap_if_t* dev() const { return dev_; }
+  GMac mac() const { return mac_; }
+  GIp ip() const { return ip_; }
+  GIp mask() const {return mask_; }
+  GIp gateway() const;
 
 protected:
   int index_{-1};

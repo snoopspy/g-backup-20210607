@@ -10,7 +10,7 @@ GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(para
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);
-    comboBox_->addItem(intf.name_);
+    comboBox_->addItem(intf.name());
   }
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(myCurrentIndexChanged(int)));
 }
@@ -20,7 +20,7 @@ void GPropItemDevice::update() {
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);
-    if (intf.name_ == dev) {
+    if (intf.name() == dev) {
       comboBox_->setCurrentIndex(i);
       return;
     }
