@@ -63,6 +63,7 @@ void GRtmLinux::init() {
   if (initialized_) return;
   initialized_ = true;
 
+  Q_ASSERT(count() == intfNames_.count());
   for (int i = 0; i < count(); i++) {
     GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
     QString intfName = intfNames_.at(i);

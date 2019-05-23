@@ -23,7 +23,6 @@ GRtmWin32::GRtmWin32() : GRtm() {
     entry.metric_ = int(row->dwForwardMetric1);
 
     append(entry);
-
   }
 }
 
@@ -35,6 +34,7 @@ void GRtmWin32::init() {
   if (initialized_) return;
   initialized_ = true;
 
+  Q_ASSERT(count() == adapterNames_.count());
   for (int i = 0; i < count(); i++) {
     GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
     QString adapterName = adapterNames_.at(i);
