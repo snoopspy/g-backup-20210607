@@ -5,9 +5,7 @@ int main() {
   GRtmEntry* entry = GRtm::instance().getBestEntry("8.8.8.8");
   GNetIntfs& intfs = GNetIntf::all();
 
-  for (int i = 0; i < intfs.count(); i++) {
-    const GNetIntf& intf = intfs.at(i);
-
+  for(GNetIntf& intf: intfs) {
     bool best = false;
     if (entry != nullptr && entry->intf_->name_ == intf.name_) best = true;
     if (intf.name_ != "")
