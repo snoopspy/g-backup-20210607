@@ -21,8 +21,9 @@ struct GRtmWin32 : GRtm {
   friend struct GRtm;
 protected:
   GRtmWin32();
-  ~GRtmWin32 override();
+  ~GRtmWin32() override;
 
+  QStringList adapterNames_;
   bool initialized_{false};
-  bool init() override;
+  void init() override;
 };

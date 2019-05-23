@@ -6,11 +6,7 @@
 // ----------------------------------------------------------------------------
 // GRtmWin32
 // ----------------------------------------------------------------------------
-bool GRtmWin32::init() {
-  if (initialized_) return false;
-  initialized_ = true;
-  clear();
-
+GRtmWin32::GRtmWin32() : GRtm() {
   PMIB_IPFORWARDTABLE table = GIpForwardTable::instance().ipForwardTable_;
   for (int i = 0; i < int(table->dwNumEntries); i++) {
     PMIB_IPFORWARDROW row = &table->table[i];
@@ -19,18 +15,35 @@ bool GRtmWin32::init() {
     PIP_ADAPTER_INFO adapter = GIpAdapterInfo::instance().findByComboIndex(ifIndex);
     if (adapter == nullptr) continue;
     QString adapterName = adapter->AdapterName;
-    GNetIntf* netIntf = GNetIntfs::instance().findByName(adapterName);
-    if (netIntf == nullptr) {
-      qCritical() << QString("GNetIntfs::instance().findByName(%1) return nullptr").arg(adapterName);
-      continue;
-    }
-    entry.intf_ = netIntf;
+    Q_ASSERT(adapterName != "");
+    adapterNames_.push_back(adapterName);
     entry.dst_ = ntohl(row->dwForwardDest);
     entry.gateway_ = ntohl(row->dwForwardNextHop);
     entry.mask_ = ntohl(row->dwForwardMask);
     entry.metric_ = int(row->dwForwardMetric1);
 
     append(entry);
+
   }
-  return true;
-};
+}
+
+GRtmWin32::~GRtmWin32() {
+  clear();
+}
+
+void GRtmWin32::init() {
+  if (initialized_) return;
+  initialized_ = true;
+
+  for (int i = 0; i < count(); i++) {
+    GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
+    QString adapterName = adapterNames_.at(i);
+    GNetIntf* netIntf = GNetIntfs::instance().findByName(adapterName);
+    if (netIntf == nullptr) {
+      QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(adapterName);
+      qFatal("%s", qPrintable(msg));
+      continue;
+    }
+    entry.intf_ = netIntf;
+  }
+}

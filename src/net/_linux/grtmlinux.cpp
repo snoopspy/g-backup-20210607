@@ -37,14 +37,15 @@ GRtmLinux::GRtmLinux() : GRtm() {
         if (value == "") break;
         if (field == "Iface") {
           appending = true;
+          Q_ASSERT(value != "");
           intfNames_.push_back(value);
         }
         else if (field == "Destination")
           entry.dst_ = ntohl(value.toUInt(nullptr, 16));
-        else if (field == "Gateway")
-          entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Mask")
           entry.mask_ = ntohl(value.toUInt(nullptr, 16));
+        else if (field == "Gateway")
+          entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
         else if (field == "Metric")
           entry.metric_ = value.toInt(nullptr, 16);
       }
@@ -67,7 +68,8 @@ void GRtmLinux::init() {
     QString intfName = intfNames_.at(i);
     GNetIntf* netIntf = GNetIntfs::instance().findByName(intfName);
     if (netIntf == nullptr) {
-      qCritical() << QString("GNetIntfs::instance().findByName(%1) return false").arg(intfName);
+      QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(intfName);
+      qFatal("%s", qPrintable(msg));
       continue;
     }
     entry.intf_ = netIntf;
