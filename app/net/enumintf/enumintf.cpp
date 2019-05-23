@@ -7,19 +7,19 @@ int main() {
 
   for(GNetIntf& intf: intfs) {
     bool best = false;
-    if (entry != nullptr && entry->intf_->name_ == intf.name_) best = true;
-    if (intf.name_ != "")
-      printf("  name    = %s%s\n", intf.name_.toStdString().c_str(), best ? " (Best)" : "");
-    if (intf.desc_ !=  "")
-      printf("  desc    = %s\n", intf.desc_.toStdString().c_str());
-    if (!intf.mac_.isClean())
-      printf("  mac     = %s\n", QString(intf.mac_).toStdString().c_str());
-    if (intf.ip_ != 0)
-      printf("  ip      = %s\n", QString(intf.ip_).toStdString().c_str());
-    if (intf.mask_ != 0)
-      printf("  mask    = %s\n", QString(intf.mask_).toStdString().c_str());
-    if (intf.gateway_ != 0)
-      printf("  gateway = %s\n", QString(intf.gateway_).toStdString().c_str());
+    if (entry != nullptr && entry->intf()->name() == intf.name()) best = true;
+    if (intf.name() != "")
+      printf("  name    = %s%s\n", intf.name().toStdString().c_str(), best ? " (Best)" : "");
+    if (intf.desc() !=  "")
+      printf("  desc    = %s\n", intf.desc().toStdString().c_str());
+    if (!intf.mac().isClean())
+      printf("  mac     = %s\n", QString(intf.mac()).toStdString().c_str());
+    if (intf.ip() != 0)
+      printf("  ip      = %s\n", QString(intf.ip()).toStdString().c_str());
+    if (intf.mask() != 0)
+      printf("  mask    = %s\n", QString(intf.mask()).toStdString().c_str());
+    if (intf.gateway() != 0)
+      printf("  gateway = %s\n", QString(intf.gateway()).toStdString().c_str());
     printf("\n");
   }
 }
