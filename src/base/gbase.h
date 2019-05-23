@@ -29,3 +29,10 @@ typedef unsigned char gbyte, *pbyte;
   typedef unsigned long size_t;
 #endif
 
+#ifdef WIN32
+  #if defined(G_BUILD)
+    #define G_EXPORT __declspec(dllexport)
+  #else
+    #define G_EXPORT __declspec(dllimport)
+  #endif
+#endif
