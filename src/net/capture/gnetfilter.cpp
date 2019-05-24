@@ -1,5 +1,5 @@
-#include "gnetfilter.h"
 #ifdef Q_OS_LINUX
+#include "gnetfilter.h"
 
 #include <linux/netfilter.h> // for NF_ACCEPT
 #include <libnetfilter_queue/libnetfilter_queue.h>

@@ -1,5 +1,5 @@
-#include "gsyncnetfilter.h"
 #ifdef Q_OS_LINUX
+#include "gsyncnetfilter.h"
 
 // ----------------------------------------------------------------------------
 // GSyncNetFilter

@@ -1,3 +1,17 @@
+// ----------------------------------------------------------------------------
+//
+// G Library
+//
+// http://www.gilgil.net
+//
+// Copyright (c) Gilbert Lee All rights reserved
+//
+// ----------------------------------------------------------------------------
+
+#pragma once
+
+#ifdef Q_OS_LINUX
+
 #include "net/capture/gnetfilter.h"
 
 // ----------------------------------------------------------------------------
@@ -20,3 +34,5 @@ public:
   GPacket::Result write(GBuf* buf) override;
   GPacket::Result relay(GPacket* packet) override;
 };
+
+#endif
