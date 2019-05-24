@@ -33,7 +33,7 @@ struct SsCon : GStateObj {
 
 public:
   SsCon(Param* param) : GStateObj(nullptr), factory_(&graph_) {
-    factory_.load("plugin/");
+    factory_.load("plugin");
 
     GSignal& signal = GSignal::instance();
     signal.setup(SIGINT);
