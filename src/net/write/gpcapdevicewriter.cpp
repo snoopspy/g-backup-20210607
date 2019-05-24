@@ -4,13 +4,6 @@
 // ----------------------------------------------------------------------------
 // GPcapDeviceWriter
 // ----------------------------------------------------------------------------
-GPcapDeviceWriter::GPcapDeviceWriter(QObject* parent) : GStateObj(parent) {
-}
-
-GPcapDeviceWriter::~GPcapDeviceWriter() {
-  close();
-}
-
 bool GPcapDeviceWriter::doOpen() {
   if (devName_ == "") {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");

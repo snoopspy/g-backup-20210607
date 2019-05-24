@@ -6,13 +6,6 @@
 // ----------------------------------------------------------------------------
 // GPcapFileWriter
 // ----------------------------------------------------------------------------
-GPcapFileWriter::GPcapFileWriter(QObject* parent) : GStateObj(parent) {
-}
-
-GPcapFileWriter::~GPcapFileWriter() {
-  close();
-}
-
 bool GPcapFileWriter::doOpen() {
   if (fileName_ == "") {
     SET_ERR(GErr::FILE_NAME_NOT_SPECIFIED, "file name is not specified");

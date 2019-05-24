@@ -66,7 +66,7 @@ public:
 
 public:
   Q_INVOKABLE GDnsFirewall(QObject* parent = nullptr);
-  ~GDnsFirewall() override { close(); }
+  ~GDnsFirewall() override;
 
 protected:
   bool doOpen() override;

@@ -30,7 +30,7 @@ public:
 
 public:
   GPcap(QObject* parent = nullptr) : GCapture(parent) {}
-  ~GPcap() override;
+  ~GPcap() override { close(); }
 
 protected:
   bool doOpen() override;

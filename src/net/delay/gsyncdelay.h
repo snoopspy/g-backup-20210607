@@ -33,7 +33,7 @@ protected:
 
 public:
   Q_INVOKABLE GSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GSyncDelay() override {}
+  ~GSyncDelay() override { close(); }
 
 protected:
   bool doOpen() override;

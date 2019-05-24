@@ -13,6 +13,10 @@ GDnsFirewall::GDnsFirewall(QObject* parent) : GFlowMgr(parent) {
       << "255.255.255.255";
 }
 
+GDnsFirewall::~GDnsFirewall() {
+  close();
+}
+
 bool GDnsFirewall::doOpen() {
     if (dnsProcessor_ != nullptr) {
     QObject::connect(dnsProcessor_, &GDnsProcessor::dnsCaptured, this, &GDnsFirewall::_dnsProcess, Qt::DirectConnection);

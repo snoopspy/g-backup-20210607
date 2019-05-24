@@ -4,13 +4,6 @@
 // ----------------------------------------------------------------------------
 // GCommand
 // ----------------------------------------------------------------------------
-GCommand::GCommand(QObject* parent) : GStateObj(parent) {
-}
-
-GCommand::~GCommand() {
-  close();
-}
-
 bool GCommand::doOpen() {
   bool res = true;
   for (QString command: openCommands_) {

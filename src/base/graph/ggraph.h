@@ -107,7 +107,7 @@ public:
 
 public:
   GGraph(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GGraph() override {}
+  ~GGraph() override { close(); }
 
 public:
   Factory* factory() { return factory_; }

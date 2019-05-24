@@ -3,13 +3,6 @@
 // ----------------------------------------------------------------------------
 // GBpFilter
 // ----------------------------------------------------------------------------
-GBpFilter::GBpFilter(QObject* parent): GStateObj(parent) {
-}
-
-GBpFilter::~GBpFilter() {
-  close();
-}
-
 bool GBpFilter::doOpen() {
   int res;
 

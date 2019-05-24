@@ -29,7 +29,7 @@ protected:
 
 public:
   Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GDelay() override {}
+  ~GDelay() override { close(); }
 
 protected:
   bool doOpen() override;

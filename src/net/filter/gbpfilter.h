@@ -27,8 +27,8 @@ public:
   QString filter_;
 
 public:
-  Q_INVOKABLE GBpFilter(QObject* parent = nullptr);
-  ~GBpFilter() override;
+  Q_INVOKABLE GBpFilter(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GBpFilter() override { close(); }
 
 protected:
   bool doOpen() override;

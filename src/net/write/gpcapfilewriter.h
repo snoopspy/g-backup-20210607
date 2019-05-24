@@ -28,8 +28,8 @@ public:
   QString fileName_{"pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'"};
 
 public:
-  Q_INVOKABLE GPcapFileWriter(QObject* parent = nullptr);
-  ~GPcapFileWriter() override;
+  Q_INVOKABLE GPcapFileWriter(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GPcapFileWriter() override { close(); }
 
 protected:
   bool doOpen() override;

@@ -24,7 +24,7 @@ public:
 
 public:
   Q_INVOKABLE GPcapFile(QObject* parent = nullptr) : GPcap(parent) {}
-  ~GPcapFile() override;
+  ~GPcapFile() override { close(); }
 
 protected:
   bool doOpen() override;

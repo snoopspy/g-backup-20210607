@@ -32,7 +32,7 @@ protected:
 
 public:
   Q_INVOKABLE GTimeStampSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GTimeStampSyncDelay() override {}
+  ~GTimeStampSyncDelay() override { close(); }
 
 protected:
   bool doOpen() override;

@@ -21,8 +21,8 @@ struct G_EXPORT GCommand : GStateObj {
   Q_PROPERTY(QStringList closeCommands MEMBER closeCommands_)
 
 public:
-  Q_INVOKABLE GCommand(QObject* parent = nullptr);
-  ~GCommand() override;
+  Q_INVOKABLE GCommand(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GCommand() override { close(); }
 
 protected:
   bool doOpen() override;
