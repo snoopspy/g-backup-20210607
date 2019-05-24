@@ -10,10 +10,10 @@
 
 #pragma once
 
-#ifdef Q_OS_LINUX
-
 #include "gcapture.h"
 #include "net/packet/gippacket.h"
+
+#ifdef Q_OS_LINUX
 
 // ----------------------------------------------------------------------------
 // GNetFilter

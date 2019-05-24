@@ -10,9 +10,9 @@
 
 #pragma once
 
-#ifdef Q_OS_LINUX
-
 #include "net/capture/gnetfilter.h"
+
+#ifdef Q_OS_LINUX
 
 // ----------------------------------------------------------------------------
 // GSyncNetFilter
