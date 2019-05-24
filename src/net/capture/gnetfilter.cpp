@@ -10,7 +10,10 @@
 // GNetFilter
 // ----------------------------------------------------------------------------
 GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
-  qDebug() << "GNetFilter::GNetFilter"; // gilgil temp 2016.09.25
+  command_.openCommands_ << "sudo iptables -A OUTPUT -j NFQUEUE";
+  command_.openCommands_ << "sudo iptables -A INPUT -j NFQUEUE";
+  command_.closeCommands_ << "sudo iptables -D OUTPUT -j NFQUEUE";
+  command_.closeCommands_ << "sudo iptables -D INPUT -j NFQUEUE";
 }
 
 GNetFilter::~GNetFilter()  {
@@ -65,6 +68,11 @@ bool GNetFilter::doOpen() {
   parser_ = GParserFactory::getDefaultParser(dataLinkType());
   Q_ASSERT(parser_ != nullptr);
 
+  if (!command_.open()) {
+    err = command_.err;
+    return false;
+  }
+
   return captureThreadOpen();
 }
 
@@ -105,6 +113,8 @@ bool GNetFilter::doClose() {
     qDebug() << "aft call nfq_close"; // gilgil temp 2016.09.25
     h_ = nullptr;
   }
+
+  command_.close();
 
   return true;
 }

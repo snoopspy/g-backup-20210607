@@ -17,8 +17,8 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GCommand : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(QStringList openCommandList MEMBER openCommandList_)
-  Q_PROPERTY(QStringList closeCommandList MEMBER closeCommandList_)
+  Q_PROPERTY(QStringList openCommands MEMBER openCommands_)
+  Q_PROPERTY(QStringList closeCommands MEMBER closeCommands_)
 
 public:
   Q_INVOKABLE GCommand(QObject* parent = nullptr);
@@ -28,7 +28,7 @@ protected:
   bool doOpen() override;
   bool doClose() override;
 
-protected:
-  QStringList openCommandList_;
-  QStringList closeCommandList_;
+public:
+  QStringList openCommands_;
+  QStringList closeCommands_;
 };

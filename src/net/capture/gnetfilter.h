@@ -12,6 +12,7 @@
 
 #include "gcapture.h"
 #include "net/packet/gippacket.h"
+#include "base/other/gcommand.h"
 
 #ifdef Q_OS_LINUX
 
@@ -24,7 +25,10 @@ struct G_EXPORT GNetFilter : GCapture {
   Q_PROPERTY(int snapLen MEMBER snapLen_)
   Q_PROPERTY(Verdict acceptVerdict MEMBER acceptVerdict_)
   Q_PROPERTY(quint32 mark MEMBER mark_)
+  Q_PROPERTY(GObjRef command READ getCommand)
   Q_ENUMS(Verdict)
+
+  GObjRef getCommand() { return &command_; }
 
 public:
   enum Verdict {
@@ -37,6 +41,7 @@ public:
   int snapLen_{65536}; // 65536 bytes
   Verdict acceptVerdict_{ACCEPT};
   uint32_t mark_{0};
+  GCommand command_;
 
 public:
   Q_INVOKABLE GNetFilter(QObject* parent = nullptr);
