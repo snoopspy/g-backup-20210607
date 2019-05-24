@@ -17,6 +17,22 @@ GNetIntfs& GNetIntf::all() {
   return GNetIntfs::instance();
 }
 
+bool GNetIntf::operator==(const GNetIntf& r) const {
+  if (index_ != r.index_) return false;
+  if (name_ != r.name_) return false;
+  if (desc_ != r.desc_) return false;
+  if (dev_ != r.dev_) return false;
+  if (mac_ != r.mac_) return false;
+  if (ip_ != r.ip_) return false;
+  if (mask_ != r.mask_) return false;
+  if (gateway_ != r.gateway_) return false;
+  return true;
+}
+
+uint qHash(GNetIntf q) {
+  return uint(uint32_t(q.index()) + q.ip() + q.mask() + q.gateway());
+}
+
 // ----------------------------------------------------------------------------
 // GNetIntfs
 // ----------------------------------------------------------------------------

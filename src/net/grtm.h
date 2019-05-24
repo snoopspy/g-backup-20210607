@@ -37,12 +37,16 @@ protected:
   GIp gateway_{uint32_t(0)};
   int metric_{0};
   GNetIntf* intf_{nullptr};
+
+public:
+  bool operator==(const GRtmEntry& r) const;
 };
+uint qHash(GRtmEntry q);
 
 // ----------------------------------------------------------------------------
 // GRtm
 // ----------------------------------------------------------------------------
-struct __declspec(dllexport) GRtm : QList<GRtmEntry> {
+struct G_EXPORT GRtm : QList<GRtmEntry> {
   friend struct GRtmEntry;
 protected: // inherited singleton
   GRtm();

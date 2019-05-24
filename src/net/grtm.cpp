@@ -11,6 +11,19 @@ GNetIntf* GRtmEntry::intf() const {
   return intf_;
 }
 
+bool GRtmEntry::operator==(const GRtmEntry& r) const {
+  if (dst_ != r.dst_) return false;
+  if (mask_ != r.mask_) return false;
+  if (gateway_ != r.gateway_) return false;
+  if (metric_ != r.metric_) return false;
+  if (intf_ != r.intf_) return false;
+  return true;
+};
+
+uint qHash(GRtmEntry q) {
+  return uint(q.dst() + q.mask() + q.gateway() + uint32_t(q.metric()));
+}
+
 // ----------------------------------------------------------------------------
 // GRtm
 // ----------------------------------------------------------------------------

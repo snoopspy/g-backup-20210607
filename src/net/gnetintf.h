@@ -54,7 +54,10 @@ public:
 
 public:
   static GNetIntfs& all();
+
+  bool operator==(const GNetIntf& r) const;
 };
+uint qHash(GNetIntf q);
 
 // ----------------------------------------------------------------------------
 // GNetIntfs
