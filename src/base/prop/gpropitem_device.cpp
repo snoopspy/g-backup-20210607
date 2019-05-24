@@ -10,17 +10,18 @@ GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(para
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);
-    comboBox_->addItem(intf.name());
+    comboBox_->addItem(intf.desc());
+    devNames_.push_back(intf.name());
   }
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(myCurrentIndexChanged(int)));
 }
 
 void GPropItemDevice::update() {
-  QString dev = object_->property(mpro_.name()).toString();
+  QString devName = object_->property(mpro_.name()).toString();
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);
-    if (intf.name() == dev) {
+    if (intf.name() == devName) {
       comboBox_->setCurrentIndex(i);
       return;
     }
@@ -29,11 +30,11 @@ void GPropItemDevice::update() {
 }
 
 void GPropItemDevice::myCurrentIndexChanged(int index) {
-  (void)index;
-  QString key = comboBox_->currentText();
-  bool res = object_->setProperty(mpro_.name(), key);
+  Q_ASSERT(index <= devNames_.count());
+  QString devName = devNames_.at(index);
+  bool res = object_->setProperty(mpro_.name(), devName);
   if (!res) {
-    qWarning() << QString("object->setProperty(%1, %2) return false").arg(mpro_.name(), key);
+    qWarning() << QString("object->setProperty(%1, %2) return false").arg(mpro_.name(), devName);
   }
 }
 

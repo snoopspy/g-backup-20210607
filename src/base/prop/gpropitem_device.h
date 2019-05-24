@@ -24,6 +24,9 @@ public:
   GPropItemDevice(GPropItemParam* param);
   void update() override;
 
+protected:
+  QStringList devNames_;
+
 protected slots:
   void myCurrentIndexChanged(int index);
 };
