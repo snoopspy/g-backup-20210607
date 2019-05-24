@@ -66,7 +66,7 @@ namespace GFlow {
 
     size_t request(const char* id /* void* */, size_t memSize) {
       size_t currentOffset = 0;
-      foreach (const RequestItem& item, *this) {
+      for (RequestItem& item: *this) {
         if (item.id_ == id) return currentOffset;
         currentOffset += item.memSize_;
       }

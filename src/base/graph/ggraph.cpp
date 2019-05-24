@@ -5,7 +5,7 @@
 // GGraph::Nodes
 // ----------------------------------------------------------------------------
 GGraph::Node* GGraph::Nodes::findNode(QString objectName) {
-  foreach (GGraph::Node* node, *this) {
+  for (GGraph::Node* node: *this) {
     if (node->objectName() == objectName)
       return node;
   }
@@ -13,7 +13,7 @@ GGraph::Node* GGraph::Nodes::findNode(QString objectName) {
 }
 
 void GGraph::Nodes::clear() {
-  foreach (GGraph::Node* node, *this) {
+  for (GGraph::Node* node: *this) {
     delete node;
   }
   QList::clear();
@@ -21,7 +21,7 @@ void GGraph::Nodes::clear() {
 
 void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
   clear();
-  foreach (QJsonValue jv, ja) {
+  for (QJsonValue jv: ja) {
     QJsonObject nodeJo = jv.toObject();
     QString className = nodeJo["_class"].toString();
     if (className == "") {
@@ -44,7 +44,7 @@ void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
 
 void GGraph::Nodes::save(QJsonArray& ja) {
   ja = QJsonArray(); // clear
-  foreach (GGraph::Node* node, *this) {
+  for (GGraph::Node* node: *this) {
     QJsonObject nodeJo;
     node->propSave(nodeJo);
     QString className = node->metaObject()->className();
@@ -57,7 +57,7 @@ void GGraph::Nodes::save(QJsonArray& ja) {
 // GGraph::Connections
 // ----------------------------------------------------------------------------
 void GGraph::Connections::clear() {
-  foreach (Connection* connection, *this) {
+  for (Connection* connection: *this) {
     delete connection;
   }
   QList::clear();
@@ -65,7 +65,7 @@ void GGraph::Connections::clear() {
 
 void GGraph::Connections::load(GGraph* graph, QJsonArray ja) {
   clear();
-  foreach (QJsonValue jv, ja) {
+  for (QJsonValue jv: ja) {
     QJsonObject connectionJo = jv.toObject();
 
     QString senderObjectName = connectionJo["sender"].toString();
@@ -97,7 +97,7 @@ void GGraph::Connections::load(GGraph* graph, QJsonArray ja) {
 
 void GGraph::Connections::save(QJsonArray& ja) {
   ja = QJsonArray(); // clear
-  foreach (Connection* connection, *this) {
+  for (Connection* connection: *this) {
     QJsonObject connectionJo;
     connectionJo["sender"] = connection->sender_->objectName();
     connectionJo["signal"] = connection->signal_;
@@ -114,7 +114,7 @@ GGraph::Factory::Factory(QObject* parent) : GObj(parent) {
 }
 
 GGraph::Factory::~Factory() {
-  foreach (Item* item, items_) {
+  for (Item* item: items_) {
     delete item;
   }
 }
@@ -124,7 +124,7 @@ GGraph::Factory::~Factory() {
 // ----------------------------------------------------------------------------
 bool GGraph::doOpen() {
   GThreadMgr::suspendStart();
-  foreach (Node* node, nodes_) {
+  for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
       bool res = stateObj->open();
@@ -147,7 +147,7 @@ bool GGraph::doOpen() {
 }
 
 bool GGraph::doClose() {
-  foreach(Node* node, nodes_) {
+  for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
       stateObj->close();

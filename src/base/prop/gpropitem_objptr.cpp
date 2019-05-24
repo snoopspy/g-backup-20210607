@@ -11,7 +11,7 @@ GPropItemObjPtr::GPropItemObjPtr(GPropItemParam* param) : GPropItemComboBox(para
   GGraph* graph = dynamic_cast<GGraph*>(param->object_->parent());
   if (graph != nullptr) {
     const QObjectList& objectList = graph->children();
-    foreach (QObject* object, objectList) {
+    for (QObject* object: objectList) {
       comboBox_->addItem(object->objectName());
     }
   }

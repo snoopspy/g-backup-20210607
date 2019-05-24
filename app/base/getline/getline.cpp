@@ -30,7 +30,7 @@ namespace GetLine {
     // file
     //
     QFileInfoList fileList = dir.entryInfoList(nameFilters);
-    foreach (QFileInfo fileInfo, fileList) {
+    for (QFileInfo fileInfo: fileList) {
       if (fileInfo.isDir()) continue;
       if (!isFolderWritten) {
         printf("--------------------------------------------------\n");
@@ -44,7 +44,7 @@ namespace GetLine {
     // dir
     //
     QFileInfoList dirList = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
-    foreach (QFileInfo fileInfo, dirList) {
+    for (QFileInfo fileInfo: dirList) {
       QString fileName = fileInfo.fileName();
       QString subFolder = folder + fileName + "/";
       res += scan(subFolder, nameFilters);

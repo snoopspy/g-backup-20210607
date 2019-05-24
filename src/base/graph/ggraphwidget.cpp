@@ -114,7 +114,7 @@ void GGraphWidget::update() {
   Q_ASSERT(graph_ != nullptr);
   GGraph::Factory* factory = graph_->factory();
   Q_ASSERT(factory!= nullptr);
-  foreach(GGraph::Factory::Item* item, factory->items_) {
+  for (GGraph::Factory::Item* item: factory->items_) {
     updateFactory(item, nullptr);
   }
   factoryWidget_->expandAll();
@@ -130,7 +130,7 @@ void GGraphWidget::loadGraph(QJsonObject jo) {
   graph_->propLoad(jo);
 
   QJsonArray nodeJa = jo["nodes"].toArray();
-  foreach (QJsonValue jv, nodeJa) {
+  for (QJsonValue jv: nodeJa) {
     QJsonObject nodeJo = jv.toObject();
     QString objectName = nodeJo["objectName"].toString();
     if (objectName == "") {
@@ -148,7 +148,7 @@ void GGraphWidget::loadGraph(QJsonObject jo) {
     scene_->createText(node, pos);
   }
 
-  foreach (GGraph::Connection* connection, graph_->connections_) {
+  for (GGraph::Connection* connection: graph_->connections_) {
     QString startNodeName = connection->sender_->objectName();
     QString endNodeName = connection->receiver_->objectName();
     scene_->createArrow(startNodeName, endNodeName, connection);
@@ -192,7 +192,7 @@ void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* p
 
   GGraph::Factory::ItemCategory* category = dynamic_cast<GGraph::Factory::ItemCategory*>(item);
   if (category != nullptr) {
-    foreach (GGraph::Factory::Item* child, category->items_) {
+    for (GGraph::Factory::Item* child: category->items_) {
       updateFactory(child, newWidgetItem);
     }
     return;
@@ -204,7 +204,7 @@ GGraph::Node* GGraphWidget::createInstance(QString className) {
   if (node == nullptr) return nullptr;
 
   QString objectName = node->metaObject()->className();
-  foreach (QString removePrefixName, removePrefixNames_) {
+  for (QString removePrefixName: removePrefixNames_) {
     if (objectName.startsWith(removePrefixName))
       objectName = objectName.mid(removePrefixName.length());
   }
@@ -225,7 +225,7 @@ GGraph::Node* GGraphWidget::createInstance(QString className) {
   while (true) {
     QString _objectName = objectName + QString::number(suffix);
     bool isExist = false;
-    foreach(GGraph::Node* node, graph()->nodes_) {
+    for (GGraph::Node* node: graph()->nodes_) {
       if (node->objectName() == _objectName) {
         isExist = true;
         break;
@@ -410,7 +410,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
   if (text != nullptr) {
     GGraph::Node* node = text->node_;
 
-    foreach (QGraphicsItem* item, scene_->items()) {
+    for (QGraphicsItem* item: scene_->items()) {
       GGArrow* arrow = dynamic_cast<GGArrow*>(item);
       if (arrow == nullptr) continue;
       if (arrow->startText() == text || arrow->endText() == text) {

@@ -34,7 +34,7 @@ protected:
   // --------------------------------------------------------------------------
   struct FlowMap : QMap<GFlow::TcpFlowKey, GFlow::Value*> {
     void clear() {
-      foreach (GFlow::Value* value, *this) {
+      for (GFlow::Value* value: *this) {
         GFlow::Value::deallocate(value);
       }
       QMap<GFlow::TcpFlowKey, GFlow::Value*>::clear();

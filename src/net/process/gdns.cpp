@@ -10,10 +10,10 @@ QByteArray GDns::Question::encode() {
   res = GDns::encodeName(this->name_);
 
   uint16_t _type = htons(this->type_);
-  res.append((const char*)&_type, sizeof(uint16_t));
+  res.append(reinterpret_cast<const char*>(&_type), sizeof(uint16_t));
 
   uint16_t _class_ = htons(this->class_);
-  res.append((const char*)&_class_, sizeof(uint16_t));
+  res.append(reinterpret_cast<const char*>(&_class_), sizeof(uint16_t));
 
   return res;
 }
@@ -23,12 +23,12 @@ bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
   if (this->name_ == "") return false;
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
-  uint16_t* _type = (uint16_t*)(udpData + *offset);
+  uint16_t* _type = reinterpret_cast<uint16_t*>(udpData + *offset);
   this->type_ = ntohs(*_type);
   *offset += sizeof(uint16_t);
 
   if (*offset + sizeof(uint16_t) > dataLen) return false;
-  uint16_t* _class_ = (uint16_t*)(udpData + *offset);
+  uint16_t* _class_ = reinterpret_cast<uint16_t*>(udpData + *offset);
   this->class_ = ntohs(*_class_);
   *offset += sizeof(uint16_t);
 
@@ -41,7 +41,7 @@ bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
 // ----------------------------------------------------------------------------
 QByteArray GDns::Questions::encode() {
   QByteArray res;
-  foreach (Question question, *this) {
+  for (Question question: *this) {
     res += question.encode();
   }
   return res;
@@ -120,7 +120,7 @@ bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offse
 // ----------------------------------------------------------------------------
 QByteArray GDns::ResourceRecords::encode() {
   QByteArray res;
-  foreach (ResourceRecord record, *this) {
+  for (ResourceRecord record: *this) {
     res += record.encode();
   }
   return res;

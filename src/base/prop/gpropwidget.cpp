@@ -55,7 +55,7 @@ void GPropWidget::setObject(QObject* object) {
 
 void GPropWidget::update() {
   QObjectList list = children();
-  foreach (QObject* object, list) {
+  for (QObject* object: list) {
     GPropItem* item = dynamic_cast<GPropItem*>(object);
     if (item != nullptr)
       item->update();
@@ -65,7 +65,7 @@ void GPropWidget::update() {
 
 void GPropWidget::clear() {
   QObjectList list = children();
-  foreach (QObject* object, list) {
+  for (QObject* object: list) {
     GPropItem* item = dynamic_cast<GPropItem*>(object);
     if (item != nullptr)
       delete item;

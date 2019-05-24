@@ -34,7 +34,7 @@ bool GDnsFirewall::doOpen() {
   }
 
   exceptionIps_.clear();
-  foreach (QString exceptionIp, exceptionIpList_) {
+  for (QString exceptionIp: exceptionIpList_) {
     if (exceptionIp == "") continue;
     GIp ip = exceptionIp;
     exceptionIps_.insert(ip);
@@ -101,7 +101,7 @@ bool GDnsFirewall::checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timev
   DnsMap::iterator it = dnsMap_.find(ipFlowKey);
   if (it != dnsMap_.end()) {
     DnsItems& items = it.value();
-    foreach (const DnsItem& item, items) {
+    for (DnsItem& item: items) {
       if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_ + extraTtlTime_) {
         block = false;
         break;
@@ -111,7 +111,7 @@ bool GDnsFirewall::checkBlockFromDnsMap(GFlow::IpFlowKey ipFlowKey, struct timev
     it = dnsMap_.find(ipFlowKey.reverse());
     if (it != dnsMap_.end()) {
       DnsItems& items = it.value();
-      foreach (const DnsItem& item, items) {
+      for (DnsItem& item: items) {
         if (ts.tv_sec <= item.ts_.tv_sec + item.ttl_ + extraTtlTime_) {
           block = false;
           break;
@@ -351,10 +351,10 @@ void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
   Q_ASSERT(ipHdr != nullptr);
   GFlow::IpFlowKey ipFlowKey(ipHdr->dip(), uint32_t(0)); // ipHdr-dip() is dns query client ip
 
-  foreach (GDns::ResourceRecord answer, dns->answers_) {
+  for (GDns::ResourceRecord answer: dns->answers_) {
     if (answer.type_ != 0x0001) // Host Address
       continue;
-    GIp ip = ntohl(*(uint32_t*)answer.data_.data());
+    GIp ip = ntohl(*(reinterpret_cast<uint32_t*>(answer.data_.data())));
     ipFlowKey.dip_ = ip; // dns response ip(server ip)
     qDebug() << QString("name=%1 ttl=%2 data=%3 %4").arg(answer.name_).arg(answer.ttl_).arg(QString(ip), QString::number(ip, 16));
 
@@ -364,9 +364,9 @@ void GDnsFirewall::_dnsProcess(GPacket* packet, GDns* dns) {
     newItem.ts_ = packet->ts_;
 
     DnsItems& items = dnsMap_[ipFlowKey];
-    foreach (const DnsItem& item, items) {
+    for (DnsItem& item: items) {
       if (item.name_ == newItem.name_) {
-        (DnsItem&)item = newItem;
+        item = newItem;
         return;
       }
     }

@@ -120,7 +120,7 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
     GObjRefArrayPtr array = qvariant_cast<GObjRefArrayPtr>(object->property(propName));
     Q_ASSERT(array != nullptr);
     QJsonArray ja = jo[propName].toArray();
-    foreach (QJsonValue value, ja) {
+    for (QJsonValue value: ja) {
       QJsonObject childJo = value.toObject();
       GObj* childObj = array->addObj();
       childObj->propLoad(childJo);

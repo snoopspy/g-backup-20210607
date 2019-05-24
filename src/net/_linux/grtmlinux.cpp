@@ -17,7 +17,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
   bool firstLine = true;
   QList<QString> fields;
 
-  foreach (QByteArray ba, baList) {
+  for (QByteArray ba: baList) {
     QTextStream ts(ba);
     if (firstLine) {
       firstLine = false;

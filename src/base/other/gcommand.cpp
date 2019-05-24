@@ -13,7 +13,7 @@ GCommand::~GCommand() {
 
 bool GCommand::doOpen() {
   bool res = true;
-  foreach (QString command, openCommandList_) {
+  for (QString command: openCommandList_) {
     if (command.isEmpty()) continue;
     int res = QProcess::execute(command);
     if (res != EXIT_SUCCESS) {
@@ -26,7 +26,7 @@ bool GCommand::doOpen() {
 
 bool GCommand::doClose() {
   bool res = true;
-  foreach (QString command, closeCommandList_) {
+  for (QString command: closeCommandList_) {
     if (command.isEmpty()) continue;
     int res = QProcess::execute(command);
     if (res != EXIT_SUCCESS) {

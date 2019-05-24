@@ -24,7 +24,7 @@ void GGText::removeArrow(GGArrow* arrow) {
 }
 
 void GGText::removeArrows() {
-  foreach (GGArrow* arrow, arrows_) {
+  for (GGArrow* arrow: arrows_) {
     arrow->startText()->removeArrow(arrow);
     arrow->endText()->removeArrow(arrow);
     delete arrow;
