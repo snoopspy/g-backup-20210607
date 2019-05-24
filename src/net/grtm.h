@@ -42,7 +42,7 @@ protected:
 // ----------------------------------------------------------------------------
 // GRtm
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRtm : QList<GRtmEntry> {
+struct __declspec(dllexport) GRtm : QList<GRtmEntry> {
   friend struct GRtmEntry;
 protected: // inherited singleton
   GRtm();

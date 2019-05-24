@@ -27,10 +27,9 @@ QStringList GObj::slotList() {
   return methodList(QMetaMethod::Slot);
 }
 
-
 bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type) {
   qDebug() << QString("connect %1::%2 > %3::%4 %5").
-    arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg((int)type);
+    arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type));
 
   QByteArray newSignal;
   Q_ASSERT(signal != nullptr);
@@ -49,7 +48,7 @@ bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const
   bool res = QObject::connect(sender, signal, receiver, slot, type);
   if (!res) {
     QString msg = QString("QObject::connect(%1::%2 > %3::%4 %5) return false").
-      arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg((int)type);
+      arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type));
     qWarning() << msg;
     return false;
   }
