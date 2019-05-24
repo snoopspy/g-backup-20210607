@@ -10,7 +10,13 @@ GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(para
   GNetIntfs& intfs = GNetIntf::all();
   for (int i = 0; i < intfs.count(); i++) {
     const GNetIntf& intf = intfs.at(i);
-    comboBox_->addItem(intf.desc());
+#ifdef Q_OS_LINUX
+    QString s = intf.name();
+#endif
+#ifdef Q_OS_WIN
+    QString s = intf.desc();
+#endif
+    comboBox_->addItem(s);
     devNames_.push_back(intf.name());
   }
   QObject::connect(comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(myCurrentIndexChanged(int)));
