@@ -26,8 +26,6 @@ public:
 
 protected:
   GWaitEvent we_;
-  QElapsedTimer et_;
-  qint64 lastClock_;
 
 public:
   Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
@@ -38,8 +36,8 @@ protected:
   bool doClose() override;
 
 public slots:
-  void delay(GPacket* packet);
+  void sleep(GPacket* packet);
 
 signals:
-  void delayed(GPacket* packet);
+  void sleeped(GPacket* packet);
 };

@@ -15,24 +15,23 @@
 #include "base/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
-// GTimeStampDelay
+// GSyncDelay
 // ----------------------------------------------------------------------------
-struct G_EXPORT GTimeStampDelay : GStateObj {
+struct G_EXPORT GSyncDelay : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(double speed MEMBER speed_) // ratio
+  Q_PROPERTY(ulong duration MEMBER duration_) // msec
 
 public:
-  double speed_{1.};
+  ulong duration_{1000};
 
 protected:
   GWaitEvent we_;
   QElapsedTimer et_;
   qint64 lastClock_;
-  qint64 lastTs_;
 
 public:
-  Q_INVOKABLE GTimeStampDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GTimeStampDelay() override {}
+  Q_INVOKABLE GSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GSyncDelay() override {}
 
 protected:
   bool doOpen() override;

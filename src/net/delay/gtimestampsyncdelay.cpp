@@ -1,23 +1,23 @@
-#include "gtimestampdelay.h"
+#include "gtimestampsyncdelay.h"
 #include <QDeadlineTimer>
 #include <QThread>
 
 // ----------------------------------------------------------------------------
-// GTimeStampDelay
+// GTimeStampSyncDelay
 // ----------------------------------------------------------------------------
-bool GTimeStampDelay::doOpen() {
+bool GTimeStampSyncDelay::doOpen() {
   et_.restart();
   lastClock_ = et_.elapsed();
   lastTs_ = 0;
   return true;
 }
 
-bool GTimeStampDelay::doClose() {
+bool GTimeStampSyncDelay::doClose() {
   we_.wakeAll();
   return true;
 }
 
-void GTimeStampDelay::delay(GPacket* packet) {
+void GTimeStampSyncDelay::delay(GPacket* packet) {
   qint64 nowTs = qint64(packet->ts_.tv_sec * 1000) + qint64(packet->ts_.tv_usec / 1000);
   if (lastTs_ == 0) lastTs_ = nowTs;
   qint64 remainTs = nowTs - lastTs_;
