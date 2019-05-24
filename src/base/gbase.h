@@ -10,11 +10,6 @@
 
 #pragma once
 
-struct G {
-  static const char* Version;
-  static const unsigned long Timeout;
-};
-
 typedef void *pvoid;
 typedef char *pchar;
 typedef unsigned char gbyte, *pbyte;
@@ -40,3 +35,7 @@ typedef unsigned char gbyte, *pbyte;
   #define  G_EXPORT
 #endif
 
+struct G_EXPORT G {
+  static const char* Version;
+  static const unsigned long Timeout;
+};
