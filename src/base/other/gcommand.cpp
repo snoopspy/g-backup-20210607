@@ -15,6 +15,7 @@ bool GCommand::doOpen() {
   bool res = true;
   for (QString command: openCommands_) {
     if (command.isEmpty()) continue;
+    qDebug() << command;
     int i = QProcess::execute(command);
     if (i != EXIT_SUCCESS) {
       QString msg = QString("command(%1) return %2").arg(command).arg(2);
@@ -29,6 +30,7 @@ bool GCommand::doClose() {
   bool res = true;
   for (QString command: closeCommands_) {
     if (command.isEmpty()) continue;
+    qDebug() << command;
     int i = QProcess::execute(command);
     if (i != EXIT_SUCCESS) {
       QString msg = QString("command(%1) return %2").arg(command).arg(2);
