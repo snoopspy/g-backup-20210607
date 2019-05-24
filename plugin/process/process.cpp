@@ -1,7 +1,7 @@
 #include <GDnsFirewall>
 #include <GDnsProcessor>
 #include <GPacketDebugger>
-#include "net/process/gflowmgrtest.h"
+#include <GFlowMgrDebugger>
 
 #ifdef Q_OS_WIN
   #define EXPORT __declspec(dllexport)
@@ -14,7 +14,7 @@ EXPORT int count() {
   qRegisterMetaType<GDnsFirewall*>();
   qRegisterMetaType<GDnsProcessor*>();
   qRegisterMetaType<GPacketDebugger*>();
-  qRegisterMetaType<GFlowMgrTest*>();
+  qRegisterMetaType<GFlowMgrDebugger*>();
   return 4;
 }
 
@@ -23,7 +23,7 @@ EXPORT const char* name(int index) {
     case 0: return GDnsFirewall::staticMetaObject.className();
     case 1: return GDnsProcessor::staticMetaObject.className();
     case 2: return GPacketDebugger::staticMetaObject.className();
-    case 3: return GFlowMgrTest::staticMetaObject.className();
+    case 3: return GFlowMgrDebugger::staticMetaObject.className();
     default: return nullptr;
   }
 }
@@ -33,7 +33,7 @@ EXPORT void* create(int index) {
     case 0: return new GDnsFirewall;
     case 1: return new GDnsProcessor;
     case 2: return new GPacketDebugger;
-    case 3: return new GFlowMgrTest;
+    case 3: return new GFlowMgrDebugger;
     default: return nullptr;
   }
 }

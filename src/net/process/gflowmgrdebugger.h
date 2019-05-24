@@ -16,9 +16,9 @@
 #include "net/flow/gudpflowmgr.h"
 
 // ----------------------------------------------------------------------------
-// GFlowMgrTest
+// GFlowMgrDebugger
 // ----------------------------------------------------------------------------
-struct G_EXPORT GFlowMgrTest : GStateObj {
+struct G_EXPORT GFlowMgrDebugger : GStateObj {
   Q_OBJECT
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
@@ -48,8 +48,8 @@ public:
   // --------------------------------------------------------------------------
 
 public:
-  Q_INVOKABLE GFlowMgrTest(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GFlowMgrTest() override { close(); }
+  Q_INVOKABLE GFlowMgrDebugger(QObject* parent = nullptr) : GStateObj(parent) {}
+  ~GFlowMgrDebugger() override { close(); }
 
 protected:
   bool doOpen() override;
