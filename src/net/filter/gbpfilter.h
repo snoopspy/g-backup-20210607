@@ -38,6 +38,9 @@ protected:
   pcap_t* pcap_{nullptr};
   bpf_program* code_{nullptr};
 
+public:
+  bool check(GBuf* buf);
+
 public slots:
   void check(GPacket* packet);
 
