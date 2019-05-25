@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 // GFlowMgrDebugger
 // ----------------------------------------------------------------------------
-struct G_EXPORT GFlowMgrDebugger : GStateObj {
+struct G_EXPORT GFlowMgrDebugger : GStateObj, GIpFlowMgr::Managable, GTcpFlowMgr::Managable, GUdpFlowMgr::Managable {
   Q_OBJECT
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
@@ -61,17 +61,22 @@ protected:
   size_t tcpFlowOffset_{0};
   size_t udpFlowOffset_{0};
 
-public slots:
-  void test(GPacket* packet);
+public:
+  // GIpFlowMgr::Managable
+  void ipFlowCreated(GFlow::IpFlowKey* key, GFlow::Value* value) override;
+  void ipFlowDeleted(GFlow::IpFlowKey* key, GFlow::Value* value) override;
 
-  void _ipFlowCreated(GPacket* packet);
-  void _ipFlowDeleted(GPacket* packet);
-  void _tcpFlowCreated(GPacket* packet);
-  void _tcpFlowDeleted(GPacket* packet);
-  void _udpFlowCreated(GPacket* packet);
-  void _udpFlowDeleted(GPacket* packet);
+  // GTcpFlowMgr::Managable
+  void tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) override;
+  void tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) override;
+
+  // GUdpFlowMgr::Managable
+  void udpFlowCreated(GFlow::UdpFlowKey* key, GFlow::Value* value) override;
+  void udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* value) override;
+
+public slots:
+  void debug(GPacket* packet);
 
 signals:
-  void tested(GPacket* packet);
+  void debugged(GPacket* packet);
 };
-

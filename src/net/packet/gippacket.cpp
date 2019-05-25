@@ -4,7 +4,7 @@
 // GIpPacket
 // ----------------------------------------------------------------------------
 void GIpPacket::parse() {
-  u_char* p = buf_.data_;
+  gbyte* p = buf_.data_;
   uint8_t proto;
   switch (*p & 0xF0) {
     case 0x40: // version 4
@@ -38,7 +38,7 @@ void GIpPacket::parse() {
       p += sizeof(GIcmpHdr); // gilgil temp 2019.05.14
       break;
     default:
-      qDebug() << "unknown protocol" << uint8_t(*p);
+      qDebug() << "unknown protocol" << proto;
       break;
   }
 }

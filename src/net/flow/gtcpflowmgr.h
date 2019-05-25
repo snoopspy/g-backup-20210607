@@ -28,6 +28,18 @@ public:
   long rstTimeout_{10}; // 10 seconds
   long finTimeout_{20}; // 20 seconds
 
+public:
+  // --------------------------------------------------------------------------
+  // Managable
+  // --------------------------------------------------------------------------
+  struct Managable {
+    virtual void tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) = 0;
+    virtual void tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) = 0;
+  };
+  typedef QSet<Managable*> Managables;
+  Managables managables_;
+  // --------------------------------------------------------------------------
+
 protected:
   // --------------------------------------------------------------------------
   // FlowMap
@@ -53,16 +65,8 @@ public:
   ~GTcpFlowMgr() override { close(); }
 
 protected:
-  bool doOpen() override {
-    flowMap_.clear();
-    return GFlowMgr::doOpen();
-  }
-
-  bool doClose() override {
-    requestItems_.clear();
-    flowMap_.clear();
-    return GFlowMgr::doClose();
-  }
+  bool doOpen() override;
+  bool doClose() override;
 
 public:
   GFlow::RequestItems requestItems_;
@@ -80,6 +84,4 @@ public slots:
 
 signals:
   void processed(GPacket* packet);
-  void _flowCreated(GPacket* packet);
-  void _flowDeleted(GPacket* packet);
 };

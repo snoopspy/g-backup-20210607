@@ -4,6 +4,24 @@
 // ----------------------------------------------------------------------------
 // GTcpFlowMgr
 // ----------------------------------------------------------------------------
+bool GTcpFlowMgr::doOpen() {
+  flowMap_.clear();
+  return GFlowMgr::doOpen();
+}
+
+bool GTcpFlowMgr::doClose() {
+  for (Managable* manager: managables_) {
+    for (FlowMap::iterator it = flowMap_.begin(); it != flowMap_.end(); it++) {
+      GFlow::TcpFlowKey key = it.key();
+      GFlow::Value* value = it.value();
+      manager->tcpFlowDeleted(&key, value);
+    }
+  }
+  flowMap_.clear();
+  // requestItems_.clear(); // gilgil temp 2019.05.25
+  return GFlowMgr::doClose();
+}
+
 void GTcpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
   struct timeval ts = packet->ts_;
   FlowMap::iterator it = flowMap_.begin();
@@ -21,7 +39,8 @@ void GTcpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
       //key_ = (GFlow::TcpFlowKey*)&it.key();
       key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
       value_ = value;
-      emit _flowDeleted(packet);
+      for (Managable* manager: managables_)
+        manager->tcpFlowDeleted(key_, value_);
       it = flowMap_.erase(it);
       continue;
     }
@@ -64,7 +83,8 @@ void GTcpFlowMgr::process(GPacket* packet) {
     it = flowMap_.insert(key, value);
     key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
     value_ = value;
-    emit _flowCreated(packet);
+    for (Managable* manager: managables_)
+      manager->tcpFlowCreated(key_, value_);
 
     GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
     FlowMap::iterator reverseIt = flowMap_.find(reverseKey);

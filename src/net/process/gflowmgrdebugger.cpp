@@ -9,45 +9,63 @@
 bool GFlowMgrDebugger::doOpen() {
   if (ipFlowMgr_ != nullptr) {
     ipFlowOffset_ = ipFlowMgr_->requestItems_.request("GFlowMgrTest_ip", sizeof(FlowItem));
-    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_ipFlowCreated, Qt::DirectConnection);
-    QObject::connect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_ipFlowDeleted, Qt::DirectConnection);
+    ipFlowMgr_->managables_.insert(this);
   }
 
   if (tcpFlowMgr_ != nullptr) {
     tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
-    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_tcpFlowCreated, Qt::DirectConnection);
-    QObject::connect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_tcpFlowDeleted, Qt::DirectConnection);
+    tcpFlowMgr_->managables_.insert(this);
   }
 
   if (udpFlowMgr_ != nullptr) {
     udpFlowOffset_ = udpFlowMgr_->requestItems_.request("GFlowMgrTest_udp", sizeof(FlowItem));
-    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_udpFlowCreated, Qt::DirectConnection);
-    QObject::connect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_udpFlowDeleted, Qt::DirectConnection);
+    udpFlowMgr_->managables_.insert(this);
   }
 
   return true;
 }
 
 bool GFlowMgrDebugger::doClose() {
-  if (ipFlowMgr_ != nullptr) {
-    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_ipFlowCreated);
-    QObject::disconnect(ipFlowMgr_, &GIpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_ipFlowDeleted);
-  }
-
-  if (tcpFlowMgr_ != nullptr) {
-    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_tcpFlowCreated);
-    QObject::disconnect(tcpFlowMgr_, &GTcpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_tcpFlowDeleted);
-  }
-
-  if (udpFlowMgr_ != nullptr) {
-    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowCreated, this, &GFlowMgrDebugger::_udpFlowCreated);
-    QObject::disconnect(udpFlowMgr_, &GUdpFlowMgr::_flowDeleted, this, &GFlowMgrDebugger::_udpFlowDeleted);
-  }
-
   return true;
 }
 
-void GFlowMgrDebugger::test(GPacket* packet) {
+void GFlowMgrDebugger::ipFlowCreated(GFlow::IpFlowKey* key, GFlow::Value* value) {
+  qDebug() << QString("_ipFlowCreated %1>%2").arg(QString(key->sip_), QString(key->dip_));
+  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
+  flowItem->packets = 0;
+  flowItem->bytes = 0;
+}
+
+void GFlowMgrDebugger::ipFlowDeleted(GFlow::IpFlowKey* key, GFlow::Value* value) {
+  (void)value;
+  qDebug() << QString("_ipFlowDeleted %1>%2").arg(QString(key->sip_), QString(key->dip_));
+}
+
+void GFlowMgrDebugger::tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) {
+  qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+  FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
+  flowItem->packets = 0;
+  flowItem->bytes = 0;
+}
+
+void GFlowMgrDebugger::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
+  (void)value;
+  qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+}
+
+void GFlowMgrDebugger::udpFlowCreated(GFlow::UdpFlowKey* key, GFlow::Value* value) {
+  qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
+  flowItem->packets = 0;
+  flowItem->bytes = 0;
+}
+
+void GFlowMgrDebugger::udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* value) {
+  (void)value;
+  qDebug() << QString("_udpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+}
+
+void GFlowMgrDebugger::debug(GPacket* packet) {
   GIpPacket* ipPacket;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
@@ -98,53 +116,5 @@ void GFlowMgrDebugger::test(GPacket* packet) {
     }
   }
 
-  emit tested(packet);
-}
-
-void GFlowMgrDebugger::_ipFlowCreated(GPacket* packet) {
-  (void)packet;
-  GFlow::IpFlowKey* key = ipFlowMgr_->key_;
-  GFlow::Value* value = ipFlowMgr_->value_;
-  qDebug() << QString("_ipFlowCreated %1>%2").arg(QString(key->sip_), QString(key->dip_));
-  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
-  flowItem->packets = 0;
-  flowItem->bytes = 0;
-}
-
-void GFlowMgrDebugger::_ipFlowDeleted(GPacket* packet) {
-  (void)packet;
-  GFlow::IpFlowKey* key = ipFlowMgr_->key_;
-  qDebug() << QString("_ipFlowDeleted %1>%2").arg(QString(key->sip_), QString(key->dip_));
-}
-
-void GFlowMgrDebugger::_tcpFlowCreated(GPacket* packet) {
-  (void)packet;
-  GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
-  GFlow::Value* value = tcpFlowMgr_->value_;
-  qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
-  FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
-  flowItem->packets = 0;
-  flowItem->bytes = 0;
-}
-
-void GFlowMgrDebugger::_tcpFlowDeleted(GPacket* packet) {
-  (void)packet;
-  GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
-  qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
-}
-
-void GFlowMgrDebugger::_udpFlowCreated(GPacket* packet) {
-  (void)packet;
-  GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
-  GFlow::Value* value = udpFlowMgr_->value_;
-  qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
-  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
-  flowItem->packets = 0;
-  flowItem->bytes = 0;
-}
-
-void GFlowMgrDebugger::_udpFlowDeleted(GPacket* packet) {
-  (void)packet;
-  GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
-  qDebug() << QString("_udpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+  emit debugged(packet);
 }

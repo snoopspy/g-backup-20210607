@@ -28,8 +28,8 @@ QStringList GObj::slotList() {
 }
 
 bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type) {
-  qDebug() << QString("connect %1::%2 > %3::%4 %5").
-    arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type));
+  //qDebug() << QString("connect %1::%2 > %3::%4 %5").
+  //  arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type)); // gilgil temp 2019.05.25
 
   QByteArray newSignal;
   Q_ASSERT(signal != nullptr);
