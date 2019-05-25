@@ -46,7 +46,7 @@ namespace GFlow {
       free(static_cast<void*>(value));
     }
 
-    u_char* mem(size_t offset) { return totalMem_ + offset; }
+    void* mem(size_t offset) { return totalMem_ + offset; }
   };
 
   // ----------------------------------------------------------------------------

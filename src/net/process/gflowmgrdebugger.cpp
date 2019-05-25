@@ -65,7 +65,7 @@ void GFlowMgrDebugger::test(GPacket* packet) {
   if (ipPacket->ipHdr_ != nullptr) {
     if (ipFlowMgr_ != nullptr) {
       GFlow::IpFlowKey* key = ipFlowMgr_->key_;
-      FlowItem* flowItem = reinterpret_cast<FlowItem*>(ipFlowMgr_->value_->mem(ipFlowOffset_));
+      FlowItem* flowItem = PFlowItem(ipFlowMgr_->value_->mem(ipFlowOffset_));
       flowItem->packets++;
       flowItem->bytes += packet->buf_.size_;
       qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5").
@@ -76,7 +76,7 @@ void GFlowMgrDebugger::test(GPacket* packet) {
     if (ipPacket->tcpHdr_ != nullptr) {
       if (tcpFlowMgr_ != nullptr) {
         GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
-        FlowItem* flowItem = reinterpret_cast<FlowItem*>(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
+        FlowItem* flowItem = PFlowItem(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
         flowItem->packets++;
         flowItem->bytes += packet->buf_.size_;
         qDebug() << QString("tcp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
@@ -85,10 +85,10 @@ void GFlowMgrDebugger::test(GPacket* packet) {
       }
     }
 
-    if (ipPacket->tcpHdr_ != nullptr) {
+    if (ipPacket->udpHdr_ != nullptr) {
       if (udpFlowMgr_ != nullptr) {
         GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
-        FlowItem* flowItem = reinterpret_cast<FlowItem*>(udpFlowMgr_->value_->mem(udpFlowOffset_));
+        FlowItem* flowItem = PFlowItem(udpFlowMgr_->value_->mem(udpFlowOffset_));
         flowItem->packets++;
         flowItem->bytes += packet->buf_.size_;
         qDebug() << QString("udp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
@@ -106,7 +106,7 @@ void GFlowMgrDebugger::_ipFlowCreated(GPacket* packet) {
   GFlow::IpFlowKey* key = ipFlowMgr_->key_;
   GFlow::Value* value = ipFlowMgr_->value_;
   qDebug() << QString("_ipFlowCreated %1>%2").arg(QString(key->sip_), QString(key->dip_));
-  FlowItem* flowItem = reinterpret_cast<FlowItem*>(value->mem(ipFlowOffset_));
+  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
@@ -122,7 +122,7 @@ void GFlowMgrDebugger::_tcpFlowCreated(GPacket* packet) {
   GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
   GFlow::Value* value = tcpFlowMgr_->value_;
   qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
-  FlowItem* flowItem = reinterpret_cast<FlowItem*>(value->mem(tcpFlowOffset_));
+  FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }
@@ -138,7 +138,7 @@ void GFlowMgrDebugger::_udpFlowCreated(GPacket* packet) {
   GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
   GFlow::Value* value = udpFlowMgr_->value_;
   qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
-  FlowItem* flowItem = reinterpret_cast<FlowItem*>(value->mem(ipFlowOffset_));
+  FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
   flowItem->packets = 0;
   flowItem->bytes = 0;
 }

@@ -45,6 +45,7 @@ public:
     size_t packets;
     size_t bytes;
   };
+  typedef FlowItem *PFlowItem;
   // --------------------------------------------------------------------------
 
 public:
