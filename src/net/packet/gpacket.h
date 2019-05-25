@@ -13,9 +13,6 @@
 #include <pcap.h>
 #include <QObject>
 #include "base/gbuf.h"
-// #include <QVector> // gilgil temp 2019.05.13
-
-// #include "net/pdu/gpdu.h" // gilgil temp 2019.05.12
 
 // ----------------------------------------------------------------------------
 // GPacket
@@ -75,6 +72,6 @@ public:
     buf_.clear();
     ctrl.block_ = false;
   }
-
-  // GPdus pdus_; // gilgil temp 2019.05.12
+  virtual void parse();
 };
+typedef GPacket *PPacket;

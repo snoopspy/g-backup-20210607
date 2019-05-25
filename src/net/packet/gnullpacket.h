@@ -13,10 +13,17 @@
 #include "gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GEthPacket
+// GNullPacket
 // ----------------------------------------------------------------------------
 struct G_EXPORT GNullPacket : GPacket {
   GNullPacket(QObject* parent = nullptr) : GPacket(parent) {
     dataLinkType_ = GPacket::Null;
   }
+
+public:
+  void clear() override {
+    GPacket::clear();
+  }
+  void parse() override;
 };
+typedef GNullPacket *PNullPacket;

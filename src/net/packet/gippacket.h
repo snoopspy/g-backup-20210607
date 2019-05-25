@@ -36,6 +36,7 @@ public:
     tcpData_.clear();
     udpData_.clear();
   }
+  void parse() override;
 
 public:
   GIpHdr*   ipHdr_{nullptr};

@@ -4,7 +4,6 @@
 
 #include <linux/netfilter.h> // for NF_ACCEPT
 #include <libnetfilter_queue/libnetfilter_queue.h>
-#include "net/parser/gparserfactory.h"
 
 // ----------------------------------------------------------------------------
 // GNetFilter
@@ -64,9 +63,6 @@ bool GNetFilter::doOpen() {
 
   fd_ = nfq_fd(h_);
   qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
-
-  parser_ = GParserFactory::getDefaultParser(dataLinkType());
-  Q_ASSERT(parser_ != nullptr);
 
   if (!command_.open()) {
     err = command_.err;
@@ -186,7 +182,7 @@ int GNetFilter::_callback(
   ipPacket->buf_.size_ = size_t(nfq_get_payload(nfad, &ipPacket->buf_.data_));
   // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
 
-  if (netFilter->autoParse_) netFilter->parser_->parse(ipPacket);
+  if (netFilter->autoParse_) netFilter->ipPacket.parse();
   emit netFilter->captured(ipPacket);
 
   uint32_t id = 0;

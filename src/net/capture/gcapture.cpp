@@ -3,7 +3,6 @@
 #include "net/packet/gippacket.h"
 #include "net/packet/gdot11packet.h"
 #include "net/packet/gnullpacket.h"
-#include "net/parser/gparserfactory.h"
 
 // ----------------------------------------------------------------------------
 // GCaptureThread
@@ -69,9 +68,7 @@ GPacket::Result GCapture::relay(GPacket* packet) {
 }
 
 void GCapture::run() {
-  qDebug() << "beg"; // gilgil temp 2017.11.25
-  GParser* parser = GParserFactory::getDefaultParser(dataLinkType());
-  Q_ASSERT(parser != nullptr);
+  qDebug() << "GCapture::run() beg"; // gilgil temp 2017.11.25
 
   GEthPacket ethPacket;
   GIpPacket ipPacket;
@@ -90,15 +87,15 @@ void GCapture::run() {
     GPacket::Result res = read(packet);
     if (res == GPacket::TimeOut) continue;
     if (res == GPacket::Eof || res == GPacket::Fail) break;
-    if (autoParse_) parser->parse(packet);
+    if (autoParse_) packet->parse();
     emit captured(packet);
     if (this->pathType() == InPath && !packet->ctrl.block_) {
       res = relay(packet);
       if (res != GPacket::Ok) {
-        qWarning() << "relay return " << int(res); // gilgil temp 2015.10.29
+        qWarning() << "relay return " << int(res);
       }
     }
   }
-  qDebug() << "end"; // gilgil temp 2017.11.25
+  qDebug() << "GCapture::run() end"; // gilgil temp 2017.11.25
   emit closed();
 }

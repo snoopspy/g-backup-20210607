@@ -28,6 +28,7 @@ public:
     ethHdr_ = nullptr;
     arpHdr_ = nullptr;
   }
+  void parse() override;
 
 public:
   GEthHdr* ethHdr_{nullptr};

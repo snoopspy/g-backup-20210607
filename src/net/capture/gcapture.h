@@ -31,8 +31,6 @@ protected:
 // ----------------------------------------------------------------------------
 // GCapture
 // ----------------------------------------------------------------------------
-struct GPacket;
-struct GParser;
 struct G_EXPORT GCapture : GStateObj {
   Q_OBJECT
   Q_PROPERTY(bool enabled MEMBER enabled_)

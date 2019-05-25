@@ -69,7 +69,6 @@ protected:
   int fd_{0};
 
   GIpPacket ipPacket{this};
-  GParser* parser_{nullptr};
 
   static int _callback(
     struct nfq_q_handle* qh_,
