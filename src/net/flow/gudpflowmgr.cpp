@@ -22,11 +22,11 @@ bool GUdpFlowMgr::doClose() {
   return GFlowMgr::doClose();
 }
 
-void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GUdpFlowMgr::deleteOldFlowMaps(long now) {
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
-    long elapsed = ts.tv_sec - value->ts_.tv_sec;
+    long elapsed = now - value->ts_.tv_sec;
     long timeout = 0;
     switch (value->state_) {
       case GFlow::Value::Half: timeout = halfTimeout_; break;
@@ -49,7 +49,7 @@ void GUdpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
 void GUdpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_) {
-    deleteOldFlowMaps(packet->ts_);
+    deleteOldFlowMaps(now);
     lastCheckTick_ = now;
   }
 

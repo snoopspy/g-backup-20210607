@@ -22,11 +22,11 @@ bool GTcpFlowMgr::doClose() {
   return GFlowMgr::doClose();
 }
 
-void GTcpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
+void GTcpFlowMgr::deleteOldFlowMaps(long now) {
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
-    long elapsed = ts.tv_sec - value->ts_.tv_sec;
+    long elapsed = now - value->ts_.tv_sec;
     long timeout = 0;
     switch (value->state_) {
       case GFlow::Value::Half: timeout = halfTimeout_; break;
@@ -50,7 +50,7 @@ void GTcpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
 void GTcpFlowMgr::process(GPacket* packet) {
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_) {
-    deleteOldFlowMaps(packet->ts_);
+    deleteOldFlowMaps(now);
     lastCheckTick_ = now;
   }
 
