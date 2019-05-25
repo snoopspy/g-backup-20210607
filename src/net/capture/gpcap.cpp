@@ -7,7 +7,7 @@ bool GPcap::doOpen() {
   if (!enabled_) return true;
 
   int dataLink = pcap_datalink(pcap_);
-  qDebug() << QString("pcap_datalink return %1").arg(dataLink);
+  // qDebug() << QString("pcap_datalink return %1").arg(dataLink); // gilgil temp 2019.05.26
   dataLinkType_ = GPacket::intToDataLinkType(dataLink);
 
   if (filter_ != "") {
@@ -15,7 +15,7 @@ bool GPcap::doOpen() {
       return false;
   }
 
-  return this->captureThreadOpen();
+  return captureThreadOpen();
 }
 
 bool GPcap::doClose() {
@@ -42,14 +42,24 @@ GPacket::Result GPcap::read(GPacket* packet) {
   if (state_ != Opened) return GPacket::Fail; // may be pcap_close called
   GPacket::Result res;
   switch (i) {
-    case -2: // if EOF was reached reading from an offline capture
-      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -2 error=%1").arg(pcap_geterr(pcap_)));
+    case -2: { // if EOF was reached reading from an offline capture
+      char* e = pcap_geterr(pcap_);
+      if (e != nullptr && strlen(e) > 0) {
+        QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
+        SET_ERR(GErr::ReadFailed, msg);
+      }
       res = GPacket::Eof;
       break;
-    case -1: // if an error occurred
-      SET_ERR(GErr::READ_FAILED, QString("pcap_next_ex return -1 error=%1").arg(pcap_geterr(pcap_)));
-      res = GPacket::Fail;
+    }
+    case -1: { // if an error occurred
+      char* e = pcap_geterr(pcap_);
+      if (e != nullptr && strlen(e) > 0) {
+        QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
+        SET_ERR(GErr::ReadFailed, msg);
+      }
+      res = GPacket::Eof;
       break;
+    }
     case 0 : // if a timeout occured
       res = GPacket::TimeOut;
       break;

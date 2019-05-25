@@ -32,6 +32,7 @@ struct GPacketCast {
       case GPacket::Null:
         return nullptr;
     }
+    return nullptr;
   }
 
   static GIpPacket* toIp(GPacket* packet) {
@@ -47,6 +48,7 @@ struct GPacketCast {
       case GPacket::Null:
         return nullptr;
     }
+    return nullptr;
   }
 
   static GDot11Packet* toDot11(GPacket* packet) {
@@ -60,6 +62,7 @@ struct GPacketCast {
         return PDot11Packet(packet);
       case GPacket::Null: return nullptr;
     }
+    return nullptr;
   }
 
   static GNullPacket* toNull(GPacket* packet) {

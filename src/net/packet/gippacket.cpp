@@ -12,7 +12,7 @@ void GIpPacket::parse() {
       proto = ipHdr_->p();
       p += ipHdr_->hl() * 4;
       break;
-    case 0x60: // /version 6
+    case 0x60: // version 6
       ip6Hdr_= reinterpret_cast<GIp6Hdr*>(p);
       proto = ip6Hdr_->nh();
       p += sizeof(GIp6Hdr); // gilgil temp 2019.05.14

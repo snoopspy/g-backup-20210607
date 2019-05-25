@@ -21,7 +21,7 @@ uint16_t GUdpHdr::calcChecksum(GIpHdr* ipHdr, GUdpHdr* udpHdr) {
 
   // If length is odd, add last data(padding)
   if ((udpHdrDataLen / 2) * 2 != udpHdrDataLen)
-    res += uint32_t(*(reinterpret_cast<uint8_t*>(p)) << 16);
+    res += uint32_t(*(reinterpret_cast<uint8_t*>(p)) << 8);
 
   // Decrease checksum from sum
   res -= udpHdr->sum();
@@ -62,35 +62,54 @@ GBuf GUdpHdr::parseData(GUdpHdr* udpHdr) {
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-static u_char _ipHdr[] =
-  "\x45\x00\x00\x20\xea\xb2\x40\x00\x40\x11\x41\x12\x0a\x01\x01\x02" \
-  "\x01\x02\x03\x04";
+#include "net/capture/gsyncpcapfile.h"
+#include "net/packet/gippacket.h"
+struct GUdpHdrTest : testing::Test {
+  GSyncPcapFile pcapFile_;
+  void SetUp() override {
+    pcapFile_.fileName_ = "test/ipv4-udp-port1234.pcap";
+    ASSERT_TRUE(pcapFile_.open());
+  }
+  void TearDown() override {
+    ASSERT_TRUE(pcapFile_.close());
+  }
+};
 
-static u_char _udpHdr[] =
-  "\x9d\xf5\x04\xd2\x00\x0c\xc9\x7f" \
-  "\x41\x42\x43\x44"; // "ABCD"
+TEST_F(GUdpHdrTest, allTest) {
+  while (true) {
+    GIpPacket packet;
+    GPacket::Result res = pcapFile_.read(&packet);
+    if (res != GPacket::Ok) break;
+    packet.parse();
 
-TEST(GUdpHdr, hdrTest) {
-  GUdpHdr* udpHdr = reinterpret_cast<GUdpHdr*>(_udpHdr);
-  uint16_t dport = udpHdr->dport();
-  EXPECT_EQ(dport, 1234);
-  uint16_t len = udpHdr->len();
-  EXPECT_EQ(len, 12);
-}
+    GIpHdr* ipHdr = packet.ipHdr_;
+    EXPECT_NE(ipHdr, nullptr);
 
-TEST(GUdpHdr, checksumTest) {
-  GIpHdr* ipHdr = reinterpret_cast<GIpHdr*>(_ipHdr);
-  GUdpHdr* udpHdr = reinterpret_cast<GUdpHdr*>(_udpHdr);
-  uint16_t realSum = udpHdr->sum();
-  uint16_t calcSum = GUdpHdr::calcChecksum(ipHdr, udpHdr);
-  EXPECT_EQ(realSum, calcSum);
-}
+    GUdpHdr* udpHdr = packet.udpHdr_;
+    EXPECT_NE(udpHdr, nullptr);
 
-TEST(GUdpHdr, parseDataTest) {
-  GUdpHdr* udpHdr = reinterpret_cast<GUdpHdr*>(_udpHdr);
-  GBuf data = GUdpHdr::parseData(udpHdr);
-  EXPECT_NE(data.data_, nullptr);
-  EXPECT_EQ(data.size_, 4);
+    //
+    // field test
+    //
+    uint16_t dport = udpHdr->dport();
+    EXPECT_EQ(dport, 1234);
+    uint16_t len = udpHdr->len();
+    EXPECT_EQ(len, 12);
+
+    //
+    // checksum test
+    //
+    uint16_t realSum = udpHdr->sum();
+     uint16_t calcSum = GUdpHdr::calcChecksum(ipHdr, udpHdr);
+     EXPECT_EQ(realSum, calcSum);
+
+    //
+    // data test
+    //
+    GBuf data = GUdpHdr::parseData(udpHdr);
+    EXPECT_NE(data.data_, nullptr);
+    EXPECT_EQ(data.size_, 4);
+  }
 }
 
 #endif // GTEST

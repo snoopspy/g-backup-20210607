@@ -36,7 +36,7 @@ struct G_EXPORT GRwPool : GStateObj {
 
   T read() {
     if (!active())
-      return (T)0;
+      return T(0);
 
     mutex_.lock();
     if (index_ == 0)
@@ -44,7 +44,7 @@ struct G_EXPORT GRwPool : GStateObj {
     mutex_.unlock();
 
     if (!active())
-      return (T)0;
+      return T(0);
 
     mutex_.lock();
     Q_ASSERT(index_ > 0);

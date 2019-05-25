@@ -42,8 +42,7 @@ struct G_EXPORT GErr {
     DEVICE_NOT_SPECIFIED,
     CONNECT_FAILED,
     DISCONNECT_FAILED,
-    READ_FAILED,
-    WRITE_FAILED
+    ReadFailed
   };
 
   GErr() : code_(OK) {}
