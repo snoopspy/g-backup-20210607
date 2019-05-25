@@ -1,7 +1,6 @@
 #include "gpacketdebugger.h"
 #include <iostream>
-#include <GEthPacket>
-#include <GIpPacket>
+#include "net/packet/gpacketcast.h"
 
 QString dump(u_char* data, size_t size) {
   QString raw;
@@ -40,21 +39,9 @@ QString dump(u_char* data, size_t size) {
 void GPacketDebugger::debug(GPacket* packet) {
   if (!debug_) return;
 
-  GEthPacket* ethPacket = nullptr;
-  GIpPacket* ipPacket;
-  switch (packet->dataLinkType_) {
-    case GPacket::Eth:
-      ethPacket = PEthPacket(packet);
-      ipPacket = PEthPacket(packet);
-      break;
-    case GPacket::Ip:
-      ipPacket = PIpPacket(packet);
-      break;
-    case GPacket::Dot11:
-      return;
-    case GPacket::Null:
-      return;
-  }
+  GEthPacket* ethPacket = GPacketCast::toEth(packet);
+  GIpPacket* ipPacket = GPacketCast::toIp(packet);
+  if (ipPacket == nullptr) return;
 
   QString msg;
 

@@ -69,7 +69,7 @@ public:
 
 protected:
   FlowMap flowMap_;
-  void deleteOldFlowMaps(GPacket* packet /* struct timeval ts */);
+  void deleteOldFlowMaps(struct timeval ts);
 
 public:
   GFlow::UdpFlowKey* key_{nullptr};

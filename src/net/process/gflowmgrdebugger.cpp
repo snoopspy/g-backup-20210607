@@ -1,7 +1,6 @@
 #include "gflowmgrdebugger.h"
 #include "net/pdu/giphdr.h"
-#include <GEthPacket>
-#include <GIpPacket>
+#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GFlowMgrDebugger
@@ -66,19 +65,8 @@ void GFlowMgrDebugger::udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* valu
 }
 
 void GFlowMgrDebugger::debug(GPacket* packet) {
-  GIpPacket* ipPacket;
-  switch (packet->dataLinkType_) {
-    case GPacket::Eth:
-      ipPacket = PEthPacket(packet);
-      break;
-    case GPacket::Ip:
-      ipPacket = PIpPacket(packet);
-      break;
-    case GPacket::Dot11:
-      return;
-    case GPacket::Null:
-      return;
-  }
+  GIpPacket* ipPacket = GPacketCast::toIp(packet);
+  if (ipPacket == nullptr) return;
 
   if (ipPacket->ipHdr_ != nullptr) {
     if (ipFlowMgr_ != nullptr) {

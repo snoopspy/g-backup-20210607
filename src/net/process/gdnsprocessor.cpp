@@ -1,24 +1,12 @@
 #include "gdnsprocessor.h"
-#include <GEthPacket>
-#include <GIpPacket>
+#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor
 // ----------------------------------------------------------------------------
 void GDnsProcessor::process(GPacket* packet) {
-  GIpPacket* ipPacket;
-  switch (packet->dataLinkType_) {
-    case GPacket::Eth:
-      ipPacket = PEthPacket(packet);
-      break;
-    case GPacket::Ip:
-      ipPacket = PIpPacket(packet);
-      break;
-    case GPacket::Dot11:
-      return;
-    case GPacket::Null:
-      return;
-  }
+  GIpPacket* ipPacket = GPacketCast::toIp(packet);
+  if (ipPacket == nullptr) return;
 
   GUdpHdr *udpHdr = ipPacket->udpHdr_;
   if (udpHdr == nullptr)

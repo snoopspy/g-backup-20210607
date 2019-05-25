@@ -1,5 +1,5 @@
 #include "gipflowmgr.h"
-#include <GEthPacket>
+#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GIpFlowMgr
@@ -22,8 +22,7 @@ bool GIpFlowMgr::doClose() {
   return GFlowMgr::doClose();
 }
 
-void GIpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
-  struct timeval ts = packet->ts_;
+void GIpFlowMgr::deleteOldFlowMaps(struct timeval ts) {
   FlowMap::iterator it = flowMap_.begin();
   while (it != flowMap_.end()) {
     GFlow::Value* value = it.value();
@@ -48,25 +47,14 @@ void GIpFlowMgr::deleteOldFlowMaps(GPacket* packet /* struct timeval ts */) {
 }
 
 void GIpFlowMgr::process(GPacket* packet) {
-  GIpPacket* ipPacket;
-  switch (packet->dataLinkType_) {
-    case GPacket::Eth:
-      ipPacket = PEthPacket(packet);
-      break;
-    case GPacket::Ip:
-      ipPacket = PIpPacket(packet);
-      break;
-    case GPacket::Dot11:
-      return;
-    case GPacket::Null:
-      return;
-  }
-
   long now = packet->ts_.tv_sec;
   if (checkInterval_ != 0 && now - lastCheckTick_ >= checkInterval_) {
-    deleteOldFlowMaps(packet);
+    deleteOldFlowMaps(packet->ts_);
     lastCheckTick_ = now;
   }
+
+  GIpPacket* ipPacket = GPacketCast::toIp(packet);
+  if (ipPacket == nullptr) return;
 
   GIpHdr* ipHdr = ipPacket->ipHdr_;
   if (ipHdr == nullptr) return;

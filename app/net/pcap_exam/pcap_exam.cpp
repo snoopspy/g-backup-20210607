@@ -2,31 +2,18 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <GApp>
-#include <GEthPacket>
-#include <GIpPacket>
 #include <GJson>
 #include <GPcapDevice>
+#include <GPacketCast>
 
 struct Obj : QObject {
   Q_OBJECT
 
 public slots:
   void captured(GPacket* packet) {
-    GEthPacket* ethPacket = nullptr;
-    GIpPacket* ipPacket;
-    switch (packet->dataLinkType_) {
-      case GPacket::Eth:
-        ethPacket = PEthPacket(packet);
-        ipPacket = PEthPacket(packet);
-        break;
-      case GPacket::Ip:
-        ipPacket = PIpPacket(packet);
-        break;
-      case GPacket::Dot11:
-        return;
-      case GPacket::Null:
-        return;
-    }
+    GEthPacket* ethPacket = GPacketCast::toEth(packet);
+    GIpPacket* ipPacket = GPacketCast::toIp(packet);
+    if (ipPacket == nullptr) return;
 
     QString smac;
     QString dmac;
