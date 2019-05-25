@@ -20,39 +20,46 @@
 // ----------------------------------------------------------------------------
 struct GPacketCast {
   static GEthPacket* toEth(GPacket* packet) {
-    GEthPacket* res;
     switch (packet->dataLinkType_) {
-      case GPacket::Eth: res = PEthPacket(packet); break;
-      case GPacket::Ip: res = PEthPacket(packet); break;
-      case GPacket::Dot11: return nullptr;
-      case GPacket::Null: return nullptr;
+      case GPacket::Eth:
+        Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
+        return PEthPacket(packet);
+      case GPacket::Ip:
+        Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
+        return PEthPacket(packet);
+      case GPacket::Dot11:
+        return nullptr;
+      case GPacket::Null:
+        return nullptr;
     }
-    Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
-    return res;
   }
 
   static GIpPacket* toIp(GPacket* packet) {
-    GIpPacket* res;
     switch (packet->dataLinkType_) {
-      case GPacket::Eth: res = PIpPacket(packet); break;
-      case GPacket::Ip: res = PIpPacket(packet); break;
-      case GPacket::Dot11: return nullptr;
-      case GPacket::Null: return nullptr;
+      case GPacket::Eth:
+        Q_ASSERT(dynamic_cast<GIpPacket*>(packet) != nullptr);
+        return PIpPacket(packet);
+      case GPacket::Ip:
+        Q_ASSERT(dynamic_cast<GIpPacket*>(packet) != nullptr);
+        return PIpPacket(packet);
+      case GPacket::Dot11:
+        return nullptr;
+      case GPacket::Null:
+        return nullptr;
     }
-    Q_ASSERT(dynamic_cast<GIpPacket*>(packet) != nullptr);
-    return res;
   }
 
   static GDot11Packet* toDot11(GPacket* packet) {
-    GDot11Packet* res;
     switch (packet->dataLinkType_) {
-      case GPacket::Eth: return nullptr;
-      case GPacket::Ip: return nullptr;
-      case GPacket::Dot11: res = PDot11Packet(packet); break;
+      case GPacket::Eth:
+        return nullptr;
+      case GPacket::Ip:
+        return nullptr;
+      case GPacket::Dot11:
+        Q_ASSERT(dynamic_cast<GDot11Packet*>(packet) != nullptr);
+        return PDot11Packet(packet);
       case GPacket::Null: return nullptr;
     }
-    Q_ASSERT(dynamic_cast<GDot11Packet*>(packet) != nullptr);
-    return res;
   }
 
   static GNullPacket* toNull(GPacket* packet) {
