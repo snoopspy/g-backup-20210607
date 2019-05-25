@@ -18,10 +18,10 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPacketDebugger : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(bool debug MEMBER debug_)
+  Q_PROPERTY(bool debug MEMBER enabled_)
 
 public:
-  bool debug_{true};
+  bool enabled_{true};
 
 public:
   Q_INVOKABLE GPacketDebugger(QObject* parent = nullptr) : GStateObj(parent) {}

@@ -65,6 +65,8 @@ void GFlowMgrDebugger::udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* valu
 }
 
 void GFlowMgrDebugger::debug(GPacket* packet) {
+  if (!enabled_) return;
+
   GIpPacket* ipPacket = GPacketCast::toIp(packet);
   if (ipPacket == nullptr) return;
 

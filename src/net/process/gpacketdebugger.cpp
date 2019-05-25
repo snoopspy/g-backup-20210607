@@ -36,8 +36,8 @@ QString dump(u_char* data, size_t size) {
 // ----------------------------------------------------------------------------
 // GPacketDebugger
 // ----------------------------------------------------------------------------
-void GPacketDebugger::debug(GPacket* packet) {
-  if (!debug_) return;
+void GPacketDebugger::enabled(GPacket* packet) {
+  if (!enabled_) return;
 
   GEthPacket* ethPacket = GPacketCast::toEth(packet);
   GIpPacket* ipPacket = GPacketCast::toIp(packet);
