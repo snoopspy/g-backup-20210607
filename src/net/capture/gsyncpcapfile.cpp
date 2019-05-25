@@ -8,7 +8,7 @@
 
 TEST(GSyncPcapFile, icmpFileTest) {
   GSyncPcapFile file;
-  file.fileName_ = "test/icmp8.pcap";
+  file.fileName_ = "test/eth-icmp8.pcap";
 
   ASSERT_TRUE(file.open());
 
