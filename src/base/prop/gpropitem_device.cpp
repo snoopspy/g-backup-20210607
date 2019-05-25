@@ -36,6 +36,7 @@ void GPropItemDevice::update() {
 }
 
 void GPropItemDevice::myCurrentIndexChanged(int index) {
+  if (index == -1) return;
   Q_ASSERT(index <= devNames_.count());
   QString devName = devNames_.at(index);
   bool res = object_->setProperty(mpro_.name(), devName);
