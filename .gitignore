@@ -18,6 +18,8 @@ lib/libg_gui_d/
 *.o
 *.pro.user
 *.so
+*.dll
+*.exe
 Makefile
 Makefile.*
 moc_*
