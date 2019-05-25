@@ -1,4 +1,3 @@
-#include <GDnsFirewall>
 #include <GDnsProcessor>
 #include <GFlowMgrDebugger>
 #include <GPacketDebugger>
@@ -11,29 +10,26 @@
 extern "C" {
 
 EXPORT int count() {
-  qRegisterMetaType<GDnsFirewall*>();
   qRegisterMetaType<GDnsProcessor*>();
   qRegisterMetaType<GFlowMgrDebugger*>();
   qRegisterMetaType<GPacketDebugger*>();
-  return 4;
+  return 3;
 }
 
 EXPORT const char* name(int index) {
   switch (index) {
-    case 0: return GDnsFirewall::staticMetaObject.className();
-    case 1: return GDnsProcessor::staticMetaObject.className();
-    case 2: return GFlowMgrDebugger::staticMetaObject.className();
-    case 3: return GPacketDebugger::staticMetaObject.className();
+    case 0: return GDnsProcessor::staticMetaObject.className();
+    case 1: return GFlowMgrDebugger::staticMetaObject.className();
+    case 2: return GPacketDebugger::staticMetaObject.className();
     default: return nullptr;
   }
 }
 
 EXPORT void* create(int index) {
   switch (index) {
-    case 0: return new GDnsFirewall;
-    case 1: return new GDnsProcessor;
-    case 2: return new GFlowMgrDebugger;
-    case 3: return new GPacketDebugger;
+    case 0: return new GDnsProcessor;
+    case 1: return new GFlowMgrDebugger;
+    case 2: return new GPacketDebugger;
     default: return nullptr;
   }
 }
