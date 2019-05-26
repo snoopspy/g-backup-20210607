@@ -1,4 +1,5 @@
 #include "gpluginfactory.h"
+#include <QCoreApplication>
 #include <QDir>
 
 // ----------------------------------------------------------------------------
@@ -14,6 +15,9 @@ GPluginFactory::~GPluginFactory() {
 }
 
 void GPluginFactory::load(QString folder) {
+  QDir d(folder);
+  if (d.isRelative())
+      folder = QCoreApplication::applicationDirPath() + "/" + folder;
   if (!folder.endsWith("/"))
     folder += "/";
   loadFolder(nullptr, folder);

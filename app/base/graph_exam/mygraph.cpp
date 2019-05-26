@@ -2,8 +2,7 @@
 #include <QCoreApplication>
 
 MyFactory::MyFactory(QObject* parent) : GPluginFactory(parent) {
-  QString folder = QCoreApplication::applicationDirPath() + "/plugin";
-  load(folder);
+  load("plugin");
 
   qRegisterMetaType<GMyObjA*>();
   qRegisterMetaType<GMyObjB*>();
