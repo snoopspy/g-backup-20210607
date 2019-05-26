@@ -2,12 +2,27 @@
 #include "net/packet/gpacketcast.h"
 #include <QElapsedTimer>
 
+// --------------------------------------------------------------------------
+// GArpResolve::SendThread
+// --------------------------------------------------------------------------
+void GArpResolve::SendThread::run() {
+  QElapsedTimer timer; timer.start();
+  qint64 first = timer.elapsed();
+  while (true) {
+    if (!resolve_->sendQueries(device_, intf_))
+      break;
+    QThread::sleep(1);
+    qint64 now = timer.elapsed();
+    if (now - first > qint64(timeout_))
+      break;
+  }
+}
+
 // ----------------------------------------------------------------------------
 // GArpResolve
 // ----------------------------------------------------------------------------
 bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
-  if (arpTable_.ok())
-    return true;
+  if (arpTable_.ok()) return true;
 
   if (!pcapDevice->active()) {
     QString msg = QString("not opened state %1").arg(pcapDevice->metaObject()->className());
@@ -29,34 +44,30 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
     return false;
   }
 
-  if (!sendQueries(pcapDevice, intf)) return false;
-  QElapsedTimer timer; timer.start();
-  qint64 first = timer.elapsed();
-  qint64 last = first;
+  SendThread thread(this, pcapDevice, intf, timeout);
+  thread.start();
 
   while (true) {
-    if (arpTable_.ok())
-      return true;
+    if (arpTable_.ok()) return true;
 
-    qint64 now = timer.elapsed();
-    if (now - last >= 1000) {
-      if (!sendQueries(pcapDevice, intf)) return false;
-      last = now;
-    }
-
-    if (now - first > qint64(timeout)) {
+    if (thread.isFinished()) {
       QString msg = "can not resolve all ip";
       for (ArpTable::iterator it = arpTable_.begin(); it != arpTable_.end(); it++) {
-        GIp ip = it.key();
-        msg += " ";
-        msg += QString(ip);
+        GMac mac = it.value();
+        if (mac.isClean()) {
+          GIp ip = it.key();
+          msg += " ";
+          msg += QString(ip);
+        }
       }
       SET_ERR(GErr::FAIL, msg);
       return false;
     }
 
     GEthPacket packet;
+    qDebug() << "bef read";
     GPacket::Result res = pcapDevice->read(&packet);
+    qDebug() << "aft read";
     switch (res) {
       case GPacket::Eof:
         SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
@@ -80,6 +91,7 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
     ArpTable::iterator it = arpTable_.find(sip);
     if (it != arpTable_.end()) {
       it.value() = smac;
+      qDebug() << QString("ip:%1 mac:%2").arg(QString(it.key()), QString(it.value()));
       if (arpTable_.ok())
         return true;
     }

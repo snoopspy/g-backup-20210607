@@ -42,6 +42,24 @@ protected:
 
 public:
   // --------------------------------------------------------------------------
+  // SendThread
+  // --------------------------------------------------------------------------
+  struct SendThread : QThread {
+    SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
+      resolve_ = resolve;
+      device_ = device;
+      intf_ = intf;
+      timeout_ = timeout;
+    }
+    GArpResolve* resolve_;
+    GPcapDevice* device_;
+    GNetIntf* intf_;
+    unsigned long timeout_;
+  protected:
+    void run() override;
+  };
+
+  // --------------------------------------------------------------------------
   // ArpTable
   // --------------------------------------------------------------------------
   struct ArpTable : QMap<GIp, GMac> {
@@ -51,10 +69,10 @@ public:
       return true;
     }
   } arpTable_;
-  bool waitResolve(GPcapDevice* pcapDevice, unsigned long timeout = G::Timeout);
+  bool waitResolve(GPcapDevice* device, unsigned long timeout = G::Timeout);
 
 protected:
-  bool sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf);
+  bool sendQueries(GPcapDevice* device, GNetIntf* intf);
 
 public slots:
   void resolve(GPacket* packet);
