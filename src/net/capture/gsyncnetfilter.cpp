@@ -35,7 +35,7 @@ GPacket::Result GSyncNetFilter::write(GPacket* packet) {
   return GPacket::Fail; // gilgil temp 2019.05.24
 }
 
-GPacket::Result GSyncNetFilter::write(GBuf* buf) {
+GPacket::Result GSyncNetFilter::write(GBuf buf) {
   (void)buf;
   qDebug() << "GSyncNetFilter::write()";
   return GPacket::Fail; // gilgil temp 2019.05.24

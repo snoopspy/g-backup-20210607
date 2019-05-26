@@ -19,6 +19,9 @@ struct G_EXPORT GBuf final {
   unsigned char* data_; // u_char*, gbyte*
   size_t size_;
 
+  GBuf() {}
+  GBuf(unsigned char* data, size_t size) : data_(data), size_(size) {}
+
   void clear() {
     data_ = nullptr;
     size_ = 0;

@@ -80,8 +80,8 @@ GPacket::Result GPcap::write(GPacket* packet) {
   return GPacket::Fail;
 }
 
-GPacket::Result GPcap::write(GBuf* buf) {
-  int i = pcap_sendpacket(pcap_, buf->data_, int(buf->size_));
+GPacket::Result GPcap::write(GBuf buf) {
+  int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
   if (i == 0) return GPacket::Ok;
   qWarning() << QString("pcap_sendpacket return %1").arg(i);
   return GPacket::Fail;

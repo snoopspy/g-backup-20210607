@@ -42,7 +42,7 @@ TEST_F(GEthHdrTest, allTest) {
     EXPECT_EQ(mac1, mac2);
 
     uint16_t type = ethHdr->type();
-    EXPECT_EQ(type, GEthHdr::Ip);
+    EXPECT_EQ(type, GEthHdr::IP4);
   }
 }
 

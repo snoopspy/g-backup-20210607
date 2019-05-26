@@ -6,8 +6,8 @@
 void GEthPacket::parse() {
   ethHdr_ = reinterpret_cast<GEthHdr*>(buf_.data_);
   switch (ethHdr_->type()) {
-    case GEthHdr::Ip:
-    case GEthHdr::Ip6: {
+    case GEthHdr::IP4:
+    case GEthHdr::IP6: {
       GBuf backup = buf_;
       buf_.data_ += sizeof(GEthHdr);
       buf_.size_ -= sizeof(GEthHdr);
@@ -15,8 +15,8 @@ void GEthPacket::parse() {
       buf_ = backup;
       break;
     }
-    case GEthHdr::Arp:
-      arpHdr_ = reinterpret_cast<GArpHdr*>(buf_.data_);
+    case GEthHdr::ARP:
+      arpHdr_ = reinterpret_cast<GArpHdr*>(buf_.data_ + sizeof(GEthHdr));
       break;
   }
 }

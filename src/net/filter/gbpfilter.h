@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <pcap.h>
 #include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
 

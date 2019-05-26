@@ -11,7 +11,6 @@
 #pragma once
 
 #include "gpdu.h"
-#include "net/gmac.h"
 
 // ----------------------------------------------------------------------------
 // GEthHdr
@@ -27,9 +26,9 @@ struct G_EXPORT GEthHdr final { // libnet_ethernet_hdr // gilgil temp 2019.05.13
   uint16_t type() { return ntohs(type_); }
 
   typedef enum {
-    Ip  = 0x0800,
-    Arp = 0x0806,
-    Ip6 = 0x86DD
+    IP4 = 0x0800,
+    ARP = 0x0806,
+    IP6 = 0x86DD
   } Type;
 };
 #pragma pack(pop)

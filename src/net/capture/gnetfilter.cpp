@@ -127,7 +127,7 @@ GPacket::Result GNetFilter::write(GPacket* packet) {
   return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(GBuf* buf) {
+GPacket::Result GNetFilter::write(GBuf buf) {
   (void)buf;
   SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
   return GPacket::Fail;

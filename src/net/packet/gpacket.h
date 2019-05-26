@@ -12,7 +12,7 @@
 
 #include <pcap.h>
 #include <QObject>
-#include "base/gbuf.h"
+#include "net/pdu/gpdu.h"
 
 // ----------------------------------------------------------------------------
 // GPacket

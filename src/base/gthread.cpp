@@ -12,10 +12,10 @@ void GThread::start(Priority priority) {
     QThread::start(priority);
 }
 
-bool GThread::wait(unsigned long time) {
-  bool res = QThread::wait(time);
+bool GThread::wait(unsigned long timeout) {
+  bool res = QThread::wait(timeout);
   if (!res) {
-    QString msg = QString("%1::wait(%2) return false").arg(metaObject()->className()).arg(time);
+    QString msg = QString("%1::wait(%2) return false").arg(metaObject()->className()).arg(timeout);
     QObject* _parent = parent();
     if (_parent != nullptr)
       msg += QString(" for (%1)").arg(_parent->metaObject()->className());

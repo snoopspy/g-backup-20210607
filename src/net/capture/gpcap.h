@@ -39,7 +39,7 @@ protected:
 public:
   GPacket::Result read(GPacket* packet) override;
   GPacket::Result write(GPacket* packet) override;
-  GPacket::Result write(GBuf* buf) override;
+  GPacket::Result write(GBuf buf) override;
   GPacket::Result relay(GPacket* packet) override;
 
   GPacket::DataLinkType dataLinkType() override { return dataLinkType_; }

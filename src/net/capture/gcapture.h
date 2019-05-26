@@ -12,7 +12,6 @@
 
 #include "base/gstateobj.h"
 #include "base/gthread.h"
-#include "net/gnet.h"
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
@@ -63,7 +62,7 @@ protected:
 public:
   virtual GPacket::Result read(GPacket* packet);
   virtual GPacket::Result write(GPacket* packet);
-  virtual GPacket::Result write(GBuf* buf);
+  virtual GPacket::Result write(GBuf buf);
   virtual GPacket::Result relay(GPacket* packet);
 
   virtual GPacket::DataLinkType dataLinkType() { return GPacket::Null; }
