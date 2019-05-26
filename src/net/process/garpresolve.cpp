@@ -11,6 +11,7 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
 
   if (!pcapDevice->active()) {
     QString msg = QString("not opened state %1").arg(pcapDevice->metaObject()->className());
+    SET_ERR(GErr::FAIL, msg);
     return false;
   }
 
@@ -58,10 +59,10 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
     GPacket::Result res = pcapDevice->read(&packet);
     switch (res) {
       case GPacket::Eof:
-        qCritical() << "pcapDevice->read return GPacket::Eof";
+        SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
         return false;
       case GPacket::Fail:
-        qCritical() << "pcapDevice->read return GPacket::Fail";
+        SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Fail");
         return false;
       case GPacket::TimeOut:
         continue;
@@ -69,8 +70,6 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
         break;
     }
     packet.parse();
-    GEthHdr* ethHdr = packet.ethHdr_;
-    Q_ASSERT(ethHdr != nullptr);
 
     GArpHdr* arpHdr = packet.arpHdr_;
     if (arpHdr == nullptr) continue;
@@ -92,6 +91,7 @@ bool GArpResolve::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   query.ethHdr_.dmac_ = GMac::broadcastMac();
   query.ethHdr_.smac_ = intf->mac();
   query.ethHdr_.type_ = htons(GEthHdr::ARP);
+
   query.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
   query.arpHdr_.pro_ = htons(GEthHdr::IP4);
   query.arpHdr_.hln_ = sizeof(GMac);
