@@ -33,7 +33,8 @@ struct SsCon : GStateObj {
 
 public:
   SsCon(Param* param) : GStateObj(nullptr), factory_(&graph_) {
-    factory_.load("plugin");
+    QString folder = QCoreApplication::applicationDirPath() + "/plugin";
+    factory_.load(folder);
 
     GSignal& signal = GSignal::instance();
     signal.setup(SIGINT);

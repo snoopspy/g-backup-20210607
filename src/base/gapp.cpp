@@ -39,7 +39,8 @@ bool GApp::execFactory(GPluginFactory* pluginFactory) {
   GGraph graph;
   if (pluginFactory == nullptr) {
     pluginFactory = &GPluginFactory::instance();
-    pluginFactory->load("plugin");
+    QString folder = QCoreApplication::applicationDirPath() + "/plugin";
+    pluginFactory->load(folder);
   }
   graph.setFactory(pluginFactory);
 

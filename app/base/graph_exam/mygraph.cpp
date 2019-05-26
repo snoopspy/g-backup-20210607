@@ -1,7 +1,9 @@
 #include "mygraph.h"
+#include <QCoreApplication>
 
 MyFactory::MyFactory(QObject* parent) : GPluginFactory(parent) {
-  load("plugin");
+  QString folder = QCoreApplication::applicationDirPath() + "/plugin";
+  load(folder);
 
   qRegisterMetaType<GMyObjA*>();
   qRegisterMetaType<GMyObjB*>();
