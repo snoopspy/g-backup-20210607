@@ -5,16 +5,26 @@
 // --------------------------------------------------------------------------
 // GArpResolve::SendThread
 // --------------------------------------------------------------------------
+GArpResolve::SendThread::SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
+  resolve_ = resolve;
+  device_ = device;
+  intf_ = intf;
+  timeout_ = timeout;
+}
+
 void GArpResolve::SendThread::run() {
   QElapsedTimer timer; timer.start();
   qint64 first = timer.elapsed();
   while (true) {
     if (!resolve_->sendQueries(device_, intf_))
       break;
-    QThread::sleep(1);
+    bool res = we_.wait(1000);
+    if (res) break;
     qint64 now = timer.elapsed();
-    if (now - first > qint64(timeout_))
+    if (now - first >= qint64(timeout_)) {
+      qWarning() << "SendThread::run() timeout elapsed";
       break;
+    }
   }
 }
 
@@ -47,6 +57,7 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
   SendThread thread(this, pcapDevice, intf, timeout);
   thread.start();
 
+  bool succeed = false;
   while (true) {
     if (arpTable_.ok()) return true;
 
@@ -61,24 +72,21 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
         }
       }
       SET_ERR(GErr::FAIL, msg);
-      return false;
+      break;
     }
 
     GEthPacket packet;
-    qDebug() << "bef read";
     GPacket::Result res = pcapDevice->read(&packet);
-    qDebug() << "aft read";
-    switch (res) {
-      case GPacket::Eof:
-        SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
-        return false;
-      case GPacket::Fail:
-        SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Fail");
-        return false;
-      case GPacket::TimeOut:
-        continue;
-      case GPacket::Ok:
-        break;
+    if (res == GPacket::Eof) {
+      SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
+      break;
+    } else
+    if (res == GPacket::Fail) {
+      SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
+      break;
+    } else
+    if (res == GPacket::TimeOut) {
+      continue;
     }
     packet.parse();
 
@@ -92,10 +100,15 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
     if (it != arpTable_.end()) {
       it.value() = smac;
       qDebug() << QString("ip:%1 mac:%2").arg(QString(it.key()), QString(it.value()));
-      if (arpTable_.ok())
-        return true;
+      if (arpTable_.ok()) {
+        succeed = true;
+        break;
+      }
     }
   }
+  thread.we_.wakeAll();
+  thread.wait(G::Timeout);
+  return succeed;
 }
 
 bool GArpResolve::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
@@ -163,7 +176,7 @@ TEST(GArpResolve, resolveTest) {
   GArpResolve ar;
   ar.arpTable_[ip] = GMac::cleanMac();
 
-  ASSERT_TRUE(ar.waitResolve(&device, 10000000)); // gilgil temp 2019.05.27
+  ASSERT_TRUE(ar.waitResolve(&device));
   GMac mac = ar.arpTable_[ip];
 
   qDebug() << QString("ip:%1 mac:%2").arg(QString(ip), QString(mac));

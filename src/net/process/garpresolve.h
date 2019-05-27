@@ -15,6 +15,7 @@
 #include "net/gnetintf.h"
 #include "net/pdu/gethhdr.h"
 #include "net/pdu/garphdr.h"
+#include "base/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GEthArpHdr
@@ -45,16 +46,12 @@ public:
   // SendThread
   // --------------------------------------------------------------------------
   struct SendThread : QThread {
-    SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
-      resolve_ = resolve;
-      device_ = device;
-      intf_ = intf;
-      timeout_ = timeout;
-    }
+    SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout);
     GArpResolve* resolve_;
     GPcapDevice* device_;
     GNetIntf* intf_;
     unsigned long timeout_;
+    GWaitEvent we_;
   protected:
     void run() override;
   };
