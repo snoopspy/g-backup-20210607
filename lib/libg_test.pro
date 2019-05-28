@@ -1,5 +1,6 @@
 TEMPLATE = app
 QT -= gui
+CONFIG *= console
 CONFIG *= G_BUILD
 DEFINES *= G_BUILD
 include(../g.pri)
