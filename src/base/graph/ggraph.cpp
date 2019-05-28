@@ -34,9 +34,6 @@ void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
       continue;
     }
     node->setParent(graph);
-    GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
-    if (stateObj != nullptr)
-      QObject::connect(stateObj, &GStateObj::closed, graph, &GGraph::stop);
     node->propLoad(nodeJo);
     append(node);
   }
@@ -127,6 +124,7 @@ bool GGraph::doOpen() {
   for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
+      QObject::connect(stateObj, &GStateObj::closed, this, &GGraph::stop);
       bool res = stateObj->open();
       if (!res) {
         QString msg;
@@ -150,6 +148,7 @@ bool GGraph::doClose() {
   for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
+      QObject::disconnect(stateObj, &GStateObj::closed, this, &GGraph::stop);
       stateObj->close();
     }
   }
