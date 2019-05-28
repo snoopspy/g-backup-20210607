@@ -78,9 +78,9 @@ public slots:
   void processSignal(int signo) {
     qDebug() << "beg processSignal" << signo; // gilgil temp 2016.09.25
     if (signo == SIGINT) {
-      qDebug() << "bef call graph_.close()" << signo; // gilgil temp 2016.09.25
-      graph_.close();
-      qDebug() << "aft call graph_.close()" << signo; // gilgil temp 2016.09.25
+      qDebug() << "bef call close()" << signo; // gilgil temp 2016.09.25
+      close();
+      qDebug() << "aft call close()" << signo; // gilgil temp 2016.09.25
     }
     qDebug() << "end processSignal" << signo; // gilgil temp 2016.09.25
   }
