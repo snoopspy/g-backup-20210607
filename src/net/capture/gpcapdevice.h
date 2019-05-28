@@ -37,6 +37,7 @@ protected:
   bool doClose() override;
 
 #ifdef QT_GUI_LIB
+public:
   GPropItem* propCreateItem(GPropItemParam* param) override;
 #endif // QT_GUI_LIB
 };

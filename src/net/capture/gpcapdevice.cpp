@@ -1,13 +1,11 @@
 #include "gpcapdevice.h"
 #include "net/grtm.h"
-#include "base/prop/gpropitem_device.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
 GPcapDevice::GPcapDevice(QObject* parent) : GPcap(parent) {
-  GRtm& rtm = GRtm::instance();
-  GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
+  GRtmEntry* entry = GRtm::instance().getBestEntry("8.8.8.8");
   if (entry != nullptr)
     devName_ = entry->intf()->name();
 }
@@ -42,6 +40,8 @@ bool GPcapDevice::doClose() {
 
 #ifdef QT_GUI_LIB
 
+
+#include "base/prop/gpropitem_device.h"
 GPropItem* GPcapDevice::propCreateItem(GPropItemParam* param) {
   if (QString(param->mpro_.name()) == "devName") {
     GPropItemDevice* res = new GPropItemDevice(param);
