@@ -18,6 +18,7 @@ bool GStateObj::open() {
     SET_ERR(GErr::NOT_CLOSED_STATE, QString("%1 State is %2").arg(metaObject()->className()).arg(int(state_)));
     return false;
   }
+  err.clear();
 
   bool res = doOpen();
   state_ = Opening;
