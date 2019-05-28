@@ -1,56 +1,33 @@
-#include "garpresolve.h"
+#include "gatm.h"
 #include "net/packet/gpacketcast.h"
 #include <QElapsedTimer>
 
-// --------------------------------------------------------------------------
-// GArpResolve::SendThread
-// --------------------------------------------------------------------------
-GArpResolve::SendThread::SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
-  resolve_ = resolve;
-  device_ = device;
-  intf_ = intf;
-  timeout_ = timeout;
+// ----------------------------------------------------------------------------
+// GAtm
+// ----------------------------------------------------------------------------
+bool GAtm::allResolved() {
+  for (GMac& mac: *this)
+    if (mac.isClean()) return  false;
+  return true;
 }
 
-void GArpResolve::SendThread::run() {
-  QElapsedTimer timer; timer.start();
-  qint64 first = timer.elapsed();
-  while (true) {
-    if (!resolve_->sendQueries(device_, intf_))
-      break;
-    bool res = we_.wait(1000);
-    if (res) break;
-    qint64 now = timer.elapsed();
-    if (now - first >= qint64(timeout_)) {
-      qWarning() << "SendThread::run() timeout elapsed";
-      break;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------
-// GArpResolve
-// ----------------------------------------------------------------------------
-bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
-  if (arpTable_.ok()) return true;
+bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
+  if (allResolved()) return true;
 
   if (!pcapDevice->active()) {
-    QString msg = QString("not opened state %1").arg(pcapDevice->metaObject()->className());
-    SET_ERR(GErr::FAIL, msg);
+    qWarning() << QString("not opened state %1").arg(pcapDevice->metaObject()->className());
     return false;
   }
 
   GPacket::DataLinkType dataLinkType = pcapDevice->dataLinkType();
   if (dataLinkType != GPacket::Eth) {
-    QString msg = QString("invalid dataLinkType %1").arg(int(dataLinkType));
-    SET_ERR(GErr::FAIL, msg);
+    qWarning() << QString("invalid dataLinkType %1").arg(int(dataLinkType));
     return false;
   }
 
   GNetIntf* intf = GNetIntf::all().findByName(pcapDevice->devName_);
   if (intf == nullptr) {
-    QString msg = QString("can not find intf for %1").arg(pcapDevice->devName_);
-    SET_ERR(GErr::FAIL, msg);
+    qWarning() << QString("can not find intf for %1").arg(pcapDevice->devName_);
     return false;
   }
 
@@ -59,11 +36,11 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
 
   bool succeed = false;
   while (true) {
-    if (arpTable_.ok()) return true;
+    if (allResolved()) return true;
 
     if (thread.isFinished()) {
       QString msg = "can not resolve all ip";
-      for (ArpTable::iterator it = arpTable_.begin(); it != arpTable_.end(); it++) {
+      for (GAtmMap::iterator it = begin(); it != end(); it++) {
         GMac mac = it.value();
         if (mac.isClean()) {
           GIp ip = it.key();
@@ -71,18 +48,18 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
           msg += QString(ip);
         }
       }
-      SET_ERR(GErr::FAIL, msg);
+      qWarning() << msg;
       break;
     }
 
     GEthPacket packet;
     GPacket::Result res = pcapDevice->read(&packet);
     if (res == GPacket::Eof) {
-      SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
+      qWarning() << "pcapDevice->read return GPacket::Eof";
       break;
     } else
     if (res == GPacket::Fail) {
-      SET_ERR(GErr::FAIL, "pcapDevice->read return GPacket::Eof");
+      qWarning() << "pcapDevice->read return GPacket::Eof";
       break;
     } else
     if (res == GPacket::TimeOut) {
@@ -96,11 +73,11 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
 
     GIp sip = arpHdr->sip();
     GMac smac = arpHdr->smac();
-    ArpTable::iterator it = arpTable_.find(sip);
-    if (it != arpTable_.end()) {
+    GAtmMap::iterator it = find(sip);
+    if (it != end()) {
       it.value() = smac;
       qDebug() << QString("ip:%1 mac:%2").arg(QString(it.key()), QString(it.value()));
-      if (arpTable_.ok()) {
+      if (allResolved()) {
         succeed = true;
         break;
       }
@@ -111,7 +88,7 @@ bool GArpResolve::waitResolve(GPcapDevice* pcapDevice, unsigned long timeout) {
   return succeed;
 }
 
-bool GArpResolve::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
+bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   GEthArpHdr query;
   query.ethHdr_.dmac_ = GMac::broadcastMac();
   query.ethHdr_.smac_ = intf->mac();
@@ -127,7 +104,7 @@ bool GArpResolve::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   query.arpHdr_.tmac_ = GMac::cleanMac();
   GBuf queryBuf(pbyte(&query), sizeof(query));
 
-  for (ArpTable::iterator it = arpTable_.begin(); it != arpTable_.end(); it++) {
+  for (GAtmMap::iterator it = begin(); it != end(); it++) {
     GIp ip = it.key();
     GMac mac = it.value();
     if (mac.isClean()) {
@@ -142,14 +119,38 @@ bool GArpResolve::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   return true;
 }
 
-void GArpResolve::resolve(GPacket* packet) {
-  GEthPacket* ethPacket = GPacketCast::toEth(packet);
-  if (ethPacket == nullptr) return;
+GMac GAtm::waitOne(GIp ip, GPcapDevice* device, unsigned long timeout) {
+  GAtm atm;
+  atm.insert(ip, GMac::cleanMac());
+  if (!atm.waitAll(device, timeout))
+    return GMac::cleanMac();
+  return atm.begin().value();
+}
 
-  GArpHdr* arpHdr = ethPacket->arpHdr_;
-  if (arpHdr == nullptr) return;
+// --------------------------------------------------------------------------
+// GAtm::SendThread
+// --------------------------------------------------------------------------
+GAtm::SendThread::SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
+  atm_ = resolve;
+  device_ = device;
+  intf_ = intf;
+  timeout_ = timeout;
+}
 
-  emit resolved(packet);
+void GAtm::SendThread::run() {
+  QElapsedTimer timer; timer.start();
+  qint64 first = timer.elapsed();
+  while (true) {
+    if (!atm_->sendQueries(device_, intf_))
+      break;
+    bool res = we_.wait(1000);
+    if (res) break;
+    qint64 now = timer.elapsed();
+    if (now - first >= qint64(timeout_)) {
+      qWarning() << "SendThread::run() timeout elapsed";
+      break;
+    }
+  }
 }
 
 // ----------------------------------------------------------------------------
@@ -159,7 +160,7 @@ void GArpResolve::resolve(GPacket* packet) {
 #include <gtest/gtest.h>
 
 #include "net/capture/gsyncpcapdevice.h"
-TEST(GArpResolve, resolveTest) {
+TEST(GAtm, resolveTest) {
   GSyncPcapDevice device;
 
   ASSERT_TRUE(device.open());
@@ -173,11 +174,8 @@ TEST(GArpResolve, resolveTest) {
   GIp ip = intf->gateway();
   ASSERT_NE(ip, 0);
 
-  GArpResolve ar;
-  ar.arpTable_[ip] = GMac::cleanMac();
-
-  ASSERT_TRUE(ar.waitResolve(&device));
-  GMac mac = ar.arpTable_[ip];
+  GMac mac = GAtm::waitOne(ip, &device);
+  ASSERT_FALSE(mac.isClean());
 
   qDebug() << QString("ip:%1 mac:%2").arg(QString(ip), QString(mac));
 }

@@ -28,26 +28,24 @@ struct GEthArpHdr {
 #pragma pack(pop)
 
 // ----------------------------------------------------------------------------
-// GArpResolve
+// GAtm(Arp Table Manager)
 // ----------------------------------------------------------------------------
-struct G_EXPORT GArpResolve : GStateObj {
-  Q_OBJECT
-
-public:
-  Q_INVOKABLE GArpResolve(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GArpResolve() override {}
+typedef QMap<GIp, GMac> GAtmMap;
+struct G_EXPORT GAtm : GAtmMap {
+  bool allResolved();
+  bool waitAll(GPcapDevice* device, unsigned long timeout = G::Timeout);
+  static GMac waitOne(GIp ip, GPcapDevice* device, unsigned long timeout = G::Timeout);
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+  bool sendQueries(GPcapDevice* device, GNetIntf* intf);
 
-public:
+protected:
   // --------------------------------------------------------------------------
   // SendThread
   // --------------------------------------------------------------------------
   struct SendThread : QThread {
-    SendThread(GArpResolve* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout);
-    GArpResolve* resolve_;
+    SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout);
+    GAtm* atm_;
     GPcapDevice* device_;
     GNetIntf* intf_;
     unsigned long timeout_;
@@ -55,26 +53,5 @@ public:
   protected:
     void run() override;
   };
-
-  // --------------------------------------------------------------------------
-  // ArpTable
-  // --------------------------------------------------------------------------
-  struct ArpTable : QMap<GIp, GMac> {
-    bool ok() {
-      for (GMac& mac: *this)
-        if (mac.isClean()) return  false;
-      return true;
-    }
-  } arpTable_;
-  bool waitResolve(GPcapDevice* device, unsigned long timeout = G::Timeout);
-
-protected:
-  bool sendQueries(GPcapDevice* device, GNetIntf* intf);
-
-public slots:
-  void resolve(GPacket* packet);
-
-signals:
-  void resolved(GPacket* packet);
 };
 

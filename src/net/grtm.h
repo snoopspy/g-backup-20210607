@@ -44,7 +44,7 @@ public:
 uint qHash(GRtmEntry q);
 
 // ----------------------------------------------------------------------------
-// GRtm
+// GRtm(Routing Table Manager)
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtm : QList<GRtmEntry> {
   friend struct GRtmEntry;
