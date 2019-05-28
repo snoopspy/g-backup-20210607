@@ -17,15 +17,7 @@
 // ----------------------------------------------------------------------------
 // GCaptureThread
 // ----------------------------------------------------------------------------
-struct G_EXPORT GCaptureThread : GThread {
-  Q_OBJECT
 
-public:
-  GCaptureThread(QObject* parent = nullptr) : GThread(parent) {}
-
-protected:
-  void run() override;
-};
 
 // ----------------------------------------------------------------------------
 // GCapture
@@ -42,9 +34,6 @@ public:
 
 protected:
   bool autoRead_{true};
-
-public:
-  friend GCaptureThread;
 
   typedef enum {
     InPath,
@@ -68,10 +57,19 @@ public:
   virtual GPacket::DataLinkType dataLinkType() { return GPacket::Null; }
   virtual PathType pathType() { return OutOfPath; }
 
+protected:
+  struct Thread : GThread {
+    Thread(GCapture* capture) : GThread(capture) {}
+  protected:
+    void run() override {
+      GCapture* capture = dynamic_cast<GCapture*>(parent());
+      Q_ASSERT(capture != nullptr);
+      capture->run();
+    }
+  } thread_{this};
+
+  virtual void run();
+
 signals:
   void captured(GPacket* packet);
-
-protected:
-  GCaptureThread thread_{this};
-  virtual void run();
 };
