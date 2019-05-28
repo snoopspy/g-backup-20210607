@@ -15,18 +15,30 @@ GSignal::~GSignal() {
   }
 }
 
-void GSignal::_signalHandler(int signo) {
-  GSignal& signal = GSignal::instance();
-  emit signal.signaled(signo);
+void GSignal::signalHandler(int signo) {
+  emit signaled(signo);
 
-  Handlers::iterator it = signal.handlers_.find(signo);
-  if (it == signal.handlers_.end()) {
+  Handlers::iterator it = handlers_.find(signo);
+  if (it == handlers_.end()) {
     qCritical() << "can not find signal" << signo;
     return;
   }
 
-  Handler handler = it.value();
-  handler(signo);
+  if (callOriginFunc_) {
+    Handler handler = it.value();
+    handler(signo);
+  }
+
+  if (signalOnce_) {
+    Handler handler = it.value();
+    std::signal(signo, handler);
+    handlers_.erase(it);
+  }
+}
+
+void GSignal::_signalHandler(int signo) {
+  GSignal& signal = GSignal::instance();
+  signal.signalHandler(signo);
 }
 
 void GSignal::setup(int signo) {

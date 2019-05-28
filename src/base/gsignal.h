@@ -21,10 +21,16 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSignal : QObject {
   Q_OBJECT
+  Q_PROPERTY(bool signalOnce MEMBER signalOnce_)
+  Q_PROPERTY(bool callOriginFunc MEMBER callOriginFunc_)
 
 private: // singleton
   GSignal();
   ~GSignal() override;
+
+public:
+  bool signalOnce_{true};
+  bool callOriginFunc_{false};
 
 protected:
 #ifdef Q_OS_LINUX
@@ -35,6 +41,7 @@ protected:
 #endif
   typedef QHash<int, Handler> Handlers;
   Handlers handlers_;
+  void signalHandler(int signo);
   static void _signalHandler(int signo);
 
 public:
