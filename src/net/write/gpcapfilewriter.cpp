@@ -26,10 +26,12 @@ bool GPcapFileWriter::doOpen() {
     realFileName = now.toString(fileName);
   }
 
-  QString path = QFileInfo(realFileName).path();
+  QString path = QFileInfo(fileName_).path();
   if (path != "") {
     QDir dir;
     dir.mkpath(path);
+    if (resolveFileNameByTime_)
+      realFileName = path + QDir::separator() + realFileName;
   }
 
   pcap_dumper_ = pcap_dump_open(pcap_, qPrintable(realFileName));
