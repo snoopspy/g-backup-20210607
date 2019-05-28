@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GSyncPcapDevice
 // ----------------------------------------------------------------------------
-struct GSyncPcapDevice : GPcapDevice {
+struct G_EXPORT GSyncPcapDevice : GPcapDevice {
   Q_OBJECT
 
 public:

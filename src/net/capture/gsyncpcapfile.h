@@ -15,7 +15,7 @@
 // ----------------------------------------------------------------------------
 // GSyncPcapFile
 // ----------------------------------------------------------------------------
-struct GSyncPcapFile : GPcapFile {
+struct G_EXPORT GSyncPcapFile : GPcapFile {
   Q_OBJECT
 
 public:
