@@ -19,19 +19,22 @@ bool GPcapFileWriter::doOpen() {
     return false;
   }
 
-  QString path = QFileInfo(fileName_).path();
-  QString fileName = QFileInfo(fileName_).fileName();
-  QDateTime now = QDateTime::currentDateTime();
-  QString newFileName = now.toString(fileName);
+  QString realFileName = fileName_;
+  if (resolveFileNameByTime_) {
+    QString fileName = QFileInfo(fileName_).fileName();
+    QDateTime now = QDateTime::currentDateTime();
+    realFileName = now.toString(fileName);
+  }
+
+  QString path = QFileInfo(realFileName).path();
   if (path != "") {
     QDir dir;
     dir.mkpath(path);
-    newFileName = path + QDir::separator() + newFileName;
   }
 
-  pcap_dumper_ = pcap_dump_open(pcap_, qPrintable(newFileName));
+  pcap_dumper_ = pcap_dump_open(pcap_, qPrintable(realFileName));
   if (pcap_dumper_ == nullptr) {
-    SET_ERR(GErr::RETURN_NULL, QString("pcap_dump_open(, %1)) return null").arg(newFileName));
+    SET_ERR(GErr::RETURN_NULL, QString("pcap_dump_open(, %1)) return null").arg(realFileName));
     pcap_close(pcap_);
     pcap_ = nullptr;
     return false;

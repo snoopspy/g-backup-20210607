@@ -10,7 +10,7 @@ int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
       res = DLT_EN10MB;
       break;
     case GPacket::Ip:
-      res = DLT_RAW;
+      res = DLT_IPV4;
       break;
     case GPacket::Dot11:
       res = DLT_IEEE802_11_RADIO;
@@ -28,7 +28,7 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
     case DLT_EN10MB:
       res = GPacket::Eth;
       break;
-    case DLT_RAW:
+    case DLT_IPV4:
       res = GPacket::Ip;
       break;
     case DLT_IEEE802_11_RADIO:

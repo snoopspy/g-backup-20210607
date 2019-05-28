@@ -21,11 +21,13 @@ struct G_EXPORT GPcapFileWriter : GStateObj {
   Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
   Q_PROPERTY(int snapLen MEMBER snapLen_)
   Q_PROPERTY(QString fileName MEMBER fileName_)
+  Q_PROPERTY(bool resolveFileNameByTime MEMBER resolveFileNameByTime_)
 
 public:
   GPacket::DataLinkType dataLinkType_{GPacket::Eth};
   int snapLen_{65536};
   QString fileName_{"pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'"};
+  bool resolveFileNameByTime_{true};
 
 public:
   Q_INVOKABLE GPcapFileWriter(QObject* parent = nullptr) : GStateObj(parent) {}

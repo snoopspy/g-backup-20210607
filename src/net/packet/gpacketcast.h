@@ -25,8 +25,7 @@ struct GPacketCast {
         Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
         return PEthPacket(packet);
       case GPacket::Ip:
-        Q_ASSERT(dynamic_cast<GEthPacket*>(packet) != nullptr);
-        return PEthPacket(packet);
+        return nullptr;
       case GPacket::Dot11:
         return nullptr;
       case GPacket::Null:
