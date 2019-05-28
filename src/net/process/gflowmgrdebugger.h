@@ -20,7 +20,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GFlowMgrDebugger : GStateObj, GIpFlowMgr::Managable, GTcpFlowMgr::Managable, GUdpFlowMgr::Managable {
   Q_OBJECT
-  Q_PROPERTY(bool debug MEMBER enabled_)
+  Q_PROPERTY(bool enabled MEMBER enabled_)
   Q_PROPERTY(GObjPtr ipFlowMgr READ getIpFlowMgr WRITE setIpFlowMgr)
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
   Q_PROPERTY(GObjPtr udpFlowMgr READ getUdpFlowMgr WRITE setUdpFlowMgr)

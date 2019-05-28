@@ -18,7 +18,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPacketDebugger : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(bool debug MEMBER enabled_)
+  Q_PROPERTY(bool enabled MEMBER enabled_)
 
 public:
   bool enabled_{true};
