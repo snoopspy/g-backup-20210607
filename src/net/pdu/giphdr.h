@@ -52,4 +52,5 @@ struct G_EXPORT GIpHdr final { // libnet_ipv4_hdr // gilgil temp 2019.05.13
   static uint16_t recalcChecksum(uint16_t oldChecksum, uint16_t oldValue, uint16_t newValue);
   static uint16_t recalcChecksum(uint16_t oldChecksum, uint32_t oldValue, uint32_t newValue);
 };
+typedef GIpHdr *PIpHdr;
 #pragma pack(pop)
