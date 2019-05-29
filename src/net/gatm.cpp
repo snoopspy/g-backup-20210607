@@ -40,12 +40,15 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
 
     if (thread.isFinished()) {
       QString msg = "can not resolve all ip";
-      for (GAtmMap::iterator it = begin(); it != end(); it++) {
+      for (GAtmMap::iterator it = begin(); it != end();) {
         GMac mac = it.value();
         if (mac.isClean()) {
           GIp ip = it.key();
           msg += " ";
           msg += QString(ip);
+          erase(it);
+        } else {
+          it++;
         }
       }
       qWarning() << msg;
