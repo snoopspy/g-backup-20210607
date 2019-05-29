@@ -36,7 +36,7 @@ void GTimeStampSyncDelay::delay(GPacket* packet) {
     qCritical() << "remain is " << remain;
     remainTs = 0;
   }
-  qDebug() << "remainTs=" << remainTs; // gilgil temp 2019.05.21
+  //qDebug() << "remainTs=" << remainTs; // gilgil temp 2019.05.21
 
   QDeadlineTimer dt(remainTs);
   bool res = we_.wait(dt);

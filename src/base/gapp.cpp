@@ -13,7 +13,7 @@ GApp::GApp(int &argc, char **argv) : QCoreApplication (argc, argv) {
 }
 
 void GApp::init() {
-  qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file} %{function}:%{line}] %{message}");
+  qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}");
 }
 
 #ifdef QT_GUI_LIB

@@ -132,10 +132,10 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
 
 GMac GAtm::waitOne(GIp ip, GPcapDevice* device, unsigned long timeout) {
   GAtm atm;
-  atm.insert(ip, GMac::cleanMac());
+  GAtmMap::iterator it = atm.insert(ip, GMac::cleanMac());
   if (!atm.waitAll(device, timeout))
     return GMac::cleanMac();
-  return atm.begin().value();
+  return it.value();
 }
 
 // --------------------------------------------------------------------------
