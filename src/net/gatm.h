@@ -33,6 +33,7 @@ struct GEthArpHdr {
 typedef QMap<GIp, GMac> GAtmMap;
 struct G_EXPORT GAtm : GAtmMap {
   bool allResolved();
+  void deleteUnresolved();
   bool waitAll(GPcapDevice* device, unsigned long timeout = G::Timeout);
   static GMac waitOne(GIp ip, GPcapDevice* device, unsigned long timeout = G::Timeout);
 

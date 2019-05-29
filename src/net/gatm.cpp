@@ -11,6 +11,17 @@ bool GAtm::allResolved() {
   return true;
 }
 
+void GAtm::deleteUnresolved() {
+  for (GAtmMap::iterator it = begin(); it != end();) {
+    GMac mac = it.value();
+    if (mac.isClean()) {
+      it = erase(it);
+    } else {
+      it++;
+    }
+  }
+}
+
 bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
   if (allResolved()) return true;
 
@@ -40,15 +51,12 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
 
     if (thread.isFinished()) {
       QString msg = "can not resolve all ip";
-      for (GAtmMap::iterator it = begin(); it != end();) {
+      for (GAtmMap::iterator it = begin(); it != end(); it++) {
         GMac mac = it.value();
         if (mac.isClean()) {
           GIp ip = it.key();
           msg += " ";
           msg += QString(ip);
-          erase(it);
-        } else {
-          it++;
         }
       }
       qWarning() << msg;
