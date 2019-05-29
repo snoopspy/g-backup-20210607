@@ -2,7 +2,7 @@
 #include "gnetintf.h"
 #include "grtm.h"
 #ifdef Q_OS_WIN
-#include "net/_win32/gipadapterinfo.h"
+#include "net/_windows/gipadapterinfo.h"
 #endif
 
 // ----------------------------------------------------------------------------

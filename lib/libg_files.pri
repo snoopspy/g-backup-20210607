@@ -36,7 +36,6 @@ linux {
   HEADERS += $${PWD}/../src/net/_linux/*.h
 }
 win32 {
-  SOURCES += $${PWD}/../src/net/_win32/*.cpp
-  HEADERS += $${PWD}/../src/net/_win32/*.h
+  SOURCES += $${PWD}/../src/net/_windows/*.cpp
+  HEADERS += $${PWD}/../src/net/_windows/*.h
 }
-

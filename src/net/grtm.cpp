@@ -79,7 +79,7 @@ GRtm& GRtm::instance() {
 }
 #endif
 #ifdef Q_OS_WIN
-#include "net/_win32/grtmwin32.h"
+#include "net/_windows/grtmwin32.h"
 GRtm& GRtm::instance() {
   static GRtmWin32 rtm;
   return rtm;
