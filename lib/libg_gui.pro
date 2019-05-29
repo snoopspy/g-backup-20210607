@@ -1,7 +1,7 @@
 TEMPLATE = lib
 QT += widgets
-CONFIG *= G_BUILD
-DEFINES *= G_BUILD
+CONFIG += G_BUILD
+DEFINES += G_BUILD
 include(../g.pri)
 TARGET = $${G_NAME}
 linux-g++: LIBS *= -lpcap -lnetfilter_queue

@@ -1,8 +1,8 @@
 TEMPLATE = app
 QT -= gui
-CONFIG *= console
-CONFIG *= G_BUILD
-DEFINES *= G_BUILD
+CONFIG += console
+CONFIG += G_BUILD
+DEFINES += G_BUILD
 include(../g.pri)
 TARGET = $${G_NAME}_test
 linux: LIBS *= -lpcap -lnetfilter_queue
