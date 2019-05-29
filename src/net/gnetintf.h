@@ -31,7 +31,7 @@ public:
   GMac mac() const { return mac_; }
   GIp ip() const { return ip_; }
   GIp mask() const { return mask_; }
-  GIp gateway();
+  GIp gateway() const;
 
 protected:
   int index_{-1};

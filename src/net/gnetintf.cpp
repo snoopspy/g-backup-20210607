@@ -8,9 +8,8 @@
 // ----------------------------------------------------------------------------
 // GNetInft
 // ----------------------------------------------------------------------------
-GIp GNetIntf::gateway() {
+GIp GNetIntf::gateway() const {
   GNetIntfs::instance().init();
-  ip_and_mask_ = ip_ & mask_;
   return gateway_;
 }
 
@@ -110,7 +109,7 @@ GNetIntfs::GNetIntfs() {
       intf.gateway_ = adapter->GatewayList.IpAddress.String;
     }
 #endif
-
+    intf.ip_and_mask_ = intf.ip_ & intf.mask_;
     push_back(intf);
     dev = dev->next;
     i++;
