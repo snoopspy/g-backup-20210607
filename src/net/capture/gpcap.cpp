@@ -7,7 +7,7 @@ bool GPcap::doOpen() {
   if (!enabled_) return true;
 
   int dataLink = pcap_datalink(pcap_);
-  // qDebug() << QString("pcap_datalink return %1").arg(dataLink); // gilgil temp 2019.05.26
+  qDebug() << QString("pcap_datalink return %1").arg(dataLink); // gilgil temp 2019.05.26
   dataLinkType_ = GPacket::intToDataLinkType(dataLink);
 
   if (filter_ != "") {

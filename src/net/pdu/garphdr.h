@@ -55,12 +55,12 @@ struct G_EXPORT GArpHdr final { // libnet_arp_hdr // gilgil temp 2019.05.26
   } HardwareType;
 
   typedef enum {
-    REQUEST    = 1, // req to resolve address
-    REPLY      = 2, // resp to previous request
-    REVREQUEST = 3, // req protocol address given hardware
-    REVREPLY   = 4, // resp giving protocol address
-    INVREQUEST = 8, // req to identify peer
-    INVREPLY   = 9  // resp identifying peer
+    Request    = 1, // req to resolve address
+    Reply      = 2, // resp to previous request
+    RevRequest = 3, // req protocol address given hardware
+    RevReply   = 4, // resp giving protocol address
+    InvRequest = 8, // req to identify peer
+    InvReply   = 9  // resp identifying peer
   } Operation;
 };
 #pragma pack(pop)

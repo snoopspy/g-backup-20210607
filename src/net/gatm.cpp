@@ -69,7 +69,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
 
     GArpHdr* arpHdr = packet.arpHdr_;
     if (arpHdr == nullptr) continue;
-    if (arpHdr->op() != GArpHdr::REPLY) continue;
+    if (arpHdr->op() != GArpHdr::Reply) continue;
 
     GIp sip = arpHdr->sip();
     GMac smac = arpHdr->smac();
@@ -92,13 +92,13 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   GEthArpHdr query;
   query.ethHdr_.dmac_ = GMac::broadcastMac();
   query.ethHdr_.smac_ = intf->mac();
-  query.ethHdr_.type_ = htons(GEthHdr::ARP);
+  query.ethHdr_.type_ = htons(GEthHdr::Arp);
 
   query.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
-  query.arpHdr_.pro_ = htons(GEthHdr::IP4);
+  query.arpHdr_.pro_ = htons(GEthHdr::Ip4);
   query.arpHdr_.hln_ = sizeof(GMac);
   query.arpHdr_.pln_ = sizeof(GIp);
-  query.arpHdr_.op_ = htons(GArpHdr::REQUEST);
+  query.arpHdr_.op_ = htons(GArpHdr::Request);
   query.arpHdr_.smac_ = intf->mac();
   query.arpHdr_.sip_ = htonl(intf->ip());
   query.arpHdr_.tmac_ = GMac::cleanMac();
