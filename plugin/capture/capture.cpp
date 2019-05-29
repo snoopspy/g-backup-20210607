@@ -1,11 +1,12 @@
 #include <GPcapDevice>
 #include <GPcapFile>
 #include <GNetFilter>
+#include <GWinDivert>
 
 #ifdef Q_OS_WIN
-  #define EXPORT __declspec(dllexport)
+#define EXPORT __declspec(dllexport)
 #else
-  #define EXPORT
+#define EXPORT
 #endif
 
 extern "C" {
@@ -15,11 +16,11 @@ EXPORT int count() {
   qRegisterMetaType<GPcapFile*>();
 #ifdef Q_OS_LINUX
   qRegisterMetaType<GNetFilter*>();
-  return 3;
 #endif
 #ifdef Q_OS_WIN
-  return 2;
+  qRegisterMetaType<GWinDivert*>();
 #endif
+  return 3;
 }
 
 EXPORT const char* name(int index) {
@@ -28,6 +29,9 @@ EXPORT const char* name(int index) {
     case 1: return GPcapFile::staticMetaObject.className();
 #ifdef Q_OS_LINUX
     case 2: return GNetFilter::staticMetaObject.className();
+#endif
+#ifdef Q_OS_WIN
+    case 2: return GWinDivert::staticMetaObject.className();
 #endif
     default: return nullptr;
   }
