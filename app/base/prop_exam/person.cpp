@@ -6,7 +6,8 @@
 GPropItem* Person::propCreateItem(GPropItemParam* param) {
   if (QString(param->mpro_.name()) == "picture") {
     GPropItemFilePath* res = new GPropItemFilePath(param);
-    res->fd_->setNameFilter("Image files - *.png *.xpm *.jpg (*.png *.xpm *.jpg);;Any files - * (*)");
+    QStringList filters{"image files - *.png *.xpm *.jpg(*.png *.xpm *.jpg)", "any files - *(*)"};
+    res->fd_->setNameFilters(filters);
     return res;
   }
   return GObj::propCreateItem(param);

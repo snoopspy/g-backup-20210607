@@ -21,7 +21,7 @@ GGraphWidget::~GGraphWidget() {
 void GGraphWidget::init() {
   resize(QSize(640, 480));
 
-  QStringList filters; filters << "snoopspy files(*.ss)" << "any files(*)";
+  QStringList filters{"snoopspy files - *.ss(*.ss)", "any files - *(*)"};
   fileDialog_.setNameFilters(filters);
   fileDialog_.setDefaultSuffix("ss");
   fileDialog_.setViewMode(QFileDialog::Detail);
