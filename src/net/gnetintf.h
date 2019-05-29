@@ -30,8 +30,8 @@ public:
   pcap_if_t* dev() const { return dev_; }
   GMac mac() const { return mac_; }
   GIp ip() const { return ip_; }
-  GIp mask() const {return mask_; }
-  GIp gateway() const;
+  GIp mask() const { return mask_; }
+  GIp gateway();
 
 protected:
   int index_{-1};
@@ -44,7 +44,7 @@ protected:
   GIp gateway_{uint32_t(0)};
 
 protected:
-  GIp ip_and_mask_; // used for isSameLanIP
+  GIp ip_and_mask_{uint32_t(0)}; // used for isSameLanIP
 
 public:
   bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }

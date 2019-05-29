@@ -8,8 +8,9 @@
 // ----------------------------------------------------------------------------
 // GNetInft
 // ----------------------------------------------------------------------------
-GIp GNetIntf::gateway() const {
+GIp GNetIntf::gateway() {
   GNetIntfs::instance().init();
+  ip_and_mask_ = ip_ & mask_;
   return gateway_;
 }
 
