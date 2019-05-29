@@ -66,6 +66,12 @@ public:
     bool block_{false};
   } ctrl;
 
+  //
+  // user
+  //
+  static const int USER_DATA_SIZE = 256;
+  gbyte userData_[USER_DATA_SIZE];
+
 public:
   virtual void clear() {
     buf_.clear();
