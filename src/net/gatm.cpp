@@ -7,7 +7,7 @@
 // ----------------------------------------------------------------------------
 bool GAtm::allResolved() {
   for (GMac& mac: *this)
-    if (mac.isClean()) return  false;
+    if (mac.isClean()) return false;
   return true;
 }
 
@@ -47,7 +47,10 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
 
   bool succeed = false;
   while (true) {
-    if (allResolved()) return true;
+    if (allResolved()) {
+      succeed = true;
+      break;
+    }
 
     if (thread.isFinished()) {
       QString msg = "can not resolve all ip";
@@ -76,7 +79,6 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
     if (res == GPacket::TimeOut) {
       continue;
     }
-    packet.parse();
 
     GArpHdr* arpHdr = packet.arpHdr_;
     if (arpHdr == nullptr) continue;
@@ -95,7 +97,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
     }
   }
   thread.we_.wakeAll();
-  thread.wait(G::Timeout);
+  thread.wait();
   return succeed;
 }
 
@@ -130,11 +132,23 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
   return true;
 }
 
+GAtm& GAtm::instance() {
+  static GAtm atm;
+  return atm;
+}
+
 GMac GAtm::waitOne(GIp ip, GPcapDevice* device, unsigned long timeout) {
-  GAtm atm;
-  GAtmMap::iterator it = atm.insert(ip, GMac::cleanMac());
-  if (!atm.waitAll(device, timeout))
+  GAtmMap::iterator it = find(ip);
+  if (it != end()) {
+    GMac mac = it.value();
+    if (!mac.isClean())
+      return mac;
+  } else
+    it = insert(ip, GMac::cleanMac());
+
+  if (!waitAll(device, timeout)) {
     return GMac::cleanMac();
+  }
   return it.value();
 }
 

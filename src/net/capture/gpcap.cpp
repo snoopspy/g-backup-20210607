@@ -66,7 +66,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
     default: // packet captured
       packet->ts_ = pkthdr->ts;
       packet->buf_.size_ = pkthdr->caplen;
-      // packet->parse_ = packet->buf_; // gilgil temp 2019.05.12
+      if (autoParse_) packet->parse();
       res = GPacket::Ok;
       break;
   }

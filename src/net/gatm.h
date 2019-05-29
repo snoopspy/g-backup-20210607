@@ -35,16 +35,19 @@ struct G_EXPORT GAtm : GAtmMap {
   bool allResolved();
   void deleteUnresolved();
   bool waitAll(GPcapDevice* device, unsigned long timeout = G::Timeout);
-  static GMac waitOne(GIp ip, GPcapDevice* device, unsigned long timeout = G::Timeout);
+  GMac waitOne(GIp ip, GPcapDevice* device, unsigned long timeout = G::Timeout);
 
 protected:
   bool sendQueries(GPcapDevice* device, GNetIntf* intf);
+
+public:
+  static GAtm& instance();
 
 protected:
   // --------------------------------------------------------------------------
   // SendThread
   // --------------------------------------------------------------------------
-  struct SendThread : QThread {
+  struct SendThread : GThread {
     SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout);
     GAtm* atm_;
     GPcapDevice* device_;

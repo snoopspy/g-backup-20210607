@@ -168,6 +168,7 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
   }
   packet->buf_.data_ = pktData_;
   packet->buf_.size_ = size_t(readLen);
+  if (autoParse_) packet->parse();
   return GPacket::Ok;
 }
 

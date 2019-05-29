@@ -170,19 +170,20 @@ int GNetFilter::_callback(
   struct nfq_data* nfad,
   void* data) {
 
-  (void)qh;
   (void)nfmsg;
-  (void)nfad;
 
   GNetFilter* netFilter = static_cast<GNetFilter*>(data);
   GIpPacket* ipPacket = &netFilter->ipPacket;
 
   ipPacket->clear();
   gettimeofday(&ipPacket->ts_, nullptr);
-  ipPacket->buf_.size_ = size_t(nfq_get_payload(nfad, &ipPacket->buf_.data_));
-  // qDebug() << "payloadLen =" << packet.buf_.size_; // gilgil temp 2016.09.27
-
-  if (netFilter->autoParse_) netFilter->ipPacket.parse();
+  int res = nfq_get_payload(nfad, &ipPacket->buf_.data_);
+  if (res == -1) {
+    qCritical() << "nfq_get_payload return -1";
+    return -1;
+  }
+  ipPacket->buf_.size_ = size_t(res);
+  if (netFilter->autoParse_) ipPacket->parse();
   emit netFilter->captured(ipPacket);
 
   uint32_t id = 0;
@@ -190,14 +191,8 @@ int GNetFilter::_callback(
   if (ph != nullptr)
     id = ntohl(ph->packet_id);
 
-  u_int32_t verdict;
-  if (ipPacket->ctrl.block_) {
-    verdict = NF_DROP;
-  } else {
-    verdict = u_int32_t(netFilter->acceptVerdict_);
-  }
-
-  int res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);
+  uint32_t verdict = ipPacket->ctrl.block_ ? NF_DROP : uint32_t(netFilter->acceptVerdict_);
+  res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);
   return res;
 }
 

@@ -78,7 +78,6 @@ void GCapture::run() {
     GPacket::Result res = read(packet);
     if (res == GPacket::TimeOut) continue;
     if (res == GPacket::Eof || res == GPacket::Fail) break;
-    if (autoParse_) packet->parse();
     emit captured(packet);
     if (this->pathType() == InPath && !packet->ctrl.block_) {
       res = relay(packet);
