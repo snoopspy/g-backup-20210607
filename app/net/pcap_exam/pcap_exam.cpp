@@ -12,9 +12,8 @@ public slots:
   void captured(GPacket* packet) {
     QString smac;
     QString dmac;
-    if (packet != nullptr) {
-      GEthHdr* ethHdr = packet->ethHdr_;
-      if (ethHdr == nullptr) return;
+    GEthHdr* ethHdr = packet->ethHdr_;
+    if (ethHdr != nullptr) {
       smac = QString(ethHdr->smac());
       dmac = QString(ethHdr->dmac());
     }

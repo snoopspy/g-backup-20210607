@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "net/packet/gpacket.h"
+#include "gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GIpPacket
