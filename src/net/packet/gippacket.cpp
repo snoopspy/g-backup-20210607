@@ -4,6 +4,12 @@
 // GIpPacket
 // ----------------------------------------------------------------------------
 void GIpPacket::parse() {
+#ifdef _DEBUG
+  if (parsed_) {
+    qCritical() << "already parsed";
+    return;
+  }
+#endif // _DEBUG
   gbyte* p = buf_.data_;
   uint8_t proto;
   switch (*p & 0xF0) {
@@ -18,8 +24,9 @@ void GIpPacket::parse() {
       p += sizeof(GIp6Hdr); // gilgil temp 2019.05.14
       break;
     default:
-      qWarning() << "invalid ip header version" << uint8_t(*p);
-      return;
+      qWarning() << "invalid ip header version" << uint8_t(*p); // gilgil temp 2019.05.31
+      proto = 0; // unknown
+      break;
   }
 
   switch (proto) {
@@ -41,4 +48,7 @@ void GIpPacket::parse() {
       qDebug() << "unknown protocol" << proto;
       break;
   }
+#ifdef _DEBUG
+  parsed_ = true;
+#endif // _DEBUG
 }

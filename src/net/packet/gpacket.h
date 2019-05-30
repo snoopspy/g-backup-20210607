@@ -95,6 +95,13 @@ public:
   static const int USER_DATA_SIZE = 256;
   gbyte userData_[USER_DATA_SIZE];
 
+#ifdef _DEBUG
+  //
+  // debug
+  //
+  bool parsed_;
+#endif // _DEBUG
+
 public:
   void clear() {
     ts_.tv_sec = 0;
@@ -110,6 +117,9 @@ public:
     icmpHdr_ = nullptr;
     tcpData_.clear();
     udpData_.clear();
+#ifdef _DEBUG
+    parsed_ = false;
+#endif // _DEBUG
   }
 
   virtual void parse();

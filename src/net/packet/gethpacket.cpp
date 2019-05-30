@@ -4,6 +4,12 @@
 // GEthPacket
 // ----------------------------------------------------------------------------
 void GEthPacket::parse() {
+#ifdef _DEBUG
+  if (parsed_) {
+    qCritical() << "already parsed";
+    return;
+  }
+#endif // _DEBUG
   ethHdr_ = reinterpret_cast<GEthHdr*>(buf_.data_);
   switch (ethHdr_->type()) {
     case GEthHdr::Ip4:
@@ -19,4 +25,7 @@ void GEthPacket::parse() {
       arpHdr_ = reinterpret_cast<GArpHdr*>(buf_.data_ + sizeof(GEthHdr));
       break;
   }
+#ifdef _DEBUG
+  parsed_ = true;
+#endif // _DEBUG
 }

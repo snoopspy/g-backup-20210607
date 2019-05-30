@@ -46,7 +46,6 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
   return res;
 }
 
-#include <QDebug> // gilgil temp 2019.05.25
 void GPacket::parse() {
-  qDebug() << "GPacket::parse()"; // gilgil temp 2019.05.25
+  qCritical() << "virtual function call";
 }
