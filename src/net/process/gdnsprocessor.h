@@ -12,7 +12,6 @@
 
 #include "base/gstateobj.h"
 #include "gdns.h"
-#include "net/pdu/gudphdr.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor
