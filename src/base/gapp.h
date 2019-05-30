@@ -12,7 +12,7 @@
 
 #ifdef QT_GUI_LIB
   #include <QApplication>
-  #include <GPluginFactory>
+  #include "base/graph/gpluginfactory.h"
 #else
   #include <QCoreApplication>
 #endif // QT_GUI_LIB

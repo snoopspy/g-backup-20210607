@@ -1,5 +1,5 @@
 #include "gapp.h"
-#include <GGraphWidget>
+#include "base/graph/ggraphwidget.h"
 
 // ----------------------------------------------------------------------------
 // GApp
