@@ -74,12 +74,6 @@ public:
   } ctrl;
 
   //
-  // user
-  //
-  static const int USER_DATA_SIZE = 256;
-  gbyte userData_[USER_DATA_SIZE];
-
-  //
   // header
   //
   GEthHdr* ethHdr_{nullptr};
@@ -94,6 +88,12 @@ public:
 
   GBuf tcpData_;
   GBuf udpData_;
+
+  //
+  // user
+  //
+  static const int USER_DATA_SIZE = 256;
+  gbyte userData_[USER_DATA_SIZE];
 
 public:
   void clear() {
