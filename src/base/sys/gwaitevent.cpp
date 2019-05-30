@@ -9,8 +9,9 @@
 #include <QThread>
 #include <QDebug>
 
+template <class T>
 struct TestThread : QThread {
-  TestThread(GWaitEvent* we, int loop, GDuration firstTimeout, GDuration timeout) : QThread(nullptr) {
+  TestThread(T* we, int loop, GDuration firstTimeout, GDuration timeout) : QThread(nullptr) {
     we_ = we;
     loop_ = loop;
     firstTimeout_ = firstTimeout;
@@ -30,7 +31,7 @@ protected:
       qDebug() << "  aft wake" << i;
     }
   }
-  GWaitEvent* we_;
+  T* we_;
   int loop_;
   GDuration firstTimeout_;
   GDuration timeout_;
@@ -38,7 +39,7 @@ protected:
 
 TEST(GWaitEvent, waitEvenTest) {
   GWaitEvent we;
-  TestThread t(&we, 5, 100, 1000);
+  TestThread<GWaitEvent> t(&we, 5, 100, 1000);
   t.start();
   for (int i = 0; i < 5; i++) {
     qDebug() << "waitEvenTest" << i;
@@ -49,7 +50,7 @@ TEST(GWaitEvent, waitEvenTest) {
 
 TEST(GWaitEvent, waitEventFailTest) {
   GWaitEvent we;
-  TestThread t(&we, 1, 0, 0);
+  TestThread<GWaitEvent> t(&we, 1, 0, 0);
   t.start();
   QThread::msleep(1000);
   qDebug() << "waitEventFailTest";
@@ -59,7 +60,7 @@ TEST(GWaitEvent, waitEventFailTest) {
 
 TEST(GWaitEvent, stateWaitEventTest) {
   GStateWaitEvent we;
-  TestThread t(&we, 5, 0, 1000);
+  TestThread<GStateWaitEvent> t(&we, 5, 0, 1000);
   t.start();
   for (int i = 0; i < 5; i++) {
     qDebug() << "stateWaitEventTest" << i;
@@ -70,7 +71,7 @@ TEST(GWaitEvent, stateWaitEventTest) {
 
 TEST(GWaitEvent, countWaitEventTest) {
   GCountWaitEvent we;
-  TestThread t(&we, 10, 0, 0);
+  TestThread<GCountWaitEvent> t(&we, 10, 0, 0);
   t.start();
   for (int i = 0; i < 10; i++) {
     qDebug() << "countWaitEventTest" << i;
