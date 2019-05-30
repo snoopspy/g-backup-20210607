@@ -19,11 +19,11 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSyncDelay : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(ulong duration MEMBER duration_) // msec
+  Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
   Q_PROPERTY(double speed MEMBER speed_) // ratio
 
 public:
-  ulong duration_{1000};
+  GDuration timeout_{1000};
   double speed_{1.};
 
 protected:

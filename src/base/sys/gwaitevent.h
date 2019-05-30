@@ -23,9 +23,9 @@ struct G_EXPORT GWaitEvent {
   QWaitCondition wc_;
   QMutex m_;
 
-  bool wait(unsigned long time = ULONG_MAX) {
+  bool wait(GDuration timeout = ULONG_MAX) {
     m_.lock();
-    bool res = wc_.wait(&m_, time);
+    bool res = wc_.wait(&m_, timeout);
     m_.unlock();
     return res;
   }

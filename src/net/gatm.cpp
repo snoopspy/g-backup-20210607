@@ -22,7 +22,7 @@ void GAtm::deleteUnresolved() {
   }
 }
 
-bool GAtm::waitAll(GPcapDevice* pcapDevice, unsigned long timeout) {
+bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
   if (allResolved()) return true;
 
   if (!pcapDevice->active()) {
@@ -137,7 +137,7 @@ GAtm& GAtm::instance() {
   return atm;
 }
 
-GMac GAtm::waitOne(GIp ip, GPcapDevice* device, unsigned long timeout) {
+GMac GAtm::waitOne(GIp ip, GPcapDevice* device, GDuration timeout) {
   GAtmMap::iterator it = find(ip);
   if (it != end()) {
     GMac mac = it.value();
@@ -155,7 +155,7 @@ GMac GAtm::waitOne(GIp ip, GPcapDevice* device, unsigned long timeout) {
 // --------------------------------------------------------------------------
 // GAtm::SendThread
 // --------------------------------------------------------------------------
-GAtm::SendThread::SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout) {
+GAtm::SendThread::SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout) {
   atm_ = resolve;
   device_ = device;
   intf_ = intf;

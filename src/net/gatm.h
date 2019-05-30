@@ -32,8 +32,8 @@ typedef QMap<GIp, GMac> GAtmMap;
 struct G_EXPORT GAtm : GAtmMap {
   bool allResolved();
   void deleteUnresolved();
-  bool waitAll(GPcapDevice* device, unsigned long timeout = G::Timeout);
-  GMac waitOne(GIp ip, GPcapDevice* device, unsigned long timeout = G::Timeout);
+  bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout);
+  GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout);
 
 protected:
   bool sendQueries(GPcapDevice* device, GNetIntf* intf);
@@ -46,11 +46,11 @@ protected:
   // SendThread
   // --------------------------------------------------------------------------
   struct SendThread : GThread {
-    SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, unsigned long timeout);
+    SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout);
     GAtm* atm_;
     GPcapDevice* device_;
     GNetIntf* intf_;
-    unsigned long timeout_;
+    GDuration timeout_;
     GWaitEvent we_;
   protected:
     void run() override;

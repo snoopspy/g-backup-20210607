@@ -19,10 +19,10 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GDelay : GStateObj {
   Q_OBJECT
-  Q_PROPERTY(ulong duration MEMBER duration_) // msec
+  Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
 
 public:
-  ulong duration_{1000};
+  GDuration timeout_{1000};
 
 protected:
   GWaitEvent we_;

@@ -12,7 +12,7 @@ void GThread::start(Priority priority) {
     QThread::start(priority);
 }
 
-bool GThread::wait(unsigned long timeout) {
+bool GThread::wait(GDuration timeout) {
   bool res = QThread::wait(timeout);
   if (!res) {
     QString msg = QString("%1::wait(%2) return false").arg(metaObject()->className()).arg(timeout);

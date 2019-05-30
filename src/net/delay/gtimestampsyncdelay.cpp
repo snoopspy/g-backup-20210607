@@ -41,6 +41,6 @@ void GTimeStampSyncDelay::delay(GPacket* packet) {
   QDeadlineTimer dt(remainTs);
   bool res = we_.wait(dt);
   lastClock_ = et_.elapsed();
-  if (res == false) // time elapsed
+  if (res == false) // timeout elapsed
     emit delayed(packet);
 }

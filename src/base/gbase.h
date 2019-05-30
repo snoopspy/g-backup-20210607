@@ -35,7 +35,9 @@ typedef unsigned char gbyte, *pbyte;
   #define  G_EXPORT
 #endif
 
+typedef unsigned long GDuration;
+
 struct G_EXPORT G {
   static const char* Version;
-  static const unsigned long Timeout;
+  static const GDuration Timeout;
 };

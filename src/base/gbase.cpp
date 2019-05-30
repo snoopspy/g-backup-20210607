@@ -6,7 +6,7 @@ const char* G::Version = "G Library version 0.2 Debug   Build( " __DATE__ " " __
 const char* G::Version = "G Library version 0.2 Release Build( " __DATE__ " " __TIME__ " )";
 #endif // _DEBUG
 
-const unsigned long G::Timeout = 5000;
+const GDuration G::Timeout = 5000;
 
 // ----------------------------------------------------------------------------
 // GTEST

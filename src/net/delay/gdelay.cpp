@@ -14,7 +14,7 @@ bool GDelay::doClose() {
 }
 
 void GDelay::sleep(GPacket* packet) {
-  bool res = we_.wait(duration_);
-  if (res == false) // time elapsed
+  bool res = we_.wait(timeout_);
+  if (res == false) // timeout elapsed
     emit sleeped(packet);
 }
