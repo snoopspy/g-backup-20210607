@@ -30,14 +30,44 @@ struct UdpClient : NetClient {
 
 struct SslClient : NetClient {
   Q_OBJECT
-  Q_PROPERTY(int protocol READ protocol() WRITE setProtocol)
-
-protected:
-  int protocol() { return (int) protocol_; }
-  void setProtocol(int protocol) { protocol_ = (QSsl::SslProtocol)protocol; }
+  //Q_PROPERTY(SslProtocol protocol READ protocol() WRITE setProtocol)
+  Q_PROPERTY(SslProtocol protocol MEMBER protocol_)
+  Q_ENUMS(SslProtocol)
 
 public:
-  QSsl::SslProtocol protocol_;
+  enum SslProtocol {
+      SslV3,
+      SslV2,
+      TlsV1_0,
+#if QT_DEPRECATED_SINCE(5,0)
+      TlsV1 = TlsV1_0,
+#endif
+      TlsV1_1,
+      TlsV1_2,
+      AnyProtocol,
+      TlsV1SslV3,
+      SecureProtocols,
+
+      TlsV1_0OrLater,
+      TlsV1_1OrLater,
+      TlsV1_2OrLater,
+
+      DtlsV1_0,
+      DtlsV1_0OrLater,
+      DtlsV1_2,
+      DtlsV1_2OrLater,
+
+      TlsV1_3,
+      TlsV1_3OrLater,
+
+      UnknownProtocol = -1
+  };
+
+  //int protocol() { return (int) protocol_; }
+  //void setProtocol(int protocol) { protocol_ = (QSsl::SslProtocol)protocol; }
+
+public:
+  SslProtocol protocol_;
 };
 
 struct Option : GObj {

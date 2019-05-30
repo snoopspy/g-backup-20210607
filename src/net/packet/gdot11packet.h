@@ -20,10 +20,6 @@ struct G_EXPORT GDot11Packet : GPacket {
     dataLinkType_ = GPacket::Dot11;
   }
 
-public:
-  void clear() override {
-    GPacket::clear();
-  }
   void parse() override;
 };
 typedef GDot11Packet *PDot11Packet;

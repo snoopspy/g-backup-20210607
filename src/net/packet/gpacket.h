@@ -13,6 +13,13 @@
 #include <pcap.h>
 #include <QObject>
 #include "net/pdu/gpdu.h"
+#include "net/pdu/gethhdr.h"
+#include "net/pdu/garphdr.h"
+#include "net/pdu/giphdr.h"
+#include "net/pdu/gip6hdr.h"
+#include "net/pdu/gtcphdr.h"
+#include "net/pdu/gudphdr.h"
+#include "net/pdu/gicmphdr.h"
 
 // ----------------------------------------------------------------------------
 // GPacket
@@ -72,11 +79,39 @@ public:
   static const int USER_DATA_SIZE = 256;
   gbyte userData_[USER_DATA_SIZE];
 
+  //
+  // header
+  //
+  GEthHdr* ethHdr_{nullptr};
+  GArpHdr* arpHdr_{nullptr};
+
+  GIpHdr* ipHdr_{nullptr};
+  GIp6Hdr* ip6Hdr_{nullptr};
+
+  GTcpHdr* tcpHdr_{nullptr};
+  GUdpHdr* udpHdr_{nullptr};
+  GIcmpHdr* icmpHdr_{nullptr};
+
+  GBuf tcpData_;
+  GBuf udpData_;
+
 public:
-  virtual void clear() {
+  void clear() {
+    ts_.tv_sec = 0;
+    ts_.tv_usec = 0;
     buf_.clear();
     ctrl.block_ = false;
+    ethHdr_ = nullptr;
+    arpHdr_ = nullptr;
+    ipHdr_ = nullptr;
+    ip6Hdr_ = nullptr;
+    tcpHdr_ = nullptr;
+    udpHdr_ = nullptr;
+    icmpHdr_ = nullptr;
+    tcpData_.clear();
+    udpData_.clear();
   }
+
   virtual void parse();
 };
 typedef GPacket *PPacket;

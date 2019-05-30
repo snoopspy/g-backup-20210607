@@ -11,8 +11,6 @@
 #pragma once
 
 #include "gippacket.h"
-#include "net/pdu/gethhdr.h"
-#include "net/pdu/garphdr.h"
 
 // ----------------------------------------------------------------------------
 // GEthPacket
@@ -22,16 +20,6 @@ struct G_EXPORT GEthPacket : GIpPacket {
     dataLinkType_ = GPacket::Eth;
   }
 
-public:
-  void clear() override {
-    GIpPacket::clear();
-    ethHdr_ = nullptr;
-    arpHdr_ = nullptr;
-  }
   void parse() override;
-
-public:
-  GEthHdr* ethHdr_{nullptr};
-  GArpHdr* arpHdr_{nullptr};
 };
 typedef GEthPacket *PEthPacket;

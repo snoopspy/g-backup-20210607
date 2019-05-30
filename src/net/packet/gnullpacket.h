@@ -20,10 +20,6 @@ struct G_EXPORT GNullPacket : GPacket {
     dataLinkType_ = GPacket::Null;
   }
 
-public:
-  void clear() override {
-    GPacket::clear();
-  }
   void parse() override;
 };
 typedef GNullPacket *PNullPacket;
