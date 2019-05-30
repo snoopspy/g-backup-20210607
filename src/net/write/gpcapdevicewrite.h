@@ -10,13 +10,12 @@
 
 #pragma once
 
-#include "base/gstateobj.h"
-#include "net/packet/gpacket.h"
+#include "gpcapwrite.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriter
+// GPcapDeviceWrite
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapDeviceWriter : GStateObj {
+struct G_EXPORT GPcapDeviceWrite : GPcapWrite {
   Q_OBJECT
   Q_PROPERTY(QString devName MEMBER devName_)
 
@@ -24,8 +23,8 @@ public:
   QString devName_{""};
 
 public:
-  Q_INVOKABLE GPcapDeviceWriter(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GPcapDeviceWriter() override { close(); }
+  Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr) : GPcapWrite(parent) {}
+  ~GPcapDeviceWrite() override { close(); }
 
 protected:
   bool doOpen() override;
@@ -36,9 +35,6 @@ public slots:
 
 signals:
   void written(GPacket* packet);
-
-protected:
-  pcap_t* pcap_{nullptr};
 
 #ifdef QT_GUI_LIB
 public:

@@ -1,10 +1,10 @@
-#include "gpcapdevicewriter.h"
+#include "gpcapdevicewrite.h"
 #include "base/prop/gpropitem_device.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriter
+// GPcapDeviceWrite
 // ----------------------------------------------------------------------------
-bool GPcapDeviceWriter::doOpen() {
+bool GPcapDeviceWrite::doOpen() {
   if (devName_ == "") {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
@@ -20,7 +20,7 @@ bool GPcapDeviceWriter::doOpen() {
   return true;
 }
 
-bool GPcapDeviceWriter::doClose()  {
+bool GPcapDeviceWrite::doClose()  {
   if (pcap_ != nullptr) {
     pcap_close(pcap_);
     pcap_ = nullptr;
@@ -28,7 +28,7 @@ bool GPcapDeviceWriter::doClose()  {
   return true;
 }
 
-GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
+GPacket::Result GPcapDeviceWrite::write(GPacket* packet) {
   int i = pcap_sendpacket(pcap_, packet->buf_.data_, int(packet->buf_.size_));
   if (i == 0) {
     emit written(packet);
@@ -40,7 +40,7 @@ GPacket::Result GPcapDeviceWriter::write(GPacket* packet) {
 
 #ifdef QT_GUI_LIB
 
-GPropItem* GPcapDeviceWriter::propCreateItem(GPropItemParam* param) {
+GPropItem* GPcapDeviceWrite::propCreateItem(GPropItemParam* param) {
   if (QString(param->mpro_.name()) == "devName") {
     GPropItemDevice* res = new GPropItemDevice(param);
     return res;

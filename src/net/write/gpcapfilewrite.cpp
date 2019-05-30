@@ -1,12 +1,12 @@
-#include "gpcapfilewriter.h"
+#include "gpcapfilewrite.h"
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
 
 // ----------------------------------------------------------------------------
-// GPcapFileWriter
+// GPcapFileWrite
 // ----------------------------------------------------------------------------
-bool GPcapFileWriter::doOpen() {
+bool GPcapFileWrite::doOpen() {
   if (fileName_ == "") {
     SET_ERR(GErr::FILE_NAME_NOT_SPECIFIED, "file name is not specified");
     return false;
@@ -44,7 +44,7 @@ bool GPcapFileWriter::doOpen() {
   return true;
 }
 
-bool GPcapFileWriter::doClose() {
+bool GPcapFileWrite::doClose() {
   if (pcap_dumper_ != nullptr) {
     pcap_dump_close(pcap_dumper_);
     pcap_dumper_ = nullptr;
@@ -56,7 +56,7 @@ bool GPcapFileWriter::doClose() {
   return true;
 }
 
-void GPcapFileWriter::write(GPacket* packet) {
+void GPcapFileWrite::write(GPacket* packet) {
   struct pcap_pkthdr pkthdr;
   pkthdr.ts = packet->ts_;
   pkthdr.caplen = pkthdr.len = bpf_u_int32(packet->buf_.size_);
