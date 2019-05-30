@@ -20,6 +20,7 @@ struct Param {
   static void usage() {
     std::clog << "snoopspy console " << G::Version << std::endl;
     std::clog << "Copyright (c) Gilbert Lee All rights reserved\n";
+    std::clog << G::pcap_lib_version() << std::endl;
     std::clog << "\n";
     std::clog << "usage : sscon <filename>\n";
     std::clog << "\n";

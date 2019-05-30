@@ -40,4 +40,5 @@ typedef unsigned long GDuration;
 struct G_EXPORT G {
   static const char* Version;
   static const GDuration Timeout;
+  static const char* pcap_lib_version();
 };
