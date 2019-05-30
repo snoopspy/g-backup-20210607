@@ -32,8 +32,8 @@ struct G_EXPORT GProp {
   virtual GPropItem* propCreateItem(GPropItemParam* param);
   virtual void propCreateItems(QTreeWidget* treeWidget, QTreeWidgetItem* parent, QObject* object);
 #else
-  virtual void* fake_propCreateItem(void* param);
-  virtual void fake_propCreateItems(void* treeWidget, void* parent, QObject* object);
+  virtual void* propCreateItem(void* param);
+  virtual void propCreateItems(void* treeWidget, void* parent, QObject* object);
 #endif
 
 #ifdef QT_GUI_LIB
