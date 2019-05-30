@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QJsonObject>
-#include "base/gbase.h"
+#include "gbase.h"
 
 // ----------------------------------------------------------------------------
 // GJson

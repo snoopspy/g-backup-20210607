@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QList>
-#include "net/gnetintf.h"
+#include "gnetintf.h"
 
 // ----------------------------------------------------------------------------
 // GRtmEntry

@@ -12,7 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "net/packet/gpacket.h"
-#include "base/gwaitevent.h"
+#include "base/sys/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GDelay

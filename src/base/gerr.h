@@ -15,7 +15,7 @@
 #include <QSharedPointer>
 #include <QString>
 #include "gerrcategory.h"
-#include "base/gbase.h"
+#include "gbase.h"
 
 // ----------------------------------------------------------------------------
 // GErr

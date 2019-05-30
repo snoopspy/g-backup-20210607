@@ -11,7 +11,7 @@
 #pragma once
 
 #include <QThread>
-#include "gbase.h"
+#include "base/gbase.h"
 
 // ----------------------------------------------------------------------------
 // GThread

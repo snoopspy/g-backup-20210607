@@ -1,5 +1,5 @@
 #include "ggraph.h"
-#include "base/gthread.h"
+#include "base/sys/gthread.h"
 
 // ----------------------------------------------------------------------------
 // GGraph::Nodes

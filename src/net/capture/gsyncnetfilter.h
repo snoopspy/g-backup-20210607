@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "net/capture/gnetfilter.h"
+#include "gnetfilter.h"
 
 #ifdef Q_OS_LINUX
 

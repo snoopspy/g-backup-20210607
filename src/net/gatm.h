@@ -13,9 +13,7 @@
 #include "net/capture/gpcapdevice.h"
 #include "net/packet/gpacket.h"
 #include "net/gnetintf.h"
-#include "net/pdu/gethhdr.h"
-#include "net/pdu/garphdr.h"
-#include "base/gwaitevent.h"
+#include "base/sys/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
 // GEthArpHdr

@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "net/capture/gpcapdevice.h"
+#include "gpcapdevice.h"
 
 // ----------------------------------------------------------------------------
 // GSyncPcapDevice

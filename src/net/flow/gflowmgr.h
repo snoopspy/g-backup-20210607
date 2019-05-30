@@ -11,9 +11,9 @@
 #pragma once
 
 #include "base/gstateobj.h"
+#include "net/packet/gpacket.h"
 #include "gflow.h"
 #include "gflowkey.h"
-#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
 // GFlowMgr

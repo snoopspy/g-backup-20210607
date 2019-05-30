@@ -17,7 +17,7 @@
   #include <QCoreApplication>
 #endif // QT_GUI_LIB
 
-#include "base/gbase.h"
+#include "gbase.h"
 
 // ----------------------------------------------------------------------------
 // GApp

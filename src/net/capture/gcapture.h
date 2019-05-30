@@ -11,7 +11,7 @@
 #pragma once
 
 #include "base/gstateobj.h"
-#include "base/gthread.h"
+#include "base/sys/gthread.h"
 #include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------

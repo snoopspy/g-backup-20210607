@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "net/capture/gpcapfile.h"
+#include "gpcapfile.h"
 
 // ----------------------------------------------------------------------------
 // GSyncPcapFile

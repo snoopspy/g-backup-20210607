@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "net/capture/gcapture.h"
+#include "gcapture.h"
 
 #ifdef Q_OS_WIN
 #include "net/_windows/windivert.h"
