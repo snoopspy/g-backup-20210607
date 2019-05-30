@@ -1,6 +1,5 @@
 #include "gflowmgrdebugger.h"
 #include "net/pdu/giphdr.h"
-#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GFlowMgrDebugger
@@ -67,10 +66,7 @@ void GFlowMgrDebugger::udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* valu
 void GFlowMgrDebugger::debug(GPacket* packet) {
   if (!enabled_) return;
 
-  GIpPacket* ipPacket = GPacketCast::toIp(packet);
-  if (ipPacket == nullptr) return;
-
-  if (ipPacket->ipHdr_ != nullptr) {
+  if (packet->ipHdr_ != nullptr) {
     if (ipFlowMgr_ != nullptr) {
       GFlow::IpFlowKey* key = ipFlowMgr_->key_;
       FlowItem* flowItem = PFlowItem(ipFlowMgr_->value_->mem(ipFlowOffset_));
@@ -81,7 +77,7 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
         arg(QString(key->sip_)).arg(QString(key->dip_)); // gilgil temp 2016.10.10
     }
 
-    if (ipPacket->tcpHdr_ != nullptr) {
+    if (packet->tcpHdr_ != nullptr) {
       if (tcpFlowMgr_ != nullptr) {
         GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
         FlowItem* flowItem = PFlowItem(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
@@ -93,7 +89,7 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
       }
     }
 
-    if (ipPacket->udpHdr_ != nullptr) {
+    if (packet->udpHdr_ != nullptr) {
       if (udpFlowMgr_ != nullptr) {
         GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
         FlowItem* flowItem = PFlowItem(udpFlowMgr_->value_->mem(udpFlowOffset_));

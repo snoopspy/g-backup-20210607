@@ -1,5 +1,4 @@
 #include "gipflowmgr.h"
-#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GIpFlowMgr
@@ -53,10 +52,7 @@ void GIpFlowMgr::process(GPacket* packet) {
     lastCheckTick_ = now;
   }
 
-  GIpPacket* ipPacket = GPacketCast::toIp(packet);
-  if (ipPacket == nullptr) return;
-
-  GIpHdr* ipHdr = ipPacket->ipHdr_;
+  GIpHdr* ipHdr = packet->ipHdr_;
   if (ipHdr == nullptr) return;
 
   GFlow::IpFlowKey key{ipHdr->sip(), ipHdr->dip()};

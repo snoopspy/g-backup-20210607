@@ -1,6 +1,6 @@
 #include "gatm.h"
-#include "net/packet/gpacketcast.h"
 #include <QElapsedTimer>
+#include "net/packet/gethpacket.h"
 
 // ----------------------------------------------------------------------------
 // GAtm

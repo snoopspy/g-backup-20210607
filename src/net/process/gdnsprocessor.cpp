@@ -1,14 +1,10 @@
 #include "gdnsprocessor.h"
-#include "net/packet/gpacketcast.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor
 // ----------------------------------------------------------------------------
 void GDnsProcessor::process(GPacket* packet) {
-  GIpPacket* ipPacket = GPacketCast::toIp(packet);
-  if (ipPacket == nullptr) return;
-
-  GUdpHdr *udpHdr = ipPacket->udpHdr_;
+  GUdpHdr *udpHdr = packet->udpHdr_;
   if (udpHdr == nullptr)
     return;
 
@@ -17,7 +13,7 @@ void GDnsProcessor::process(GPacket* packet) {
       return;
   }
 
-  GBuf udpData = ipPacket->udpData_;
+  GBuf udpData = packet->udpData_;
   if (!udpData.valid())
     return;
 

@@ -4,39 +4,34 @@
 #include <GApp>
 #include <GJson>
 #include <GPcapDevice>
-#include <GPacketCast>
 
 struct Obj : QObject {
   Q_OBJECT
 
 public slots:
   void captured(GPacket* packet) {
-    GEthPacket* ethPacket = GPacketCast::toEth(packet);
-    GIpPacket* ipPacket = GPacketCast::toIp(packet);
-    if (ipPacket == nullptr) return;
-
     QString smac;
     QString dmac;
-    if (ethPacket != nullptr) {
-      GEthHdr* ethHdr = ethPacket->ethHdr_;
+    if (packet != nullptr) {
+      GEthHdr* ethHdr = packet->ethHdr_;
       if (ethHdr == nullptr) return;
       smac = QString(ethHdr->smac());
       dmac = QString(ethHdr->dmac());
     }
 
-    GIpHdr* ipHdr = ipPacket->ipHdr_;
+    GIpHdr* ipHdr = packet->ipHdr_;
     if (ipHdr == nullptr) return;
     QString sip = QString(ipHdr->sip());
     QString dip = QString(ipHdr->dip());
 
     QString proto, sport, dport;
-    GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
+    GTcpHdr* tcpHdr = packet->tcpHdr_;
     if (tcpHdr != nullptr) {
       proto = "tcp";
       sport = QString::number(tcpHdr->sport());
       dport = QString::number(tcpHdr->dport());
     } else {
-      GUdpHdr* udpHdr = ipPacket->udpHdr_;
+      GUdpHdr* udpHdr = packet->udpHdr_;
       if (udpHdr != nullptr) {
         proto = "udp";
         sport = QString::number(udpHdr->sport());

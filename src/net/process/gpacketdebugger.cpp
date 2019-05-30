@@ -1,6 +1,5 @@
 #include "gpacketdebugger.h"
 #include <iostream>
-#include "net/packet/gpacketcast.h"
 
 QString dump(u_char* data, size_t size) {
   QString raw;
@@ -39,40 +38,34 @@ QString dump(u_char* data, size_t size) {
 void GPacketDebugger::debug(GPacket* packet) {
   if (!enabled_) return;
 
-  GEthPacket* ethPacket = GPacketCast::toEth(packet);
-  GIpPacket* ipPacket = GPacketCast::toIp(packet);
-  if (ipPacket == nullptr) return;
-
   QString msg;
 
-  if (ethPacket != nullptr) {
-    GEthHdr* ethHdr = ethPacket->ethHdr_;
-    if (ethHdr != nullptr) {
-      msg += QString(" eth %1>%2").arg(QString(ethHdr->smac()), QString(ethHdr->dmac()));
-    }
+  GEthHdr* ethHdr = packet->ethHdr_;
+  if (ethHdr != nullptr) {
+    msg += QString(" eth %1>%2").arg(QString(ethHdr->smac()), QString(ethHdr->dmac()));
   }
 
-  GIpHdr* ipHdr = ipPacket->ipHdr_;
+  GIpHdr* ipHdr = packet->ipHdr_;
   if (ipHdr != nullptr) {
     msg += QString(" ip %1>%2").arg(QString(ipHdr->sip()), QString(ipHdr->dip()));
   }
 
-  GTcpHdr* tcpHdr = ipPacket->tcpHdr_;
+  GTcpHdr* tcpHdr = packet->tcpHdr_;
   if (tcpHdr != nullptr) {
     msg += QString(" tcp %1>%2").arg(tcpHdr->sport()).arg(tcpHdr->dport());
   }
 
-  GBuf tcpData = ipPacket->tcpData_;
+  GBuf tcpData = packet->tcpData_;
   if (tcpData.valid()) {
     msg += " " + dump(tcpData.data_, tcpData.size_);
   }
 
-  GUdpHdr* udpHdr = ipPacket->udpHdr_;
+  GUdpHdr* udpHdr = packet->udpHdr_;
   if (udpHdr != nullptr) {
     msg += QString(" udp %1>%2").arg(udpHdr->sport()).arg(udpHdr->dport());
   }
 
-  GBuf udpData = ipPacket->udpData_;
+  GBuf udpData = packet->udpData_;
   if (udpData.valid()) {
     msg += " " + dump(udpData.data_, udpData.size_);
   }
