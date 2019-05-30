@@ -21,14 +21,14 @@ bool GApp::execObj(GObj* obj) {
   GPropWidget propWidget(obj);
 
   QJsonObject jo = GJson::loadFromFile();
-  jo["dept"] >> *obj;
+  jo["obj"] >> *obj;
   jo["propWidget"] >> propWidget;
 
   propWidget.update();
   propWidget.show();
   int res = QApplication::exec();
 
-  jo["dept"] << *obj;
+  jo["obj"] << *obj;
   jo["propWidget"] << propWidget;
 
   GJson::saveToFile(jo);
