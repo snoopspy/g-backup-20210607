@@ -46,7 +46,9 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
   return res;
 }
 
-GBuf GPacket::getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst) {
+// ----- gilgil temp 2019.05.31 -----
+/*
+ * GBuf GPacket::getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst) {
   GBuf res = buf;
   if (src != dst) {
     if (src == GPacket::Eth && dst == GPacket::Ip) {
@@ -60,6 +62,8 @@ GBuf GPacket::getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst) {
   }
   return res;
 }
+*/
+// ----------------------------------
 
 void GPacket::parse() {
   qCritical() << "virtual function call";

@@ -35,19 +35,20 @@ bool GPcapDeviceWrite::doClose()  {
   return true;
 }
 
-GPacket::Result GPcapDeviceWrite::write(GPacket* packet) {
-  GBuf buf = GPacket::getWriteBuf(packet->buf_, packet->dataLinkType_, dataLinkType_);
-  if (!buf.valid()) {
-    SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
+GPacket::Result GPcapDeviceWrite::write(GBuf buf) {
+  int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
+  if (i != 0) {
+    SET_ERR(GErr::FAIL, QString("pcap_sendpacket return %1").arg(i));
     return GPacket::Fail;
   }
-  int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
-  if (i == 0) {
+  return GPacket::Ok;
+}
+
+GPacket::Result GPcapDeviceWrite::write(GPacket* packet) {
+  GPacket::Result res = write(packet->buf_);
+  if (res == GPacket::Ok)
     emit written(packet);
-    return GPacket::Ok;
-  }
-  SET_ERR(GErr::FAIL, QString("pcap_sendpacket return %1").arg(i));
-  return GPacket::Fail;
+  return res;
 }
 
 #ifdef QT_GUI_LIB

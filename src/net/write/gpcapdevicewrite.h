@@ -36,6 +36,9 @@ public:
 protected:
   GNetIntf* intf_{nullptr};
 
+public:
+  GPacket::Result write(GBuf buf);
+
 public slots:
   GPacket::Result write(GPacket* packet);
 

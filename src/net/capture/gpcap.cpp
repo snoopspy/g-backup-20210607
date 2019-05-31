@@ -74,15 +74,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-  GBuf buf = GPacket::getWriteBuf(packet->buf_, packet->dataLinkType_, dataLinkType_);
-  if (!buf.valid()) {
-    SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
-    return GPacket::Fail;
-  }
-  int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
-  if (i == 0) return GPacket::Ok;
-  qWarning() << QString("pcap_sendpacket return %1").arg(i);
-  return GPacket::Fail;
+  return write(GBuf(packet->buf_.data_, packet->buf_.size_));
 }
 
 GPacket::Result GPcap::write(GBuf buf) {

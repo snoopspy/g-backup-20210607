@@ -57,15 +57,10 @@ bool GPcapFileWrite::doClose() {
 }
 
 GPacket::Result GPcapFileWrite::write(GPacket* packet) {
-  GBuf buf = GPacket::getWriteBuf(packet->buf_, packet->dataLinkType_, dataLinkType_);
-  if (!buf.valid()) {
-    SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
-    return GPacket::Fail;
-  }
   struct pcap_pkthdr pkthdr;
   pkthdr.ts = packet->ts_;
-  pkthdr.caplen = pkthdr.len = bpf_u_int32(buf.size_);
-  pcap_dump(reinterpret_cast<u_char*>(pcap_dumper_), &pkthdr, buf.data_);
+  pkthdr.caplen = pkthdr.len = bpf_u_int32(packet->buf_.size_);
+  pcap_dump(pbyte(pcap_dumper_), &pkthdr, packet->buf_.data_);
   emit written(packet);
   return GPacket::Ok;
 }
