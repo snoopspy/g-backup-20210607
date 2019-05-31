@@ -74,7 +74,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-  GBuf buf = GPacket::getWriteBuf(packet->buf_, dataLinkType_, packet->dataLinkType_);
+  GBuf buf = GPacket::getWriteBuf(packet->buf_, packet->dataLinkType_, dataLinkType_);
   if (!buf.valid()) {
     SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
     return GPacket::Fail;

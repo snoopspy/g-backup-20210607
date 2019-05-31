@@ -176,7 +176,7 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
   GWinDivertLib& lib = GWinDivertLib::instance();
   Q_ASSERT(lib.ok);
 
-  GBuf buf = GPacket::getWriteBuf(packet->buf_, dataLinkType_, packet->dataLinkType_);
+  GBuf buf = GPacket::getWriteBuf(packet->buf_, packet->dataLinkType_, dataLinkType_);
   if (!buf.valid()) {
     SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
     return GPacket::Fail;
