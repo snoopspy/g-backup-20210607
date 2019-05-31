@@ -33,4 +33,5 @@ struct G_EXPORT GIp6Hdr final {
   GIp6     sip()   { return sip_; }
   GIp6     dip()   { return dip_; }
 };
+typedef GIp6Hdr *PIp6Hdr;
 #pragma pack(pop)

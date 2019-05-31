@@ -63,4 +63,5 @@ struct G_EXPORT GArpHdr final { // libnet_arp_hdr // gilgil temp 2019.05.26
     InvReply   = 9  // resp identifying peer
   } Operation;
 };
+typedef GArpHdr *PArpHdr;
 #pragma pack(pop)

@@ -10,7 +10,7 @@ void GEthPacket::parse() {
     return;
   }
 #endif // _DEBUG
-  ethHdr_ = reinterpret_cast<GEthHdr*>(buf_.data_);
+  ethHdr_ = PEthHdr(buf_.data_);
   switch (ethHdr_->type()) {
     case GEthHdr::Ip4:
     case GEthHdr::Ip6: {
@@ -22,7 +22,7 @@ void GEthPacket::parse() {
       break;
     }
     case GEthHdr::Arp:
-      arpHdr_ = reinterpret_cast<GArpHdr*>(buf_.data_ + sizeof(GEthHdr));
+      arpHdr_ = PArpHdr(buf_.data_ + sizeof(GEthHdr));
       break;
   }
 #ifdef _DEBUG
