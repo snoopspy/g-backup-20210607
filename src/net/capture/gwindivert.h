@@ -13,7 +13,7 @@
 #include "gcapture.h"
 
 #ifdef Q_OS_WIN
-#include "net/_windows/windivert.h"
+#include "net/_win/windivert.h"
 
 // ----------------------------------------------------------------------------
 // GWinDivert
