@@ -36,8 +36,8 @@ protected:
   bool doClose() override;
 
 public slots:
-  void sleep(GPacket* packet);
+  void delay(GPacket* packet);
 
 signals:
-  void sleeped(GPacket* packet);
+  void delayed(GPacket* packet);
 };
