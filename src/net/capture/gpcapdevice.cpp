@@ -21,6 +21,7 @@ bool GPcapDevice::doOpen() {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
   }
+  intf_ = GNetIntf::all().findByName(devName_);
 
   char errBuf[PCAP_ERRBUF_SIZE];
   pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, readTimeout_, errBuf);
@@ -35,11 +36,12 @@ bool GPcapDevice::doOpen() {
 bool GPcapDevice::doClose() {
   if (!enabled_) return true;
 
+  intf_ = nullptr;
+
   return GPcap::doClose();
 }
 
 #ifdef QT_GUI_LIB
-
 
 #include "base/prop/gpropitem_device.h"
 GPropItem* GPcapDevice::propCreateItem(GPropItemParam* param) {

@@ -11,6 +11,7 @@
 #pragma once
 
 #include "gpcapwrite.h"
+#include "net/gnetintf.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite
@@ -29,6 +30,11 @@ public:
 protected:
   bool doOpen() override;
   bool doClose() override;
+
+public:
+  GNetIntf* intf() { return intf_; }
+protected:
+  GNetIntf* intf_{nullptr};
 
 public slots:
   GPacket::Result write(GPacket* packet);

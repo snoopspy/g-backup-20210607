@@ -9,6 +9,7 @@ bool GPcapDeviceWrite::doOpen() {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
   }
+  intf_ = GNetIntf::all().findByName(devName_);
 
   char errBuf[PCAP_ERRBUF_SIZE];
   pcap_ = pcap_open_live(qPrintable(devName_), 0, 0, 0, errBuf);
@@ -25,6 +26,9 @@ bool GPcapDeviceWrite::doClose()  {
     pcap_close(pcap_);
     pcap_ = nullptr;
   }
+
+  intf_ = nullptr;
+
   return true;
 }
 

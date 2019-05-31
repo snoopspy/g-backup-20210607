@@ -11,6 +11,7 @@
 #pragma once
 
 #include "gpcap.h"
+#include "net/gnetintf.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
@@ -35,6 +36,11 @@ public:
 protected:
   bool doOpen() override;
   bool doClose() override;
+
+public:
+  GNetIntf* intf() { return intf_; }
+protected:
+  GNetIntf* intf_{nullptr};
 
 #ifdef QT_GUI_LIB
 public:
