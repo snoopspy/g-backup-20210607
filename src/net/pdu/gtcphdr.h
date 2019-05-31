@@ -50,4 +50,5 @@ struct G_EXPORT GTcpHdr final { // libnet_tcp_hdr // gilgil temp 2019.05.13
   static uint16_t calcChecksum(GIpHdr* ipHdr, GTcpHdr* tcpHdr);
   static GBuf parseData(GIpHdr* ipHdr, GTcpHdr* tcpHdr);
 };
+typedef GTcpHdr *PTcpHdr;
 #pragma pack(pop)

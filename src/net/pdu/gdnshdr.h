@@ -31,4 +31,5 @@ struct G_EXPORT GDnsHdr final { // libnet_dnsv4_hdr // gilgil temp 2019.05.13
     uint16_t auth()  { return ntohs(num_auth_rr); }
     uint16_t addr()  { return ntohs(num_addi_rr); }
 };
+typedef GDnsHdr *PDnsHdr;
 #pragma pack(pop)

@@ -31,18 +31,18 @@ void GIpPacket::parse() {
 
   switch (proto) {
     case GIpHdr::Tcp: // Tcp
-      tcpHdr_ = reinterpret_cast<GTcpHdr*>(p);
+      tcpHdr_ = PTcpHdr(p);
       p += tcpHdr_->off() * 4;
       tcpData_ = GTcpHdr::parseData(ipHdr_, tcpHdr_);
       break;
     case GIpHdr::Udp: // Udp
-      udpHdr_ = reinterpret_cast<GUdpHdr*>(p);
+      udpHdr_ = PUdpHdr(p);
       p += sizeof(GUdpHdr);
       udpData_ = GUdpHdr::parseData(udpHdr_);
       break;
     case GIpHdr::Icmp: // Icmp
-      icmpHdr_ = reinterpret_cast<GIcmpHdr*>(p);
-      p += sizeof(GIcmpHdr); // gilgil temp 2019.05.14
+      icmpHdr_ = PIcmpHdr(p);
+      p += sizeof(GIcmpHdr);
       break;
     default:
       qDebug() << "unknown protocol" << proto;
