@@ -33,6 +33,10 @@ public:
   }
   ~GPcapFileWrite() override { close(); }
 
+  void setDataLinkType(GPacket::DataLinkType dataLinkType) {
+    dataLinkType_ = dataLinkType;
+  }
+
 protected:
   bool doOpen() override;
   bool doClose() override;
