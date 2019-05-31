@@ -3,6 +3,25 @@
 // ----------------------------------------------------------------------------
 // GPacket
 // ----------------------------------------------------------------------------
+QString GPacket::dataLinkTypeToString(DataLinkType dataLinkType) {
+  QString res;
+  switch (dataLinkType) {
+    case GPacket::Eth:
+      res = "GPacket::Eth";
+      break;
+    case GPacket::Ip:
+      res = "GPacket::Ip";
+      break;
+    case GPacket::Dot11:
+      res = "GPacket::Dot11";
+      break;
+    case GPacket::Null:
+      res = "GPacket::Null";
+      break;
+  }
+  return res;
+}
+
 int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
   int res;
   switch (dataLinkType) {

@@ -1,24 +1,36 @@
 #include <GPcapDeviceWrite>
+#include <GPcapDeviceWriteEth>
+#include <GPcapDeviceWriteIp>
 #include <GPcapFileWrite>
+#include <GPcapFileWriteEth>
+#include <GPcapFileWriteIp>
 
 #ifdef Q_OS_WIN
-  #define EXPORT __declspec(dllexport)
+#define EXPORT __declspec(dllexport)
 #else
-  #define EXPORT
+#define EXPORT
 #endif
 
 extern "C" {
 
 EXPORT int count() {
   qRegisterMetaType<GPcapDeviceWrite*>();
+  qRegisterMetaType<GPcapDeviceWriteEth*>();
+  qRegisterMetaType<GPcapDeviceWriteIp*>();
   qRegisterMetaType<GPcapFileWrite*>();
-  return 2;
+  qRegisterMetaType<GPcapFileWriteEth*>();
+  qRegisterMetaType<GPcapFileWriteIp*>();
+  return 6;
 }
 
 EXPORT const char* name(int index) {
   switch (index) {
     case 0: return GPcapDeviceWrite::staticMetaObject.className();
-    case 1: return GPcapFileWrite::staticMetaObject.className();
+    case 1: return GPcapDeviceWriteEth::staticMetaObject.className();
+    case 2: return GPcapDeviceWriteIp::staticMetaObject.className();
+    case 3: return GPcapFileWrite::staticMetaObject.className();
+    case 4: return GPcapFileWriteEth::staticMetaObject.className();
+    case 5: return GPcapFileWriteIp::staticMetaObject.className();
     default: return nullptr;
   }
 }
@@ -26,7 +38,11 @@ EXPORT const char* name(int index) {
 EXPORT void* create(int index) {
   switch (index) {
     case 0: return new GPcapDeviceWrite;
-    case 1: return new GPcapFileWrite;
+    case 1: return new GPcapDeviceWriteEth;
+    case 2: return new GPcapDeviceWriteIp;
+    case 3: return new GPcapFileWrite;
+    case 4: return new GPcapFileWriteEth;
+    case 5: return new GPcapFileWriteIp;
     default: return nullptr;
   }
 }

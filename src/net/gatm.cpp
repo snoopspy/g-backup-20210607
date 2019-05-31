@@ -32,7 +32,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
 
   GPacket::DataLinkType dataLinkType = pcapDevice->dataLinkType();
   if (dataLinkType != GPacket::Eth) {
-    qWarning() << QString("invalid dataLinkType %1").arg(int(dataLinkType));
+    qWarning() << QString("invalid dataLinkType %1").arg(GPacket::dataLinkTypeToString(dataLinkType));
     return false;
   }
 

@@ -48,9 +48,10 @@ public:
     Dot11, // DLT_IEEE802_11_RADIO (127)
     Null,  // DLT_NULL (0)
   } DataLinkType;
+  static QString dataLinkTypeToString(DataLinkType dataLinkType);
   static int dataLinkTypeToInt(DataLinkType dataLinkType);
   static DataLinkType intToDataLinkType(int dataLink);
-  static GBuf getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst);
+  // static GBuf getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst); // gilgil temp 2019.05.31
 
 public:
   GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
