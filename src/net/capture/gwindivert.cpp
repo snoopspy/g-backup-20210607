@@ -176,9 +176,14 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
   GWinDivertLib& lib = GWinDivertLib::instance();
   Q_ASSERT(lib.ok);
 
+  GBuf buf = GPacket::getWriteBuf(packet->buf_, dataLinkType_, packet->dataLinkType_);
+  if (!buf.valid()) {
+    SET_ERR(GErr::NOT_SUPPORTED, "invalid data link type");
+    return GPacket::Fail;
+  }
   PWINDIVERT_ADDRESS addr = reinterpret_cast<PWINDIVERT_ADDRESS>(packet->userData_);
   UINT writeLen;
-  BOOL res = lib.WinDivertSend(handle_, packet->buf_.data_, UINT(packet->buf_.size_), addr, &writeLen);
+  BOOL res = lib.WinDivertSend(handle_, buf_.data_, UINT(buf_.size_), addr, &writeLen);
   if (!res)
   {
     DWORD lastError = GetLastError();

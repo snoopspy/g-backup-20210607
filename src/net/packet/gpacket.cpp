@@ -46,6 +46,21 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
   return res;
 }
 
+GBuf GPacket::getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst) {
+  GBuf res = buf;
+  if (src != dst) {
+    if (src == GPacket::Eth && dst == GPacket::Ip) {
+      buf.data_ += sizeof(GEthHdr);
+      buf.size_ -= sizeof(GEthHdr);
+    } else {
+      QString msg = QString("invalid data link type src:%1 dst:%2").arg(int(src)).arg(int(dst));
+      qCritical() << msg;
+      return GBuf(nullptr, 0);
+    }
+  }
+  return res;
+}
+
 void GPacket::parse() {
   qCritical() << "virtual function call";
 }

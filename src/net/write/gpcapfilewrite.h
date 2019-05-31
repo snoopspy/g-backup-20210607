@@ -41,7 +41,7 @@ protected:
   pcap_dumper_t* pcap_dumper_{nullptr};
 
 public slots:
-  void write(GPacket* packet);
+  GPacket::Result write(GPacket* packet);
 
 signals:
   void written(GPacket* packet);

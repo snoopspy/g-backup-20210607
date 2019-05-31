@@ -50,6 +50,7 @@ public:
   } DataLinkType;
   static int dataLinkTypeToInt(DataLinkType dataLinkType);
   static DataLinkType intToDataLinkType(int dataLink);
+  static GBuf getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst);
 
 public:
   GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
