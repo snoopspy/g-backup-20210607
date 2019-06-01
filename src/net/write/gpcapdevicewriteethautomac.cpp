@@ -113,6 +113,6 @@ GPacket::Result GPcapDeviceWriteEthAutoMac::write(GPacket* packet) {
   ethHdr->type_ = htons(type_);
   packet->buf_ = newBuf;
   GPacket::Result res = GPcapDeviceWrite::write(packet);
-  packet->buf_ = newBuf;
+  packet->buf_ = oldBuf;
   return res;
 }

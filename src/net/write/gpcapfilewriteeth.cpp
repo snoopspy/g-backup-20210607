@@ -51,6 +51,6 @@ GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
   ethHdr->type_ = htons(type_);
   packet->buf_ = newBuf;
   GPacket::Result res = GPcapFileWrite::write(packet);
-  packet->buf_ = newBuf;
+  packet->buf_ = oldBuf;
   return res;
 }
