@@ -4,7 +4,7 @@
 // GPcapDeviceWriteEth
 // ----------------------------------------------------------------------------
 bool GPcapDeviceWriteEth::doOpen() {
-  if (GPcapDeviceWrite::doOpen())
+  if (!GPcapDeviceWrite::doOpen())
     return false;
 
   if (dataLinkType_ != GPacket::Eth) {
@@ -23,25 +23,21 @@ bool GPcapDeviceWriteEth::doClose() {
 }
 
 GPacket::Result GPcapDeviceWriteEth::write(GPacket* packet) {
-  GPacket::Result res;
+  GBuf oldBuf = packet->buf_;
+  GBuf newBuf;
+  GEthHdr* ethHdr;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      res = GPcapDeviceWrite::write(packet);
+      newBuf = packet->buf_;
+      ethHdr = PEthHdr(oldBuf.data_);
       break;
-    case GPacket::Ip: {
-      GEthHdr* ethHdr = PEthHdr(temp_);
-      ethHdr->smac_ = smac_;
-      ethHdr->dmac_ = dmac_;
-      ethHdr->type_ = htons(type_);
-      GBuf oldBuf = packet->buf_;
-      GBuf newBuf(temp_, sizeof(GEthHdr) + oldBuf.size_);
+    case GPacket::Ip:
+      newBuf.data_ = temp_;
+      newBuf.size_ = sizeof(GEthHdr) + oldBuf.size_;
       Q_ASSERT(newBuf.size_ <= MAXBUF);
+      ethHdr = PEthHdr(temp_);
       memcpy(temp_ + sizeof(GEthHdr), oldBuf.data_, oldBuf.size_);
-      packet->buf_ = newBuf;
-      res = GPcapDeviceWrite::write(packet);
-      packet->buf_ = oldBuf;
       break;
-    }
     case GPacket::Dot11:
     case GPacket::Null: {
       QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dataLinkType_));
@@ -49,5 +45,11 @@ GPacket::Result GPcapDeviceWriteEth::write(GPacket* packet) {
       return GPacket::Fail;
     }
   }
+  ethHdr->smac_ = smac_;
+  ethHdr->dmac_ = dmac_;
+  ethHdr->type_ = htons(type_);
+  packet->buf_ = newBuf;
+  GPacket::Result res = GPcapDeviceWrite::write(packet);
+  packet->buf_ = newBuf;
   return res;
 }

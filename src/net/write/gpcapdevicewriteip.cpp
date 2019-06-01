@@ -4,7 +4,7 @@
 // GPcapDeviceWriteIp
 // ----------------------------------------------------------------------------
 bool GPcapDeviceWriteIp::doOpen() {
-  if (GPcapDeviceWrite::doOpen())
+  if (!GPcapDeviceWrite::doOpen())
     return false;
 
   if (dataLinkType_ != GPacket::Ip) {

@@ -4,7 +4,7 @@
 // GPcapFileWriteEth
 // ----------------------------------------------------------------------------
 bool GPcapFileWriteEth::doOpen() {
-  if (GPcapFileWrite::doOpen())
+  if (!GPcapFileWrite::doOpen())
     return false;
 
   if (dataLinkType_ != GPacket::Eth) {
@@ -23,23 +23,20 @@ bool GPcapFileWriteEth::doClose() {
 }
 
 GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
-  GPacket::Result res;
+  GBuf oldBuf = packet->buf_;
+  GBuf newBuf;
+  GEthHdr* ethHdr;
   switch (packet->dataLinkType_) {
     case GPacket::Eth:
-      res = GPcapFileWrite::write(packet);
+      newBuf = packet->buf_;
+      ethHdr = PEthHdr(oldBuf.data_);
       break;
     case GPacket::Ip: {
-      GEthHdr* ethHdr = PEthHdr(temp_);
-      ethHdr->smac_ = smac_;
-      ethHdr->dmac_ = dmac_;
-      ethHdr->type_ = htons(type_);
-      GBuf oldBuf = packet->buf_;
-      GBuf newBuf(temp_, sizeof(GEthHdr) + oldBuf.size_);
+      newBuf.data_ = temp_;
+      newBuf.size_ = sizeof(GEthHdr) + oldBuf.size_;
       Q_ASSERT(newBuf.size_ <= MAXBUF);
+      ethHdr = PEthHdr(temp_);
       memcpy(temp_ + sizeof(GEthHdr), oldBuf.data_, oldBuf.size_);
-      packet->buf_ = newBuf;
-      res = GPcapFileWrite::write(packet);
-      packet->buf_ = oldBuf;
       break;
     }
     case GPacket::Dot11:
@@ -49,5 +46,11 @@ GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
       return GPacket::Fail;
     }
   }
+  ethHdr->smac_ = smac_;
+  ethHdr->dmac_ = dmac_;
+  ethHdr->type_ = htons(type_);
+  packet->buf_ = newBuf;
+  GPacket::Result res = GPcapFileWrite::write(packet);
+  packet->buf_ = newBuf;
   return res;
 }
