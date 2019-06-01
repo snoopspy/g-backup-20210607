@@ -169,6 +169,12 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
   packet->buf_.data_ = pktData_;
   packet->buf_.size_ = size_t(readLen);
   if (autoParse_) packet->parse();
+  if (correctIpChecksum_) {
+    GIpHdr* ipHdr = packet->ipHdr_;
+    if (ipHdr != nullptr) {
+      ipHdr->sum_ = ntohs(GIpHdr::calcChecksum(ipHdr));
+    }
+  }
   return GPacket::Ok;
 }
 

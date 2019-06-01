@@ -27,7 +27,7 @@ struct G_EXPORT GWinDivert : GCapture {
   Q_PROPERTY(quint64 queueLen_ MEMBER queueLen_)
   Q_PROPERTY(quint64 queueTime_ MEMBER queueTime_)
   Q_PROPERTY(int tos MEMBER tos_)
-  Q_PROPERTY(bool correctChecksum MEMBER correctChecksum_)
+  Q_PROPERTY(bool correctIpChecksum MEMBER correctIpChecksum_)
 
 public:
   QString filter_{"true"};
@@ -37,7 +37,7 @@ public:
   UINT64 queueLen_{8192};
   UINT64 queueTime_{1024};
   int tos_{0};
-  bool correctChecksum_{true};
+  bool correctIpChecksum_{true};
 
 public:
   Q_INVOKABLE GWinDivert(QObject* parent = nullptr);
