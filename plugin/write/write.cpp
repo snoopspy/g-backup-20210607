@@ -22,7 +22,7 @@ EXPORT int count() {
   qRegisterMetaType<GPcapFileWrite*>();
   qRegisterMetaType<GPcapFileWriteEth*>();
   qRegisterMetaType<GPcapFileWriteIp*>();
-  return 6;
+  return 7;
 }
 
 EXPORT const char* name(int index) {
