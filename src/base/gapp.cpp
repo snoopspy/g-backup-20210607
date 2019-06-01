@@ -1,5 +1,7 @@
 #include "gapp.h"
 #include "base/graph/ggraphwidget.h"
+#include "net/gnetintf.h"
+#include "net/grtm.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -14,6 +16,8 @@ GApp::GApp(int &argc, char **argv) : QCoreApplication (argc, argv) {
 
 void GApp::init() {
   qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}");
+  GNetIntf::all().init();
+  GRtm::instance().init();
 }
 
 #ifdef QT_GUI_LIB
