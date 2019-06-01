@@ -102,7 +102,7 @@ GPacket::Result GPcapDeviceWriteEthAutoMac::write(GPacket* packet) {
   if (it == atm.end()) {
     GAtm atmOne;
     GMac mac = atmOne.waitOne(adjIp, device_);
-    if (mac.cleanMac()) {
+    if (mac.isClean()) {
       qCritical() << QString("can not resolve mac for ip %1").arg(QString(adjIp));
       return GPacket::Fail;
     }

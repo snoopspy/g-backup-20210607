@@ -89,7 +89,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
     GAtmMap::iterator it = find(sip);
     if (it != end()) {
       it.value() = smac;
-      qDebug() << QString("ip:%1 mac:%2").arg(QString(it.key()), QString(it.value()));
+      qDebug() << QString("resolve ip:%1 mac:%2").arg(QString(it.key()), QString(it.value()));
       if (allResolved()) {
         succeed = true;
         break;
