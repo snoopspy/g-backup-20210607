@@ -21,7 +21,13 @@ bool GPcapDevice::doOpen() {
     SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
     return false;
   }
+
   intf_ = GNetIntf::all().findByName(devName_);
+  if (intf_ == nullptr) {
+    QString msg = QString("can not find interface for %1").arg(devName_);
+    SET_ERR(GErr::VALUE_IS_NULL, msg);
+    return false;
+  }
 
   char errBuf[PCAP_ERRBUF_SIZE];
   pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, readTimeout_, errBuf);

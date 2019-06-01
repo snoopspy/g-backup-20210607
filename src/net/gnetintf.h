@@ -74,7 +74,7 @@ public:
   pcap_if_t* allDevs_{nullptr};
   static GNetIntfs& instance();
 
-protected:
+public:
   bool initialized_{false};
   void init();
 };

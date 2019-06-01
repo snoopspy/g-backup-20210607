@@ -51,6 +51,8 @@ struct G_EXPORT GRtm : QList<GRtmEntry> {
 protected: // inherited singleton
   GRtm();
   virtual ~GRtm();
+
+public:
   virtual void init() = 0;
 
 public:

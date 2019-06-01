@@ -5,6 +5,8 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 GRtmLinux::GRtmLinux() : GRtm() {
+  qDebug() << "GRtmLinux::GRtmLinux()"; // gilgil temp 2019.06.01
+
   QString command = "cat /proc/net/route";
   QProcess p;
   p.start(command);
@@ -56,12 +58,14 @@ GRtmLinux::GRtmLinux() : GRtm() {
 }
 
 GRtmLinux::~GRtmLinux() {
+  qDebug() << "GRtmLinux::~GRtmLinux()"; // gilgil temp 2019.06.01
   clear();
 }
 
 void GRtmLinux::init() {
   if (initialized_) return;
   initialized_ = true;
+  qDebug() << "GRtmLinux::init()"; // gilgil temp 2019.06.01
 
   Q_ASSERT(count() == intfNames_.count());
   for (int i = 0; i < count(); i++) {

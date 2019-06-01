@@ -23,5 +23,7 @@ protected:
 
   QStringList adapterNames_;
   bool initialized_{false};
+
+public:
   void init() override;
 };

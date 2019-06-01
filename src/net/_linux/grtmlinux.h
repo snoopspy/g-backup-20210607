@@ -23,5 +23,7 @@ protected:
 
   QStringList intfNames_;
   bool initialized_{false};
+
+public:
   void init() override;
 };
