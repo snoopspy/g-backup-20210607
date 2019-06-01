@@ -1,5 +1,5 @@
-#include <GSleep>
 #include <GDelay>
+#include <GSyncDelay>
 #include <GTimeStampSyncDelay>
 
 #ifdef Q_OS_WIN
