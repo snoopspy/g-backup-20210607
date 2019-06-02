@@ -12,12 +12,12 @@
 
 #ifdef QT_GUI_LIB
   #include <QApplication>
-  #include "base/graph/gpluginfactory.h"
 #else
   #include <QCoreApplication>
 #endif // QT_GUI_LIB
 
-#include "gbase.h"
+#include "base/graph/ggraph.h"
+#include "base/graph/gpluginfactory.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -29,7 +29,7 @@ struct G_EXPORT GApp : QCoreApplication {
 #endif // QT_GUI_LIB
 
 public:
-  GApp(int &argc, char **argv);
+  GApp(int &argc, char** argv);
   static void init();
 
 #ifdef QT_GUI_LIB

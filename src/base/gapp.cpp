@@ -7,9 +7,9 @@
 // GApp
 // ----------------------------------------------------------------------------
 #ifdef QT_GUI_LIB
-GApp::GApp(int &argc, char **argv) : QApplication (argc, argv) {
+GApp::GApp(int &argc, char** argv) : QApplication(argc, argv) {
 #else
-GApp::GApp(int &argc, char **argv) : QCoreApplication (argc, argv) {
+GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 #endif // QT_GUI_LIB
   init();
 }
