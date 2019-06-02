@@ -23,27 +23,27 @@ struct G_EXPORT GWaitEvent {
   QMutex m_;
   QWaitCondition wc_;
 
-  bool wait(GDuration timeout = ULONG_MAX) {
+  virtual bool wait(GDuration timeout = ULONG_MAX) {
     m_.lock();
     bool res = wc_.wait(&m_, timeout);
     m_.unlock();
     return res;
   }
 
-  bool wait(QDeadlineTimer& dt) {
+  virtual bool wait(QDeadlineTimer& dt) {
     m_.lock();
     bool res = wc_.wait(&m_, dt);
     m_.unlock();
     return res;
   }
 
-  void wakeOne() {
+  virtual void wakeOne() {
     m_.lock();
     wc_.wakeOne();
     m_.unlock();
   }
 
-  void wakeAll() {
+  virtual void wakeAll() {
     m_.lock();
     wc_.wakeAll();
     m_.unlock();
@@ -58,7 +58,7 @@ struct G_EXPORT GStateWaitEvent : GWaitEvent {
 
   GStateWaitEvent(bool state = false) : state_(state) {}
 
-  bool wait(GDuration timeout = ULONG_MAX) {
+  bool wait(GDuration timeout = ULONG_MAX) override {
     m_.lock();
     if (state_) {
       state_ = false;
@@ -70,7 +70,7 @@ struct G_EXPORT GStateWaitEvent : GWaitEvent {
     return res;
   }
 
-  bool wait(QDeadlineTimer& dt) {
+  bool wait(QDeadlineTimer& dt) override {
     m_.lock();
     if (state_) {
       state_ = false;
@@ -82,14 +82,14 @@ struct G_EXPORT GStateWaitEvent : GWaitEvent {
     return res;
   }
 
-  void wakeOne() {
+  void wakeOne() override {
     m_.lock();
     state_ = true;
     wc_.wakeOne();
     m_.unlock();
   }
 
-  void wakeAll() {
+  void wakeAll() override {
     m_.lock();
     state_ = true;
     wc_.wakeAll();
@@ -105,7 +105,7 @@ struct G_EXPORT GCountWaitEvent : GWaitEvent {
 
   GCountWaitEvent(int count = 0) : count_(count) {}
 
-  bool wait(GDuration timeout = ULONG_MAX) {
+  bool wait(GDuration timeout = ULONG_MAX) override {
     m_.lock();
     if (count_ > 0) {
       count_--;
@@ -117,7 +117,7 @@ struct G_EXPORT GCountWaitEvent : GWaitEvent {
     return res;
   }
 
-  bool wait(QDeadlineTimer& dt) {
+  bool wait(QDeadlineTimer& dt) override {
     m_.lock();
     if (count_ > 0) {
       count_--;
@@ -129,14 +129,14 @@ struct G_EXPORT GCountWaitEvent : GWaitEvent {
     return res;
   }
 
-  void wakeOne() {
+  void wakeOne() override {
     m_.lock();
     count_++;
     wc_.wakeOne();
     m_.unlock();
   }
 
-  void wakeAll() {
+  void wakeAll() override {
     m_.lock();
     count_++;
     wc_.wakeAll();
