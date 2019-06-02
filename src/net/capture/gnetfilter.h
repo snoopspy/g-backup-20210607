@@ -67,9 +67,8 @@ protected:
   struct nfq_handle* h_{nullptr};
   struct nfq_q_handle* qh_{nullptr};
   int fd_{0};
-  char* pktData_{nullptr};
 
-  GIpPacket ipPacket{this};
+  GIpPacket ipPacket_{this};
 
   static int _callback(
     struct nfq_q_handle* qh_,

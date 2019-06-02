@@ -64,13 +64,6 @@ bool GNetFilter::doOpen() {
   fd_ = nfq_fd(h_);
   qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
 
-  pktData_ = pchar(malloc(size_t(snapLen_)));
-  if (pktData_ == nullptr) {
-    QString msg = QString("malloc(%1) return nullptr").arg(snapLen_);
-    SET_ERR(GErr::FAIL, msg);
-    return false;
-  }
-
   if (!command_.open()) {
     err = command_.err;
     return false;
@@ -117,11 +110,6 @@ bool GNetFilter::doClose() {
     h_ = nullptr;
   }
 
-  if (pktData_ != nullptr) {
-    free(pktData_);
-    pktData_ = nullptr;
-  }
-
   command_.close();
 
   return true;
@@ -153,12 +141,13 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 
 void GNetFilter::run() {
   qDebug() << "beg"; // gilgil temp 2016.09.27
+  char* buf = pchar(malloc(size_t(snapLen_)));
   while (true) {
     //qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-    int res = int(::recv(fd_, pktData_, size_t(snapLen_), 0));
+    int res = int(::recv(fd_, buf, size_t(snapLen_), 0));
     //qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
     if (res >= 0) {
-      nfq_handle_packet(h_, pktData_, res);
+      nfq_handle_packet(h_, buf, res);
       continue;
     } else {
       if (errno == ENOBUFS) {
@@ -169,6 +158,7 @@ void GNetFilter::run() {
       break;
     }
   }
+  free(buf);
   emit closed();
   qDebug() << "end"; // gilgil temp 2016.09.27
 }
@@ -182,7 +172,7 @@ int GNetFilter::_callback(
   (void)nfmsg;
 
   GNetFilter* netFilter = static_cast<GNetFilter*>(data);
-  GIpPacket* ipPacket = &netFilter->ipPacket;
+  GIpPacket* ipPacket = &netFilter->ipPacket_;
 
   ipPacket->clear();
   gettimeofday(&ipPacket->ts_, nullptr);
