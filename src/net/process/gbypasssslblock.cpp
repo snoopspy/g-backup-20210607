@@ -9,11 +9,6 @@ bool GBypassSslBlock::doOpen() {
     tcpFlowMgr_->managables_.insert(this);
   }
 
-  if (writer_ == nullptr) {
-    SET_ERR(GErr::FAIL, "writer must be specified");
-    return false;
-  }
-
   return true;
 }
 
@@ -69,7 +64,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
   ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
   packet->buf_.size_ = ipHdr->len();
-  writer_->write(packet);
+  emit bypassed(packet);
 
   // ----- gilgil temp 2019.06.03 -----
   /*
@@ -87,5 +82,4 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   // ----------------------------------
 
   packet->ctrl.block_ = true;
-  emit bypassed(packet);
 }
