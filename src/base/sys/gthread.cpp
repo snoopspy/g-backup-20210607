@@ -22,7 +22,7 @@ bool GThread::wait(GDuration timeout) {
     qCritical() << "*********************************************************";
     qCritical() << msg;
     qCritical() << "*********************************************************";
-    // QThread::terminate(); // gilgil temp 2019.06.02
+    QThread::terminate(); // gilgil temp 2019.06.02
   }
   return res;
 }
