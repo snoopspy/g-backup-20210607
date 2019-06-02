@@ -49,7 +49,7 @@ bool GPcapDeviceWriteEthAutoMac::doOpen() {
   if (it == mgr.end()) {
     GSyncPcapDevice* device = new GSyncPcapDevice;
     device->devName_ = devName_;
-    if (!device->open()) {
+    if (!device->active() && !device->open()) {
       err = device->err;
       delete device;
       return false;
@@ -107,6 +107,11 @@ GPacket::Result GPcapDeviceWriteEthAutoMac::write(GPacket* packet) {
       return GPacket::Fail;
     }
     it = atm.insert(adjIp, mac);
+    if (!active()) {
+      QString msg = QString("not opened state %1").arg(int(state_));
+      SET_ERR(GErr::NOT_OPENED_STATE, msg); // gilgil temp 2019.06.02
+      return GPacket::Fail;
+    }
   }
   GMac dmac = it.value();
   ethHdr->dmac_ = dmac;
