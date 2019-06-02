@@ -39,8 +39,8 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 
   GBuf tcpData = packet->tcpData_;
   if (!tcpData.valid()) return; // no tcp data
-
   flowItem->processed_ = true;
+
   if (tcpData.size_ <= 16) return; // too small data
 
   if (tcpData.data_[0] != 0x16) return;
@@ -53,14 +53,13 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   size_t firstDataSize = 16;
   size_t secondDataSize = orgDataSize - firstDataSize;
 
-  static const int SIZE = 65536;
   gbyte* temp = pbyte(malloc(tcpData.size_));
   memcpy(temp, tcpData.data_, tcpData.size_);
 
   //
   // first 16 bytes
   //
-  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + firstDataSize);
+  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(firstDataSize));
   tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
   ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
   packet->buf_.size_ = ipHdr->len();
@@ -69,7 +68,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   //
   // second extra bytes
   //
-  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + secondDataSize);
+  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(secondDataSize));
   memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);
   tcpHdr->seq_ = htonl(tcpHdr->seq() + 16);
   tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
