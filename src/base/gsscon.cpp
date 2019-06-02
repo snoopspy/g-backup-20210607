@@ -16,14 +16,16 @@ struct GSsConParam {
   }
 
   static void usage() {
-    std::clog << "snoopspy console " << G::Version << std::endl;
-    std::clog << "Copyright (c) Gilbert Lee All rights reserved\n";
-    std::clog << G::pcap_lib_version() << std::endl;
-    std::clog << "\n";
-    std::clog << "usage : sscon <filename>\n";
-    std::clog << "\n";
-    std::clog << "example : sscon ss/test.ss\n";
-    std::clog << "\n";
+    using namespace std;
+    QString appName = QCoreApplication::applicationName();
+    clog << qPrintable(appName) << " " << G::Version << endl;
+    clog << "Copyright (c) Gilbert Lee All rights reserved" << endl;
+    clog << G::pcap_lib_version() << endl;
+    clog << endl;
+    clog << "usage : " << qPrintable(appName) << " <filename>" << endl;
+    clog << endl;
+    clog << "example : " << qPrintable(appName) << " ss/test.ss" << endl;
+    clog << endl;
   }
 };
 
