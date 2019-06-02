@@ -29,7 +29,7 @@ GRtmWin32::GRtmWin32() : GRtm() {
 }
 
 GRtmWin32::~GRtmWin32() {
-  qDebug() << "GRtmWin32::GRtmWin32()"; // gilgil temp 2019.06.01
+  qDebug() << "GRtmWin32::~GRtmWin32()"; // gilgil temp 2019.06.01
 
   clear();
 }
