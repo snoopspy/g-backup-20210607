@@ -45,7 +45,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 
   if (tcpData.data_[0] != 0x16) return;
 
-  qDebug() << QString("tcp size=%1 %2:%3>%4:%5").
+  qDebug() << QString("split!!! tcp size=%1 %2:%3>%4:%5").
     arg(packet->buf_.size_).
     arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
 
@@ -54,32 +54,29 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   size_t secondDataSize = orgDataSize - firstDataSize;
 
   static const int SIZE = 65536;
-  gbyte temp[65536];
+  gbyte* temp = pbyte(malloc(tcpData.size_));
   memcpy(temp, tcpData.data_, tcpData.size_);
 
   //
   // first 16 bytes
   //
-  ipHdr->len_ = htons(sizeof(GIpHdr) + tcpHdr->off() * 4  + firstDataSize);
+  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + firstDataSize);
   tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
   ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
   packet->buf_.size_ = ipHdr->len();
   emit bypassed(packet);
 
-  // ----- gilgil temp 2019.06.03 -----
-  /*
   //
   // second extra bytes
   //
-  ipHdr->len_ = htons(sizeof(GIpHdr) + tcpHdr->off() * 4  + secondDataSize);
+  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + secondDataSize);
   memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);
   tcpHdr->seq_ = htonl(tcpHdr->seq() + 16);
   tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
   ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
   packet->buf_.size_ = ipHdr->len();
-  writer_->write(packet);
-  */
-  // ----------------------------------
+  emit bypassed(packet);
 
+  free(temp);
   packet->ctrl.block_ = true;
 }
