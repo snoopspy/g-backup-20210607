@@ -50,7 +50,7 @@ protected:
 protected:
   HANDLE handle_{nullptr};
   static const int MAXBUF = 0xFFFF;
-  u_char pktData_[MAXBUF];
+  gbyte pktData_[MAXBUF];
 
 public:
   GPacket::Result read(GPacket* packet) override;
