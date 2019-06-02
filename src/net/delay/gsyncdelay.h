@@ -40,7 +40,7 @@ protected:
   bool doClose() override;
 
 public slots:
-  void delay(GPacket* packet);
+  bool delay(GPacket* packet);
 
 signals:
   void delayed(GPacket* packet);

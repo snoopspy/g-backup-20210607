@@ -17,7 +17,7 @@ bool GTimeStampSyncDelay::doClose() {
   return true;
 }
 
-void GTimeStampSyncDelay::delay(GPacket* packet) {
+bool GTimeStampSyncDelay::delay(GPacket* packet) {
   qint64 nowTs = qint64(packet->ts_.tv_sec * 1000) + qint64(packet->ts_.tv_usec / 1000);
   if (lastTs_ == 0) lastTs_ = nowTs;
   qint64 remainTs = nowTs - lastTs_;
@@ -43,4 +43,5 @@ void GTimeStampSyncDelay::delay(GPacket* packet) {
   lastClock_ = et_.elapsed();
   if (res == false) // timeout elapsed
     emit delayed(packet);
+  return res;
 }

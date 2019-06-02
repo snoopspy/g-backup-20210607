@@ -16,7 +16,7 @@ bool GSyncDelay::doClose() {
   return true;
 }
 
-void GSyncDelay::delay(GPacket* packet) {
+bool GSyncDelay::delay(GPacket* packet) {
   qint64 nowClock = et_.elapsed();
   qint64 remain = qint64(timeout_) - (nowClock - lastClock_);
   qDebug() << "remain=" << remain << "nowClock=" << nowClock << "lastClock_=" << lastClock_; // gilgil temp 2019.05.19
@@ -33,4 +33,5 @@ void GSyncDelay::delay(GPacket* packet) {
   lastClock_ = et_.elapsed();
   if (res == false) // timeout elapsed
     emit delayed(packet);
+  return res;
 }

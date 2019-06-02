@@ -13,8 +13,9 @@ bool GDelay::doClose() {
   return true;
 }
 
-void GDelay::delay(GPacket* packet) {
+bool GDelay::delay(GPacket* packet) {
   bool res = we_.wait(timeout_);
   if (res == false) // timeout elapsed
     emit delayed(packet);
+  return res;
 }
