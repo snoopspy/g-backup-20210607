@@ -15,7 +15,7 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 }
 
 void GApp::init() {
-  qSetMessagePattern("%{time yyyyMMdd h:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}");
+  qSetMessagePattern("%{time yyMMdd hh:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}");
   GNetIntf::all().init();
   GRtm::instance().init();
 }
