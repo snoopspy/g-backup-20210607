@@ -18,7 +18,7 @@ struct GSsConParam {
   static void usage() {
     using namespace std;
     QString appName = QCoreApplication::applicationName();
-    clog << qPrintable(appName) << " " << G::Version << endl;
+    clog << qPrintable(appName) << " " << G::version() << endl;
     clog << "Copyright (c) Gilbert Lee All rights reserved" << endl;
     clog << G::pcap_lib_version() << endl;
     clog << endl;

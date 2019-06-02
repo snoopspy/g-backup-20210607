@@ -32,13 +32,13 @@ typedef unsigned char gbyte, *pbyte;
   #endif
 #endif
 #ifdef linux
-  #define  G_EXPORT
+  #define G_EXPORT
 #endif
 
 typedef unsigned long GDuration;
 
 struct G_EXPORT G {
-  static const char* Version;
   static const GDuration Timeout;
+  static const char* version();
   static const char* pcap_lib_version();
 };
