@@ -46,7 +46,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
       char* e = pcap_geterr(pcap_);
       if (e != nullptr && strlen(e) > 0) {
         QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
-        SET_ERR(GErr::ReadFailed, msg);
+        SET_ERR(GErr::REAL_FAILED, msg);
       }
       res = GPacket::Eof;
       break;
@@ -55,7 +55,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
       char* e = pcap_geterr(pcap_);
       if (e != nullptr && strlen(e) > 0) {
         QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
-        SET_ERR(GErr::ReadFailed, msg);
+        SET_ERR(GErr::REAL_FAILED, msg);
       }
       res = GPacket::Eof;
       break;
