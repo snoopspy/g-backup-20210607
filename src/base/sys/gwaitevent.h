@@ -66,6 +66,8 @@ struct G_EXPORT GStateWaitEvent : GWaitEvent {
       return true;
     }
     bool res = wc_.wait(&m_, timeout);
+    if (res)
+      state_ = false;
     m_.unlock();
     return res;
   }
@@ -78,6 +80,8 @@ struct G_EXPORT GStateWaitEvent : GWaitEvent {
       return true;
     }
     bool res = wc_.wait(&m_, dt);
+    if (res)
+      state_ = false;
     m_.unlock();
     return res;
   }
@@ -113,6 +117,8 @@ struct G_EXPORT GCountWaitEvent : GWaitEvent {
       return true;
     }
     bool res = wc_.wait(&m_, timeout);
+    if (res)
+      count_--;
     m_.unlock();
     return res;
   }
@@ -125,6 +131,8 @@ struct G_EXPORT GCountWaitEvent : GWaitEvent {
       return true;
     }
     bool res = wc_.wait(&m_, dt);
+    if (res)
+      count_--;
     m_.unlock();
     return res;
   }
