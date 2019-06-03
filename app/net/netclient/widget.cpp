@@ -146,16 +146,16 @@ void Widget::on_pbOpen_clicked() {
   int currentIndex = ui->tabOption->currentIndex();
   switch (currentIndex) {
     case 0:
-      tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toUShort());
       netClient_ = &tcpSocket_;
+      tcpSocket_.connectToHost(ui->leTcpHost->text(), ui->leTcpPort->text().toUShort());
       break;
     case 1:
-      udpSocket_.connectToHost(ui->leUdpHost->text(), ui->leUdpPort->text().toUShort());
       netClient_ = &udpSocket_;
+      udpSocket_.connectToHost(ui->leUdpHost->text(), ui->leUdpPort->text().toUShort());
       break;
     case 2:
-      sslSocket_.connectToHostEncrypted(ui->leSslHost->text(), ui->leSslPort->text().toUShort());
       netClient_ = &sslSocket_;
+      sslSocket_.connectToHostEncrypted(ui->leSslHost->text(), ui->leSslPort->text().toUShort());
       break;
   }
   setControl();
