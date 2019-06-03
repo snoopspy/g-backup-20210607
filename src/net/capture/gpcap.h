@@ -24,11 +24,6 @@ public:
   QString filter_{""};
 
 public:
-  enum {
-    ERROR_IN_PCAP_NEXT_EX = GErrCategory::PCAP,
-  };
-
-public:
   GPcap(QObject* parent = nullptr) : GCapture(parent) {}
   ~GPcap() override { close(); }
 
