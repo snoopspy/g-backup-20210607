@@ -56,25 +56,39 @@ void GBypassSslBlock::bypass(GPacket* packet) {
   gbyte* temp = pbyte(malloc(tcpData.size_));
   memcpy(temp, tcpData.data_, tcpData.size_);
 
-  //
-  // first 16 bytes
-  //
-  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(firstDataSize));
-  tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
-  ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
-  packet->buf_.size_ = ipHdr->len();
-  emit bypassed(packet);
+  {
+    //
+    // first 16 bytes
+    //
+    GBuf backup = packet->buf_;
+    uint16_t oldIpHdrLen = ipHdr->len();
+    uint16_t newIpHdrLen = ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(firstDataSize);
+    ssize_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
+    ipHdr->len_ = htons(newIpHdrLen);
+    tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
+    ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
+    packet->buf_.size_ += ipHdrLenDiff;
+    emit bypassed(packet);
+    packet->buf_ = backup;
+  }
 
-  //
-  // second extra bytes
-  //
-  ipHdr->len_ = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(secondDataSize));
-  memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);
-  tcpHdr->seq_ = htonl(tcpHdr->seq() + 16);
-  tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
-  ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
-  packet->buf_.size_ = ipHdr->len();
-  emit bypassed(packet);
+  {
+    //
+    // second extra bytes
+    //
+    GBuf backup = packet->buf_;
+    uint16_t oldIpHdrLen = ipHdr->len();
+    uint16_t newIpHdrLen = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(secondDataSize));
+    ssize_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
+    ipHdr->len_ = htons(newIpHdrLen);
+    memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);
+    tcpHdr->seq_ = htonl(tcpHdr->seq() + 16);
+    tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
+    ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
+    packet->buf_.size_ += ipHdrLenDiff;
+    emit bypassed(packet);
+    packet->buf_ = backup;
+  }
 
   free(temp);
   packet->ctrl.block_ = true;
