@@ -51,7 +51,7 @@ struct G_EXPORT GWaitEvent {
 };
 
 // ----------------------------------------------------------------------------
-// GBoolWaitEvent
+// GStateWaitEvent
 // ----------------------------------------------------------------------------
 struct G_EXPORT GStateWaitEvent : GWaitEvent {
   bool state_;
