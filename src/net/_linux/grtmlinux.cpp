@@ -5,7 +5,7 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 GRtmLinux::GRtmLinux() : GRtm() {
-  qDebug() << "GRtmLinux::GRtmLinux()"; // gilgil temp 2019.06.01
+  GDEBUG_CTOR
 
   QString command = "cat /proc/net/route";
   QProcess p;
@@ -58,7 +58,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
 }
 
 GRtmLinux::~GRtmLinux() {
-  qDebug() << "GRtmLinux::~GRtmLinux()"; // gilgil temp 2019.06.01
+  GDEBUG_DTOR
   clear();
 }
 

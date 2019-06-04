@@ -57,7 +57,7 @@ static GMac getMac(char* name) {
 #endif
 
 GNetIntfs::GNetIntfs() {
-  qDebug() << "GNetIntfs::GNetIntfs()"; // gilgil temp 2019.06.01
+  GDEBUG_CTOR
 
   //
   // Initialize allDevs using pcap API.
@@ -119,7 +119,7 @@ GNetIntfs::GNetIntfs() {
 }
 
 GNetIntfs::~GNetIntfs() {
-  qDebug() << "GNetIntfs::~GNetIntfs()"; // gilgil temp 2019.06.01
+  GDEBUG_DTOR
 
   clear();
 

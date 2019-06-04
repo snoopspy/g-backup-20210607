@@ -31,11 +31,11 @@ bool GThread::wait(GDuration timeout) {
 // GThreadMgr
 // ----------------------------------------------------------------------------
 GThreadMgr::GThreadMgr() {
-  qDebug() << "GThreadMgr::GThreadMgr()" << static_cast<void*>(this);
+  GDEBUG_CTOR
 }
 
 GThreadMgr::~GThreadMgr() {
-  qDebug() << "GThreadMgr::~GThreadMgr()" << static_cast<void*>(this);
+  GDEBUG_DTOR
 }
 
 void GThreadMgr::suspendStart() {

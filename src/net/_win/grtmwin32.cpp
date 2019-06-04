@@ -7,8 +7,7 @@
 // GRtmWin32
 // ----------------------------------------------------------------------------
 GRtmWin32::GRtmWin32() : GRtm() {
-  qDebug() << "GRtmWin32::GRtmWin32()"; // gilgil temp 2019.06.01
-
+  GDEBUG_CTOR
   PMIB_IPFORWARDTABLE table = GIpForwardTable::instance().ipForwardTable_;
   for (int i = 0; i < int(table->dwNumEntries); i++) {
     PMIB_IPFORWARDROW row = &table->table[i];
@@ -29,8 +28,7 @@ GRtmWin32::GRtmWin32() : GRtm() {
 }
 
 GRtmWin32::~GRtmWin32() {
-  qDebug() << "GRtmWin32::~GRtmWin32()"; // gilgil temp 2019.06.01
-
+  GDEBUG_DTOR
   clear();
 }
 

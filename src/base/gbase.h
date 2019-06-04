@@ -42,3 +42,6 @@ struct G_EXPORT G {
   static const char* version();
   static const char* pcap_lib_version();
 };
+
+#define GDEBUG_CTOR { qDebug() << "constructor  " << pvoid(this); }
+#define GDEBUG_DTOR { qDebug() << "destructor " << pvoid(this); }
