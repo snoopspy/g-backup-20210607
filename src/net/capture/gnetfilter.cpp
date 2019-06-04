@@ -16,12 +16,12 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 }
 
 GNetFilter::~GNetFilter()  {
-  qDebug() << "GNetFilter::~GNetFilter"; // gilgil temp 2016.09.25
+  GDEBUG_CTOR
   close();
 }
 
 bool GNetFilter::doOpen() {
-  qDebug() << "GNetFilter::doOpen"; // gilgil temp 2016.09.25
+  GDEBUG_DTOR
   if (!enabled_) return true;
 
   if (!autoRead_) {
