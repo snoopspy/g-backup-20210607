@@ -126,6 +126,7 @@ public:
 public:
   Nodes nodes_;
   Connections connections_;
+  bool closeGraphOnNodeClosed_{true};
 
 public slots:
   void clear();

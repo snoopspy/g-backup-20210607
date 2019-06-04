@@ -124,7 +124,8 @@ bool GGraph::doOpen() {
   for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
-      QObject::connect(stateObj, &GStateObj::closed, this, &GGraph::stop);
+      if (closeGraphOnNodeClosed_)
+        QObject::connect(stateObj, &GStateObj::closed, this, &GGraph::stop);
       bool res = stateObj->open();
       if (!res) {
         QString msg;
@@ -148,7 +149,8 @@ bool GGraph::doClose() {
   for (Node* node: nodes_) {
     GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
     if (stateObj != nullptr) {
-      QObject::disconnect(stateObj, &GStateObj::closed, this, &GGraph::stop);
+      if (closeGraphOnNodeClosed_)
+        QObject::disconnect(stateObj, &GStateObj::closed, this, &GGraph::stop);
       stateObj->close();
     }
   }
