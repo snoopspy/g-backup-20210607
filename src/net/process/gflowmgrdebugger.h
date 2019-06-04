@@ -25,6 +25,7 @@ struct G_EXPORT GFlowMgrDebugger : GStateObj, GIpFlowMgr::Managable, GTcpFlowMgr
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
   Q_PROPERTY(GObjPtr udpFlowMgr READ getUdpFlowMgr WRITE setUdpFlowMgr)
 
+public:
   GObjPtr getIpFlowMgr() { return ipFlowMgr_; }
   GObjPtr getTcpFlowMgr() { return tcpFlowMgr_; }
   GObjPtr getUdpFlowMgr() { return udpFlowMgr_; }
