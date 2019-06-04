@@ -20,6 +20,7 @@ struct G_EXPORT GBypassSslBlock : GStateObj, GTcpFlowMgr::Managable {
   Q_OBJECT
   Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
 
+public:
   GObjPtr getTcpFlowMgr() { return tcpFlowMgr_; }
   void setTcpFlowMgr(GObjPtr value) { tcpFlowMgr_ = dynamic_cast<GTcpFlowMgr*>(value.data()); }
 
