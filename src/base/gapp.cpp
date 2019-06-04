@@ -41,14 +41,20 @@ bool GApp::execObj(GObj* obj) {
 
 bool GApp::execFactory(GPluginFactory* pluginFactory) {
   GGraph graph;
+  return execGraphFactory(&graph, pluginFactory);
+}
+
+bool GApp::execGraphFactory(GGraph* graph, GPluginFactory* pluginFactory) {
+  Q_ASSERT(graph != nullptr);
+
   if (pluginFactory == nullptr) {
     pluginFactory = &GPluginFactory::instance();
     pluginFactory->load("plugin");
   }
-  graph.setFactory(pluginFactory);
+  graph->setFactory(pluginFactory);
 
   GGraphWidget graphWidget;
-  graphWidget.setGraph(&graph);
+  graphWidget.setGraph(graph);
 
   QJsonObject jo = GJson::loadFromFile();
   jo["graphWidget"] >> graphWidget;
