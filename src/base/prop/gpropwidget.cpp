@@ -1,21 +1,23 @@
-#ifdef QT_GUI_LIB
-
 #include "gpropwidget.h"
 
-#include <QGridLayout>
-#include <QHeaderView>
+#ifdef QT_GUI_LIB
+
+#include <QMessageBox>
 #include "base/gjson.h"
+#include "base/gstateobj.h"
 
 // ----------------------------------------------------------------------------
 // GPropWidget
 // ----------------------------------------------------------------------------
-GPropWidget::GPropWidget(QWidget *parent) : QTreeWidget(parent) {
+GPropWidget::GPropWidget(QWidget *parent) : QWidget(parent) {
   init();
+  setControl();
 }
 
-GPropWidget::GPropWidget(QObject* object) : QTreeWidget(nullptr) {
+GPropWidget::GPropWidget(QObject* object) : QWidget(nullptr) {
   init();
   setObject(object);
+  setControl();
 }
 
 GPropWidget::~GPropWidget() {
@@ -23,19 +25,34 @@ GPropWidget::~GPropWidget() {
 }
 
 void GPropWidget::init() {
-  this->setIndentation(12);
-  this->setColumnCount(2);
-  this->setHeaderLabels(QStringList() << "property" << "value");
-  QLayout* layout = new QGridLayout(this);
-  layout->setMargin(0);
-  object_ = nullptr;
+  (actionOpen_ = new QAction(this))->setText("Open");
+  (actionClose_ = new QAction(this))->setText("Close");
+
+  mainLayout_ = new QVBoxLayout;
+  mainLayout_->setMargin(0);
+  mainLayout_->setSpacing(0);
+
+  toolBar_ = new QToolBar(this);
+  toolBar_->addAction(actionOpen_);
+  toolBar_->addAction(actionClose_);
+
+  treeWidget_ = new QTreeWidget(this);
+  treeWidget_->setIndentation(12);
+  treeWidget_->setColumnCount(2);
+  treeWidget_->setHeaderLabels(QStringList() << "property" << "value");
+
+  mainLayout_->addWidget(toolBar_, 0);
+  mainLayout_->addWidget(treeWidget_, 1);
+  this->setLayout(mainLayout_);
+
+  QObject::connect(actionOpen_, &QAction::triggered, this, &GPropWidget::actionOpenTriggered);
+  QObject::connect(actionClose_, &QAction::triggered, this, &GPropWidget::actionCloseTriggered);
 }
 
 void GPropWidget::setObject(QObject* object) {
   if (object == object_) return;
-  clear();
   object_ = object;
-
+  clear();
   if (object == nullptr) return;
 
   GProp* prop = dynamic_cast<GProp*>(object_);
@@ -43,13 +60,13 @@ void GPropWidget::setObject(QObject* object) {
     qWarning() << "prop is nullptr. object must be descendant of both QObject and GProp";
     return;
   }
-  prop->propCreateItems(this, nullptr, object_);
+  prop->propCreateItems(treeWidget_, nullptr, object_);
 
   update();
 
   if (isFirstSetObject_) {
     isFirstSetObject_ = false;
-    resizeColumnToContents(0);
+    treeWidget_->resizeColumnToContents(0);
   }
 }
 
@@ -60,7 +77,8 @@ void GPropWidget::update() {
     if (item != nullptr)
       item->update();
   }
-  QTreeWidget::update();
+  treeWidget_->update();
+  setControl();
 }
 
 void GPropWidget::clear() {
@@ -70,17 +88,48 @@ void GPropWidget::clear() {
     if (item != nullptr)
       delete item;
   }
-  QTreeWidget::clear();
+  treeWidget_->clear();
+  setControl();
 }
 
 void GPropWidget::propLoad(QJsonObject jo) {
   jo["rect"] >> GJson::rect(this);
-  jo["sizes"] >> GJson::headerSizes(this);
+  jo["sizes"] >> GJson::headerSizes(treeWidget_);
 }
 
 void GPropWidget::propSave(QJsonObject& jo) {
   jo["rect"] << GJson::rect(this);
-  jo["sizes"] << GJson::headerSizes(this);
+  jo["sizes"] << GJson::headerSizes(treeWidget_);
+}
+
+void GPropWidget::setControl() {
+  GStateObj* stateObj = object_ == nullptr ? nullptr : dynamic_cast<GStateObj*>(object_);
+  toolBar_->setEnabled(stateObj != nullptr);
+
+  bool active = false;
+  if (stateObj != nullptr)
+    active = stateObj->active();
+  actionOpen_->setEnabled(!active);
+  actionClose_->setEnabled(active);
+  treeWidget_->setEnabled(!active);
+}
+
+void GPropWidget::actionOpenTriggered(bool) {
+  GStateObj* stateObj = dynamic_cast<GStateObj*>(object_);
+  Q_ASSERT(stateObj != nullptr);
+  bool res = stateObj->open();
+  if (!res) {
+    QString msg = stateObj->err->msg();
+    QMessageBox::warning(nullptr, "Error", msg);
+  }
+  setControl();
+}
+
+void GPropWidget::actionCloseTriggered(bool) {
+  GStateObj* stateObj = dynamic_cast<GStateObj*>(object_);
+  Q_ASSERT(stateObj != nullptr);
+  stateObj->close();
+  setControl();
 }
 
 #endif // QT_GUI_LIB

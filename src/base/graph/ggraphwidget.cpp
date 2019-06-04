@@ -269,7 +269,7 @@ void GGraphWidget::propLoad(QJsonObject jo) {
   QJsonObject splitter = jo["splitter"].toObject();
   splitter["mid"] >> GJson::splitterSizes(midSplitter_);
   splitter["left"] >> GJson::splitterSizes(midLeftSplitter_);
-  splitter["prop"] >> GJson::headerSizes(propWidget_);
+  splitter["prop"] >> GJson::headerSizes(propWidget_->treeWidget_);
 
   toLowerFirstCharacter_ = jo["toLowerFirstCharacter"].toBool();
   removePrefixNames_ = jo["removePrefixNames"].toString().split(",");
@@ -285,7 +285,7 @@ void GGraphWidget::propSave(QJsonObject& jo) {
   QJsonObject splitter;
   splitter["mid"] << GJson::splitterSizes(midSplitter_);
   splitter["left"] << GJson::splitterSizes(midLeftSplitter_);
-  splitter["prop"] << GJson::headerSizes(propWidget_);
+  splitter["prop"] << GJson::headerSizes(propWidget_->treeWidget_);
   jo["splitter"] = splitter;
 
   jo["toLowerFirstCharacter"] = toLowerFirstCharacter_;
