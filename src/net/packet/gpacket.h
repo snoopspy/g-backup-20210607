@@ -73,6 +73,7 @@ public:
   //
   struct {
     bool block_{false};
+    bool changed_{false};
   } ctrl;
 
   //
@@ -110,6 +111,7 @@ public:
     ts_.tv_usec = 0;
     buf_.clear();
     ctrl.block_ = false;
+    ctrl.changed_ = false;
     ethHdr_ = nullptr;
     arpHdr_ = nullptr;
     ipHdr_ = nullptr;
