@@ -126,6 +126,7 @@ public:
 #endif // _DEBUG
   }
 
+  explicit operator QString() const;
   virtual void parse();
 };
 typedef GPacket *PPacket;

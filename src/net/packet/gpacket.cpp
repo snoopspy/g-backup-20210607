@@ -84,6 +84,50 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
 */
 // ----------------------------------
 
+GPacket::operator QString() const {
+  QString smac;
+  QString dmac;
+  GIp sip(uint32_t(0));
+  GIp dip(uint32_t(0));
+  QString protoStr = "unknown";
+  uint16_t sport = 0;
+  uint16_t dport = 0;
+
+  if (ethHdr_ != nullptr) {
+    smac = QString(ethHdr_->smac());
+    dmac = QString(ethHdr_->dmac());
+  }
+
+  if (ipHdr_ != nullptr) {
+    sip = ipHdr_->sip();
+    dip = ipHdr_->dip();
+    uint8_t proto = ipHdr_->p();
+    if (proto == GIpHdr::Tcp) {
+      protoStr = "TCP";
+      Q_ASSERT(tcpHdr_ != nullptr);
+      sport = tcpHdr_->sport();
+      dport = tcpHdr_->dport();
+    }
+    if (proto == GIpHdr::Udp) {
+      protoStr = "UDP";
+      Q_ASSERT(udpHdr_ != nullptr);
+      sport = udpHdr_->sport();
+      dport = udpHdr_->dport();
+    }
+  }
+
+  QString msg = QString("%1 %2:%3 > %4:%5")
+    .arg(protoStr)
+    .arg(QString(sip)).arg(QString::number(sport))
+    .arg(QString(dip)).arg(QString::number(dport));
+
+  if (smac != "")
+    msg = QString("%1 > %2 %3").arg(smac).arg(dmac).arg(msg);
+
+  return msg;
+}
+
 void GPacket::parse() {
   qCritical() << "virtual function call";
 }
+
