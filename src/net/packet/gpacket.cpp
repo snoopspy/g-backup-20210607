@@ -117,9 +117,9 @@ GPacket::operator QString() const {
 	}
 
 	QString msg = QString("%1 %2:%3 > %4:%5")
-			.arg(protoStr)
-			.arg(QString(sip)).arg(QString::number(sport))
-			.arg(QString(dip)).arg(QString::number(dport));
+		.arg(protoStr)
+		.arg(QString(sip)).arg(QString::number(sport))
+		.arg(QString(dip)).arg(QString::number(dport));
 
 	if (smac != "")
 		msg = QString("%1 > %2 %3").arg(smac).arg(dmac).arg(msg);

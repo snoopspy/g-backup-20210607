@@ -310,8 +310,8 @@ void* GProp::propCreateItem(void* param) {
 
 void GProp::propCreateItems(void* treeWidget, void* parent, QObject* object) {
 	QString className = object == nullptr ? "" : object->metaObject()->className();
-	QString msg = QString("GProp::fake_propCreateItems invalid function call treeWidget = %1 parent= %2 className = %3").
-			arg(quintptr(treeWidget)).arg(quintptr(parent)).arg(className);
+	QString msg = QString("GProp::fake_propCreateItems invalid function call treeWidget = %1 parent= %2 className = %3")
+		.arg(quintptr(treeWidget)).arg(quintptr(parent)).arg(className);
 	qCritical() << "****************************************************************";
 	qCritical() << msg;
 	qCritical() << "****************************************************************";

@@ -45,9 +45,9 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 
 	if (tcpData.data_[0] != 0x16) return;
 
-	qDebug() << QString("split!!! tcp size=%1 %2:%3>%4:%5").
-							arg(packet->buf_.size_).
-							arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
+	qDebug() << QString("split!!! tcp size=%1 %2:%3>%4:%5")
+		.arg(packet->buf_.size_)
+		.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
 
 	size_t orgDataSize = tcpData.size_;
 	size_t firstDataSize = 16;

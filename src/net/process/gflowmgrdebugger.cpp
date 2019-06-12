@@ -71,9 +71,9 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 			FlowItem* flowItem = PFlowItem(ipFlowMgr_->value_->mem(ipFlowOffset_));
 			flowItem->packets++;
 			flowItem->bytes += packet->buf_.size_;
-			qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5").
-									arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-									arg(QString(key->sip_)).arg(QString(key->dip_)); // gilgil temp 2016.10.10
+			qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5")
+				.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
+				.arg(QString(key->sip_)).arg(QString(key->dip_)); // gilgil temp 2016.10.10
 		}
 
 		if (packet->tcpHdr_ != nullptr) {
@@ -82,9 +82,9 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 				FlowItem* flowItem = PFlowItem(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
 				flowItem->packets++;
 				flowItem->bytes += packet->buf_.size_;
-				qDebug() << QString("tcp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
-										arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-										arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
+				qDebug() << QString("tcp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7")
+					.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
+					.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
 			}
 		}
 
@@ -94,9 +94,9 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 				FlowItem* flowItem = PFlowItem(udpFlowMgr_->value_->mem(udpFlowOffset_));
 				flowItem->packets++;
 				flowItem->bytes += packet->buf_.size_;
-				qDebug() << QString("udp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7").
-										arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes).
-										arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
+				qDebug() << QString("udp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7")
+					.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
+					.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
 			}
 		}
 	}

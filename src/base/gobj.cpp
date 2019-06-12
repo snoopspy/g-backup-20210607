@@ -47,8 +47,8 @@ bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const
 
 	bool res = QObject::connect(sender, signal, receiver, slot, type);
 	if (!res) {
-		QString msg = QString("QObject::connect(%1::%2 > %3::%4 %5) return false").
-				arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type));
+		QString msg = QString("QObject::connect(%1::%2 > %3::%4 %5) return false")
+			.arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type));
 		qWarning() << msg;
 		return false;
 	}
@@ -62,8 +62,8 @@ bool GObj::connect(QObject *sender, const QMetaMethod &signal, QObject *receiver
 }
 
 bool GObj::disconnect(QObject* sender, const char* signal, QObject* receiver, const char* slot) {
-	qDebug() << QString("disconnect %1::%2 > %3::%4").
-							arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot);
+	qDebug() << QString("disconnect %1::%2 > %3::%4")
+		.arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot);
 
 	QByteArray newSignal;
 	Q_ASSERT(signal != nullptr);

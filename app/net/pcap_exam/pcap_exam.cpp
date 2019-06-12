@@ -41,8 +41,8 @@ public slots:
 		}
 
 		static int count = 0;
-		QString msg = QString("%1 %2 %3 > %4 %5:%6 > %7:%8\n").
-				arg(++count).arg(proto, smac, dmac, sip, sport, dip, dport);
+		QString msg = QString("%1 %2 %3 > %4 %5:%6 > %7:%8\n")
+			.arg(++count).arg(proto, smac, dmac, sip, sport, dip, dport);
 		std::clog << qPrintable(msg);
 	}
 
