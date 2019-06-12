@@ -42,7 +42,7 @@ void showRtm() {
 		QString maskStr = QString(entry.mask()); maskStr += QString(" ").repeated(16 - maskStr.length());
 		QString gatewayStr = QString(entry.gateway()); gatewayStr += QString(" ").repeated(16 - gatewayStr.length());
 		QString metricStr = QString::number(entry.metric()); metricStr += QString(" ").repeated(7 - metricStr.length());
-		QString intfStr = QString::number(entry.intf()->index());
+		QString intfStr = QString("%1 %2").arg(entry.intf()->index()).arg(entry.intf()->desc());
 		QString msg = dstStr + maskStr + gatewayStr + metricStr + intfStr;
 		clog << qPrintable(msg) << endl;
 	}

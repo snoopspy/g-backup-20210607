@@ -83,6 +83,7 @@ GNetIntfs::GNetIntfs() {
 		intf.index_ = i;
 		intf.name_ = dev->name;
 		intf.desc_ = dev->description;
+		if (intf.desc_ == "") intf.desc_ = intf.name_;
 		intf.dev_ = dev;
 
 #ifdef Q_OS_LINUX
