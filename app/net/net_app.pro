@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS += \
-  enumintf \
   netclient \
+  netinfo \
   netserver \
   pcap_exam \
   pcap_findalldevs_test
