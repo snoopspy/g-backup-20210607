@@ -17,23 +17,23 @@
 // GDnsProcessor
 // ----------------------------------------------------------------------------
 struct G_EXPORT GDnsProcessor : GStateObj {
-  Q_OBJECT
-  Q_PROPERTY(quint16 port MEMBER port_)
+	Q_OBJECT
+	Q_PROPERTY(quint16 port MEMBER port_)
 
 public:
-  uint16_t port_{53};
+	uint16_t port_{53};
 
 public:
-  Q_INVOKABLE GDnsProcessor(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GDnsProcessor() override {}
+	Q_INVOKABLE GDnsProcessor(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GDnsProcessor() override {}
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+	bool doOpen() override { return true; }
+	bool doClose() override { return true; }
 
 public slots:
-  void process(GPacket* packet);
+	void process(GPacket* packet);
 
 signals:
-  void dnsCaptured(GPacket* packet, GDns* dns);
+	void dnsCaptured(GPacket* packet, GDns* dns);
 };

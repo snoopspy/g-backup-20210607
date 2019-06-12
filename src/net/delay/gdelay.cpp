@@ -5,17 +5,17 @@
 // GDelay
 // ----------------------------------------------------------------------------
 bool GDelay::doOpen() {
-  return true;
+	return true;
 }
 
 bool GDelay::doClose() {
-  we_.wakeAll();
-  return true;
+	we_.wakeAll();
+	return true;
 }
 
 bool GDelay::delay(GPacket* packet) {
-  bool res = we_.wait(timeout_);
-  if (res == false) // timeout elapsed
-    emit delayed(packet);
-  return res;
+	bool res = we_.wait(timeout_);
+	if (res == false) // timeout elapsed
+		emit delayed(packet);
+	return res;
 }

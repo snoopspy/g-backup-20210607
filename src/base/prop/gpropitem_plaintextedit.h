@@ -20,19 +20,19 @@
 // ----------------------------------------------------------------------------
 struct GPropItemPlainTextEdit;
 struct G_EXPORT GPropItemPlainTextEdit_ : QPlainTextEdit {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemPlainTextEdit_(QWidget *parent, GPropItemPlainTextEdit* owner);
+	GPropItemPlainTextEdit_(QWidget *parent, GPropItemPlainTextEdit* owner);
 
 signals:
-  void editingFinished();
+	void editingFinished();
 
 protected:
-  void focusOutEvent(QFocusEvent * e) override;
+	void focusOutEvent(QFocusEvent * e) override;
 
 protected:
-  GPropItemPlainTextEdit* owner_;
+	GPropItemPlainTextEdit* owner_;
 };
 
 // ----------------------------------------------------------------------------
@@ -40,10 +40,10 @@ protected:
 // ----------------------------------------------------------------------------
 struct GPropItemPlainTextEdit_;
 struct GPropItemPlainTextEdit : public GPropItem {
-  GPropItemPlainTextEdit(GPropItemParam* param);
+	GPropItemPlainTextEdit(GPropItemParam* param);
 
 protected:
-  GPropItemPlainTextEdit_* plainTextEdit_{nullptr};
+	GPropItemPlainTextEdit_* plainTextEdit_{nullptr};
 };
 
 #endif // QT_GUI_LIB

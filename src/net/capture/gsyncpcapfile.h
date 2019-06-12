@@ -16,10 +16,10 @@
 // GSyncPcapFile
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSyncPcapFile : GPcapFile {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  Q_INVOKABLE GSyncPcapFile(QObject* parent = nullptr) : GPcapFile(parent) {
-    autoRead_ = false;
-  }
+	Q_INVOKABLE GSyncPcapFile(QObject* parent = nullptr) : GPcapFile(parent) {
+		autoRead_ = false;
+	}
 };

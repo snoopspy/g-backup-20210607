@@ -18,26 +18,26 @@
 // GDelay
 // ----------------------------------------------------------------------------
 struct G_EXPORT GDelay : GStateObj {
-  Q_OBJECT
-  Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
+	Q_OBJECT
+	Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
 
 public:
-  GDuration timeout_{1000};
+	GDuration timeout_{1000};
 
 protected:
-  GWaitEvent we_;
+	GWaitEvent we_;
 
 public:
-  Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GDelay() override { close(); }
+	Q_INVOKABLE GDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GDelay() override { close(); }
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public slots:
-  bool delay(GPacket* packet);
+	bool delay(GPacket* packet);
 
 signals:
-  void delayed(GPacket* packet);
+	void delayed(GPacket* packet);
 };

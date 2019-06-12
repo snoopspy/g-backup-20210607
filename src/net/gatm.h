@@ -20,8 +20,8 @@
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
 struct GEthArpHdr {
-  GEthHdr ethHdr_;
-  GArpHdr arpHdr_;
+	GEthHdr ethHdr_;
+	GArpHdr arpHdr_;
 };
 #pragma pack(pop)
 
@@ -30,30 +30,30 @@ struct GEthArpHdr {
 // ----------------------------------------------------------------------------
 typedef QMap<GIp, GMac> GAtmMap;
 struct G_EXPORT GAtm : GAtmMap {
-  bool allResolved();
-  void deleteUnresolved();
-  bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout / 2);
-  GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout / 2);
+	bool allResolved();
+	void deleteUnresolved();
+	bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout / 2);
+	GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout / 2);
 
 protected:
-  bool sendQueries(GPcapDevice* device, GNetIntf* intf);
+	bool sendQueries(GPcapDevice* device, GNetIntf* intf);
 
 public:
-  static GAtm& instance();
+	static GAtm& instance();
 
 protected:
-  // --------------------------------------------------------------------------
-  // SendThread
-  // --------------------------------------------------------------------------
-  struct SendThread : GThread {
-    SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout);
-    GAtm* atm_;
-    GPcapDevice* device_;
-    GNetIntf* intf_;
-    GDuration timeout_;
-    GWaitEvent we_;
-  protected:
-    void run() override;
-  };
+	// --------------------------------------------------------------------------
+	// SendThread
+	// --------------------------------------------------------------------------
+	struct SendThread : GThread {
+		SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout);
+		GAtm* atm_;
+		GPcapDevice* device_;
+		GNetIntf* intf_;
+		GDuration timeout_;
+		GWaitEvent we_;
+	protected:
+		void run() override;
+	};
 };
 

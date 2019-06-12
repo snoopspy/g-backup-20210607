@@ -18,14 +18,14 @@
 // GPropItemBool
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemBool : public GPropItemCheckBox {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemBool(GPropItemParam* param);
-  void update() override;
+	GPropItemBool(GPropItemParam* param);
+	void update() override;
 
 protected slots:
-  void myClicked(bool checked);
+	void myClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB

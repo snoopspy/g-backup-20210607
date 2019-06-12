@@ -3,8 +3,8 @@
 #include <GApp>
 
 int main(int argc, char *argv[]) {
-  GApp a(argc, argv);
-  return a.exec_();
+	GApp a(argc, argv);
+	return a.exec_();
 }
 */
 // ----------------------------------
@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 #include "mygraph.h"
 
 int main(int argc, char *argv[]) {
-  GApp a(argc, argv);
-  MyFactory factory;
-  return a.execFactory(&factory);
+	GApp a(argc, argv);
+	MyFactory factory;
+	return a.execFactory(&factory);
 }

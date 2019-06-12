@@ -18,17 +18,17 @@
 // GPropItemDevice
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemDevice : public GPropItemComboBox {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemDevice(GPropItemParam* param);
-  void update() override;
+	GPropItemDevice(GPropItemParam* param);
+	void update() override;
 
 protected:
-  QStringList devNames_;
+	QStringList devNames_;
 
 protected slots:
-  void myCurrentIndexChanged(int index);
+	void myCurrentIndexChanged(int index);
 };
 
 #endif // QT_GUI_LIB

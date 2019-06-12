@@ -18,18 +18,18 @@
 // GPluginFactory
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPluginFactory : GGraph::Factory {
-  GPluginFactory(QObject* parent = nullptr);
-  ~GPluginFactory() override;
+	GPluginFactory(QObject* parent = nullptr);
+	~GPluginFactory() override;
 
-  void load(QString folder);
-
-protected:
-  void loadFile(GGraph::Factory::ItemCategory* category, QString fileName);
-  void loadFolder(GGraph::Factory::ItemCategory* category, QString folder);
+	void load(QString folder);
 
 protected:
-  QList<QLibrary*> libraries_;
+	void loadFile(GGraph::Factory::ItemCategory* category, QString fileName);
+	void loadFolder(GGraph::Factory::ItemCategory* category, QString folder);
+
+protected:
+	QList<QLibrary*> libraries_;
 
 public:
-  static GPluginFactory& instance();
+	static GPluginFactory& instance();
 };

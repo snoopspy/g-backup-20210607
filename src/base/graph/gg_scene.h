@@ -27,40 +27,40 @@
 // ----------------------------------------------------------------------------
 struct GGraphWidget;
 struct G_EXPORT GGScene : QGraphicsScene {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GGScene(QObject *parent);
-  virtual ~GGScene();
+	GGScene(QObject *parent);
+	virtual ~GGScene();
 
 public:
-  void clear();
+	void clear();
 
 public:
-  enum Mode { InsertItem, MoveItem, InsertLine };
-  Mode mode() { return m_mode; }
-  void setMode(Mode mode) { m_mode = mode; }
+	enum Mode { InsertItem, MoveItem, InsertLine };
+	Mode mode() { return m_mode; }
+	void setMode(Mode mode) { m_mode = mode; }
 
 protected:
-  Mode m_mode;
+	Mode m_mode;
 
 public:
-  GGraphWidget* graphWidget_;
-  GGSignalSlotForm* signalSlotForm_;
+	GGraphWidget* graphWidget_;
+	GGSignalSlotForm* signalSlotForm_;
 
 public:
-  GGText* createText(GGraph::Node* node, QPointF pos);
-  GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
-  GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
-  GGText*  findTextByObjectName(QString objectName);
+	GGText* createText(GGraph::Node* node, QPointF pos);
+	GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
+	GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
+	GGText*  findTextByObjectName(QString objectName);
 
 protected: // for drag and drop
-  QGraphicsLineItem *line;
+	QGraphicsLineItem *line;
 
 protected:
-  void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
-  void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
-  void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
+	void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // QT_GUI_LIB

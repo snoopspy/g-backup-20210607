@@ -18,14 +18,14 @@
 // GPropItemStringList
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemStringList : public GPropItemPlainTextEdit {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemStringList(GPropItemParam* param);
-  void update() override;
+	GPropItemStringList(GPropItemParam* param);
+	void update() override;
 
 protected slots:
-  void myEditingFinished();
+	void myEditingFinished();
 };
 
 #endif // QT_GUI_LIB

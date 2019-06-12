@@ -16,10 +16,10 @@
 // GNullPacket
 // ----------------------------------------------------------------------------
 struct G_EXPORT GNullPacket : GPacket {
-  GNullPacket(QObject* parent = nullptr) : GPacket(parent) {
-    dataLinkType_ = GPacket::Null;
-  }
+	GNullPacket(QObject* parent = nullptr) : GPacket(parent) {
+		dataLinkType_ = GPacket::Null;
+	}
 
-  void parse() override;
+	void parse() override;
 };
 typedef GNullPacket *PNullPacket;

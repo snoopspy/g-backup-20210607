@@ -19,13 +19,13 @@
 // GPropItemToolButton
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemToolButton : public GPropItem {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemToolButton(GPropItemParam* param);
+	GPropItemToolButton(GPropItemParam* param);
 
 public:
-  QToolButton* toolButton_{nullptr};
+	QToolButton* toolButton_{nullptr};
 };
 
 #endif // QT_GUI_LIB

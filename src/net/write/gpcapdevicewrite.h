@@ -17,36 +17,36 @@
 // GPcapDeviceWrite
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPcapDeviceWrite : GPcapWrite {
-  Q_OBJECT
-  Q_PROPERTY(QString devName MEMBER devName_)
+	Q_OBJECT
+	Q_PROPERTY(QString devName MEMBER devName_)
 
 public:
-  QString devName_{""};
+	QString devName_{""};
 
 public:
-  Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr) : GPcapWrite(parent) {}
-  ~GPcapDeviceWrite() override { close(); }
+	Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr) : GPcapWrite(parent) {}
+	~GPcapDeviceWrite() override { close(); }
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public:
-  GNetIntf* intf() { return intf_; }
+	GNetIntf* intf() { return intf_; }
 protected:
-  GNetIntf* intf_{nullptr};
+	GNetIntf* intf_{nullptr};
 
 public:
-  GPacket::Result write(GBuf buf);
+	GPacket::Result write(GBuf buf);
 
 public slots:
-  GPacket::Result write(GPacket* packet);
+	GPacket::Result write(GPacket* packet);
 
 signals:
-  void written(GPacket* packet);
+	void written(GPacket* packet);
 
 #ifdef QT_GUI_LIB
 public:
-  GPropItem* propCreateItem(GPropItemParam* param) override;
+	GPropItem* propCreateItem(GPropItemParam* param) override;
 #endif // QT_GUI_LIB
 };

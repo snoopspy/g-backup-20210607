@@ -8,8 +8,8 @@ function usage() {
 }
 
 if [ -z "$FROM" -o -z "$TO" ]; then
-  usage
-  exit 1
+	usage
+	exit 1
 fi
 
 sudo ifconfig "$FROM" down

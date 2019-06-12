@@ -1,30 +1,30 @@
 #include <GBlock>
 
 #ifdef Q_OS_WIN
-  #define EXPORT __declspec(dllexport)
+#define EXPORT __declspec(dllexport)
 #else
-  #define EXPORT
+#define EXPORT
 #endif
 
 extern "C" {
 
 EXPORT int count() {
-  qRegisterMetaType<GBlock*>();
-  return 1;
+	qRegisterMetaType<GBlock*>();
+	return 1;
 }
 
 EXPORT const char* name(int index) {
-  switch (index) {
-    case 0: return GBlock::staticMetaObject.className();
-    default: return nullptr;
-  }
+	switch (index) {
+		case 0: return GBlock::staticMetaObject.className();
+		default: return nullptr;
+	}
 }
 
 EXPORT void* create(int index) {
-  switch (index) {
-    case 0: return new GBlock;
-    default: return nullptr;
-  }
+	switch (index) {
+		case 0: return new GBlock;
+		default: return nullptr;
+	}
 }
 
 }

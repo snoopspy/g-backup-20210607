@@ -16,10 +16,10 @@
 // GSyncPcapDevice
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSyncPcapDevice : GPcapDevice {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  Q_INVOKABLE GSyncPcapDevice(QObject* parent = nullptr) : GPcapDevice(parent) {
-    autoRead_ = false;
-  }
+	Q_INVOKABLE GSyncPcapDevice(QObject* parent = nullptr) : GPcapDevice(parent) {
+		autoRead_ = false;
+	}
 };

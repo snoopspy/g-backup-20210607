@@ -16,10 +16,10 @@
 // GEthPacket
 // ----------------------------------------------------------------------------
 struct G_EXPORT GEthPacket : GIpPacket {
-  GEthPacket(QObject* parent = nullptr) : GIpPacket(parent) {
-    dataLinkType_ = GPacket::Eth;
-  }
+	GEthPacket(QObject* parent = nullptr) : GIpPacket(parent) {
+		dataLinkType_ = GPacket::Eth;
+	}
 
-  void parse() override;
+	void parse() override;
 };
 typedef GEthPacket *PEthPacket;

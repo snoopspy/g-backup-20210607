@@ -14,18 +14,18 @@
 // GPcapDeviceWriteIp
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPcapDeviceWriteIp : GPcapDeviceWrite {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  Q_INVOKABLE GPcapDeviceWriteIp(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
-    dataLinkType_ = GPacket::Ip;
-  }
-  ~GPcapDeviceWriteIp() override { close(); }
+	Q_INVOKABLE GPcapDeviceWriteIp(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
+		dataLinkType_ = GPacket::Ip;
+	}
+	~GPcapDeviceWriteIp() override { close(); }
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public slots:
-  GPacket::Result write(GPacket* packet);
+	GPacket::Result write(GPacket* packet);
 };

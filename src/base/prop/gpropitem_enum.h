@@ -18,14 +18,14 @@
 // GPropItemEnum
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemEnum : public GPropItemComboBox {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemEnum(GPropItemParam* param);
-  void update() override;
+	GPropItemEnum(GPropItemParam* param);
+	void update() override;
 
 protected slots:
-  void myCurrentIndexChanged(int index);
+	void myCurrentIndexChanged(int index);
 };
 
 #endif // QT_GUI_LIB

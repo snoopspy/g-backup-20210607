@@ -19,10 +19,10 @@
 // GPropItemLineEdit
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemLineEdit : public GPropItem {
-  GPropItemLineEdit(GPropItemParam* param);
+	GPropItemLineEdit(GPropItemParam* param);
 
 public:
-  QLineEdit* lineEdit_{nullptr};
+	QLineEdit* lineEdit_{nullptr};
 };
 
 #endif // QT_GUI_LIB

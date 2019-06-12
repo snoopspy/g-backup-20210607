@@ -22,21 +22,21 @@
 // GPropItemFilePath
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemFilePath : public GPropItemWidget {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemFilePath(GPropItemParam* param);
-  void update() override;
+	GPropItemFilePath(GPropItemParam* param);
+	void update() override;
 
 public:
-  QHBoxLayout* layout_{nullptr};
-  QLineEdit* lineEdit_{nullptr};
-  QToolButton* toolButton_{nullptr};
-  QFileDialog* fd_{nullptr};
+	QHBoxLayout* layout_{nullptr};
+	QLineEdit* lineEdit_{nullptr};
+	QToolButton* toolButton_{nullptr};
+	QFileDialog* fd_{nullptr};
 
 protected slots:
-  void myEditingFinished();
-  void myToolButtonClicked(bool checked);
+	void myEditingFinished();
+	void myToolButtonClicked(bool checked);
 };
 
 #endif // QT_GUI_LIB

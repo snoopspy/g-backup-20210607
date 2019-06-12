@@ -25,24 +25,24 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GGText : QGraphicsTextItem {
 public:
-  enum { Type = UserType + 5 };
-  int type() const { return Type; }
+	enum { Type = UserType + 5 };
+	int type() const { return Type; }
 
 public:
-  GGText(GGraph::Node* node);
-  ~GGText() override;
+	GGText(GGraph::Node* node);
+	~GGText() override;
 
 public:
-  QList<GGArrow*> arrows_;
-  void addArrow(GGArrow *arrow);
-  void removeArrow(GGArrow *arrow);
-  void removeArrows();
+	QList<GGArrow*> arrows_;
+	void addArrow(GGArrow *arrow);
+	void removeArrow(GGArrow *arrow);
+	void removeArrows();
 
 public:
-  GGraph::Node* node_;
+	GGraph::Node* node_;
 
 public:
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 #endif // QT_GUI_LIB

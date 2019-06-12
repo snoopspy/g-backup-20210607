@@ -25,10 +25,10 @@ CONFIG(debug, debug|release)  G_NAME = $${G_NAME}_d
 G_DIR = $${PWD}
 INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
-  win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.dll
-  linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
-  LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
-  ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
+	win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.dll
+	linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
+	LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
+	ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
 }
 
 #------------------------------------------------------------------------------
@@ -45,18 +45,18 @@ QMAKE_RPATHDIR *= . $${PWD}/bin
 # gstacktrace
 #------------------------------------------------------------------------------
 CONFIG(gstacktrace) {
-  QMAKE_LFLAGS *= -rdynamic
+	QMAKE_LFLAGS *= -rdynamic
 }
 
 #------------------------------------------------------------------------------
 # pcap
 #------------------------------------------------------------------------------
 win32 {
-  INCLUDEPATH *= $${PWD}/../npcap/Include
-  contains(QMAKE_TARGET.arch, x86_64) { # 64 bit
-    LIBS *= -L$${PWD}/../npcap/Lib/x64
-  } else { # 32 bit
-    LIBS *= -L$${PWD}/../npcap/Lib
-  }
-  LIBS *= -lpacket -lwpcap -lws2_32
+	INCLUDEPATH *= $${PWD}/../npcap/Include
+	contains(QMAKE_TARGET.arch, x86_64) { # 64 bit
+		LIBS *= -L$${PWD}/../npcap/Lib/x64
+	} else { # 32 bit
+		LIBS *= -L$${PWD}/../npcap/Lib
+	}
+	LIBS *= -lpacket -lwpcap -lws2_32
 }

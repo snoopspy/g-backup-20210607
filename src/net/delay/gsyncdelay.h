@@ -18,30 +18,30 @@
 // GSyncDelay
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSyncDelay : GStateObj {
-  Q_OBJECT
-  Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
-  Q_PROPERTY(double speed MEMBER speed_) // ratio
+	Q_OBJECT
+	Q_PROPERTY(ulong timeout MEMBER timeout_) // msec
+	Q_PROPERTY(double speed MEMBER speed_) // ratio
 
 public:
-  GDuration timeout_{1000};
-  double speed_{1.};
+	GDuration timeout_{1000};
+	double speed_{1.};
 
 protected:
-  GWaitEvent we_;
-  QElapsedTimer et_;
-  qint64 lastClock_;
+	GWaitEvent we_;
+	QElapsedTimer et_;
+	qint64 lastClock_;
 
 public:
-  Q_INVOKABLE GSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GSyncDelay() override { close(); }
+	Q_INVOKABLE GSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GSyncDelay() override { close(); }
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public slots:
-  bool delay(GPacket* packet);
+	bool delay(GPacket* packet);
 
 signals:
-  void delayed(GPacket* packet);
+	void delayed(GPacket* packet);
 };

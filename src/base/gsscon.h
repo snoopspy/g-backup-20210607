@@ -16,14 +16,14 @@
 // GSsCon
 // ----------------------------------------------------------------------------
 struct G_EXPORT GSsCon : GApp {
-  GSsCon(int &argc, char** argv);
-  ~GSsCon() override;
-  bool execFactory(GPluginFactory* pluginFactory = nullptr);
+	GSsCon(int &argc, char** argv);
+	~GSsCon() override;
+	bool execFactory(GPluginFactory* pluginFactory = nullptr);
 
 protected:
-  GGraph graph_;
+	GGraph graph_;
 
 public slots:
-  void processClose();
-  void processSignal(int signo);
+	void processClose();
+	void processSignal(int signo);
 };

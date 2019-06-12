@@ -19,12 +19,12 @@
 struct G_EXPORT GPcapWrite : GStateObj {
 
 public:
-  Q_INVOKABLE GPcapWrite(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GPcapWrite() override {}
+	Q_INVOKABLE GPcapWrite(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GPcapWrite() override {}
 
-  GPacket::DataLinkType dataLinkType() { return dataLinkType_; }
+	GPacket::DataLinkType dataLinkType() { return dataLinkType_; }
 
 protected:
-  pcap_t* pcap_{nullptr};
-  GPacket::DataLinkType dataLinkType_{GPacket::Null};
+	pcap_t* pcap_{nullptr};
+	GPacket::DataLinkType dataLinkType_{GPacket::Null};
 };

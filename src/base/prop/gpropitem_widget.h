@@ -19,10 +19,10 @@
 // GPropItemWidget
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemWidget : public GPropItem {
-  GPropItemWidget(GPropItemParam* param);
+	GPropItemWidget(GPropItemParam* param);
 
 public:
-  QWidget* widget_{nullptr};
+	QWidget* widget_{nullptr};
 };
 
 #endif // QT_GUI_LIB

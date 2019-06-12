@@ -18,15 +18,15 @@
 // GPropItemVariantSelect
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemVariantSelect : public GPropItemComboBox {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemVariantSelect(GPropItemParam* param);
-  GPropItemVariantSelect(GPropItemParam* param, QStringList& items);
-  void update() override;
+	GPropItemVariantSelect(GPropItemParam* param);
+	GPropItemVariantSelect(GPropItemParam* param, QStringList& items);
+	void update() override;
 
 protected slots:
-  void myCurrentIndexChanged(const QString &arg1);
+	void myCurrentIndexChanged(const QString &arg1);
 };
 
 #endif // QT_GUI_LIB

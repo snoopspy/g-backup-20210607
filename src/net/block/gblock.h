@@ -17,23 +17,23 @@
 // GBlock
 // ----------------------------------------------------------------------------
 struct G_EXPORT GBlock : GStateObj {
-  Q_OBJECT
-  Q_PROPERTY(bool enabled MEMBER enabled_)
+	Q_OBJECT
+	Q_PROPERTY(bool enabled MEMBER enabled_)
 
 public:
-  bool enabled_{true};
+	bool enabled_{true};
 
 public:
-  Q_INVOKABLE GBlock(QObject* parent = nullptr);
-  ~GBlock() override;
+	Q_INVOKABLE GBlock(QObject* parent = nullptr);
+	~GBlock() override;
 
 protected:
-  bool doOpen() override { return true; }
-  bool doClose() override { return true; }
+	bool doOpen() override { return true; }
+	bool doClose() override { return true; }
 
 public slots:
-  void block(GPacket* packet);
+	void block(GPacket* packet);
 
 signals:
-  void blocked(GPacket* packet);
+	void blocked(GPacket* packet);
 };

@@ -21,41 +21,41 @@
 // ----------------------------------------------------------------------------
 struct GNetIntfs;
 struct G_EXPORT GNetIntf {
-  friend struct GNetIntfs;
+	friend struct GNetIntfs;
 
 public:
-  int index() const { return index_; }
-  QString name() const { return name_; }
-  QString desc() const { return desc_; }
-  pcap_if_t* dev() const { return dev_; }
-  GMac mac() const { return mac_; }
-  GIp ip() const { return ip_; }
-  GIp mask() const { return mask_; }
-  GIp gateway() const;
+	int index() const { return index_; }
+	QString name() const { return name_; }
+	QString desc() const { return desc_; }
+	pcap_if_t* dev() const { return dev_; }
+	GMac mac() const { return mac_; }
+	GIp ip() const { return ip_; }
+	GIp mask() const { return mask_; }
+	GIp gateway() const;
 
 protected:
-  int index_{-1};
-  QString name_;
-  QString desc_;
-  pcap_if_t* dev_{nullptr};
-  GMac mac_{GMac::cleanMac()};
-  GIp ip_{uint32_t(0)};
-  GIp mask_{uint32_t(0)};
-  GIp gateway_{uint32_t(0)};
+	int index_{-1};
+	QString name_;
+	QString desc_;
+	pcap_if_t* dev_{nullptr};
+	GMac mac_{GMac::cleanMac()};
+	GIp ip_{uint32_t(0)};
+	GIp mask_{uint32_t(0)};
+	GIp gateway_{uint32_t(0)};
 
 protected:
-  GIp ip_and_mask_{uint32_t(0)}; // used for isSameLanIP
+	GIp ip_and_mask_{uint32_t(0)}; // used for isSameLanIP
 
 public:
-  bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
-  GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;  }
-  GIp  getStartIp()        { return (ip_ & mask_) + 1;                }
-  GIp  getEndIp()          { return (ip_ | ~mask_);                   }
+	bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
+	GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;  }
+	GIp  getStartIp()        { return (ip_ & mask_) + 1;                }
+	GIp  getEndIp()          { return (ip_ | ~mask_);                   }
 
 public:
-  static GNetIntfs& all();
+	static GNetIntfs& all();
 
-  bool operator==(const GNetIntf& r) const;
+	bool operator==(const GNetIntf& r) const;
 };
 uint qHash(GNetIntf q);
 
@@ -63,18 +63,18 @@ uint qHash(GNetIntf q);
 // GNetIntfs
 // ----------------------------------------------------------------------------
 struct G_EXPORT GNetIntfs : QList<GNetIntf> {
-  friend struct GNetIntf;
+	friend struct GNetIntf;
 
 private: // singleton
-  GNetIntfs();
-  virtual ~GNetIntfs();
+	GNetIntfs();
+	virtual ~GNetIntfs();
 
 public:
-  GNetIntf* findByName(QString name);
-  pcap_if_t* allDevs_{nullptr};
-  static GNetIntfs& instance();
+	GNetIntf* findByName(QString name);
+	pcap_if_t* allDevs_{nullptr};
+	static GNetIntfs& instance();
 
 public:
-  bool initialized_{false};
-  void init();
+	bool initialized_{false};
+	void init();
 };

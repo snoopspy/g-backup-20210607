@@ -19,13 +19,13 @@
 // GPropItemCheckBox
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemCheckBox : public GPropItem {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemCheckBox(GPropItemParam* param);
+	GPropItemCheckBox(GPropItemParam* param);
 
 public:
-  QCheckBox* checkBox_{nullptr};
+	QCheckBox* checkBox_{nullptr};
 };
 
 #endif // QT_GUI_LIB

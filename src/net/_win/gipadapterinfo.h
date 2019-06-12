@@ -20,16 +20,16 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GIpAdapterInfo {
 private: // singleton
-  GIpAdapterInfo();
-  virtual ~GIpAdapterInfo();
+	GIpAdapterInfo();
+	virtual ~GIpAdapterInfo();
 
 protected:
-  PIP_ADAPTER_INFO pAdapterInfo_{nullptr};
+	PIP_ADAPTER_INFO pAdapterInfo_{nullptr};
 
 public:
-  PIP_ADAPTER_INFO findByAdapterName(char* value);
-  PIP_ADAPTER_INFO findByComboIndex(DWORD comboIndex);
+	PIP_ADAPTER_INFO findByAdapterName(char* value);
+	PIP_ADAPTER_INFO findByComboIndex(DWORD comboIndex);
 
-  static GIpAdapterInfo& instance();
+	static GIpAdapterInfo& instance();
 };
 

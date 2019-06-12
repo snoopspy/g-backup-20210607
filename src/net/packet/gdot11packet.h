@@ -16,10 +16,10 @@
 // GDot11Packet
 // ----------------------------------------------------------------------------
 struct G_EXPORT GDot11Packet : GPacket {
-  GDot11Packet(QObject* parent = nullptr) : GPacket(parent) {
-    dataLinkType_ = GPacket::Dot11;
-  }
+	GDot11Packet(QObject* parent = nullptr) : GPacket(parent) {
+		dataLinkType_ = GPacket::Dot11;
+	}
 
-  void parse() override;
+	void parse() override;
 };
 typedef GDot11Packet *PDot11Packet;

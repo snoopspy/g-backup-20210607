@@ -18,29 +18,29 @@
 // GTimeStampSyncDelay
 // ----------------------------------------------------------------------------
 struct G_EXPORT GTimeStampSyncDelay : GStateObj {
-  Q_OBJECT
-  Q_PROPERTY(double speed MEMBER speed_) // ratio
+	Q_OBJECT
+	Q_PROPERTY(double speed MEMBER speed_) // ratio
 
 public:
-  double speed_{1.};
+	double speed_{1.};
 
 protected:
-  GWaitEvent we_;
-  QElapsedTimer et_;
-  qint64 lastClock_;
-  qint64 lastTs_;
+	GWaitEvent we_;
+	QElapsedTimer et_;
+	qint64 lastClock_;
+	qint64 lastTs_;
 
 public:
-  Q_INVOKABLE GTimeStampSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
-  ~GTimeStampSyncDelay() override { close(); }
+	Q_INVOKABLE GTimeStampSyncDelay(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GTimeStampSyncDelay() override { close(); }
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public slots:
-  bool delay(GPacket* packet);
+	bool delay(GPacket* packet);
 
 signals:
-  void delayed(GPacket* packet);
+	void delayed(GPacket* packet);
 };

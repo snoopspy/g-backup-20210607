@@ -5,16 +5,16 @@ rem ***************************************************************************
 rem lib
 rem ***************************************************************************
 cd lib
-  mkdir libg
-  cd libg
-  qmake ../libg.pro QMAKE_CXXFLAGS+=/MP
-  nmake
-  cd ..
-  mkdir libg_gui
-  cd libg_gui
-  qmake ../libg_gui.pro QMAKE_CXXFLAGS+=/MP
-  nmake
-  cd ..
+	mkdir libg
+	cd libg
+	qmake ../libg.pro QMAKE_CXXFLAGS+=/MP
+	nmake
+	cd ..
+	mkdir libg_gui
+	cd libg_gui
+	qmake ../libg_gui.pro QMAKE_CXXFLAGS+=/MP
+	nmake
+	cd ..
 cd ..
 
 rem ***************************************************************************

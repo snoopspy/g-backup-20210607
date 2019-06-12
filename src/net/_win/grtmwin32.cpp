@@ -7,45 +7,45 @@
 // GRtmWin32
 // ----------------------------------------------------------------------------
 GRtmWin32::GRtmWin32() : GRtm() {
-  GDEBUG_CTOR
-  PMIB_IPFORWARDTABLE table = GIpForwardTable::instance().ipForwardTable_;
-  for (int i = 0; i < int(table->dwNumEntries); i++) {
-    PMIB_IPFORWARDROW row = &table->table[i];
-    GRtmEntry entry;
-    IF_INDEX ifIndex = row->dwForwardIfIndex;
-    PIP_ADAPTER_INFO adapter = GIpAdapterInfo::instance().findByComboIndex(ifIndex);
-    if (adapter == nullptr) continue;
-    QString adapterName = adapter->AdapterName;
-    Q_ASSERT(adapterName != "");
-    adapterNames_.push_back(adapterName);
-    entry.dst_ = ntohl(row->dwForwardDest);
-    entry.gateway_ = ntohl(row->dwForwardNextHop);
-    entry.mask_ = ntohl(row->dwForwardMask);
-    entry.metric_ = int(row->dwForwardMetric1);
+	GDEBUG_CTOR
+	PMIB_IPFORWARDTABLE table = GIpForwardTable::instance().ipForwardTable_;
+	for (int i = 0; i < int(table->dwNumEntries); i++) {
+		PMIB_IPFORWARDROW row = &table->table[i];
+		GRtmEntry entry;
+		IF_INDEX ifIndex = row->dwForwardIfIndex;
+		PIP_ADAPTER_INFO adapter = GIpAdapterInfo::instance().findByComboIndex(ifIndex);
+		if (adapter == nullptr) continue;
+		QString adapterName = adapter->AdapterName;
+		Q_ASSERT(adapterName != "");
+		adapterNames_.push_back(adapterName);
+		entry.dst_ = ntohl(row->dwForwardDest);
+		entry.gateway_ = ntohl(row->dwForwardNextHop);
+		entry.mask_ = ntohl(row->dwForwardMask);
+		entry.metric_ = int(row->dwForwardMetric1);
 
-    append(entry);
-  }
+		append(entry);
+	}
 }
 
 GRtmWin32::~GRtmWin32() {
-  GDEBUG_DTOR
-  clear();
+	GDEBUG_DTOR
+	clear();
 }
 
 void GRtmWin32::init() {
-  if (initialized_) return;
-  initialized_ = true;
-  qDebug() << "GRtmLinux::init()"; // gilgil temp 2019.06.01
+	if (initialized_) return;
+	initialized_ = true;
+	qDebug() << "GRtmLinux::init()"; // gilgil temp 2019.06.01
 
-  Q_ASSERT(count() == adapterNames_.count());
-  for (int i = 0; i < count(); i++) {
-    GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
-    QString adapterName = adapterNames_.at(i);
-    GNetIntf* netIntf = GNetIntfs::instance().findByName(adapterName);
-    if (netIntf == nullptr) {
-      QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(adapterName);
-      qFatal("%s", qPrintable(msg));
-    }
-    entry.intf_ = netIntf;
-  }
+	Q_ASSERT(count() == adapterNames_.count());
+	for (int i = 0; i < count(); i++) {
+		GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
+		QString adapterName = adapterNames_.at(i);
+		GNetIntf* netIntf = GNetIntfs::instance().findByName(adapterName);
+		if (netIntf == nullptr) {
+			QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(adapterName);
+			qFatal("%s", qPrintable(msg));
+		}
+		entry.intf_ = netIntf;
+	}
 }

@@ -19,11 +19,11 @@
 // GPropItemUnknownType
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemUnknownType : public GPropItem {\
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemUnknownType(GPropItemParam* param);
-  void update() override {}
+	GPropItemUnknownType(GPropItemParam* param);
+	void update() override {}
 };
 
 #endif // QT_GUI_LIB

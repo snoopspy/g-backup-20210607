@@ -21,40 +21,40 @@
 // GPropWidget
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropWidget : public QWidget, GProp {
-  GPropWidget(QWidget *parent = nullptr);
-  GPropWidget(QObject* object);
-  ~GPropWidget() override;
+	GPropWidget(QWidget *parent = nullptr);
+	GPropWidget(QObject* object);
+	~GPropWidget() override;
 
 public:
-  void init();
-  QObject* object() { return object_; }
-  void setObject(QObject* object);
-  void update();
-  void clear();
+	void init();
+	QObject* object() { return object_; }
+	void setObject(QObject* object);
+	void update();
+	void clear();
 
 public:
-  QAction* actionOpen_;
-  QAction* actionClose_;
+	QAction* actionOpen_;
+	QAction* actionClose_;
 
 public:
-  QVBoxLayout* mainLayout_;
-  QToolBar*    toolBar_;
-  QTreeWidget* treeWidget_;
+	QVBoxLayout* mainLayout_;
+	QToolBar*    toolBar_;
+	QTreeWidget* treeWidget_;
 
 protected:
-  bool isFirstSetObject_{true};
-  QObject* object_{nullptr};
+	bool isFirstSetObject_{true};
+	QObject* object_{nullptr};
 
 public:
-  void propLoad(QJsonObject jo) override;
-  void propSave(QJsonObject& jo) override;
+	void propLoad(QJsonObject jo) override;
+	void propSave(QJsonObject& jo) override;
 
 public slots:
-  void setControl();
+	void setControl();
 
 public slots:
-  void actionOpenTriggered(bool);
-  void actionCloseTriggered(bool);
+	void actionOpenTriggered(bool);
+	void actionCloseTriggered(bool);
 };
 
 #endif // QT_GUI_LIB

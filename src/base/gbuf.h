@@ -16,18 +16,18 @@
 // GBuf
 // ----------------------------------------------------------------------------
 struct G_EXPORT GBuf final {
-  unsigned char* data_; // u_char*, gbyte*
-  size_t size_;
+	unsigned char* data_; // u_char*, gbyte*
+	size_t size_;
 
-  GBuf() {}
-  GBuf(unsigned char* data, size_t size) : data_(data), size_(size) {}
+	GBuf() {}
+	GBuf(unsigned char* data, size_t size) : data_(data), size_(size) {}
 
-  void clear() {
-    data_ = nullptr;
-    size_ = 0;
-  }
+	void clear() {
+		data_ = nullptr;
+		size_ = 0;
+	}
 
-  bool valid() {
-    return data_ != nullptr;
-  }
+	bool valid() {
+		return data_ != nullptr;
+	}
 };

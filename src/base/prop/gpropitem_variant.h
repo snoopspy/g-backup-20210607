@@ -18,14 +18,14 @@
 // GPropItemVariant
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemVariant : public GPropItemLineEdit {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemVariant(GPropItemParam* param);
-  void update() override;
+	GPropItemVariant(GPropItemParam* param);
+	void update() override;
 
 protected slots:
-  void myEditingFinished();
+	void myEditingFinished();
 };
 
 #endif // QT_GUI_LIB

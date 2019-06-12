@@ -18,11 +18,11 @@
 // GPropItemObjRef
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPropItemObjRef : public GPropItem {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  GPropItemObjRef(GPropItemParam* param);
-  void update() override {}
+	GPropItemObjRef(GPropItemParam* param);
+	void update() override {}
 };
 
 #endif // QT_GUI_LIB

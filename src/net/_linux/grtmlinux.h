@@ -16,14 +16,14 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmLinux : GRtm {
-  friend struct GRtm;
+	friend struct GRtm;
 protected:
-  GRtmLinux();
-  ~GRtmLinux() override;
+	GRtmLinux();
+	~GRtmLinux() override;
 
-  QStringList intfNames_;
-  bool initialized_{false};
+	QStringList intfNames_;
+	bool initialized_{false};
 
 public:
-  void init() override;
+	void init() override;
 };

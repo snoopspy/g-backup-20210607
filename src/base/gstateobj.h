@@ -16,33 +16,33 @@
 // GStateObj
 // ----------------------------------------------------------------------------
 struct G_EXPORT GStateObj : GObj {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  typedef enum {
-    Closed,
-    Opening,
-    Opened,
-    Closing
-  } State;
+	typedef enum {
+		Closed,
+		Opening,
+		Opened,
+		Closing
+	} State;
 
-  GStateObj(QObject* parent = nullptr) : GObj(parent) {}
-  ~GStateObj() override;
+	GStateObj(QObject* parent = nullptr) : GObj(parent) {}
+	~GStateObj() override;
 
-  bool active();
+	bool active();
 
 public slots:
-  virtual bool open();
-  virtual bool close();
+	virtual bool open();
+	virtual bool close();
 
 signals:
-  void opened();
-  void closed();
+	void opened();
+	void closed();
 
 protected:
-  virtual bool doOpen();
-  virtual bool doClose();
+	virtual bool doOpen();
+	virtual bool doClose();
 
 protected:
-  State state_{Closed};
+	State state_{Closed};
 };
