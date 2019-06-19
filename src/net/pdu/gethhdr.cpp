@@ -7,7 +7,6 @@
 #include <gtest/gtest.h>
 
 #include "net/capture/gsyncpcapfile.h"
-// #include "net/packet/gethpacket.h" // gilgil temp 2019.06.20
 struct GEthHdrTest : testing::Test {
 	GSyncPcapFile pcapFile_;
 	void SetUp() override {
