@@ -4,14 +4,23 @@
 #include <QThread>
 
 // ----------------------------------------------------------------------------
-// qt_gettid(from qlogging.cpp)
+// qt_gettid(coiped from qlogging.cpp)
 // ----------------------------------------------------------------------------
+#ifdef Q_OS_LINUX
 #include <unistd.h>
 #include <sys/syscall.h>
 static long qt_gettid()
 {
 		return syscall(SYS_gettid);
 }
+#endif
+#ifdef Q_OS_WIN
+static QT_PREPEND_NAMESPACE(qint64) qt_gettid()
+{
+		QT_USE_NAMESPACE
+		return qintptr(QThread::currentThreadId());
+}
+#endif
 
 // ----------------------------------------------------------------------------
 // GLogManager
