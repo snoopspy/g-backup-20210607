@@ -1,6 +1,6 @@
 #include "gatm.h"
 #include <QElapsedTimer>
-#include "net/packet/gethpacket.h"
+// #include "net/packet/gethpacket.h" // gilgil temp 2019.06.20
 
 // ----------------------------------------------------------------------------
 // GAtm

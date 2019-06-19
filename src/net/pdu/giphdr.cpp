@@ -61,7 +61,7 @@ uint16_t GIpHdr::recalcChecksum(uint16_t oldChecksum, uint32_t oldValue, uint32_
 #include <gtest/gtest.h>
 
 #include "net/capture/gsyncpcapfile.h"
-#include "net/packet/gethpacket.h"
+// #include "net/packet/gethpacket.h" // gilgil temp 2019.06.20
 struct GIpHdrTest : testing::Test {
 	GSyncPcapFile pcapFile_;
 	void SetUp() override {

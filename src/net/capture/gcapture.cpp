@@ -1,8 +1,4 @@
 #include "gcapture.h"
-#include "net/packet/gethpacket.h"
-#include "net/packet/gippacket.h"
-#include "net/packet/gdot11packet.h"
-#include "net/packet/gnullpacket.h"
 
 // ----------------------------------------------------------------------------
 // GCapture

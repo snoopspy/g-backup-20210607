@@ -13,11 +13,10 @@
 #include "base/gstateobj.h"
 #include "base/sys/gthread.h"
 #include "net/packet/gpacket.h"
-
-// ----------------------------------------------------------------------------
-// GCaptureThread
-// ----------------------------------------------------------------------------
-
+#include "net/packet/gethpacket.h"
+#include "net/packet/gippacket.h"
+#include "net/packet/gdot11packet.h"
+#include "net/packet/gnullpacket.h"
 
 // ----------------------------------------------------------------------------
 // GCapture
