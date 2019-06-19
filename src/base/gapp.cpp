@@ -2,6 +2,9 @@
 #include "base/graph/ggraphwidget.h"
 #include "net/gnetintf.h"
 #include "net/grtm.h"
+#include "base/log/glogmanager.h"
+#include "base/log/glogstdout.h"
+#include "base/log/glogfile.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -15,7 +18,11 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 }
 
 void GApp::init() {
-	qSetMessagePattern("%{time yyMMdd hh:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}");
+	//qSetMessagePattern("%{time yyMMdd hh:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}"); // gilgil temp 2019.06.20
+	GLogManager& logManager = GLogManager::instance();
+	logManager.logs_.push_back(new GLogStdout);
+	logManager.logs_.push_back(new GLogFile);
+
 	GNetIntf::all().init();
 	GRtm::instance().init();
 }

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <GApp>
 #include <GNetIntf>
 #include <GRtm>
 
@@ -49,6 +50,7 @@ void showRtm() {
 }
 
 int main() {
+	GApp::init();
 	showNetIntf();
 	showRtm();
 }
