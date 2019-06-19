@@ -5,6 +5,8 @@
 #include <GJson>
 #include <GPcapDevice>
 
+using namespace std;
+
 struct Obj : QObject {
 	Q_OBJECT
 
@@ -43,7 +45,7 @@ public slots:
 		static int count = 0;
 		QString msg = QString("%1 %2 %3 > %4 %5:%6 > %7:%8\n")
 			.arg(++count).arg(proto, smac, dmac, sip, sport, dip, dport);
-		std::clog << qPrintable(msg);
+		cout << qPrintable(msg);
 	}
 
 	void processClose() {
@@ -66,7 +68,7 @@ int main(int argc, char* argv[]) {
 	QObject::connect(&device, &GPcapDevice::closed,   &obj, &Obj::processClose);
 
 	if (!device.open()) {
-		std::clog << device.err;
+		cout << device.err;
 		return EXIT_FAILURE;
 	}
 

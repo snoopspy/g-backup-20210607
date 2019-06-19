@@ -3,6 +3,8 @@
 #include <QFile>
 #include "base/sys/gsignal.h"
 
+using namespace std;
+
 // ----------------------------------------------------------------------------
 // GSsConParam
 // ----------------------------------------------------------------------------
@@ -18,14 +20,14 @@ struct GSsConParam {
 	static void usage() {
 		using namespace std;
 		QString appName = QCoreApplication::applicationName();
-		clog << qPrintable(appName) << " " << G::version() << endl;
-		clog << "Copyright (c) Gilbert Lee All rights reserved" << endl;
-		clog << G::pcap_lib_version() << endl;
-		clog << endl;
-		clog << "usage : " << qPrintable(appName) << " <filename>" << endl;
-		clog << endl;
-		clog << "example : " << qPrintable(appName) << " ss/test.ss" << endl;
-		clog << endl;
+		cout << qPrintable(appName) << " " << G::version() << endl;
+		cout << "Copyright (c) Gilbert Lee All rights reserved" << endl;
+		cout << G::pcap_lib_version() << endl;
+		cout << endl;
+		cout << "usage : " << qPrintable(appName) << " <filename>" << endl;
+		cout << endl;
+		cout << "example : " << qPrintable(appName) << " ss/test.ss" << endl;
+		cout << endl;
 	}
 };
 
@@ -47,7 +49,7 @@ bool GSsCon::execFactory(GPluginFactory* pluginFactory) {
 	}
 
 	if (!QFile::exists(param.fileName_)) {
-		std::clog << "no such file " << qPrintable(param.fileName_) << std::endl;
+		cout << "no such file " << qPrintable(param.fileName_) << endl;
 		return false;
 	}
 

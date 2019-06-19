@@ -23,8 +23,8 @@ const char* G::pcap_lib_version() {
 
 #include <iostream>
 TEST(GBase, versionTest) {
-	std::clog << G::version() << std::endl;
-	std::clog << G::pcap_lib_version() << std::endl;
+	std::cout << G::version() << std::endl;
+	std::cout << G::pcap_lib_version() << std::endl;
 }
 
 #endif // GTEST
