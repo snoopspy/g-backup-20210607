@@ -3,8 +3,9 @@
 #include "net/gnetintf.h"
 #include "net/grtm.h"
 #include "base/log/glogmanager.h"
-#include "base/log/glogstdout.h"
+#include "base/log/glogdbwin32.h"
 #include "base/log/glogfile.h"
+#include "base/log/glogstdout.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -20,7 +21,12 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 void GApp::init() {
 	//qSetMessagePattern("%{time yyMMdd hh:mm:ss.zzz} %{threadid} [%{file}:%{line} %{function}] %{message}"); // gilgil temp 2019.06.20
 	GLogManager& logManager = GLogManager::instance();
+#ifdef Q_OS_LINUX
 	logManager.logs_.push_back(new GLogStdout);
+#endif // Q_OS_LINUX
+#ifdef Q_OS_WIN
+	logManager.logs_.push_back(new GLogDbWin32);
+#endif // Q_OS_WIN
 	logManager.logs_.push_back(new GLogFile);
 
 	GNetIntf::all().init();

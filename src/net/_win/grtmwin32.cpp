@@ -35,7 +35,7 @@ GRtmWin32::~GRtmWin32() {
 void GRtmWin32::init() {
 	if (initialized_) return;
 	initialized_ = true;
-	qDebug() << "GRtmLinux::init()"; // gilgil temp 2019.06.01
+	qDebug() << "GRtmWin32::init()"; // gilgil temp 2019.06.01
 
 	Q_ASSERT(count() == adapterNames_.count());
 	for (int i = 0; i < count(); i++) {
