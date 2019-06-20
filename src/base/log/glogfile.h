@@ -21,7 +21,7 @@
 struct G_EXPORT GLogFile : GLog {
 	GLogFile(QString folder = "log");
 	~GLogFile() override;
-	void write(QString msg) override;
+	void write(QString& msg) override;
 
 protected:
 	QString folder_;
