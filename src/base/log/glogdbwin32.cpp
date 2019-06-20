@@ -8,6 +8,7 @@
 // GLogDbWin32
 // ----------------------------------------------------------------------------
 void GLogDbWin32::write(QString& msg) {
+	msg += "\n";
 	OutputDebugStringA(qPrintable(msg));
 }
 
