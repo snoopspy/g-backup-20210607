@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include "base/log/glog.h"
+#include "glog.h"
 
 // ----------------------------------------------------------------------------
 // GLogStdout
 // ----------------------------------------------------------------------------
-struct GLogStdout : GLog {
+struct G_EXPORT GLogStdout : GLog {
 	void write(QString& msg) override;
 };

@@ -15,6 +15,8 @@
 // ----------------------------------------------------------------------------
 // GLog
 // ----------------------------------------------------------------------------
-struct GLog : GObj {
+struct G_EXPORT GLog : GObj {
+	GLog(QObject* parent = nullptr) : GObj(parent) {}
+	~GLog() override {}
 	virtual void write(QString& msg) = 0;
 };

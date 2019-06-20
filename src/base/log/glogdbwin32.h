@@ -10,14 +10,14 @@
 
 #pragma once
 
-#include "base/log/glog.h"
+#include "glog.h"
 
 #ifdef Q_OS_WIN
 
 // ----------------------------------------------------------------------------
 // GLogDbWin32
 // ----------------------------------------------------------------------------
-struct GLogDbWin32 : GLog {
+struct G_EXPORT GLogDbWin32 : GLog {
 	void write(QString& msg) override;
 };
 

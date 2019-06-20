@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "base/log/glog.h"
+#include "glog.h"
 
 // ----------------------------------------------------------------------------
 // GLogManager
 // ----------------------------------------------------------------------------
-struct GLogManager : GObj {
+struct G_EXPORT GLogManager : GObj {
 private: // singleton
 	GLogManager(QObject* parent = nullptr);
 	~GLogManager() override;
