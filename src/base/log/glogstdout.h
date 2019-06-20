@@ -16,5 +16,5 @@
 // GLogStdout
 // ----------------------------------------------------------------------------
 struct G_EXPORT GLogStdout : GLog {
-	void write(QString& msg) override;
+	void write(QString msg) override;
 };

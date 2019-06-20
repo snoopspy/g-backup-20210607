@@ -22,7 +22,7 @@ GLogFile::~GLogFile() {
 	thread_.wait();
 }
 
-void GLogFile::write(QString& msg) {
+void GLogFile::write(QString msg) {
 	QMutexLocker ml(&m_);
 	msg += "\n";
 	file_.write(qPrintable(msg));

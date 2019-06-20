@@ -18,7 +18,7 @@
 // GLogDbWin32
 // ----------------------------------------------------------------------------
 struct G_EXPORT GLogDbWin32 : GLog {
-	void write(QString& msg) override;
+	void write(QString msg) override;
 };
 
 #endif // Q_OS_WIN

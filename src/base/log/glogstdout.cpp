@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GLogStdout
 // ----------------------------------------------------------------------------
-void GLogStdout::write(QString& msg) {
+void GLogStdout::write(QString msg) {
 	printf("%s\n", qPrintable(msg));
 	fflush(stdout);
 }
