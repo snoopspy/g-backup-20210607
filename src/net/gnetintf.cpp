@@ -152,6 +152,14 @@ GNetIntf* GNetIntfs::findByName(QString name) {
 }
 #endif
 
+GNetIntf* GNetIntfs::findByIp(GIp ip) {
+	for (GNetIntf& intf: *this) {
+		if (intf.ip() == ip)
+			return &intf;
+	}
+	return nullptr;
+}
+
 GNetIntfs& GNetIntfs::instance() {
 	static GNetIntfs intfs;
 	return intfs;

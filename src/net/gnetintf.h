@@ -71,6 +71,7 @@ private: // singleton
 
 public:
 	GNetIntf* findByName(QString name);
+	GNetIntf* findByIp(GIp ip);
 	pcap_if_t* allDevs_{nullptr};
 	static GNetIntfs& instance();
 
