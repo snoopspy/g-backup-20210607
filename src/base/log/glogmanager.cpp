@@ -30,6 +30,7 @@ GLogManager::GLogManager(QObject* parent) : GObj(parent) {
 }
 
 GLogManager::~GLogManager() {
+	enabled_ = false;
 	for (GLog* log: logs_) {
 		delete log;
 	}
@@ -41,6 +42,9 @@ GLogManager& GLogManager::instance() {
 }
 
 void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+	GLogManager& logManager = GLogManager::instance();
+	if (!logManager.enabled_) return;
+
 	QString typeStr;
 	switch (type) {
 		case QtDebugMsg: typeStr = "D"; break;
@@ -61,7 +65,6 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	if (i != -1) funcStr = funcStr.mid(i + 1);
 	QString finalMsg = QString("%1 %2 %3 [%4:%5 %6] %7").arg(typeStr, nowStr, threadStr, fileStr, lineStr, funcStr, msg);
 
-	GLogManager& logManager = GLogManager::instance();
 	for (GLog* log: logManager.logs_)
 		log->write(finalMsg);
 }

@@ -21,6 +21,7 @@ private: // singleton
 	~GLogManager() override;
 
 public:
+	bool enabled_{true};
 	QList<GLog*> logs_;
 	static GLogManager& instance();
 
