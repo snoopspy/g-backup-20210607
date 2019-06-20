@@ -21,5 +21,6 @@ struct G_EXPORT GNullPacket : GPacket {
 	}
 
 	void parse() override;
+	GPacket* clone() override;
 };
 typedef GNullPacket *PNullPacket;

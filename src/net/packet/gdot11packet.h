@@ -21,5 +21,6 @@ struct G_EXPORT GDot11Packet : GPacket {
 	}
 
 	void parse() override;
+	GPacket* clone() override;
 };
 typedef GDot11Packet *PDot11Packet;

@@ -21,5 +21,6 @@ struct G_EXPORT GIpPacket : GPacket {
 	}
 
 	void parse() override;
+	GPacket* clone() override;
 };
 typedef GIpPacket *PIpPacket;

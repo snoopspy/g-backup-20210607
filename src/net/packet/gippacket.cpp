@@ -52,3 +52,9 @@ void GIpPacket::parse() {
 	parsed_ = true;
 #endif // _DEBUG
 }
+
+GPacket* GIpPacket::clone() {
+	GPacket* res = new GIpPacket;
+	res->doClone(this);
+	return res;
+}

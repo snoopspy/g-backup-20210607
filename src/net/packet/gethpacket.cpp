@@ -29,3 +29,9 @@ void GEthPacket::parse() {
 	parsed_ = true;
 #endif // _DEBUG
 }
+
+GPacket* GEthPacket::clone() {
+	GPacket* res = new GEthPacket;
+	res->doClone(this);
+	return res;
+}

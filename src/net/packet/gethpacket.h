@@ -21,5 +21,6 @@ struct G_EXPORT GEthPacket : GIpPacket {
 	}
 
 	void parse() override;
+	GPacket* clone() override;
 };
 typedef GEthPacket *PEthPacket;
