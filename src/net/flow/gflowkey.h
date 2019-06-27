@@ -22,6 +22,7 @@ namespace GFlow {
 		GMac smac_;
 		GMac dmac_;
 
+		MacFlowKey() {}
 		MacFlowKey(GMac smac, GMac dmac) : smac_(smac), dmac_(dmac) {}
 
 		bool operator < (const MacFlowKey& rhs) const {
@@ -43,6 +44,7 @@ namespace GFlow {
 		GMac mac1_;
 		GMac mac2_;
 
+		MacSessionKey() {}
 		MacSessionKey(GMac mac1, GMac mac2) : mac1_(mac1), mac2_(mac2) {}
 
 		bool operator < (const MacSessionKey& rhs) const {
@@ -61,6 +63,7 @@ namespace GFlow {
 		GIp sip_;
 		GIp dip_;
 
+		IpFlowKey() {}
 		IpFlowKey(GIp sip, GIp dip) : sip_(sip), dip_(dip) {}
 
 		bool operator < (const IpFlowKey& rhs) const {
@@ -83,6 +86,7 @@ namespace GFlow {
 		GIp ip1_;
 		GIp ip2_;
 
+		IpSessionKey() {}
 		IpSessionKey(GIp ip1, GIp ip2) : ip1_(ip1), ip2_(ip2) {}
 
 		bool operator < (const IpSessionKey& rhs) const {
@@ -101,6 +105,7 @@ namespace GFlow {
 		uint16_t sport_;
 		uint16_t dport_;
 
+		PortFlowKey() {}
 		PortFlowKey(uint16_t sport, uint16_t dport) : sport_(sport), dport_(dport) {}
 
 		bool operator < (const PortFlowKey& rhs) const {
@@ -123,6 +128,7 @@ namespace GFlow {
 		uint16_t port1_;
 		uint16_t port2_;
 
+		PortSessionKey() {}
 		PortSessionKey(uint16_t port1, uint16_t port2) : port1_(port1), port2_(port2) {}
 
 		bool operator < (const PortSessionKey& rhs) const {
@@ -141,6 +147,7 @@ namespace GFlow {
 		GIp      ip_;
 		uint16_t port_;
 
+		TransportKey() {}
 		TransportKey(GIp ip, uint16_t port) : ip_(ip), port_(port) {}
 
 		bool operator < (const TransportKey& rhs) const {
@@ -164,6 +171,7 @@ namespace GFlow {
 		GIp      dip_;
 		uint16_t dport_;
 
+		TransportFlowKey() {}
 		TransportFlowKey(GIp sip, uint16_t sport, GIp dip, uint16_t dport) : sip_(sip), sport_(sport), dip_(dip), dport_(dport) {}
 
 		bool operator < (const TransportFlowKey& rhs) const {
@@ -206,6 +214,7 @@ namespace GFlow {
 		GIp      ip2_;
 		uint16_t port2_;
 
+		TransportSessionKey() {}
 		TransportSessionKey(GIp ip1, uint16_t port1, GIp ip2, uint16_t port2) : ip1_(ip1), port1_(port1), ip2_(ip2), port2_(port2) {}
 
 		bool operator < (const TransportSessionKey& rhs) const {
@@ -231,6 +240,7 @@ namespace GFlow {
 		uint8_t          proto_;
 		TransportFlowKey flow_;
 
+		TupleFlowKey() {}
 		TupleFlowKey(uint8_t proto, TransportFlowKey flow) : proto_(proto), flow_(flow) {}
 
 		bool operator < (const TupleFlowKey& rhs) const {
