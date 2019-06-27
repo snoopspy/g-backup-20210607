@@ -76,8 +76,10 @@ protected:
 	void deleteOldFlowMaps(long now);
 
 public:
-	GFlow::TcpFlowKey* key_{nullptr};
-	GFlow::Value* value_{nullptr};
+	GFlow::TcpFlowKey key_;
+	GFlow::Value* val_{nullptr};
+	GFlow::TcpFlowKey rKey_;
+	GFlow::Value* rVal_{nullptr};
 
 public slots:
 	void process(GPacket* packet);

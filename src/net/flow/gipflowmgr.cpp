@@ -17,7 +17,6 @@ bool GIpFlowMgr::doClose() {
 		}
 	}
 	flowMap_.clear();
-	// requestItems_.clear(); // gilgil temp 2019.05.25
 	return GFlowMgr::doClose();
 }
 
@@ -54,29 +53,28 @@ void GIpFlowMgr::process(GPacket* packet) {
 	GIpHdr* ipHdr = packet->ipHdr_;
 	if (ipHdr == nullptr) return;
 
-	GFlow::IpFlowKey key{ipHdr->sip(), ipHdr->dip()};
+	key_.sip_ = ipHdr->sip();
+	key_.dip_ = ipHdr->dip();
+	FlowMap::iterator it = flowMap_.find(key_);
 
-	FlowMap::iterator it = flowMap_.find(key);
+	rKey_ = key_.reverse();
+	rVal_ = nullptr;
+	FlowMap::iterator rIt = flowMap_.find(rKey_);
+	if (rIt != flowMap_.end())
+		rVal_ = rIt.value();
+
 	if (it == flowMap_.end()) {
-		GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
-		it = flowMap_.insert(key, value);
-		key_ = const_cast<GFlow::IpFlowKey*>(&it.key());
-		value_ = value;
+		val_ = GFlow::Value::allocate(GFlow::Value::Half, requestItems_.totalMemSize_);
+		it = flowMap_.insert(key_, val_);
 		for (Managable* manager: managables_)
-			manager->ipFlowCreated(key_, value_);
+			manager->ipFlowCreated(&key_, val_);
 
-		GFlow::IpFlowKey reverseKey = GFlow::IpFlowKey(it.key()).reverse();
-		FlowMap::iterator reverseIt = flowMap_.find(reverseKey);
-		if (reverseIt != flowMap_.end()) {
-			it.value()->state_ = GFlow::Value::Full;
-			reverseIt.value()->state_ = GFlow::Value::Full;
+		if (rVal_ != nullptr) {
+			val_->state_ = GFlow::Value::Full;
+			rVal_->state_ = GFlow::Value::Full;
 		}
-	} else {
-		GFlow::Value* value = it.value();
-		value->ts_ = packet->ts_;
 	}
+	val_->ts_ = packet->ts_;
 
-	this->key_ = const_cast<GFlow::IpFlowKey*>(&it.key());
-	this->value_ = it.value();
 	emit processed(packet);
 }

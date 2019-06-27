@@ -35,9 +35,8 @@ namespace GFlow {
 		State state_;
 		u_char totalMem_[0];
 
-		static struct Value* allocate(struct timeval ts, State state, size_t totalMemSize) {
+		static struct Value* allocate(State state, size_t totalMemSize) {
 			Value* res = reinterpret_cast<Value*>(malloc(sizeof(struct Value) + totalMemSize));
-			res->ts_ = ts;
 			res->state_ = state;
 			return res;
 		}

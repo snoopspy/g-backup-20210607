@@ -17,7 +17,6 @@ bool GTcpFlowMgr::doClose() {
 		}
 	}
 	flowMap_.clear();
-	// requestItems_.clear(); // gilgil temp 2019.05.25
 	return GFlowMgr::doClose();
 }
 
@@ -57,40 +56,38 @@ void GTcpFlowMgr::process(GPacket* packet) {
 	GTcpHdr* tcpHdr = packet->tcpHdr_;
 	if (tcpHdr == nullptr) return;
 
-	GFlow::TcpFlowKey key{ipHdr->sip(), tcpHdr->sport(), ipHdr->dip(), tcpHdr->dport()};
+	key_.sip_ = ipHdr->sip();
+	key_.sport_ = tcpHdr->sport();
+	key_.dip_ = ipHdr->dip();
+	key_.dport_ = tcpHdr->dport();
+	FlowMap::iterator it = flowMap_.find(key_);
 
-	FlowMap::iterator it = flowMap_.find(key);
+	rKey_ = key_.reverse();
+	rVal_ = nullptr;
+	FlowMap::iterator rIt = flowMap_.find(rKey_);
+	if (rIt != flowMap_.end())
+		rVal_ = rIt.value();
+
 	if (it == flowMap_.end()) {
-		GFlow::Value* value = GFlow::Value::allocate(packet->ts_, GFlow::Value::Half, requestItems_.totalMemSize_);
-		it = flowMap_.insert(key, value);
-		key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
-		value_ = value;
+		val_ = GFlow::Value::allocate(GFlow::Value::Half, requestItems_.totalMemSize_);
+		it = flowMap_.insert(key_, val_);
 		for (Managable* manager: managables_)
-			manager->tcpFlowCreated(key_, value_);
+			manager->tcpFlowCreated(&key_, val_);
 
-		GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
-		FlowMap::iterator reverseIt = flowMap_.find(reverseKey);
-		if (reverseIt != flowMap_.end()) {
-			it.value()->state_ = GFlow::Value::Full;
-			reverseIt.value()->state_ = GFlow::Value::Full;
+		if (rVal_ != nullptr) {
+			val_->state_ = GFlow::Value::Full;
+			rVal_->state_ = GFlow::Value::Full;
 		}
-	} else {
-		GFlow::Value* value = it.value();
-		value->ts_ = packet->ts_;
 	}
+	val_->ts_ = packet->ts_;
 
 	if ((tcpHdr->flags() & (GTcpHdr::Rst | GTcpHdr::Fin)) != 0) {
-		GFlow::Value* value = it.value();
 		GFlow::Value::State state = (tcpHdr->flags() & GTcpHdr::Rst) ? GFlow::Value::Rst : GFlow::Value::Fin;
-		value->state_ = state;
-		GFlow::TcpFlowKey reverseKey = GFlow::TcpFlowKey(it.key()).reverse();
-		FlowMap::iterator reverseIt = flowMap_.find(reverseKey);
-		if (reverseIt != flowMap_.end()) {
-			reverseIt.value()->state_ = state;
+		val_->state_ = state;
+		if (rVal_  != nullptr) {
+			rVal_->state_ = state;
 		}
 	}
 
-	this->key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
-	this->value_ = it.value();
 	emit processed(packet);
 }

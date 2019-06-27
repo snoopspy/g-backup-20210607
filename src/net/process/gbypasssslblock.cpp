@@ -33,8 +33,8 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 	GTcpHdr* tcpHdr = packet->tcpHdr_;
 	if (tcpHdr == nullptr) return;
 
-	GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
-	FlowItem* flowItem = PFlowItem(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
+	GFlow::TcpFlowKey* key = &tcpFlowMgr_->key_;
+	FlowItem* flowItem = PFlowItem(tcpFlowMgr_->val_->mem(tcpFlowOffset_));
 	if (flowItem->processed_) return;
 
 	GBuf tcpData = packet->tcpData_;
