@@ -45,8 +45,8 @@ public:
 	// FlowItem
 	// --------------------------------------------------------------------------
 	struct FlowItem {
-		size_t packets;
-		size_t bytes;
+		size_t packets{0};
+		size_t bytes{0};
 	};
 	typedef FlowItem *PFlowItem;
 	// --------------------------------------------------------------------------

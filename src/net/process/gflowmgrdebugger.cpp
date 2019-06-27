@@ -29,8 +29,7 @@ bool GFlowMgrDebugger::doClose() {
 void GFlowMgrDebugger::ipFlowCreated(GFlow::IpFlowKey* key, GFlow::Value* value) {
 	qDebug() << QString("_ipFlowCreated %1>%2").arg(QString(key->sip_), QString(key->dip_));
 	FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
-	flowItem->packets = 0;
-	flowItem->bytes = 0;
+	new (flowItem) FlowItem();
 }
 
 void GFlowMgrDebugger::ipFlowDeleted(GFlow::IpFlowKey* key, GFlow::Value* value) {
@@ -41,8 +40,7 @@ void GFlowMgrDebugger::ipFlowDeleted(GFlow::IpFlowKey* key, GFlow::Value* value)
 void GFlowMgrDebugger::tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) {
 	qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
 	FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
-	flowItem->packets = 0;
-	flowItem->bytes = 0;
+	new (flowItem) FlowItem();
 }
 
 void GFlowMgrDebugger::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
@@ -53,8 +51,7 @@ void GFlowMgrDebugger::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* valu
 void GFlowMgrDebugger::udpFlowCreated(GFlow::UdpFlowKey* key, GFlow::Value* value) {
 	qDebug() << QString("_udpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
 	FlowItem* flowItem = PFlowItem(value->mem(ipFlowOffset_));
-	flowItem->packets = 0;
-	flowItem->bytes = 0;
+	new (flowItem) FlowItem();
 }
 
 void GFlowMgrDebugger::udpFlowDeleted(GFlow::UdpFlowKey* key, GFlow::Value* value) {
