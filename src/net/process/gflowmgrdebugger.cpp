@@ -18,7 +18,6 @@ bool GFlowMgrDebugger::doOpen() {
 		udpFlowOffset_ = udpFlowMgr_->requestItems_.request("GFlowMgrTest_udp", sizeof(FlowItem));
 		udpFlowMgr_->managables_.insert(this);
 	}
-
 	return true;
 }
 
@@ -64,10 +63,10 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 
 	if (packet->ipHdr_ != nullptr) {
 		if (ipFlowMgr_ != nullptr) {
-			GFlow::IpFlowKey* key = ipFlowMgr_->key_;
 			FlowItem* flowItem = PFlowItem(ipFlowMgr_->value_->mem(ipFlowOffset_));
 			flowItem->packets++;
 			flowItem->bytes += packet->buf_.size_;
+			GFlow::IpFlowKey* key = ipFlowMgr_->key_;
 			qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5")
 				.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
 				.arg(QString(key->sip_)).arg(QString(key->dip_)); // gilgil temp 2016.10.10
@@ -75,10 +74,10 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 
 		if (packet->tcpHdr_ != nullptr) {
 			if (tcpFlowMgr_ != nullptr) {
-				GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
 				FlowItem* flowItem = PFlowItem(tcpFlowMgr_->value_->mem(tcpFlowOffset_));
 				flowItem->packets++;
 				flowItem->bytes += packet->buf_.size_;
+				GFlow::TcpFlowKey* key = tcpFlowMgr_->key_;
 				qDebug() << QString("tcp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7")
 					.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
 					.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
@@ -87,10 +86,10 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 
 		if (packet->udpHdr_ != nullptr) {
 			if (udpFlowMgr_ != nullptr) {
-				GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
 				FlowItem* flowItem = PFlowItem(udpFlowMgr_->value_->mem(udpFlowOffset_));
 				flowItem->packets++;
 				flowItem->bytes += packet->buf_.size_;
+				GFlow::UdpFlowKey* key = udpFlowMgr_->key_;
 				qDebug() << QString("udp size=%1 packets=%2 bytes=%3 %4:%5>%6:%7")
 					.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
 					.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
