@@ -33,7 +33,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 	GTcpHdr* tcpHdr = packet->tcpHdr_;
 	if (tcpHdr == nullptr) return;
 
-	GFlow::TcpFlowKey* key = &tcpFlowMgr_->key_;
+	Q_ASSERT(tcpFlowMgr_->val_ != nullptr);
 	FlowItem* flowItem = PFlowItem(tcpFlowMgr_->val_->mem(tcpFlowOffset_));
 	if (flowItem->processed_) return;
 
@@ -45,6 +45,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 
 	if (tcpData.data_[0] != 0x16) return;
 
+	GFlow::TcpFlowKey* key = &tcpFlowMgr_->key_;
 	qDebug() << QString("split!!! tcp size=%1 %2:%3>%4:%5")
 		.arg(packet->buf_.size_)
 		.arg(QString(key->sip_)).arg(key->sport_).arg(QString(key->dip_)).arg(key->dport_); // gilgil temp 2016.10.10
