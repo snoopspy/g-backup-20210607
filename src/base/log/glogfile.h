@@ -11,9 +11,9 @@
 #pragma once
 
 #include "glog.h"
-#include "base/sys/gthread.h"
 #include "base/sys/gwaitevent.h"
 #include <QFile>
+#include <QThread>
 
 // ----------------------------------------------------------------------------
 // GLogFile
@@ -30,7 +30,7 @@ protected:
 	QFile file_;
 	void changeFileName();
 
-	struct ChangeFileNameThread : GThread {
+	struct ChangeFileNameThread : QThread {
 		ChangeFileNameThread(GLogFile* logFile) : logFile_(logFile) {}
 		GLogFile* logFile_;
 		GWaitEvent we_;
