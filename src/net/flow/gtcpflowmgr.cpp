@@ -34,11 +34,9 @@ void GTcpFlowMgr::deleteOldFlowMaps(long now) {
 			case GFlow::Value::Fin: timeout = finTimeout_; break;
 		}
 		if (elapsed >= timeout) {
-			//key_ = (GFlow::TcpFlowKey*)&it.key();
-			key_ = const_cast<GFlow::TcpFlowKey*>(&it.key());
-			value_ = value;
+			GFlow::TcpFlowKey* key = const_cast<GFlow::TcpFlowKey*>(&it.key());
 			for (Managable* manager: managables_)
-				manager->tcpFlowDeleted(key_, value_);
+				manager->tcpFlowDeleted(key, value);
 			it = flowMap_.erase(it);
 			continue;
 		}

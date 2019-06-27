@@ -34,10 +34,9 @@ void GIpFlowMgr::deleteOldFlowMaps(long now) {
 			case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
 		}
 		if (elapsed >= timeout) {
-			key_ = const_cast<GFlow::IpFlowKey*>(&it.key());
-			value_ = value;
+			GFlow::IpFlowKey* key = const_cast<GFlow::IpFlowKey*>(&it.key());
 			for (Managable* manager: managables_)
-				manager->ipFlowDeleted(key_, value_);
+				manager->ipFlowDeleted(key, value);
 			it = flowMap_.erase(it);
 			continue;
 		}

@@ -34,10 +34,9 @@ void GUdpFlowMgr::deleteOldFlowMaps(long now) {
 			case GFlow::Value::Fin: qCritical() << "unrecheable Fin"; timeout = 0; break;
 		}
 		if (elapsed >= timeout) {
-			key_ = const_cast<GFlow::UdpFlowKey*>(&it.key());
-			value_ = value;
+			GFlow::UdpFlowKey* key = const_cast<GFlow::UdpFlowKey*>(&it.key());
 			for (Managable* manager: managables_)
-				manager->udpFlowCreated(key_, value_);
+				manager->udpFlowCreated(key, value);
 			it = flowMap_.erase(it);
 			continue;
 		}
