@@ -81,6 +81,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
 	} else {
 		val_ = it.value();
 	}
+	Q_ASSERT(val_ != nullptr);
 	val_->ts_ = packet->ts_;
 
 	if ((tcpHdr->flags() & (GTcpHdr::Rst | GTcpHdr::Fin)) != 0) {

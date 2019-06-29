@@ -76,6 +76,7 @@ void GIpFlowMgr::process(GPacket* packet) {
 	} else {
 		val_ = it.value();
 	}
+	Q_ASSERT(val_ != nullptr);
 	val_->ts_ = packet->ts_;
 
 	emit processed(packet);
