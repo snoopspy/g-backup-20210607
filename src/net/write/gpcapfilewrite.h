@@ -24,7 +24,7 @@ struct G_EXPORT GPcapFileWrite : GPcapWrite {
 
 public:
 	int snapLen_{65536};
-	QString fileName_{"pcap/yyyy.MM.dd hh-mm-ss-zzz.'pcap'"};
+	QString fileName_{"pcap/yyMMdd hhmmss-zzz.'pcap'"};
 	bool resolveFileNameByTime_{true};
 
 public:

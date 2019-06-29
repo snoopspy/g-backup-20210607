@@ -54,7 +54,7 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 		case QtInfoMsg: typeStr = "I"; break;
 	}
 	QDateTime now = QDateTime::currentDateTime();
-	QString nowStr = now.toString("yyMMdd hh:mm:ss.zzz");
+	QString nowStr = now.toString("yyMMdd hhmmss-zzz");
 	QString threadStr = QString::number(qt_gettid());
 	QString fileStr = context.file;
 	int i = fileStr.lastIndexOf(QDir::separator());
