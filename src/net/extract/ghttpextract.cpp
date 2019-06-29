@@ -56,7 +56,7 @@ void GHttpExtract::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
 	(void)key;
 	if (!enabled_) return;
 	FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
-	::operator delete(flowItem);
+	flowItem->~FlowItem();
 }
 
 void GHttpExtract::write(GPacket* packet) {
