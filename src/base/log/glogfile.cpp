@@ -1,6 +1,5 @@
 #include "glogfile.h"
 #include <QDate>
-#include <QDir>
 
 // ----------------------------------------------------------------------------
 // GLogFile

@@ -12,6 +12,7 @@
 
 #include "glog.h"
 #include "base/sys/gwaitevent.h"
+#include <QDir>
 #include <QFile>
 #include <QThread>
 
@@ -19,7 +20,7 @@
 // GLogFile
 // ----------------------------------------------------------------------------
 struct G_EXPORT GLogFile : GLog {
-	GLogFile(QString folder = "log");
+	GLogFile(QString folder = QString("log") + QDir::separator());
 	~GLogFile() override;
 	void write(QString& msg) override;
 

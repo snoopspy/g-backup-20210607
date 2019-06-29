@@ -27,7 +27,7 @@ public:
 	void setTcpFlowMgr(GObjPtr value) { tcpFlowMgr_ = dynamic_cast<GTcpFlowMgr*>(value.data()); }
 
 public:
-	QString folder_;
+	QString folder_{"extract"};
 	GTcpFlowMgr* tcpFlowMgr_{nullptr};
 
 public:
@@ -38,15 +38,14 @@ public:
 		GHttpExtract* httpExtract_;
 		enum State {
 			None,
-			RequestHeaderParsed,
-			ResponseHeaderParsed,
+			HttpRquestParsed,
+			HttpResponseParsed,
 		} state_;
 
 		QString fileName_;
 		size_t contentLength_;
 		FILE* fp_;
-		uint32_t firstClientServerSeq_;
-		uint32_t firstServerClientSeq_;
+		uint32_t firstHttpResponseBodySeq_;
 
 		FlowItem(GHttpExtract* httpExtract);
 		virtual ~FlowItem();
@@ -67,6 +66,7 @@ protected:
 
 protected:
 	size_t tcpFlowOffset_{0};
+	QString currentFolder_;
 
 protected:
 	QRegularExpression httpRequestFirstLine_{"^GET ([^ ]+) HTTP/1.1\r\n"};
