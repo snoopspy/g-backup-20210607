@@ -38,8 +38,8 @@ public:
 		GHttpExtract* httpExtract_;
 		enum State {
 			None,
-			RequestHeaderCompleted,
-			ResponseHeaderCompleted
+			RequestHeaderParsed,
+			ResponseHeaderParsed,
 		} state_;
 
 		QString fileName_;
@@ -69,10 +69,11 @@ protected:
 	size_t tcpFlowOffset_{0};
 
 protected:
-	QRegularExpression httpRequestFirstLine_{"GET ([^ ]+) HTTP/1.1\r\n"};
-	QRegularExpression httpRequestHost_{"Host: ([^\r]+)\r\n"};
-	QRegularExpression httpResponseFirstLine_{"HTTP/1.1 200"};
-	QRegularExpression httpResponseContentLength_{"Content-Length: ([0-9]+)"};
+	QRegularExpression httpRequestFirstLine_{"^GET ([^ ]+) HTTP/1.1\r\n"};
+	QRegularExpression httpRequestHost_{"\r\nHost: ([^\r]+)\r\n"};
+	QRegularExpression httpResponseFirstLine_{"^HTTP/1.1 200 "};
+	QRegularExpression httpResponseContentLength_{"\r\nContent-Length: ([0-9]+)"};
+	QRegularExpression httpResponseBodyStart_{"\r\n\r\n"};
 
 public:
 	// GTcpFlowMgr::Managable

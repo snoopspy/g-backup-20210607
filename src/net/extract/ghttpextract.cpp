@@ -1,4 +1,5 @@
 #include "ghttpextract.h"
+#include <cstring> // for strcmp
 
 // ----------------------------------------------------------------------------
 // GHttpExtract::FlowItem
@@ -61,19 +62,25 @@ void GHttpExtract::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
 void GHttpExtract::write(GPacket* packet) {
 	if (!enabled_) return;
 	if (!packet->tcpData_.valid()) return;
-	//QString tcpData(pchar(packet->tcpData_.data_), packet->tcpData_.size_);
 
 	Q_ASSERT(tcpFlowMgr_->val_ != nullptr);
 	FlowItem* flowItem = PFlowItem(tcpFlowMgr_->val_->mem(tcpFlowOffset_));
 
 	switch (flowItem->state_) {
-		case FlowItem::None:
-			if (tcpData.size_ < 10) return;
-			if (strcmp(pchar(tcpData.data_), "GET ") != 0) return;
-			int pos = httpRequestFirstLine_.indexIn();
-
-		case FlowItem::RequestHeaderCompleted:
-		case FlowItem::ResponseHeaderCompleted:
+		case FlowItem::None: {
+			if (packet->tcpData_.size_ < 10) return;
+			if (strcmp(pchar(packet->tcpData_.data_), "GET ") != 0) return;
+			QString tcpData(QByteArray(pchar(packet->tcpData_.data_), int(packet->tcpData_.size_)));
+			QRegularExpressionMatch matchFirstLine = httpRequestFirstLine_.match(tcpData);
+			int offset = matchFirstLine.capturedEnd(1) + 1;
+			if (!matchFirstLine.hasMatch()) return;
+			QRegularExpressionMatch matchHost = httpRequestHost_.match(tcpData, offset);
+			if (!matchHost.hasMatch()) return;
+			flowItem->fileName_ = matchHost.captured(1) + matchFirstLine.captured(1);
+			qDebug() << "fileName =" << flowItem->fileName_;
+			break;
+		}
+		case FlowItem::RequestHeaderParsed: break;
+		case FlowItem::ResponseHeaderParsed: break;
 	}
-
 }

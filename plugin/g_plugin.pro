@@ -3,6 +3,7 @@ SUBDIRS += \
 	block \
 	capture \
 	delay \
+	extract \
 	filter \
 	flow \
 	other \
