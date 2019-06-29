@@ -6,7 +6,7 @@
 // GSyncPcapDeviceMgr
 // ----------------------------------------------------------------------------
 typedef QMap<QString /*devName*/, GSyncPcapDevice*> GSyncPcapDeviceMap;
-struct GSyncPcapDeviceMgr : GSyncPcapDeviceMap  {
+struct GSyncPcapDeviceMgr : GSyncPcapDeviceMap {
 private: // singleton
 	GSyncPcapDeviceMgr() {}
 	virtual ~GSyncPcapDeviceMgr() {

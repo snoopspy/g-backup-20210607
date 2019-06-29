@@ -42,13 +42,13 @@ public:
 	//
 	// comparison operator
 	//
-	bool operator == (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) == 0; }
-	bool operator != (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) != 0; }
-	bool operator <  (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) <  0; }
-	bool operator >  (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) >  0; }
-	bool operator <= (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) <= 0; }
-	bool operator >= (const GMac& rhs) const   { return memcmp(mac_, rhs.mac_, SIZE) >= 0; }
-	bool operator == (const u_char* rhs) const { return memcmp(mac_, rhs,      SIZE) == 0; }
+	bool operator == (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) == 0; }
+	bool operator != (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) != 0; }
+	bool operator <  (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) <  0; }
+	bool operator >  (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) >  0; }
+	bool operator <= (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) <= 0; }
+	bool operator >= (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) >= 0; }
+	bool operator == (const pbyte rhs) const { return memcmp(mac_, rhs,      SIZE) == 0; }
 
 public:
 	void clear() {

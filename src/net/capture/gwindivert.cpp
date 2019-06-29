@@ -142,7 +142,7 @@ bool GWinDivert::doClose() {
 		return false;
 	}
 
-	if (!lib.WinDivertClose(handle_))  {
+	if (!lib.WinDivertClose(handle_)) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertClose return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));
 		SET_ERR(GErr::FAIL, msg);

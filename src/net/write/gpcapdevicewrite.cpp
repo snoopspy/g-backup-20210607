@@ -30,7 +30,7 @@ bool GPcapDeviceWrite::doOpen() {
 	return true;
 }
 
-bool GPcapDeviceWrite::doClose()  {
+bool GPcapDeviceWrite::doClose() {
 	if (pcap_ != nullptr) {
 		pcap_close(pcap_);
 		pcap_ = nullptr;

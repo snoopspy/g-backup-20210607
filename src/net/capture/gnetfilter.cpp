@@ -16,7 +16,7 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 	command_.closeCommands_ << "sudo iptables -D INPUT -j NFQUEUE";
 }
 
-GNetFilter::~GNetFilter()  {
+GNetFilter::~GNetFilter() {
 	GDEBUG_DTOR
 	close();
 }
