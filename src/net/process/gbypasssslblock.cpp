@@ -19,7 +19,7 @@ bool GBypassSslBlock::doClose() {
 void GBypassSslBlock::tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) {
 	qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
 	FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
-	flowItem->processed_ = false;
+	new (flowItem) FlowItem;
 }
 
 void GBypassSslBlock::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {

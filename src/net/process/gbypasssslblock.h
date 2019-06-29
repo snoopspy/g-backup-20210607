@@ -31,7 +31,7 @@ public:
 	// FlowItem
 	// --------------------------------------------------------------------------
 	struct FlowItem {
-		bool processed_;
+		bool processed_{false};
 	};
 	typedef FlowItem *PFlowItem;
 	// --------------------------------------------------------------------------
