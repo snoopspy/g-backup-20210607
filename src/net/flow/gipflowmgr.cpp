@@ -73,6 +73,8 @@ void GIpFlowMgr::process(GPacket* packet) {
 			val_->state_ = GFlow::Value::Full;
 			rVal_->state_ = GFlow::Value::Full;
 		}
+	} else {
+		val_ = it.value();
 	}
 	val_->ts_ = packet->ts_;
 
