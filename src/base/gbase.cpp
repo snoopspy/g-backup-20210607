@@ -5,9 +5,9 @@ const GDuration G::Timeout = 5000;
 
 const char* G::version() {
 #ifdef _DEBUG
-	return "G Library version 0.2.2 Debug Build(" __DATE__ " " __TIME__ ")";
+	return "G Library version 0.2.3 Debug Build(" __DATE__ " " __TIME__ ")";
 #else // RELEASE
-	return "G Library version 0.2.2 Release Build(" __DATE__ " " __TIME__ ")";
+	return "G Library version 0.2.3 Release Build(" __DATE__ " " __TIME__ ")";
 #endif // _DEBUG
 }
 
