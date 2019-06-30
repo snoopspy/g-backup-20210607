@@ -34,10 +34,14 @@ void GHttpExtract::FlowItem::close() {
 // GHttpExtract
 // ----------------------------------------------------------------------------
 bool GHttpExtract::doOpen() {
-	if (tcpFlowMgr_ != nullptr) {
-		tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
-		tcpFlowMgr_->managables_.insert(this);
+	if (!enabled_) return true;
+
+	if (tcpFlowMgr_ == nullptr) {
+		SET_ERR(GErr::OBJECT_IS_NULL, "tcpFlowMgr must be specified");
+		return false;
 	}
+	tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
+	tcpFlowMgr_->managables_.insert(this);
 
 	currentFolder_ = folder_;
 	if (!currentFolder_.endsWith(QDir::separator()))
@@ -73,6 +77,8 @@ void GHttpExtract::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
 }
 
 void GHttpExtract::write(GPacket* packet) {
+	qDebug() << QString(*packet); // gilgil temp 2019.06.30
+
 	if (!enabled_) return;
 	if (!packet->tcpData_.valid()) return;
 

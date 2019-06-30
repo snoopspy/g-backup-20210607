@@ -4,10 +4,12 @@
 // GBypassSslBlock
 // ----------------------------------------------------------------------------
 bool GBypassSslBlock::doOpen() {
-	if (tcpFlowMgr_ != nullptr) {
-		tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
-		tcpFlowMgr_->managables_.insert(this);
+	if (tcpFlowMgr_ == nullptr) {
+		SET_ERR(GErr::OBJECT_IS_NULL, "tcpFlowMgr must be specified");
+		return false;
 	}
+	tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
+	tcpFlowMgr_->managables_.insert(this);
 
 	return true;
 }
