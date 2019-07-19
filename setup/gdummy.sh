@@ -11,20 +11,20 @@ function usage() {
 }
 
 if [ -z "$COMMAND" ]; then
- usage
- exit 1
+	usage
+	exit 1
 fi
 
 if [ "$COMMAND" == "start" ]; then
- # echo "Installing dummy kernel module"
- sudo modprobe dummy
- sudo ip link delete dummy0 type dummy
+	# echo "Installing dummy kernel module"
+	sudo modprobe dummy
+	sudo ip link delete dummy0 type dummy
 	exit 0
 fi
 
 if [ $COMMAND == "stop" ]; then
 	# echo "Uninstalling dummy kernel module"
-	sudo rmmod dummy
+	sudo modprobe -r dummy
 	exit 0
 fi
 
@@ -34,7 +34,7 @@ if [ "$COMMAND" == "add" ]; then
 		echo "Interface not specified"
 		exit 1
 	fi
-	ip link add "$INTERFACE" type dummy
+	sudo ip link add "$INTERFACE" type dummy
 	sudo ifconfig "$INTERFACE" up
 	exit 0
 fi
