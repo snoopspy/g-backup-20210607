@@ -1,5 +1,9 @@
+rem for win64
 call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
 set path=%path%;C:\Qt\5.12.2\msvc2017_64\bin
+rem for win32
+rem call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+rem set path=%path%;C:\Qt\5.12.2\msvc2017\bin
 
 rem ***************************************************************************
 rem lib
