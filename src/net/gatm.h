@@ -32,8 +32,8 @@ typedef QMap<GIp, GMac> GAtmMap;
 struct G_EXPORT GAtm : GAtmMap {
 	bool allResolved();
 	void deleteUnresolved();
-	bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout / 2);
-	GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout / 2);
+	bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout);
+	GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout);
 
 protected:
 	bool sendQueries(GPcapDevice* device, GNetIntf* intf);
@@ -45,7 +45,7 @@ protected:
 	// --------------------------------------------------------------------------
 	// SendThread
 	// --------------------------------------------------------------------------
-	struct SendThread : GThread {
+	struct SendThread : QThread {
 		SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout);
 		GAtm* atm_;
 		GPcapDevice* device_;

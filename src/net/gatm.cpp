@@ -167,7 +167,7 @@ void GAtm::SendThread::run() {
 	while (true) {
 		if (!atm_->sendQueries(device_, intf_))
 			break;
-		bool res = we_.wait(500);
+		bool res = we_.wait(1000);
 		if (res) break;
 		qint64 now = timer.elapsed();
 		if (now - first >= qint64(timeout_)) {
