@@ -38,5 +38,5 @@ protected:
 	gbyte temp_[MAXBUF];
 
 public slots:
-	GPacket::Result write(GPacket* packet);
+	GPacket::Result writeEth(GPacket* packet);
 };

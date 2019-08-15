@@ -66,7 +66,7 @@ bool GPcapDeviceWriteEthAutoMac::doClose() {
 	return GPcapDeviceWrite::doClose();
 }
 
-GPacket::Result GPcapDeviceWriteEthAutoMac::write(GPacket* packet) {
+GPacket::Result GPcapDeviceWriteEthAutoMac::writeEth(GPacket* packet) {
 	GBuf oldBuf = packet->buf_;
 	GBuf newBuf;
 	GEthHdr* ethHdr;

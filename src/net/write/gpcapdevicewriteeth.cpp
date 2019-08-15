@@ -22,7 +22,7 @@ bool GPcapDeviceWriteEth::doClose() {
 	return GPcapDeviceWrite::doClose();
 }
 
-GPacket::Result GPcapDeviceWriteEth::write(GPacket* packet) {
+GPacket::Result GPcapDeviceWriteEth::writeEth(GPacket* packet) {
 	GBuf oldBuf = packet->buf_;
 	GBuf newBuf;
 	GEthHdr* ethHdr;
