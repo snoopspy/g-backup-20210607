@@ -47,7 +47,7 @@ bool GArpSpoof::doOpen() {
 		}
 
 		if (targetIp == intf_.ip()) {
-			QString msg = QString("target(%1) can not be my ip").arg(QString(senderIp));
+			QString msg = QString("target(%1) can not be my ip").arg(QString(targetIp));
 			SET_ERR(GErr::FAIL, msg);
 			return false;
 		}
