@@ -24,7 +24,6 @@ bool GArpSpoof::doOpen() {
 
 	sessionList_.clear();
 	sessionMap_.clear();
-
 	for (GAtm::iterator it = atm_.begin(); it != atm_.end();) {
 		GMac mac = it.value();
 		if (mac == GMac::cleanMac())
@@ -32,9 +31,9 @@ bool GArpSpoof::doOpen() {
 		else
 			it++;
 	}
+
 	for (GObj* obj: propSessions_) {
 		GArpSpoofSession* propSession = PArpSpoofSession(obj);
-
 		GIp senderIp = propSession->senderIp_;
 		GMac senderMac = propSession->senderMac_;
 		GIp targetIp = propSession->targetIp_;
@@ -58,15 +57,9 @@ bool GArpSpoof::doOpen() {
 			return false;
 		}
 
-		Session session;
-		session.senderIp_ = senderIp;
-		session.senderMac_ = senderMac;
-		session.targetIp_ = targetIp;
-		session.targetMac_ = targetMac;
-
+		Session session(senderIp, senderMac, targetIp, targetMac);
 		sessionList_.push_back(session);
 		sessionMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
-
 		if (atm_.find(senderIp) == atm_.end())
 			atm_[session.senderIp_] = session.senderMac_;
 		if (atm_.find(targetIp) == atm_.end())
@@ -74,7 +67,7 @@ bool GArpSpoof::doOpen() {
 	}
 
 	if (!atm_.waitAll(this)) {
-		QString msg = "can not find all host ";
+		QString msg = "can not find all host(s) ";
 		for (GAtm::iterator it = atm_.begin(); it != atm_.end(); it++) {
 			GMac mac = it.value();
 			if (mac.isClean()) {

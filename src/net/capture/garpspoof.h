@@ -69,6 +69,10 @@ protected:
 		GMac senderMac_;
 		GIp targetIp_;
 		GMac targetMac_;
+
+		Session() {}
+		Session(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
+			senderIp_(senderIp), senderMac_(senderMac), targetIp_(targetIp), targetMac_(targetMac) {}
 	};
 	QList<Session> sessionList_; // for arp infect and recover
 	QMap<GFlow::IpFlowKey, Session> sessionMap_; // for relay
