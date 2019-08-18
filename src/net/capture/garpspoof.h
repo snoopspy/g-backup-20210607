@@ -48,9 +48,9 @@ typedef GArpSpoofSession *PArpSpoofSession;
 // ----------------------------------------------------------------------------
 struct G_EXPORT GArpSpoof : GPcapDevice {
 	Q_OBJECT
-	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
 	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
 	Q_PROPERTY(ulong infectInterval MEMBER infectInterval_)
+	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
 
 	GObjRefArrayPtr getSessions() { return &propSessions_; }
 	QString getVirtualMac() { return QString(virtualMac_); }
@@ -73,9 +73,9 @@ protected:
 	void run() override;
 
 public:
-	GObjRefArray<GArpSpoofSession> propSessions_; // for property
 	GMac virtualMac_{GMac::cleanMac()};
 	GDuration infectInterval_{1000};
+	GObjRefArray<GArpSpoofSession> propSessions_; // for property
 
 protected:
 	struct Session {
