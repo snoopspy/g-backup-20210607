@@ -45,7 +45,7 @@ void GIpPacket::parse() {
 			p += sizeof(GIcmpHdr);
 			break;
 		default:
-			qDebug() << "unknown protocol" << proto;
+			// qDebug() << "unknown protocol" << proto; // gilgil temp 2019.08.19
 			break;
 	}
 #ifdef _DEBUG

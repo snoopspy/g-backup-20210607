@@ -19,6 +19,7 @@
 // ----------------------------------------------------------------------------
 struct GArpSpoofSession : GObj {
 	Q_OBJECT
+	Q_PROPERTY(bool enabled MEMBER enabled_)
 	Q_PROPERTY(QString senderIp READ getSenderIp WRITE setSenderIp)
 	Q_PROPERTY(QString senderMac READ getSenderMac WRITE setSenderMac)
 	Q_PROPERTY(QString targetIp READ getTargetIp WRITE setTargetIp)
@@ -34,6 +35,7 @@ struct GArpSpoofSession : GObj {
 	void setTargetMac(QString value) { targetMac_ = value; }
 
 public:
+	bool enabled_{true};
 	GIp senderIp_{uint32_t(0)};
 	GMac senderMac_{GMac::cleanMac()};
 	GIp targetIp_{uint32_t(0)};
@@ -44,7 +46,7 @@ typedef GArpSpoofSession *PArpSpoofSession;
 // ----------------------------------------------------------------------------
 // GArpSpoof
 // ----------------------------------------------------------------------------
-struct G_EXPORT GArpSpoof : GSyncPcapDevice {
+struct G_EXPORT GArpSpoof : GPcapDevice {
   Q_OBJECT
 	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
 	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
@@ -63,6 +65,14 @@ protected:
   bool doClose() override;
 
 public:
+	GPacket::Result relay(GPacket* packet) override;
+
+	PathType pathType() override { return InPath; }
+
+protected:
+	void run() override;
+
+public:
 	GObjRefArray<GArpSpoofSession> propSessions_; // for property
 	GMac virtualMac_{GMac::cleanMac()};
 	GDuration infectInterval_{1000};
@@ -79,9 +89,9 @@ protected:
 			senderIp_(senderIp), senderMac_(senderMac), targetIp_(targetIp), targetMac_(targetMac) {}
 	};
 	QList<Session> sessionList_; // for arp infect and recover
-	QMap<GFlow::IpFlowKey, Session> sessionMap_; // for relay
+	typedef QMap<GFlow::IpFlowKey, Session> SessionMap;
+	SessionMap sessionMap_; // for relay
 
-	GNetIntf intf_;
 	GAtm atm_;
 	GMac attackMac_{GMac::cleanMac()};
 

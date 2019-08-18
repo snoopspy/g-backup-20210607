@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GArpSpoof
 // ----------------------------------------------------------------------------
-GArpSpoof::GArpSpoof(QObject* parent) : GSyncPcapDevice(parent) {
+GArpSpoof::GArpSpoof(QObject* parent) : GPcapDevice(parent) {
 	qDebug() << ""; // gilgil temp 2019.08.16
 }
 
@@ -15,15 +15,7 @@ GArpSpoof::~GArpSpoof() {
 bool GArpSpoof::doOpen() {
 	if (!GPcapDevice::doOpen()) return false;
 
-	GNetIntf* intf = GNetIntfs::instance().findByName(devName_);
-	if (intf == nullptr) {
-		SET_ERR(GErr::DEVICE_NOT_SPECIFIED, QString("cat not find device for ").arg(devName_));
-		return false;
-	}
-	intf_ = *intf;
-
 	sessionList_.clear();
-	sessionMap_.clear();
 	for (GAtm::iterator it = atm_.begin(); it != atm_.end();) {
 		GMac mac = it.value();
 		if (mac == GMac::cleanMac())
@@ -34,32 +26,34 @@ bool GArpSpoof::doOpen() {
 
 	for (GObj* obj: propSessions_) {
 		GArpSpoofSession* propSession = PArpSpoofSession(obj);
+		if (!propSession->enabled_) continue;
+
 		GIp senderIp = propSession->senderIp_;
 		GMac senderMac = propSession->senderMac_;
 		GIp targetIp = propSession->targetIp_;
 		GMac targetMac = propSession->targetMac_;
 
-		if (senderIp == intf_.ip()) {
+		Q_ASSERT(intf_ != nullptr);
+		if (senderIp == intf_->ip()) {
 			QString msg = QString("sender(%1) can not be my ip").arg(QString(senderIp));
 			SET_ERR(GErr::FAIL, msg);
 			return false;
 		}
 
-		if (targetIp == intf_.ip()) {
+		if (targetIp == intf_->ip()) {
 			QString msg = QString("target(%1) can not be my ip").arg(QString(targetIp));
 			SET_ERR(GErr::FAIL, msg);
 			return false;
 		}
 
 		if (senderIp == targetIp) {
-			QString msg = QString("sender(%1) and target(%2) can not be same").arg(QString(senderIp), QString(targetIp));
+			QString msg = QString("sender(%1) and target(%2) can not be same").arg(QString(senderIp)).arg(QString(targetIp));
 			SET_ERR(GErr::FAIL, msg);
 			return false;
 		}
 
 		Session session(senderIp, senderMac, targetIp, targetMac);
 		sessionList_.push_back(session);
-		sessionMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
 		if (atm_.find(senderIp) == atm_.end())
 			atm_[session.senderIp_] = session.senderMac_;
 		if (atm_.find(targetIp) == atm_.end())
@@ -87,21 +81,23 @@ bool GArpSpoof::doOpen() {
 	}
 	device.close();
 
+	sessionMap_.clear();
 	for(Session& session: sessionList_) {
 		if (session.senderMac_.isClean())
 			session.senderMac_ = atm_[session.senderIp_];
 		if (session.targetMac_.isClean())
 			session.targetMac_ = atm_[session.targetIp_];
+		sessionMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
 	}
 
-	attackMac_ = virtualMac_.isClean() ? intf_.mac() : virtualMac_;
+	attackMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
 
 	sendArpInfectAll();
 
 	if (infectInterval_ != 0)
 		infectThread_.start();
 
-	return true;
+	return captureThreadOpen();
 }
 
 bool GArpSpoof::doClose() {
@@ -114,7 +110,75 @@ bool GArpSpoof::doClose() {
 		QThread::msleep(100);
 	}
 
+	captureThreadClose();
+
   return GPcapDevice::doClose();
+}
+
+GPacket::Result GArpSpoof::relay(GPacket* packet) {
+	return write(packet);
+}
+
+void GArpSpoof::run() {
+	qDebug() << "GArpSpoof::run() beg"; // gilgil temp 2019.08.18
+
+	GEthPacket packet;
+	while (active()) {
+		GPacket::Result res = read(&packet);
+		if (res == GPacket::TimeOut) continue;
+		if (res == GPacket::Eof || res == GPacket::Fail) break;
+
+		GEthHdr* ethHdr = packet.ethHdr_;
+		GArpHdr* arpHdr = packet.arpHdr_;
+		GIpHdr* ipHdr = packet.ipHdr_;
+
+		Q_ASSERT(ethHdr != nullptr);
+		// attacker sending packet?
+		if (ethHdr->smac() == attackMac_) continue;
+
+		switch (packet.ethHdr_->type()) {
+			case GEthHdr::Arp: {
+				Q_ASSERT(arpHdr != nullptr);
+				for (Session& session: sessionList_) {
+					bool infect = false;
+					if (arpHdr->sip() == session.senderIp_ && arpHdr->tip() == session.targetIp_) { // sender > target ARP packet
+						qDebug() << QString("sender(%1) to target(%2) ARP packet").arg(QString(session.senderIp_)).arg(QString(session.targetIp_));
+						infect = true;
+					} else
+					if (arpHdr->sip() == session.targetIp_ && ethHdr->dmac() == GMac::broadcastMac()) { // target to any ARP packet
+						qDebug() << QString("target(%1) to any(%2) ARP packet").arg(QString(session.targetIp_)).arg(QString(session.senderIp_));
+						infect = true;
+					}
+					if (infect)
+						sendArpInfect(&session);
+				}
+				break;
+			}
+
+			case GEthHdr::Ip4: {
+				Q_ASSERT(ipHdr != nullptr);
+				GIp adjSrcIp = intf_->getAdjIp(ipHdr->sip());
+				GIp adjDstIp = intf_->getAdjIp(ipHdr->dip());
+				GFlow::IpFlowKey key(adjSrcIp, adjDstIp);
+				SessionMap::iterator it = sessionMap_.find(key);
+				if (it == sessionMap_.end()) break;
+				Session& session = it.value();
+				ethHdr->smac_ = attackMac_;
+				ethHdr->dmac_ = session.targetMac_;
+				emit captured(&packet);
+				GPacket::Result res = relay(&packet);
+				if (res != GPacket::Ok) {
+					qWarning() << "relay return " << int(res);
+				}
+				break;
+			}
+
+			default:
+				break;
+		}
+	}
+	qDebug() << "GArpSpoof::run() end"; // gilgil temp 2019.08.18
+	emit closed();
 }
 
 void GArpSpoof::InfectThread::run() {
@@ -160,7 +224,7 @@ bool GArpSpoof::sendArp(Session* session, bool infect) {
 	sendPacket.arpHdr_.hln_ = sizeof(GMac);
 	sendPacket.arpHdr_.pln_ = sizeof(GIp);
 	sendPacket.arpHdr_.op_ = htons(GArpHdr::Reply);
-	sendPacket.arpHdr_.smac_ = infect ? attackMac_ : session->targetMac_;
+	sendPacket.arpHdr_.smac_ = infect ? attackMac_ : session->targetMac_; // infect(true) or recover(false)
 	sendPacket.arpHdr_.sip_ = htonl(session->targetIp_);
 	sendPacket.arpHdr_.tmac_ = session->senderMac_;
 	sendPacket.arpHdr_.tip_ = htonl(session->senderIp_);
