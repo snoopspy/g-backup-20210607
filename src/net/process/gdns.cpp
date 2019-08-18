@@ -92,17 +92,17 @@ bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offse
 	this->type_ = ntohs(*_type);
 	*offset += sizeof(uint16_t);
 
-	if (*offset  + sizeof(uint16_t) > dataLen) return false;
+	if (*offset + sizeof(uint16_t) > dataLen) return false;
 	uint16_t* _class_ = reinterpret_cast<uint16_t*>(udpData + *offset);
 	this->class_ = ntohs(*_class_);
 	*offset += sizeof(uint16_t);
 
-	if (*offset  + sizeof(uint32_t) > dataLen) return false;
+	if (*offset + sizeof(uint32_t) > dataLen) return false;
 	uint32_t* _ttl = reinterpret_cast<uint32_t*>(udpData + *offset);
 	this->ttl_ = ntohl(*_ttl);
 	*offset += sizeof(uint32_t);
 
-	if (*offset  + sizeof(uint16_t) > dataLen) return false;
+	if (*offset + sizeof(uint16_t) > dataLen) return false;
 	uint16_t* _dataLength = reinterpret_cast<uint16_t*>(udpData + *offset);
 	this->dataLength_= ntohs(*_dataLength);
 	*offset += sizeof(uint16_t);

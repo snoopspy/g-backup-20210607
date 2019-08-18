@@ -57,7 +57,7 @@ GGArrow* GGScene::createArrow(GGText* startText, GGText* endText, GGraph::Connec
 GGArrow* GGScene::createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection) {
 	GGText* startText = findTextByObjectName(startNodeName);
 	if (startText == nullptr) return nullptr;
-	GGText* endText   = findTextByObjectName(endNodeName);
+	GGText* endText = findTextByObjectName(endNodeName);
 	if (endText == nullptr) return nullptr;
 	return createArrow(startText, endText, connection);
 }
@@ -153,7 +153,7 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 					signalSlotForm_->exec();
 					if (signalSlotForm_->result() == QDialog::Accepted) {
 						QString signal = signalSlotForm_->lwSignalList_->selectedItems().first()->text();
-						QString slot   = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
+						QString slot = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
 
 						bool res = GObj::connect(
 									startText->node_, qPrintable(signal),

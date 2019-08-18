@@ -13,7 +13,7 @@ static const qreal Pi = 3.14;
 // ----------------------------------------------------------------------------
 GGArrow::GGArrow(GGText *startText, GGText *endText, GGraph::Connection* connection) : QGraphicsLineItem(nullptr) {
 	myStartText = startText;
-	myEndText   = endText;
+	myEndText = endText;
 
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
 	myColor = Qt::black;

@@ -65,7 +65,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 		//
 		GBuf backup = packet->buf_;
 		uint16_t oldIpHdrLen = ipHdr->len();
-		uint16_t newIpHdrLen = ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(firstDataSize);
+		uint16_t newIpHdrLen = ipHdr->hl() * 4 + tcpHdr->off() * 4 + uint16_t(firstDataSize);
 		size_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
 		ipHdr->len_ = htons(newIpHdrLen);
 		tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
@@ -81,7 +81,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 		//
 		GBuf backup = packet->buf_;
 		uint16_t oldIpHdrLen = ipHdr->len();
-		uint16_t newIpHdrLen = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4  + uint16_t(secondDataSize));
+		uint16_t newIpHdrLen = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4 + uint16_t(secondDataSize));
 		size_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
 		ipHdr->len_ = htons(newIpHdrLen);
 		memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);

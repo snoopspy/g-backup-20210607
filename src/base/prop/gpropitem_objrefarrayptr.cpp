@@ -11,7 +11,7 @@ struct GPropItemObjRefArrayMgr : QObject, QTreeWidgetItem {
 
 public:
 	GPropItemObjRefArrayMgr(QTreeWidgetItem* parent, GObjRefArrayPtr array, GObj* obj)
-		: QObject(parent->treeWidget()), QTreeWidgetItem(parent), array_(array),  obj_(obj) {
+		: QObject(parent->treeWidget()), QTreeWidgetItem(parent), array_(array), obj_(obj) {
 		int index = array->indexOf(GObjRef(obj));
 		Q_ASSERT(index != -1);
 		QString text = QString("item%1").arg(index);

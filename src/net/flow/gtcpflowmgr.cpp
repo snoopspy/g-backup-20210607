@@ -87,7 +87,7 @@ void GTcpFlowMgr::process(GPacket* packet) {
 	if ((tcpHdr->flags() & (GTcpHdr::Rst | GTcpHdr::Fin)) != 0) {
 		GFlow::Value::State state = (tcpHdr->flags() & GTcpHdr::Rst) ? GFlow::Value::Rst : GFlow::Value::Fin;
 		val_->state_ = state;
-		if (rVal_  != nullptr) {
+		if (rVal_ != nullptr) {
 			rVal_->state_ = state;
 		}
 	}

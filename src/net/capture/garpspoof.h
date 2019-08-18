@@ -47,7 +47,7 @@ typedef GArpSpoofSession *PArpSpoofSession;
 // GArpSpoof
 // ----------------------------------------------------------------------------
 struct G_EXPORT GArpSpoof : GPcapDevice {
-  Q_OBJECT
+	Q_OBJECT
 	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
 	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
 	Q_PROPERTY(ulong infectInterval MEMBER infectInterval_)
@@ -57,12 +57,12 @@ struct G_EXPORT GArpSpoof : GPcapDevice {
 	void setVirtualMac(QString value) { virtualMac_ = value; }
 
 public:
-  Q_INVOKABLE GArpSpoof(QObject* parent = nullptr);
-  ~GArpSpoof() override;
+	Q_INVOKABLE GArpSpoof(QObject* parent = nullptr);
+	~GArpSpoof() override;
 
 protected:
-  bool doOpen() override;
-  bool doClose() override;
+	bool doOpen() override;
+	bool doClose() override;
 
 public:
 	GPacket::Result relay(GPacket* packet) override;

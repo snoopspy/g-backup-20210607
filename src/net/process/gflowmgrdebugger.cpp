@@ -74,7 +74,7 @@ void GFlowMgrDebugger::debug(GPacket* packet) {
 			flowItem->packets++;
 			flowItem->bytes += packet->buf_.size_;
 			GFlow::IpFlowKey* key = &ipFlowMgr_->key_;
-			qDebug() << QString("ip  size=%1 packets=%2 bytes=%3 %4>%5")
+			qDebug() << QString("ip size=%1 packets=%2 bytes=%3 %4>%5")
 				.arg(packet->buf_.size_).arg(flowItem->packets).arg(flowItem->bytes)
 				.arg(QString(key->sip_)).arg(QString(key->dip_)); // gilgil temp 2016.10.10
 		}

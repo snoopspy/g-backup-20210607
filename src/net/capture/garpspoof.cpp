@@ -9,7 +9,7 @@ GArpSpoof::GArpSpoof(QObject* parent) : GPcapDevice(parent) {
 
 GArpSpoof::~GArpSpoof() {
 	qDebug() << ""; // gilgil temp 2019.08.16
-  close();
+	close();
 }
 
 bool GArpSpoof::doOpen() {
@@ -112,7 +112,7 @@ bool GArpSpoof::doClose() {
 
 	captureThreadClose();
 
-  return GPcapDevice::doClose();
+	return GPcapDevice::doClose();
 }
 
 GPacket::Result GArpSpoof::relay(GPacket* packet) {

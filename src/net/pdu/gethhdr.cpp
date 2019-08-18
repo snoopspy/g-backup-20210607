@@ -29,7 +29,7 @@ TEST_F(GEthHdrTest, allTest) {
 		EXPECT_NE(ethHdr, nullptr);
 
 		//
-		//  field test
+		// field test
 		//
 		GMac mac1, mac2;
 		mac1 = ethHdr->smac();

@@ -29,9 +29,9 @@ public:
 	int type() const override { return Type; }
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
-	void setColor(const QColor &color) { myColor = color;    }
+	void setColor(const QColor &color) { myColor = color; }
 	GGText *startText() const { return myStartText; }
-	GGText *endText() const { return myEndText;   }
+	GGText *endText() const { return myEndText; }
 
 	void updatePosition();
 

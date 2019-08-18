@@ -49,7 +49,7 @@ bool GNetFilter::doOpen() {
 	}
 
 	// binding this socket to queue
-	qh_ = nfq_create_queue(h_,  uint16_t(queueNum_), &_callback, this);
+	qh_ = nfq_create_queue(h_, uint16_t(queueNum_), &_callback, this);
 	if (!qh_) {
 		SET_ERR(GErr::FAIL, "error during nfq_create_queue()");
 		return false;
