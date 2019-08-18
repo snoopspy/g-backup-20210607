@@ -47,8 +47,12 @@ typedef GArpSpoofSession *PArpSpoofSession;
 struct G_EXPORT GArpSpoof : GSyncPcapDevice {
   Q_OBJECT
 	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
+	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
+	Q_PROPERTY(ulong infectInterval MEMBER infectInterval_)
 
 	GObjRefArrayPtr getSessions() { return &propSessions_; }
+	QString getVirtualMac() { return QString(virtualMac_); }
+	void setVirtualMac(QString value) { virtualMac_ = value; }
 
 public:
   Q_INVOKABLE GArpSpoof(QObject* parent = nullptr);
@@ -60,10 +64,10 @@ protected:
 
 public:
 	GObjRefArray<GArpSpoofSession> propSessions_; // for property
+	GMac virtualMac_{GMac::cleanMac()};
+	GDuration infectInterval_{1000};
 
 protected:
-	GNetIntf intf_;
-
 	struct Session {
 		GIp senderIp_;
 		GMac senderMac_;
@@ -76,5 +80,21 @@ protected:
 	};
 	QList<Session> sessionList_; // for arp infect and recover
 	QMap<GFlow::IpFlowKey, Session> sessionMap_; // for relay
+
+	GNetIntf intf_;
 	GAtm atm_;
+	GMac attackMac_{GMac::cleanMac()};
+
+	struct InfectThread : GThread {
+		InfectThread(GArpSpoof* arpSpoof) : GThread(arpSpoof), arpSpoof_(arpSpoof) {}
+		void run() override;
+		GWaitEvent we_;
+		GArpSpoof* arpSpoof_;
+	} infectThread_{this};
+
+	bool sendArpInfectAll();
+	bool sendArpInfect(Session* session);
+	bool sendARPReciverAll();
+	bool sendArpRecover(Session* session);
+	bool sendArp(Session* session, bool infect);
 };

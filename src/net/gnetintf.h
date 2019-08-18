@@ -47,6 +47,9 @@ protected:
 	GIp ip_and_mask_{uint32_t(0)}; // used for isSameLanIP
 
 public:
+	GNetIntf() {}
+
+public:
 	bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
 	GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;  }
 	GIp  getStartIp()        { return (ip_ & mask_) + 1;                }
