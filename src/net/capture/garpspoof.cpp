@@ -66,7 +66,11 @@ bool GArpSpoof::doOpen() {
 			atm_[session.targetIp_] = session.targetMac_;
 	}
 
-	if (!atm_.waitAll(this)) {
+	State backup = this->state_;
+	this->state_ = Opened; // change state for waitAll
+	bool res = atm_.waitAll(this);
+	this->state_ = backup;
+	if (!res) {
 		QString msg = "can not find all host(s) ";
 		for (GAtm::iterator it = atm_.begin(); it != atm_.end(); it++) {
 			GMac mac = it.value();
