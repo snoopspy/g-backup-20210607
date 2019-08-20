@@ -166,15 +166,16 @@ void GArpSpoof::run() {
 				ethHdr->smac_ = attackMac_;
 				ethHdr->dmac_ = session.targetMac_;
 				emit captured(&packet);
-				GPacket::Result res = relay(&packet);
-				if (res != GPacket::Ok) {
-					qWarning() << "relay return " << int(res);
+				if (!packet.ctrl.block_) {
+					res = relay(&packet);
+					if (res != GPacket::Ok) {
+						qWarning() << "relay return " << int(res);
+					}
 				}
 				break;
 			}
 
-			default:
-				break;
+			default: break;
 		}
 	}
 	qDebug() << "GArpSpoof::run() end"; // gilgil temp 2019.08.18
