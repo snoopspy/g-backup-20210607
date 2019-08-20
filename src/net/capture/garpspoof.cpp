@@ -4,11 +4,11 @@
 // GArpSpoof
 // ----------------------------------------------------------------------------
 GArpSpoof::GArpSpoof(QObject* parent) : GPcapDevice(parent) {
-	qDebug() << ""; // gilgil temp 2019.08.16
+	GDEBUG_CTOR
 }
 
 GArpSpoof::~GArpSpoof() {
-	qDebug() << ""; // gilgil temp 2019.08.16
+	GDEBUG_DTOR
 	close();
 }
 
