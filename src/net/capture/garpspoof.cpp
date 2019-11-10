@@ -24,14 +24,14 @@ bool GArpSpoof::doOpen() {
 			it++;
 	}
 
-	for (GObj* obj: propSessions_) {
-		GArpSpoofSession* propSession = PArpSpoofSession(obj);
-		if (!propSession->enabled_) continue;
+	for (GObj* obj: propFlows_) {
+		GArpSpoofFlow* propFlow = PArpSpoofFlow(obj);
+		if (!propFlow->enabled_) continue;
 
-		GIp senderIp = propSession->senderIp_;
-		GMac senderMac = propSession->senderMac_;
-		GIp targetIp = propSession->targetIp_;
-		GMac targetMac = propSession->targetMac_;
+		GIp senderIp = propFlow->senderIp_;
+		GMac senderMac = propFlow->senderMac_;
+		GIp targetIp = propFlow->targetIp_;
+		GMac targetMac = propFlow->targetMac_;
 
 		Q_ASSERT(intf_ != nullptr);
 		if (senderIp == intf_->ip()) {

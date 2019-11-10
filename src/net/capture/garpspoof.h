@@ -15,9 +15,9 @@
 #include "net/flow/gflowkey.h"
 
 // ----------------------------------------------------------------------------
-// GArpSpoofSession
+// GArpSpoofFlow
 // ----------------------------------------------------------------------------
-struct GArpSpoofSession : GObj {
+struct GArpSpoofFlow : GObj {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled MEMBER enabled_)
 	Q_PROPERTY(QString senderIp READ getSenderIp WRITE setSenderIp)
@@ -41,7 +41,7 @@ public:
 	GIp targetIp_{uint32_t(0)};
 	GMac targetMac_{GMac::cleanMac()};
 };
-typedef GArpSpoofSession *PArpSpoofSession;
+typedef GArpSpoofFlow *PArpSpoofFlow;
 
 // ----------------------------------------------------------------------------
 // GArpSpoof
@@ -50,9 +50,9 @@ struct G_EXPORT GArpSpoof : GPcapDevice {
 	Q_OBJECT
 	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
 	Q_PROPERTY(ulong infectInterval MEMBER infectInterval_)
-	Q_PROPERTY(GObjRefArrayPtr sessions READ getSessions)
+	Q_PROPERTY(GObjRefArrayPtr flows READ getFlows)
 
-	GObjRefArrayPtr getSessions() { return &propSessions_; }
+	GObjRefArrayPtr getFlows() { return &propFlows_; }
 	QString getVirtualMac() { return QString(virtualMac_); }
 	void setVirtualMac(QString value) { virtualMac_ = value; }
 
@@ -75,7 +75,7 @@ protected:
 public:
 	GMac virtualMac_{GMac::cleanMac()};
 	GDuration infectInterval_{1000};
-	GObjRefArray<GArpSpoofSession> propSessions_; // for property
+	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
 protected:
 	struct Session {
