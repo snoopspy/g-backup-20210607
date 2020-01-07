@@ -90,7 +90,7 @@ bool GArpSpoof::doOpen() {
     flowMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
 	}
 
-	attackMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
+  virtualMac_ = propVirtualMac_.isClean() ? intf_->mac() : propVirtualMac_;
 
 	sendArpInfectAll();
 
@@ -134,7 +134,7 @@ void GArpSpoof::run() {
 
 		Q_ASSERT(ethHdr != nullptr);
 		// attacker sending packet?
-		if (ethHdr->smac() == attackMac_) continue;
+    if (ethHdr->smac() == virtualMac_) continue;
 
 		switch (packet.ethHdr_->type()) {
 			case GEthHdr::Arp: {
@@ -163,10 +163,10 @@ void GArpSpoof::run() {
         FlowMap::iterator it = flowMap_.find(key);
         if (it == flowMap_.end()) break;
         Flow& session = it.value();
-				ethHdr->smac_ = attackMac_;
-				ethHdr->dmac_ = session.targetMac_;
-				emit captured(&packet);
-				if (!packet.ctrl.block_) {
+        ethHdr->dmac_ = session.targetMac_;
+        emit captured(&packet);
+        ethHdr->smac_ = virtualMac_;
+        if (!packet.ctrl.block_) {
 					res = relay(&packet);
 					if (res != GPacket::Ok) {
 						qWarning() << "relay return " << int(res);
@@ -217,7 +217,7 @@ bool GArpSpoof::sendArp(Flow* session, bool infect) {
 	GEthArpHdr sendPacket;
 
 	sendPacket.ethHdr_.dmac_ = session->senderMac_;
-	sendPacket.ethHdr_.smac_ = attackMac_;
+  sendPacket.ethHdr_.smac_ = virtualMac_;
 	sendPacket.ethHdr_.type_ = htons(GEthHdr::Arp);
 
 	sendPacket.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
@@ -225,7 +225,7 @@ bool GArpSpoof::sendArp(Flow* session, bool infect) {
 	sendPacket.arpHdr_.hln_ = sizeof(GMac);
 	sendPacket.arpHdr_.pln_ = sizeof(GIp);
 	sendPacket.arpHdr_.op_ = htons(GArpHdr::Reply);
-	sendPacket.arpHdr_.smac_ = infect ? attackMac_ : session->targetMac_; // infect(true) or recover(false)
+  sendPacket.arpHdr_.smac_ = infect ? virtualMac_ : session->targetMac_; // infect(true) or recover(false)
 	sendPacket.arpHdr_.sip_ = htonl(session->targetIp_);
 	sendPacket.arpHdr_.tmac_ = session->senderMac_;
 	sendPacket.arpHdr_.tip_ = htonl(session->senderIp_);
