@@ -15,7 +15,7 @@ GArpSpoof::~GArpSpoof() {
 bool GArpSpoof::doOpen() {
 	if (!GPcapDevice::doOpen()) return false;
 
-	sessionList_.clear();
+  flowList_.clear();
 	for (GAtm::iterator it = atm_.begin(); it != atm_.end();) {
 		GMac mac = it.value();
 		if (mac == GMac::cleanMac())
@@ -52,8 +52,8 @@ bool GArpSpoof::doOpen() {
 			return false;
 		}
 
-		Session session(senderIp, senderMac, targetIp, targetMac);
-		sessionList_.push_back(session);
+    Flow session(senderIp, senderMac, targetIp, targetMac);
+    flowList_.push_back(session);
 		if (atm_.find(senderIp) == atm_.end())
 			atm_[session.senderIp_] = session.senderMac_;
 		if (atm_.find(targetIp) == atm_.end())
@@ -81,13 +81,13 @@ bool GArpSpoof::doOpen() {
 	}
 	device.close();
 
-	sessionMap_.clear();
-	for(Session& session: sessionList_) {
+  flowMap_.clear();
+  for(Flow& session: flowList_) {
 		if (session.senderMac_.isClean())
 			session.senderMac_ = atm_[session.senderIp_];
 		if (session.targetMac_.isClean())
 			session.targetMac_ = atm_[session.targetIp_];
-		sessionMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
+    flowMap_[GFlow::IpFlowKey(session.senderIp_, session.targetIp_)] = session;
 	}
 
 	attackMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
@@ -139,7 +139,7 @@ void GArpSpoof::run() {
 		switch (packet.ethHdr_->type()) {
 			case GEthHdr::Arp: {
 				Q_ASSERT(arpHdr != nullptr);
-				for (Session& session: sessionList_) {
+        for (Flow& session: flowList_) {
 					bool infect = false;
 					if (arpHdr->sip() == session.senderIp_ && arpHdr->tip() == session.targetIp_) { // sender > target ARP packet
 						qDebug() << QString("sender(%1) to target(%2) ARP packet").arg(QString(session.senderIp_)).arg(QString(session.targetIp_));
@@ -160,9 +160,9 @@ void GArpSpoof::run() {
 				GIp adjSrcIp = intf_->getAdjIp(ipHdr->sip());
 				GIp adjDstIp = intf_->getAdjIp(ipHdr->dip());
 				GFlow::IpFlowKey key(adjSrcIp, adjDstIp);
-				SessionMap::iterator it = sessionMap_.find(key);
-				if (it == sessionMap_.end()) break;
-				Session& session = it.value();
+        FlowMap::iterator it = flowMap_.find(key);
+        if (it == flowMap_.end()) break;
+        Flow& session = it.value();
 				ethHdr->smac_ = attackMac_;
 				ethHdr->dmac_ = session.targetMac_;
 				emit captured(&packet);
@@ -190,30 +190,30 @@ void GArpSpoof::InfectThread::run() {
 }
 
 bool GArpSpoof::sendArpInfectAll() {
-	for (Session& session: sessionList_) {
+  for (Flow& session: flowList_) {
 		if (!sendArpInfect(&session))
 			return false;
 	}
 	return true;
 }
 
-bool GArpSpoof::sendArpInfect(Session* session) {
+bool GArpSpoof::sendArpInfect(Flow* session) {
 	return sendArp(session, true);
 }
 
 bool GArpSpoof::sendARPReciverAll() {
-	for (Session& session: sessionList_) {
+  for (Flow& session: flowList_) {
 		if (!sendArpRecover(&session))
 			return false;
 	}
 	return true;
 }
 
-bool GArpSpoof::sendArpRecover(Session* session) {
+bool GArpSpoof::sendArpRecover(Flow* session) {
 	return sendArp(session, false);
 }
 
-bool GArpSpoof::sendArp(Session* session, bool infect) {
+bool GArpSpoof::sendArp(Flow* session, bool infect) {
 	GEthArpHdr sendPacket;
 
 	sendPacket.ethHdr_.dmac_ = session->senderMac_;

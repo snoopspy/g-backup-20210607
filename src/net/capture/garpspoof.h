@@ -78,19 +78,19 @@ public:
 	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
 protected:
-	struct Session {
+  struct Flow {
 		GIp senderIp_;
 		GMac senderMac_;
 		GIp targetIp_;
 		GMac targetMac_;
 
-		Session() {}
-		Session(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
+    Flow() {}
+    Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
 			senderIp_(senderIp), senderMac_(senderMac), targetIp_(targetIp), targetMac_(targetMac) {}
 	};
-	QList<Session> sessionList_; // for arp infect and recover
-	typedef QMap<GFlow::IpFlowKey, Session> SessionMap;
-	SessionMap sessionMap_; // for relay
+  QList<Flow> flowList_; // for arp infect and recover
+  typedef QMap<GFlow::IpFlowKey, Flow> FlowMap;
+  FlowMap flowMap_; // for relay
 
 	GAtm atm_;
 	GMac attackMac_{GMac::cleanMac()};
@@ -103,8 +103,8 @@ protected:
 	} infectThread_{this};
 
 	bool sendArpInfectAll();
-	bool sendArpInfect(Session* session);
+  bool sendArpInfect(Flow* session);
 	bool sendARPReciverAll();
-	bool sendArpRecover(Session* session);
-	bool sendArp(Session* session, bool infect);
+  bool sendArpRecover(Flow* session);
+  bool sendArp(Flow* session, bool infect);
 };
