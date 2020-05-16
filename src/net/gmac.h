@@ -32,6 +32,9 @@ public:
 	GMac(const char* rhs);
 	GMac(const QString& rhs) : GMac(qPrintable(rhs)) {}
 
+	// assign operator
+	GMac& operator = (const GMac& rhs) { memcpy(this->mac_, rhs.mac_, SIZE); return *this; }
+
 	//
 	// casting operator
 	//
@@ -39,6 +42,8 @@ public:
 	explicit operator const char*() const { return qPrintable(QString(*this)); }
 	explicit operator QString() const;
 
+	// gilgil temp 2020.05.17 -----
+	/*
 	//
 	// comparison operator
 	//
@@ -49,6 +54,8 @@ public:
 	bool operator <= (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) <= 0; }
 	bool operator >= (const GMac& rhs) const { return memcmp(mac_, rhs.mac_, SIZE) >= 0; }
 	bool operator == (const pbyte rhs) const { return memcmp(mac_, rhs,      SIZE) == 0; }
+	*/
+	// ----------------------------
 
 public:
 	void clear() {

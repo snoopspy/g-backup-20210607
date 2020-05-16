@@ -29,6 +29,9 @@ public:
 	GIp(const char* rhs);
 	GIp(const QString& rhs) : GIp(qPrintable(rhs)) {}
 
+	// assign operator
+	GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
+
 	//
 	// casting operator
 	//
