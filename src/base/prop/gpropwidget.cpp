@@ -25,28 +25,32 @@ GPropWidget::~GPropWidget() {
 }
 
 void GPropWidget::init() {
-	(actionOpen_ = new QAction(this))->setText("Open");
-	(actionClose_ = new QAction(this))->setText("Close");
+	// (actionOpen_ = new QAction(this))->setText("Open"); // gilgil temp 2020.05.21
+	// (actionClose_ = new QAction(this))->setText("Close"); // gilgil temp 2020.05.21
 
 	mainLayout_ = new QVBoxLayout;
 	mainLayout_->setMargin(0);
 	mainLayout_->setSpacing(0);
 
+	// ----- gilgil temp 2020.05.21 -----
+	/*
 	toolBar_ = new QToolBar(this);
 	toolBar_->addAction(actionOpen_);
 	toolBar_->addAction(actionClose_);
+	*/
+	// ----------------------------------
 
 	treeWidget_ = new QTreeWidget(this);
 	treeWidget_->setIndentation(12);
 	treeWidget_->setColumnCount(2);
 	treeWidget_->setHeaderLabels(QStringList() << "property" << "value");
 
-	mainLayout_->addWidget(toolBar_, 0);
+	// mainLayout_->addWidget(toolBar_, 0); // gilgil temp 2020.05.21
 	mainLayout_->addWidget(treeWidget_, 1);
 	this->setLayout(mainLayout_);
 
-	QObject::connect(actionOpen_, &QAction::triggered, this, &GPropWidget::actionOpenTriggered);
-	QObject::connect(actionClose_, &QAction::triggered, this, &GPropWidget::actionCloseTriggered);
+	// QObject::connect(actionOpen_, &QAction::triggered, this, &GPropWidget::actionOpenTriggered); // gilgil temp 2020.05.21
+	// QObject::connect(actionClose_, &QAction::triggered, this, &GPropWidget::actionCloseTriggered); // gilgil temp 2020.05.21
 }
 
 void GPropWidget::setObject(QObject* object) {
@@ -104,16 +108,18 @@ void GPropWidget::propSave(QJsonObject& jo) {
 
 void GPropWidget::setControl() {
 	GStateObj* stateObj = object_ == nullptr ? nullptr : dynamic_cast<GStateObj*>(object_);
-	toolBar_->setEnabled(stateObj != nullptr);
+	// toolBar_->setEnabled(stateObj != nullptr); // gilgil temp 2020.05.21
 
 	bool active = false;
 	if (stateObj != nullptr)
 		active = stateObj->active();
-	actionOpen_->setEnabled(!active);
-	actionClose_->setEnabled(active);
+	// actionOpen_->setEnabled(!active); // gilgil temp 2020.05.21
+	// actionClose_->setEnabled(active); // gilgil temp 2020.05.21
 	treeWidget_->setEnabled(!active);
 }
 
+// ----- gilgil temp 2020.05.21 -----
+/*
 void GPropWidget::actionOpenTriggered(bool) {
 	GStateObj* stateObj = dynamic_cast<GStateObj*>(object_);
 	Q_ASSERT(stateObj != nullptr);
@@ -131,5 +137,7 @@ void GPropWidget::actionCloseTriggered(bool) {
 	stateObj->close();
 	setControl();
 }
+*/
+// ----------------------------------
 
 #endif // QT_GUI_LIB

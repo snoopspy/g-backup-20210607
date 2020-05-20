@@ -32,13 +32,17 @@ public:
 	void update();
 	void clear();
 
+	// ----- gilgil temp 2020.05.21 -----
+	/*
 public:
 	QAction* actionOpen_;
 	QAction* actionClose_;
+	*/
+	// ----------------------------------
 
 public:
 	QVBoxLayout* mainLayout_;
-	QToolBar*    toolBar_;
+	// QToolBar*    toolBar_; // gilgil temp 2020.05.21
 	QTreeWidget* treeWidget_;
 
 protected:
@@ -51,10 +55,13 @@ public:
 
 public slots:
 	void setControl();
-
+	// ----- gilgil temp 2020.05.21 -----
+	/*
 public slots:
 	void actionOpenTriggered(bool);
 	void actionCloseTriggered(bool);
+	*/
+	// ----------------------------------
 };
 
 #endif // QT_GUI_LIB
