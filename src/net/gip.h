@@ -26,8 +26,7 @@ public:
 	GIp() {}
 	GIp(const GIp& rhs) : ip_(rhs.ip_) {}
 	GIp(const uint32_t rhs) : ip_(rhs) {}
-	GIp(const char* rhs);
-	GIp(const QString& rhs) : GIp(qPrintable(rhs)) {}
+	GIp(const QString& rhs);
 
 	// assign operator
 	GIp& operator = (const GIp& rhs) { ip_ = rhs.ip_; return *this; }
@@ -36,7 +35,6 @@ public:
 	// casting operator
 	//
 	operator uint32_t() const { return ip_; } // default casting operator
-	explicit operator const char*() const { return qPrintable(QString(*this)); }
 	explicit operator QString() const;
 
 public:

@@ -4,8 +4,10 @@
 // ----------------------------------------------------------------------------
 // GIp6
 // ----------------------------------------------------------------------------
-GIp6::GIp6(const char* rhs) {
-	int res = inet_pton(AF_INET6, rhs, &ip6_);
+GIp6::GIp6(const QString& rhs) {
+	std::string s = rhs.toStdString();
+	char* p = pchar(s.c_str());
+	int res = inet_pton(AF_INET6, p, &ip6_);
 	switch (res) {
 		case 0:
 			qWarning() << "inet_pton return zero ip=" << rhs;
@@ -43,10 +45,10 @@ TEST(GIp6, ctorTest) {
 	GIp6 ip63{_loopback}; // GIp6(const u_char* rhs)
 	EXPECT_EQ(ip63, _loopback);
 
-	GIp6 ip64{"::1"}; // GIp6(const char* rhs)
+	GIp6 ip64{QString("::1")}; // GIp6(const QString rhs)
 	EXPECT_EQ(ip64, _loopback);
 
-	GIp6 ip65{QString("::1")}; // GIp6(const QString rhs)
+	GIp6 ip65{"::1"}; // GIp6(const QString rhs)
 	EXPECT_EQ(ip65, _loopback);
 }
 
@@ -74,13 +76,13 @@ TEST(GIp6, castingTest) {
 TEST(GIp6, funcTest) {
 	GIp6 ip6;
 
-	ip6 = "127.0.0.1";
+	ip6 = QString("127.0.0.1");
 	EXPECT_TRUE(ip6.isLocalHost());
 
-	ip6 = "255.255.255.255";
+	ip6 = QString("255.255.255.255");
 	EXPECT_TRUE(ip6.isBroadcast());
 
-	ip6 = "224.0.0.0";
+	ip6 = QString("224.0.0.0");
 	EXPECT_TRUE(ip6.isMulticast());
 }
 

@@ -3,14 +3,11 @@
 // ----------------------------------------------------------------------------
 // GMac
 // ----------------------------------------------------------------------------
-GMac::GMac(const char* rhs) {
-	int i;
-	gbyte* p;
-	gbyte ch1, ch2;
-
-	p = reinterpret_cast<u_char*>(const_cast<char*>(rhs));
-	for (i = 0 ; i < SIZE; i++) {
-		ch1 = *p++;
+GMac::GMac(const QString& rhs) {
+	std::string s = rhs.toStdString();
+	gbyte* p = pbyte(s.c_str());
+	for (int i = 0 ; i < SIZE; i++) {
+		gbyte ch1 = *p++;
 		if (ch1 >= 'a')
 			ch1 = ch1 - 'a' + 10;
 		else
@@ -18,7 +15,7 @@ GMac::GMac(const char* rhs) {
 				ch1 = ch1 - 'A' + 10;
 			else
 				ch1 = ch1 - '0';
-		ch2 = *p++;
+		gbyte ch2 = *p++;
 		if (ch2 >= 'a')
 			ch2 = ch2 - 'a' + 10;
 		else if (ch2 >= 'A')
@@ -91,13 +88,12 @@ TEST(GMac, ctorTest) {
 	GMac mac2{mac1}; // (const GMac& rhs)
 
 	GMac mac3(_temp); // (const gbyte* rhs)
-	EXPECT_EQ(mac3, _temp);
 
-	GMac mac4("001122-334455"); // (const char* rhs)
-	EXPECT_EQ(mac4, _temp);
+	GMac mac4(QString("001122-334455")); // (const QString& rhs)
+	EXPECT_EQ(mac3, mac4);
 
-	GMac mac5(QString("001122-334455")); // (const QString& rhs)
-	EXPECT_EQ(mac5, _temp);
+	GMac mac5("001122-334455"); // (const QString& rhs)
+	EXPECT_EQ(mac3, mac5);
 }
 
 TEST(GMac, castingTest) {
@@ -107,15 +103,7 @@ TEST(GMac, castingTest) {
 	gbyte temp[GMac::SIZE];
 	for (int i = 0; i < GMac::SIZE; i++)
 		temp[i] = *uc++;
-	EXPECT_EQ(mac, temp);
-
-	// ----- gilgil temp 2019.05.18 -----
-	// Error occurrs on Windows
-	/*
-	QString s1 = static_cast<const char*>(mac); // operator const byte*()
-	EXPECT_EQ(s1, "001122-334455");
-	*/
-	// ----------------------------------
+	EXPECT_TRUE(memcmp(&mac, temp, 6) == 0);
 
 	QString s2 = QString(mac); // operator QString()
 	EXPECT_EQ(s2, "001122-334455");
@@ -127,10 +115,10 @@ TEST(GMac, funcTest) {
 	mac.clear();
 	EXPECT_TRUE(mac.isClean());
 
-	mac = "FF:FF:FF:FF:FF:FF";
+	mac = QString("FF:FF:FF:FF:FF:FF");
 	EXPECT_TRUE(mac.isBroadcast());
 
-	mac = "01:00:5E:00:11:22";
+	mac = QString("01:00:5E:00:11:22");
 	EXPECT_TRUE(mac.isMulticast());
 }
 

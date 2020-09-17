@@ -109,7 +109,7 @@ TEST(GRtm, loadTest) {
 
 TEST(GRtm, bestTest) {
 	GRtm& rtm = GRtm::instance();
-	GRtmEntry* entry = rtm.getBestEntry("8.8.8.8");
+	GRtmEntry* entry = rtm.getBestEntry(QString("8.8.8.8"));
 	EXPECT_NE(entry, nullptr);
 	qDebug() << "best entry for 8.8.8.8 is" << entry->intf()->name();
 }
