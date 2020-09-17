@@ -55,42 +55,38 @@ QString GJson::defaultFileName() {
 // ----------------------------------------------------------------------------
 // QList<int>
 // ----------------------------------------------------------------------------
-QJsonValueRef operator << (QJsonValueRef ref, const QList<int>& intList) {
+void operator << (QJsonValueRef ref, const QList<int>& intList) {
 	QStringList strList;
 	for (int i: intList) {
 		QString s = QString::number(i);
 		strList.append(s);
 	}
 	ref = strList.join(',');
-	return ref;
 }
 
-const QJsonValue operator >> (const QJsonValue val, QList<int>& intList) {
-	if (val.isNull()) return val;
+void operator >> (const QJsonValue val, QList<int>& intList) {
+	if (val.isNull()) return;
 	QString s = val.toString();
 	QStringList strList = val.toString().split(',');
 	for (QString s: strList) {
 		intList.append(s.toInt());
 	}
-	return val;
 }
 
 #include "prop/gprop.h"
 // ----------------------------------------------------------------------------
 // GProp
 // ----------------------------------------------------------------------------
-QJsonValueRef operator << (QJsonValueRef ref, const GProp& prop) {
+void operator << (QJsonValueRef ref, const GProp& prop) {
 	QJsonObject jo;
 	((GProp&)prop).propSave(jo);
 	ref = jo;
-	return ref;
 }
 
-const QJsonValue operator >> (const QJsonValue val, GProp& prop) {
-	if (val.isNull()) return val;
+void operator >> (const QJsonValue val, GProp& prop) {
+	if (val.isNull()) return;
 	QJsonObject jo = val.toObject();
 	prop.propLoad(jo);
-	return val;
 }
 
 #ifdef QT_GUI_LIB
@@ -104,7 +100,7 @@ GJson::GWidgetRect GJson::rect(QWidget* widget) {
 
 #include <QPoint>
 #include <QSize>
-QJsonValueRef operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect) {
+void operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect) {
 	QJsonObject jo;
 
 	QPoint pos = rect.widget_->pos();
@@ -116,11 +112,10 @@ QJsonValueRef operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect) {
 	jo["height"] = size.height();
 
 	ref = jo;
-	return ref;
 }
 
-const QJsonValue operator >> (const QJsonValue val, GJson::GWidgetRect&& rect) {
-	if (val.isNull()) return val;
+void operator >> (const QJsonValue val, GJson::GWidgetRect&& rect) {
+	if (val.isNull()) return;
 	QJsonObject jo = val.toObject();
 
 	QPoint pos;
@@ -132,8 +127,6 @@ const QJsonValue operator >> (const QJsonValue val, GJson::GWidgetRect&& rect) {
 	size.setWidth(jo["width"].toInt());
 	size.setHeight(jo["height"].toInt());
 	rect.widget_->resize(size);
-
-	return val;
 }
 
 // ----------------------------------------------------------------------------
@@ -143,17 +136,15 @@ GJson::GSplitterSizes GJson::splitterSizes(QSplitter* splitter) {
 	return GJson::GSplitterSizes(splitter);
 }
 
-QJsonValueRef operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes) {
+void operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes) {
 	ref << sizes.splitter_->sizes();
-	return ref;
 }
 
-const QJsonValue operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes) {
-	if (val.isNull()) return val;
+void operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes) {
+	if (val.isNull()) return;
 	QList<int> intSizes;
 	val >> intSizes;
 	sizes.splitter_->setSizes(intSizes);
-	return val;
 }
 
 // ----------------------------------------------------------------------------
@@ -163,25 +154,23 @@ GJson::GTreeViewHeaderSizes GJson::headerSizes(QTreeView* treeView) {
 	return GJson::GTreeViewHeaderSizes(treeView);
 }
 
-QJsonValueRef operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes) {
+void operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes) {
 	int count = headerSizes.treeView_->header()->count();
 	QList<int> intSizes;
 	for (int i = 0; i < count - 1; i++) {
 		intSizes << headerSizes.treeView_->columnWidth(i);
 	}
-	ref << (const QList<int>)intSizes;
-	return ref;
+	ref << intSizes;
 }
 
-const QJsonValue operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes) {
-	if (val.isNull()) return val;
+void operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes) {
+	if (val.isNull()) return;
 	QList<int> intSizes;
 	val >> intSizes;
 	int count = headerSizes.treeView_->header()->count();
 	for (int i = 0; i < count - 1; i++) {
 		headerSizes.treeView_->setColumnWidth(i, intSizes.at(i));
 	}
-	return val;
 }
 
 #endif // QT_GUI_LIB

@@ -26,15 +26,15 @@ namespace GJson {
 // ----------------------------------------------------------------------------
 // QList<int>
 // ----------------------------------------------------------------------------
-QJsonValueRef G_EXPORT operator << (QJsonValueRef ref, const QList<int>& intList);
-const QJsonValue G_EXPORT operator >> (const QJsonValue val, QList<int>& intList);
+void G_EXPORT operator << (QJsonValueRef ref, const QList<int>& intList);
+void G_EXPORT operator >> (const QJsonValue val, QList<int>& intList);
 
 // ----------------------------------------------------------------------------
 // GProp
 // ----------------------------------------------------------------------------
 struct GProp;
-QJsonValueRef G_EXPORT operator << (QJsonValueRef ref, const GProp& prop);
-const QJsonValue G_EXPORT operator >> (const QJsonValue val, GProp& prop);
+void G_EXPORT operator << (QJsonValueRef ref, const GProp& prop);
+void G_EXPORT operator >> (const QJsonValue val, GProp& prop);
 
 #ifdef QT_GUI_LIB
 
@@ -49,8 +49,8 @@ namespace GJson {
 	};
 	GWidgetRect G_EXPORT rect(QWidget* widget);
 }
-QJsonValueRef G_EXPORT operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect);
-const QJsonValue G_EXPORT operator >> (const QJsonValue val, GJson::GWidgetRect&& rect);
+void G_EXPORT operator << (QJsonValueRef ref, const GJson::GWidgetRect&& rect);
+void G_EXPORT operator >> (const QJsonValue val, GJson::GWidgetRect&& rect);
 
 // ----------------------------------------------------------------------------
 // GSplitterSizes
@@ -63,8 +63,8 @@ namespace GJson {
 	};
 	GSplitterSizes G_EXPORT splitterSizes(QSplitter* splitter);
 }
-QJsonValueRef G_EXPORT operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes);
-const QJsonValue G_EXPORT operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes);
+void G_EXPORT operator << (QJsonValueRef ref, const GJson::GSplitterSizes&& sizes);
+void G_EXPORT operator >> (const QJsonValue val, GJson::GSplitterSizes&& sizes);
 
 // ----------------------------------------------------------------------------
 // GTreeViewHeaderSizes
@@ -78,7 +78,7 @@ namespace GJson {
 	};
 	GTreeViewHeaderSizes G_EXPORT headerSizes(QTreeView* treeView);
 }
-QJsonValueRef G_EXPORT operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes);
-const QJsonValue G_EXPORT operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes);
+void G_EXPORT operator << (QJsonValueRef ref, const GJson::GTreeViewHeaderSizes&& headerSizes);
+void G_EXPORT operator >> (const QJsonValue val, GJson::GTreeViewHeaderSizes&& headerSizes);
 
 #endif // QT_GUI_LIB
