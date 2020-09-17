@@ -6,7 +6,7 @@
 using namespace std;
 
 void showNetIntf() {
-	GRtmEntry* entry = GRtm::instance().getBestEntry("8.8.8.8");
+	GRtmEntry* entry = GRtm::instance().getBestEntry(QString("8.8.8.8"));
 	GNetIntfs& intfs = GNetIntf::all();
 
 	int index = 1;
