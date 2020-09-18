@@ -52,7 +52,7 @@ public:
 	GGText* createText(GGraph::Node* node, QPointF pos);
 	GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
 	GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
-	GGText*  findTextByObjectName(QString objectName);
+	GGText* findTextByObjectName(QString objectName);
 
 protected: // for drag and drop
 	QGraphicsLineItem *line;
