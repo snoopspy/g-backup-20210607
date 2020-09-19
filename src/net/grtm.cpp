@@ -98,12 +98,12 @@ TEST(GRtm, loadTest) {
 	for (GRtm::iterator it = rtm.begin(); it != rtm.end(); it++) {
 		GRtmEntry& entry = *it;
 		qDebug() << QString("dst=%1 mask=%2 gateway=%3 intf=%4 metric=%5").arg(
-									QString(entry.dst()),
-									QString(entry.mask()),
-									QString(entry.gateway()),
-									entry.intf()->name(),
-									QString::number(entry.metric())
-									);
+						QString(entry.dst()),
+						QString(entry.mask()),
+						QString(entry.gateway()),
+						entry.intf()->name(),
+						QString::number(entry.metric())
+						);
 	}
 }
 

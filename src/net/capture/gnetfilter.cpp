@@ -9,7 +9,8 @@
 // GNetFilter
 // ----------------------------------------------------------------------------
 GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
-	GDEBUG_CTOR
+	GDEBUG_CTOR;
+
 	command_.openCommands_ << "sudo iptables -A OUTPUT -j NFQUEUE";
 	command_.openCommands_ << "sudo iptables -A INPUT -j NFQUEUE";
 	command_.closeCommands_ << "sudo iptables -D OUTPUT -j NFQUEUE";
@@ -17,7 +18,8 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 }
 
 GNetFilter::~GNetFilter() {
-	GDEBUG_DTOR
+	GDEBUG_DTOR;
+
 	close();
 }
 

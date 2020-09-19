@@ -5,7 +5,7 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 GRtmLinux::GRtmLinux() : GRtm() {
-	GDEBUG_CTOR
+	GDEBUG_CTOR;
 
 	QString command = "cat /proc/net/route";
 	QProcess p;
@@ -58,7 +58,8 @@ GRtmLinux::GRtmLinux() : GRtm() {
 }
 
 GRtmLinux::~GRtmLinux() {
-	GDEBUG_DTOR
+	GDEBUG_DTOR;
+
 	clear();
 }
 

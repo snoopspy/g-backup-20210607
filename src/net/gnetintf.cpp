@@ -6,7 +6,7 @@
 #endif
 
 // ----------------------------------------------------------------------------
-// GNetInft
+// GNetIntf
 // ----------------------------------------------------------------------------
 GIp GNetIntf::gateway() const {
 	GNetIntfs::instance().init();
@@ -57,7 +57,7 @@ static GMac getMac(char* name) {
 #endif
 
 GNetIntfs::GNetIntfs() {
-	GDEBUG_CTOR
+	GDEBUG_CTOR;
 
 	//
 	// Initialize allDevs using pcap API.
@@ -120,7 +120,7 @@ GNetIntfs::GNetIntfs() {
 }
 
 GNetIntfs::~GNetIntfs() {
-	GDEBUG_DTOR
+	GDEBUG_DTOR;
 
 	clear();
 

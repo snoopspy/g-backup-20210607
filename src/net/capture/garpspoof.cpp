@@ -4,12 +4,13 @@
 // GArpSpoof
 // ----------------------------------------------------------------------------
 GArpSpoof::GArpSpoof(QObject* parent) : GPcapDevice(parent) {
-	GDEBUG_CTOR
+	GDEBUG_CTOR;
 }
 
 GArpSpoof::~GArpSpoof() {
-	GDEBUG_DTOR
-			close();
+	GDEBUG_DTOR;
+
+	close();
 }
 
 bool GArpSpoof::doOpen() {
