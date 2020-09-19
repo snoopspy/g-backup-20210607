@@ -31,6 +31,9 @@ public:
 	GIp6(const gbyte* rhs) { memcpy(ip6_, rhs, SIZE); }
 	GIp6(const QString& rhs);
 
+	// assign operator
+	GIp6& operator = (const GIp6& rhs) { memcpy(this->ip6_, rhs.ip6_, SIZE); return *this; }
+
 	//
 	// casting operator
 	//

@@ -38,7 +38,6 @@ public:
 	// casting operator
 	//
 	operator gbyte*() const { return const_cast<gbyte*>(mac_); } // default casting operator
-
 	explicit operator QString() const;
 
 	//
