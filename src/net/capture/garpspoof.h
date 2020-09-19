@@ -36,9 +36,9 @@ struct GArpSpoofFlow : GObj {
 
 public:
 	bool enabled_{true};
-	GIp senderIp_{uint32_t(0)};
+	GIp senderIp_{0};
 	GMac senderMac_{GMac::cleanMac()};
-	GIp targetIp_{uint32_t(0)};
+	GIp targetIp_{0};
 	GMac targetMac_{GMac::cleanMac()};
 };
 typedef GArpSpoofFlow *PArpSpoofFlow;

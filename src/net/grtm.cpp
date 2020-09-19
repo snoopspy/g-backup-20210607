@@ -41,7 +41,7 @@ GIp GRtm::findGateway(QString intfName, GIp ip) {
 		if (entry.gateway_ == ip) continue;
 		return entry.gateway_;
 	}
-	return GIp(uint32_t(0));
+	return GIp(0);
 }
 
 GRtmEntry* GRtm::getBestEntry(GIp ip) {

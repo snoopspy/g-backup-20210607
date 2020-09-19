@@ -87,8 +87,8 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
 GPacket::operator QString() const {
 	QString smac;
 	QString dmac;
-	GIp sip(uint32_t(0));
-	GIp dip(uint32_t(0));
+	GIp sip(0);
+	GIp dip(0);
 	QString protoStr = "unknown";
 	uint16_t sport = 0;
 	uint16_t dport = 0;

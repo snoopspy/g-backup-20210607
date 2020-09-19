@@ -39,12 +39,12 @@ protected:
 	QString desc_;
 	pcap_if_t* dev_{nullptr};
 	GMac mac_{GMac::cleanMac()};
-	GIp ip_{uint32_t(0)};
-	GIp mask_{uint32_t(0)};
-	GIp gateway_{uint32_t(0)};
+	GIp ip_{0};
+	GIp mask_{0};
+	GIp gateway_{0};
 
 protected:
-	GIp ip_and_mask_{uint32_t(0)}; // used for isSameLanIP
+	GIp ip_and_mask_{0}; // used for isSameLanIP
 
 public:
 	GNetIntf() {}

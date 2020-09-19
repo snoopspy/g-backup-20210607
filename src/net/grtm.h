@@ -32,9 +32,9 @@ public:
 	GNetIntf* intf() const;
 
 protected:
-	GIp dst_{uint32_t(0)};
-	GIp mask_{uint32_t(0)};
-	GIp gateway_{uint32_t(0)};
+	GIp dst_{0};
+	GIp mask_{0};
+	GIp gateway_{0};
 	int metric_{0};
 	GNetIntf* intf_{nullptr};
 
