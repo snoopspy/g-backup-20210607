@@ -53,8 +53,8 @@ struct G_EXPORT GArpSpoof : GPcapDevice {
 	Q_PROPERTY(GObjRefArrayPtr flows READ getFlows)
 
 	GObjRefArrayPtr getFlows() { return &propFlows_; }
-  QString getVirtualMac() { return QString(propVirtualMac_); }
-  void setVirtualMac(QString value) { propVirtualMac_ = value; }
+	QString getVirtualMac() { return QString(propVirtualMac_); }
+	void setVirtualMac(QString value) { propVirtualMac_ = value; }
 
 public:
 	Q_INVOKABLE GArpSpoof(QObject* parent = nullptr);
@@ -73,27 +73,27 @@ protected:
 	void run() override;
 
 public:
-  GMac propVirtualMac_{GMac::cleanMac()};
+	GMac propVirtualMac_{GMac::cleanMac()};
 	GDuration infectInterval_{1000};
 	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
 protected:
-  struct Flow {
+	struct Flow {
 		GIp senderIp_;
 		GMac senderMac_;
 		GIp targetIp_;
 		GMac targetMac_;
 
-    Flow() {}
-    Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
+		Flow() {}
+		Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
 			senderIp_(senderIp), senderMac_(senderMac), targetIp_(targetIp), targetMac_(targetMac) {}
 	};
-  QList<Flow> flowList_; // for arp infect and recover
-  typedef QMap<GFlow::IpFlowKey, Flow> FlowMap;
-  FlowMap flowMap_; // for relay
+	QList<Flow> flowList_; // for arp infect and recover
+	typedef QMap<GFlow::IpFlowKey, Flow> FlowMap;
+	FlowMap flowMap_; // for relay
 
 	GAtm atm_;
-  GMac virtualMac_{GMac::cleanMac()};
+	GMac virtualMac_{GMac::cleanMac()};
 
 	struct InfectThread : GThread {
 		InfectThread(GArpSpoof* arpSpoof) : GThread(arpSpoof), arpSpoof_(arpSpoof) {}
@@ -103,8 +103,8 @@ protected:
 	} infectThread_{this};
 
 	bool sendArpInfectAll();
-  bool sendArpInfect(Flow* session);
+	bool sendArpInfect(Flow* flow);
 	bool sendARPReciverAll();
-  bool sendArpRecover(Flow* session);
-  bool sendArp(Flow* session, bool infect);
+	bool sendArpRecover(Flow* flow);
+	bool sendArp(Flow* flow, bool infect);
 };
