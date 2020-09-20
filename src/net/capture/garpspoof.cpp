@@ -146,10 +146,10 @@ void GArpSpoof::run() {
 						qDebug() << QString("sender(%1) to target(%2) ARP packet").arg(QString(flow.senderIp_)).arg(QString(flow.targetIp_));
 						infect = true;
 					} else
-						if (arpHdr->sip() == flow.targetIp_ && ethHdr->dmac() == GMac::broadcastMac()) { // target to any ARP packet
-							qDebug() << QString("target(%1) to any(%2) ARP packet").arg(QString(flow.targetIp_)).arg(QString(flow.senderIp_));
-							infect = true;
-						}
+					if (arpHdr->sip() == flow.targetIp_ && ethHdr->dmac() == GMac::broadcastMac()) { // target to any ARP packet
+						qDebug() << QString("target(%1) to any(%2) ARP packet").arg(QString(flow.targetIp_)).arg(QString(flow.senderIp_));
+						infect = true;
+					}
 					if (infect)
 						sendArpInfect(&flow);
 				}
