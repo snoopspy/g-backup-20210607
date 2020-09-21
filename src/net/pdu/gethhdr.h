@@ -25,11 +25,10 @@ struct G_EXPORT GEthHdr final { // libnet_ethernet_hdr // gilgil temp 2019.05.13
 	GMac     smac() { return smac_; }
 	uint16_t type() { return ntohs(type_); }
 
-	typedef enum {
-		Ip4 = 0x0800,
-		Arp = 0x0806,
-		Ip6 = 0x86DD
-	} Type;
+	// Type
+	static const uint16_t Ip4 = 0x0800;
+	static const uint16_t Arp = 0x0806;
+	static const uint16_t Ip6 = 0x86DD;
 };
 typedef GEthHdr *PEthHdr;
 #pragma pack(pop)
