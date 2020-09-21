@@ -56,7 +56,7 @@ void MyFactory::loadCapture() {
 #include <GTimeStampSyncDelay>
 
 void MyFactory::loadDelay() {
-	qRegisterMetaType<GBlock*>();
+	qRegisterMetaType<GDelay*>();
 	qRegisterMetaType<GSyncDelay*>();
 	qRegisterMetaType<GTimeStampSyncDelay*>();
 
