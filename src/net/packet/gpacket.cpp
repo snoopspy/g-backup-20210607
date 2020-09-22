@@ -35,6 +35,7 @@ int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
 			res = DLT_IEEE802_11_RADIO;
 			break;
 		case GPacket::Null:
+		default:
 			res = DLT_NULL;
 			break;
 	}
@@ -56,8 +57,6 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
 			res = GPacket::Dot11;
 			break;
 		case DLT_NULL:
-			res = GPacket::Null;
-			break;
 		default:
 			res = GPacket::Null;
 			break;

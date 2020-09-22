@@ -67,7 +67,7 @@ void GCapture::run() {
 		case GPacket::Eth: packet = &ethPacket; break;
 		case GPacket::Ip: packet = &ipPacket; break;
 		case GPacket::Dot11: packet = &dot11Packet; break;
-		case GPacket::Null: packet = &nullPacket; break;
+		case GPacket::Null: default: packet = &nullPacket; break;
 	}
 
 	while (active()) {
