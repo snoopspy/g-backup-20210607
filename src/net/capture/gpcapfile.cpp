@@ -1,5 +1,5 @@
 #include "gpcapfile.h"
-#include "base/prop/gpropitem_filepath.h"
+#include "base/prop/gpropitem-filepath.h"
 
 // ----------------------------------------------------------------------------
 // GPcapFile

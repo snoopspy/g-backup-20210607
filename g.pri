@@ -15,9 +15,9 @@ DEFINES *= QT_MESSAGELOGCONTEXT
 # G_NAME
 #------------------------------------------------------------------------------
 G_NAME = g
-android-g++:                  G_NAME = $${G_NAME}_android
-CONFIG(qt): contains(QT, gui) G_NAME = $${G_NAME}_gui
-CONFIG(debug, debug|release)  G_NAME = $${G_NAME}_d
+android-g++:                  G_NAME = $${G_NAME}-android
+CONFIG(qt): contains(QT, gui) G_NAME = $${G_NAME}-gui
+CONFIG(debug, debug|release)  G_NAME = $${G_NAME}-d
 
 #------------------------------------------------------------------------------
 # G_DIR

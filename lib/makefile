@@ -1,58 +1,58 @@
-.PHONY: all lib test debug release debug_test release_test libg_d libg_gui_d libg libg_gui g_d_test g_gui_d_test g_test g_gui_test
+.PHONY: all lib test debug release debug-test release-test libg-d libg-gui-d libg libg-gui g-d-test g-gui-d-test g-test g-gui-test
 
 all: lib #test
 
 lib: release #debug
 
-test: debug_test release_test
+test: debug-test release-test
 
-debug: libg_d libg_gui_d
+debug: libg-d libg-gui-d
 
-release: libg libg_gui
+release: libg libg-gui
 
-debug_test: g_d_test g_gui_d_test
+debug-test: g-d-test g-gui-d-test
 
-release_test: g_test g_gui_test
+release-test: g-test g-gui-test
 
-libg_d:
-	mkdir -p libg_d;      cd libg_d;        qmake ../libg.pro           "CONFIG+=debug"; make -j4
+libg-d:
+	mkdir -p libg-d;      cd libg-d;        qmake ../libg.pro           "CONFIG+=debug"; make -j4
 	
-libg_gui_d:
-	mkdir -p libg_gui_d;   cd libg_gui_d;   qmake ../libg_gui.pro       "CONFIG+=debug"; make -j4
+libg-gui-d:
+	mkdir -p libg-gui-d;   cd libg-gui-d;   qmake ../libg-gui.pro       "CONFIG+=debug"; make -j4
 
 libg:
 	mkdir -p libg;         cd libg;         qmake ../libg.pro;          "CONFIG+=release"; make -j4
 
-libg_gui:
-	mkdir -p libg_gui;     cd libg_gui;     qmake ../libg_gui.pro;      "CONFIG+=release"; make -j4
+libg-gui:
+	mkdir -p libg-gui;     cd libg-gui;     qmake ../libg-gui.pro;      "CONFIG+=release"; make -j4
 
-g_d_test:
-	mkdir -p g_d_test;     cd g_d_test;     qmake ../libg_test.pro      "CONFIG+=debug"; make -j4
+g-d-test:
+	mkdir -p g-d-test;     cd g-d-test;     qmake ../libg-test.pro      "CONFIG+=debug"; make -j4
 
-g_gui_d_test:
-	mkdir -p g_gui_d_test; cd g_gui_d_test; qmake ../libg_gui_test.pro  "CONFIG+=debug"; make -j4
+g-gui-d-test:
+	mkdir -p g-gui-d-test; cd g-gui-d-test; qmake ../libg-gui-test.pro  "CONFIG+=debug"; make -j4
 
-g_test:
-	mkdir -p g_test;       cd g_test;       qmake ../libg_test.pro;     "CONFIG+=release"; make -j4
+g-test:
+	mkdir -p g-test;       cd g-test;       qmake ../libg-test.pro;     "CONFIG+=release"; make -j4
 
-g_gui_test:
-	mkdir -p g_gui_test;   cd g_gui_test;   qmake ../libg_gui_test.pro; "CONFIG+=release"; make -j4
+g-gui-test:
+	mkdir -p g-gui-test;   cd g-gui-test;   qmake ../libg-gui-test.pro; "CONFIG+=release"; make -j4
 
 clean:
-	rm -rf libg_d
-	rm -rf libg_gui_d
+	rm -rf libg-d
+	rm -rf libg-gui-d
 	rm -rf libg
-	rm -rf libg_gui
-	rm -rf g_d_test
-	rm -rf g_gui_d_test
-	rm -rf g_test
-	rm -rf g_gui_test
+	rm -rf libg-gui
+	rm -rf g-d-test
+	rm -rf g-gui-d-test
+	rm -rf g-test
+	rm -rf g-gui-test
 	rm -rf *.pro.user
 
 distclean: clean
 	find ../bin -name "*.so*" -delete
-	find ../bin -type f -executable -name "*_test" -delete
-	rm -f ../bin/g_d_test
-	rm -f ../bin/g_gui_d_test
-	rm -f ../bin/g_test
-	rm -f ../bin/g_gui_test
+	find ../bin -type f -executable -name "*-test" -delete
+	rm -f ../bin/g-d-test
+	rm -f ../bin/g-gui-d-test
+	rm -f ../bin/g-test
+	rm -f ../bin/g-gui-test

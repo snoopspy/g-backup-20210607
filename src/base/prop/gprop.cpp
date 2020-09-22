@@ -229,15 +229,15 @@ bool GProp::propSave(QJsonObject& jo, QMetaProperty mpro) {
 }
 
 #ifdef QT_GUI_LIB
-#include "gpropitem_bool.h"
-#include "gpropitem_char.h"
-#include "gpropitem_enum.h"
-#include "gpropitem_objptr.h"
-#include "gpropitem_objref.h"
-#include "gpropitem_objrefarrayptr.h"
-#include "gpropitem_stringlist.h"
-#include "gpropitem_unknowntype.h"
-#include "gpropitem_variant.h"
+#include "gpropitem-bool.h"
+#include "gpropitem-char.h"
+#include "gpropitem-enum.h"
+#include "gpropitem-objptr.h"
+#include "gpropitem-objref.h"
+#include "gpropitem-objrefarrayptr.h"
+#include "gpropitem-stringlist.h"
+#include "gpropitem-unknowntype.h"
+#include "gpropitem-variant.h"
 
 GPropItem* GProp::propCreateItem(GPropItemParam* param) {
 	const char* propName = param->mpro_.name();

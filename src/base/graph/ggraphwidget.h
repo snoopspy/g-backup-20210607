@@ -24,7 +24,7 @@
 #include <QVBoxLayout>
 
 #include "base/prop/gpropwidget.h"
-#include "gg_scene.h"
+#include "gg-scene.h"
 
 // ----------------------------------------------------------------------------
 // GGraphWidget

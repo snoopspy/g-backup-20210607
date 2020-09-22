@@ -1,5 +1,5 @@
 #include "gpcapdevicewrite.h"
-#include "base/prop/gpropitem_device.h"
+#include "base/prop/gpropitem-device.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite

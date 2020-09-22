@@ -49,7 +49,7 @@ bool GPcapDevice::doClose() {
 
 #ifdef QT_GUI_LIB
 
-#include "base/prop/gpropitem_device.h"
+#include "base/prop/gpropitem-device.h"
 GPropItem* GPcapDevice::propCreateItem(GPropItemParam* param) {
 	if (QString(param->mpro_.name()) == "devName") {
 		GPropItemDevice* res = new GPropItemDevice(param);
