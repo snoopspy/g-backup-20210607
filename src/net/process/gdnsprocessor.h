@@ -11,7 +11,7 @@
 #pragma once
 
 #include "base/gstateobj.h"
-#include "gdnsinfo.h"
+#include "net/pdu/gdnsinfo.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor

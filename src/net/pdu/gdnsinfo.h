@@ -11,7 +11,7 @@
 #pragma once
 
 #include "net/packet/gpacket.h"
-#include "net/pdu/gdnshdr.h"
+#include "gdnshdr.h"
 
 // ----------------------------------------------------------------------------
 // GDnsInfo
