@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GIp6 final {
 public:
-	static const int SIZE = 16;
+	static constexpr int SIZE = 16;
 
 protected:
 	gbyte ip6_[SIZE];

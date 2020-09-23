@@ -26,9 +26,9 @@ struct G_EXPORT GEthHdr final { // libnet_ethernet_hdr // gilgil temp 2019.05.13
 	uint16_t type() { return ntohs(type_); }
 
 	// Type
-	static const uint16_t Ip4 = 0x0800;
-	static const uint16_t Arp = 0x0806;
-	static const uint16_t Ip6 = 0x86DD;
+	static constexpr uint16_t Ip4 = 0x0800;
+	static constexpr uint16_t Arp = 0x0806;
+	static constexpr uint16_t Ip6 = 0x86DD;
 };
 typedef GEthHdr *PEthHdr;
 #pragma pack(pop)

@@ -97,7 +97,7 @@ public:
 	//
 	// user
 	//
-	static const int USER_DATA_SIZE = 256;
+	static constexpr int USER_DATA_SIZE = 256;
 	gbyte userData_[USER_DATA_SIZE];
 
 #ifdef _DEBUG

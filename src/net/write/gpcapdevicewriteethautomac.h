@@ -34,7 +34,7 @@ protected:
 protected:
 	GMac myMac_;
 	GSyncPcapDevice* device_{nullptr};
-	static const int MAXBUF = 65536;
+	static constexpr int MAXBUF = 65536;
 	gbyte temp_[MAXBUF];
 
 public slots:

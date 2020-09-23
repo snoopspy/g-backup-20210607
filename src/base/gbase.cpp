@@ -1,8 +1,6 @@
 #include "gbase.h"
 #include <pcap.h>
 
-const GDuration G::Timeout = 5000;
-
 const char* G::version() {
 #ifdef _DEBUG
 	return "G Library version 0.2.3 Debug Build(" __DATE__ " " __TIME__ ")";
@@ -12,7 +10,7 @@ const char* G::version() {
 }
 
 const char* G::pcap_lib_version() {
-	return ::pcap_lib_version();
+	return pchar(::pcap_lib_version());
 }
 
 // ----------------------------------------------------------------------------

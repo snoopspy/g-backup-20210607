@@ -6,7 +6,7 @@
 #include "ggraphwidget.h"
 #include <cmath>
 
-static const qreal Pi = 3.14;
+static constexpr qreal Pi = 3.14;
 
 // ----------------------------------------------------------------------------
 // GGArrow

@@ -49,7 +49,7 @@ protected:
 
 protected:
 	HANDLE handle_{nullptr};
-	static const int MAXBUF = 0xFFFF;
+	static constexpr int MAXBUF = 0xFFFF;
 	gbyte pktData_[MAXBUF];
 
 public:

@@ -37,7 +37,7 @@ protected:
 protected:
 	GMac smac_;
 	GMac dmac_;
-	static const int MAXBUF = 65536;
+	static constexpr int MAXBUF = 65536;
 	gbyte temp_[MAXBUF];
 
 public slots:

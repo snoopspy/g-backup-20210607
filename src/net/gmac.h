@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GMac final {
 public:
-	static const int SIZE = 6;
+	static constexpr int SIZE = 6;
 
 protected:
 	gbyte mac_[SIZE];

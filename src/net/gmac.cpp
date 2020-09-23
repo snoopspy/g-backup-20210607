@@ -80,7 +80,7 @@ GMac& GMac::broadcastMac() {
 #ifdef GTEST
 #include <gtest/gtest.h>
 
-static const gbyte _temp[] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55};
+static constexpr gbyte _temp[] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55};
 
 TEST(GMac, ctorTest) {
 	GMac mac1; // ()

@@ -38,7 +38,7 @@ typedef unsigned char gbyte, *pbyte;
 typedef unsigned long GDuration;
 
 struct G_EXPORT G {
-	static const GDuration Timeout;
+	static constexpr GDuration Timeout = 5000;
 	static const char* version();
 	static const char* pcap_lib_version();
 };
