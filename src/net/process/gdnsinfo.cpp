@@ -1,13 +1,13 @@
 #include <QDebug>
-#include "gdns.h"
+#include "gdnsinfo.h"
 
 // ----------------------------------------------------------------------------
-// GDns::Question
+// GDnsInfo::Question
 // ----------------------------------------------------------------------------
-QByteArray GDns::Question::encode() {
+QByteArray GDnsInfo::Question::encode() {
 	QByteArray res;
 
-	res = GDns::encodeName(this->name_);
+	res = GDnsInfo::encodeName(this->name_);
 
 	uint16_t _type = htons(this->type_);
 	res.append(reinterpret_cast<const char*>(&_type), sizeof(uint16_t));
@@ -18,8 +18,8 @@ QByteArray GDns::Question::encode() {
 	return res;
 }
 
-bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
-	this->name_ = GDns::decodeName(udpData, dataLen, offset);
+bool GDnsInfo::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
+	this->name_ = GDnsInfo::decodeName(udpData, dataLen, offset);
 	if (this->name_ == "") return false;
 
 	if (*offset + sizeof(uint16_t) > dataLen) return false;
@@ -37,9 +37,9 @@ bool GDns::Question::decode(u_char* udpData, size_t dataLen, size_t* offset) {
 }
 
 // ----------------------------------------------------------------------------
-// GDns::Questions
+// GDnsInfo::Questions
 // ----------------------------------------------------------------------------
-QByteArray GDns::Questions::encode() {
+QByteArray GDnsInfo::Questions::encode() {
 	QByteArray res;
 	for (Question question: *this) {
 		res += question.encode();
@@ -47,7 +47,7 @@ QByteArray GDns::Questions::encode() {
 	return res;
 }
 
-bool GDns::Questions::decode(u_char* udpData, size_t dataLen, int count, size_t* offset) {
+bool GDnsInfo::Questions::decode(u_char* udpData, size_t dataLen, int count, size_t* offset) {
 	for (int i = 0; i < count; i++) {
 		Question question;
 		if (!question.decode(udpData, dataLen, offset)) return false;
@@ -57,12 +57,12 @@ bool GDns::Questions::decode(u_char* udpData, size_t dataLen, int count, size_t*
 }
 
 // ----------------------------------------------------------------------------
-// GDns::ResourceRecord
+// GDnsInfo::ResourceRecord
 // ----------------------------------------------------------------------------
-QByteArray GDns::ResourceRecord::encode() {
+QByteArray GDnsInfo::ResourceRecord::encode() {
 	QByteArray res;
 
-	//res = GDns::encodeName(this->name);
+	//res = GDnsInfo::encodeName(this->name);
 	res.append((char)0xC0); // gilgil temp 2014.03.22
 	res.append((char)0x0C);
 
@@ -83,8 +83,8 @@ QByteArray GDns::ResourceRecord::encode() {
 	return res;
 }
 
-bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offset) {
-	this->name_ = GDns::decodeName(udpData, dataLen, offset);
+bool GDnsInfo::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offset) {
+	this->name_ = GDnsInfo::decodeName(udpData, dataLen, offset);
 	if (this->name_ == "") return false;
 
 	if (*offset + sizeof(uint16_t) > dataLen) return false;
@@ -116,9 +116,9 @@ bool GDns::ResourceRecord::decode(u_char* udpData, size_t dataLen, size_t* offse
 }
 
 // ----------------------------------------------------------------------------
-// GDns::ResourceRecords
+// GDnsInfo::ResourceRecords
 // ----------------------------------------------------------------------------
-QByteArray GDns::ResourceRecords::encode() {
+QByteArray GDnsInfo::ResourceRecords::encode() {
 	QByteArray res;
 	for (ResourceRecord record: *this) {
 		res += record.encode();
@@ -126,7 +126,7 @@ QByteArray GDns::ResourceRecords::encode() {
 	return res;
 }
 
-bool GDns::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, size_t* offset) {
+bool GDnsInfo::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, size_t* offset) {
 	for (int i = 0; i < count; i++) {
 		ResourceRecord record;
 		if (!record.decode(udpData, dataLen, offset)) return false;
@@ -136,9 +136,9 @@ bool GDns::ResourceRecords::decode(u_char* udpData, size_t dataLen, int count, s
 }
 
 // ----------------------------------------------------------------------------
-// GDns
+// GDnsInfo
 // ----------------------------------------------------------------------------
-QByteArray GDns::encode() {
+QByteArray GDnsInfo::encode() {
 	QByteArray res;
 	res.append((const char*)&dnsHdr_, sizeof(GDnsHdr));
 
@@ -172,20 +172,20 @@ QByteArray GDns::encode() {
 	return res;
 }
 
-bool GDns::decode(u_char* udpData, size_t dataLen, size_t* offset) {
+bool GDnsInfo::decode(u_char* udpData, size_t dataLen, size_t* offset) {
 	if (*offset + sizeof(GDnsHdr) > dataLen) return false;
 	memcpy(&this->dnsHdr_, udpData, sizeof(GDnsHdr));
 	*offset += sizeof(GDnsHdr);
 
-	if (!questions_.decode(udpData,   dataLen, dnsHdr_.q(),       offset)) return false;
-	if (!answers_.decode(udpData,     dataLen, dnsHdr_.answ(), offset)) return false;
+	if (!questions_.decode(udpData, dataLen, dnsHdr_.q(), offset)) return false;
+	if (!answers_.decode(udpData, dataLen, dnsHdr_.answ(), offset)) return false;
 	if (!authorities_.decode(udpData, dataLen, dnsHdr_.auth(), offset)) return false;
 	if (!additionals_.decode(udpData, dataLen, dnsHdr_.addr(), offset)) return false;
 
 	return true;
 }
 
-QByteArray GDns::encodeName(QString name) {
+QByteArray GDnsInfo::encodeName(QString name) {
 	QStringList labels = name.split('.');
 	int count = labels.count();
 	if (count == 0) {
@@ -205,7 +205,7 @@ QByteArray GDns::encodeName(QString name) {
 	return res;
 }
 
-QString GDns::decodeName(u_char* udpData, size_t dataLen, size_t* offset) {
+QString GDnsInfo::decodeName(u_char* udpData, size_t dataLen, size_t* offset) {
 	u_char* p = (u_char*)(udpData + *offset);
 	QString res;
 	bool first = true;

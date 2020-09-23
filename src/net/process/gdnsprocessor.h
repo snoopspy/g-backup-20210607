@@ -11,7 +11,7 @@
 #pragma once
 
 #include "base/gstateobj.h"
-#include "gdns.h"
+#include "gdnsinfo.h"
 
 // ----------------------------------------------------------------------------
 // GDnsProcessor
@@ -35,5 +35,5 @@ public slots:
 	void process(GPacket* packet);
 
 signals:
-	void dnsCaptured(GPacket* packet, GDns* dns);
+	void dnsCaptured(GPacket* packet, GDnsInfo* dnsInfo);
 };
