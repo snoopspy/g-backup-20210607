@@ -123,4 +123,4 @@ struct GObjRefArray : _GObjRefArray {
 	err = QSharedPointer<GErr>(new GErr((CODE), (MSG))); \
 	qWarning() << err; \
 	} \
-	}
+}

@@ -20,8 +20,8 @@ bool GStateObj::open() {
 	}
 	err.clear();
 
-	bool res = doOpen();
 	state_ = Opening;
+	bool res = doOpen();
 	if (!res) {
 		state_ = Closing;
 		doClose();
