@@ -30,7 +30,7 @@ bool GPcapDevice::doOpen() {
 	}
 
 	char errBuf[PCAP_ERRBUF_SIZE];
-	pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, readTimeout_, errBuf);
+	pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, timeout_, errBuf);
 	if (pcap_ == nullptr) {
 		SET_ERR(GErr::RETURN_NULL, errBuf);
 		return false;
