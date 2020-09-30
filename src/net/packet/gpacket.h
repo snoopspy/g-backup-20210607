@@ -112,7 +112,8 @@ public:
 		ts_.tv_sec = 0;
 		ts_.tv_usec = 0;
 		if (!bufSelfAlloc_)
-			buf_.clear();
+			free(buf_.data_);
+		buf_.clear();
 		ctrl.block_ = false;
 		ctrl.changed_ = false;
 		ethHdr_ = nullptr;
