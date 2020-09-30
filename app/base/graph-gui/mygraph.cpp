@@ -60,7 +60,7 @@ void MyFactory::loadDelay() {
 	qRegisterMetaType<GSyncDelay*>();
 	qRegisterMetaType<GTimeStampSyncDelay*>();
 
-	ItemCategory* category = new ItemCategory("block");
+	ItemCategory* category = new ItemCategory("delay");
 	category->items_.push_back(new ItemNode(GDelay::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GSyncDelay::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GTimeStampSyncDelay::staticMetaObject.className()));
@@ -176,7 +176,7 @@ void MyFactory::loadWrite() {
 	qRegisterMetaType<GPcapFileWriteEth*>();
 	qRegisterMetaType<GPcapFileWriteIp*>();
 
-	ItemCategory* category = new ItemCategory("other");
+	ItemCategory* category = new ItemCategory("write");
 	category->items_.push_back(new ItemNode(GPcapDeviceWrite::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GPcapDeviceWriteEth::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GPcapDeviceWriteEthAutoMac::staticMetaObject.className()));
