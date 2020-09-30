@@ -31,14 +31,13 @@ GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
 			newBuf = packet->buf_;
 			ethHdr = PEthHdr(oldBuf.data_);
 			break;
-		case GPacket::Ip: {
+		case GPacket::Ip:
 			newBuf.data_ = temp_;
 			newBuf.size_ = sizeof(GEthHdr) + oldBuf.size_;
 			Q_ASSERT(newBuf.size_ <= MAXBUF);
 			ethHdr = PEthHdr(temp_);
 			memcpy(temp_ + sizeof(GEthHdr), oldBuf.data_, oldBuf.size_);
 			break;
-		}
 		case GPacket::Dot11:
 		case GPacket::Null: {
 			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dataLinkType_));
