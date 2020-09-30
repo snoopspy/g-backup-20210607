@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 GStateObj::~GStateObj() {
 	if (state_ != Closed) {
-		qCritical() << QString("%1 State is %2. close must be called in descendant of GStateObject").arg(metaObject()->className()).arg(int(state_));
+		qCritical() << QString("%1 State is %2. close must be called in descendant of GStateObj").arg(metaObject()->className()).arg(int(state_));
 	}
 }
 
