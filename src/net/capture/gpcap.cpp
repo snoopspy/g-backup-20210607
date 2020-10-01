@@ -44,19 +44,17 @@ GPacket::Result GPcap::read(GPacket* packet) {
 	switch (i) {
 		case -2: { // if EOF was reached reading from an offline capture
 			char* e = pcap_geterr(pcap_);
-			if (e != nullptr && strlen(e) > 0) {
-				QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
-				SET_ERR(GErr::REAL_FAILED, msg);
-			}
+			if (e == nullptr) e = pchar("unknown");
+			QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
+			SET_ERR(GErr::REAL_FAILED, msg);
 			res = GPacket::Eof;
 			break;
 		}
 		case -1: { // if an error occurred
 			char* e = pcap_geterr(pcap_);
-			if (e != nullptr && strlen(e) > 0) {
-				QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
-				SET_ERR(GErr::REAL_FAILED, msg);
-			}
+			if (e == nullptr) e = pchar("unknown");
+			QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
+			SET_ERR(GErr::REAL_FAILED, msg);
 			res = GPacket::Eof;
 			break;
 		}
@@ -80,7 +78,9 @@ GPacket::Result GPcap::write(GPacket* packet) {
 GPacket::Result GPcap::write(GBuf buf) {
 	int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
 	if (i == 0) return GPacket::Ok;
-	qWarning() << QString("pcap_sendpacket return %1(%2) length=%3").arg(i).arg(pcap_geterr(pcap_)).arg(buf.size_);
+	char* e = pcap_geterr(pcap_);
+	if (e == nullptr) e = pchar("unknown");
+	qWarning() << QString("pcap_sendpacket return %1(%2) length=%3").arg(i).arg(e).arg(buf.size_);
 	return GPacket::Fail;
 }
 
