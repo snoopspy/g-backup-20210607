@@ -8,6 +8,7 @@ SOURCES += \
 	$${PWD}/../src/net/*.cpp \
 	$${PWD}/../src/net/block/*.cpp \
 	$${PWD}/../src/net/capture/*.cpp \
+	$${PWD}/../src/net/convert/*.cpp \
 	$${PWD}/../src/net/delay/*.cpp \
 	$${PWD}/../src/net/extract/*.cpp \
 	$${PWD}/../src/net/filter/*.cpp \
@@ -27,6 +28,7 @@ HEADERS += \
 	$${PWD}/../src/net/*.h \
 	$${PWD}/../src/net/block/*.h \
 	$${PWD}/../src/net/capture/*.h \
+	$${PWD}/../src/net/convert/*.h \
 	$${PWD}/../src/net/delay/*.h \
 	$${PWD}/../src/net/extract/*.h \
 	$${PWD}/../src/net/filter/*.h \
