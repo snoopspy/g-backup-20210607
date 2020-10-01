@@ -26,7 +26,7 @@ GPacket::Result GPcapDeviceWriteEth::writeEth(GPacket* packet) {
 	GBuf oldBuf = packet->buf_;
 	GBuf newBuf;
 	GEthHdr* ethHdr;
-	switch (packet->dataLinkType_) {
+	switch (packet->dataLinkType()) {
 		case GPacket::Eth:
 			newBuf = packet->buf_;
 			ethHdr = PEthHdr(oldBuf.data_);

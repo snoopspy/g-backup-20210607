@@ -57,11 +57,14 @@ public:
 	GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
 	~GPacket() override { if (bufSelfAlloc_) free(buf_.data_); }
 
+protected:
+	DataLinkType dataLinkType_{Null};
+
 public:
 	//
 	// info
 	//
-	DataLinkType dataLinkType_{Null};
+	DataLinkType dataLinkType() { return dataLinkType_; };
 
 	//
 	// sniffing

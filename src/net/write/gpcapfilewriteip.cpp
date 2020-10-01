@@ -22,7 +22,7 @@ bool GPcapFileWriteIp::doClose() {
 
 GPacket::Result GPcapFileWriteIp::write(GPacket* packet) {
 	GPacket::Result res;
-	switch (packet->dataLinkType_) {
+	switch (packet->dataLinkType()) {
 		case GPacket::Eth: {
 			GBuf oldBuf = packet->buf_;
 			GBuf newBuf(oldBuf.data_ + sizeof(GEthHdr), oldBuf.size_ - sizeof(GEthHdr));
