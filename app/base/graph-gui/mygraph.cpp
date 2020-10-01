@@ -49,20 +49,6 @@ void MyFactory::loadCapture() {
 }
 
 // ----------------------------------------------------------------------------
-// Convert
-// ----------------------------------------------------------------------------
-#include <GConvertEthIp>
-
-void MyFactory::loadConvert() {
-	qRegisterMetaType<GConvertEthIp*>();
-
-	ItemCategory* category = new ItemCategory("convert");
-	category->items_.push_back(new ItemNode(GConvertEthIp::staticMetaObject.className()));
-
-	items_.push_back(category);
-}
-
-// ----------------------------------------------------------------------------
 // Delay
 // ----------------------------------------------------------------------------
 #include <GDelay>
@@ -206,7 +192,6 @@ void MyFactory::loadWrite() {
 MyFactory::MyFactory(QObject* parent) : GPluginFactory(parent) {
 	loadBlock();
 	loadCapture();
-	loadConvert();
 	loadDelay();
 	loadExtract();
 	loadFilter();
