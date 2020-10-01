@@ -44,17 +44,20 @@ GPacket::Result GPcap::read(GPacket* packet) {
 	switch (i) {
 		case -2: { // if EOF was reached reading from an offline capture
 			char* e = pcap_geterr(pcap_);
-			if (e == nullptr) e = pchar("unknown");
-			QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
-			SET_ERR(GErr::REAL_FAILED, msg);
+			if (e != nullptr && strlen(e) > 0) {
+				QString msg = QString("pcap_next_ex return -2 error=%1").arg(e);
+				SET_ERR(GErr::READ_FAILED, msg);
+			}
 			res = GPacket::Eof;
 			break;
+
 		}
 		case -1: { // if an error occurred
 			char* e = pcap_geterr(pcap_);
-			if (e == nullptr) e = pchar("unknown");
-			QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
-			SET_ERR(GErr::REAL_FAILED, msg);
+			if (e != nullptr && strlen(e) > 0) {
+				QString msg = QString("pcap_next_ex return -1 error=%1").arg(e);
+				SET_ERR(GErr::READ_FAILED, msg);
+			}
 			res = GPacket::Eof;
 			break;
 		}
