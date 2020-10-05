@@ -91,7 +91,7 @@ bool GArpSpoof::doOpen() {
 		flowMap_[GFlow::IpFlowKey(flow.senderIp_, flow.targetIp_)] = flow;
 	}
 
-	virtualMac_ = propVirtualMac_.isClean() ? intf_->mac() : propVirtualMac_;
+	myMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
 
 	sendArpInfectAll();
 
@@ -135,7 +135,7 @@ void GArpSpoof::run() {
 
 		Q_ASSERT(ethHdr != nullptr);
 		// attacker sending packet?
-		if (ethHdr->smac() == virtualMac_) continue;
+		if (ethHdr->smac() == myMac_) continue;
 
 		switch (packet.ethHdr_->type()) {
 			case GEthHdr::Arp: {
@@ -166,7 +166,7 @@ void GArpSpoof::run() {
 				Flow& flow = it.value();
 				ethHdr->dmac_ = flow.targetMac_;
 				emit captured(&packet);
-				ethHdr->smac_ = virtualMac_;
+				ethHdr->smac_ = myMac_;
 				if (!packet.ctrl.block_) {
 					res = relay(&packet);
 					if (res != GPacket::Ok) {
@@ -218,7 +218,7 @@ bool GArpSpoof::sendArp(Flow* flow, bool infect) {
 	GEthArpHdr sendPacket;
 
 	sendPacket.ethHdr_.dmac_ = flow->senderMac_;
-	sendPacket.ethHdr_.smac_ = virtualMac_;
+	sendPacket.ethHdr_.smac_ = myMac_;
 	sendPacket.ethHdr_.type_ = htons(GEthHdr::Arp);
 
 	sendPacket.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
@@ -226,7 +226,7 @@ bool GArpSpoof::sendArp(Flow* flow, bool infect) {
 	sendPacket.arpHdr_.hln_ = sizeof(GMac);
 	sendPacket.arpHdr_.pln_ = sizeof(GIp);
 	sendPacket.arpHdr_.op_ = htons(GArpHdr::Reply);
-	sendPacket.arpHdr_.smac_ = infect ? virtualMac_ : flow->targetMac_; // infect(true) or recover(false)
+	sendPacket.arpHdr_.smac_ = infect ? myMac_ : flow->targetMac_; // infect(true) or recover(false)
 	sendPacket.arpHdr_.sip_ = htonl(flow->targetIp_);
 	sendPacket.arpHdr_.tmac_ = flow->senderMac_;
 	sendPacket.arpHdr_.tip_ = htonl(flow->senderIp_);

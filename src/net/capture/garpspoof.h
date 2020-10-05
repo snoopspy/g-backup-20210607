@@ -53,8 +53,8 @@ struct G_EXPORT GArpSpoof : GPcapDevice {
 	Q_PROPERTY(GObjRefArrayPtr flows READ getFlows)
 
 	GObjRefArrayPtr getFlows() { return &propFlows_; }
-	QString getVirtualMac() { return QString(propVirtualMac_); }
-	void setVirtualMac(QString value) { propVirtualMac_ = value; }
+	QString getVirtualMac() { return QString(virtualMac_); }
+	void setVirtualMac(QString value) { virtualMac_ = value; }
 
 public:
 	Q_INVOKABLE GArpSpoof(QObject* parent = nullptr);
@@ -73,7 +73,7 @@ protected:
 	void run() override;
 
 public:
-	GMac propVirtualMac_{GMac::cleanMac()};
+	GMac virtualMac_{GMac::cleanMac()};
 	GDuration infectInterval_{1000};
 	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
@@ -93,7 +93,7 @@ protected:
 	FlowMap flowMap_; // for relay
 
 	GAtm atm_;
-	GMac virtualMac_{GMac::cleanMac()};
+	GMac myMac_{GMac::cleanMac()};
 
 	struct InfectThread : GThread {
 		InfectThread(GArpSpoof* arpSpoof) : GThread(arpSpoof), arpSpoof_(arpSpoof) {}
