@@ -21,6 +21,21 @@ struct G_EXPORT GPluginFactory : GGraph::Factory {
 	GPluginFactory(QObject* parent = nullptr);
 	~GPluginFactory() override;
 
+public:
+	void loadDefault();
+
+protected:
+	void loadBlock();
+	void loadCapture();
+	void loadDelay();
+	void loadExtract();
+	void loadFilter();
+	void loadFlow();
+	void loadOther();
+	void loadProcess();
+	void loadWrite();
+
+public:
 	void load(QString folder);
 
 protected:

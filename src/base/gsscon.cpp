@@ -55,7 +55,6 @@ bool GSsCon::execFactory(GPluginFactory* pluginFactory) {
 
 	if (pluginFactory == nullptr) {
 		pluginFactory = &GPluginFactory::instance();
-		pluginFactory->load("plugin");
 	}
 	graph_.setFactory(pluginFactory);
 

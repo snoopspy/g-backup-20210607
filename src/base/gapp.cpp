@@ -58,7 +58,6 @@ bool GApp::execGraphFactory(GGraph* graph, GPluginFactory* pluginFactory) {
 
 	if (pluginFactory == nullptr) {
 		pluginFactory = &GPluginFactory::instance();
-		pluginFactory->load("plugin");
 	}
 	graph->setFactory(pluginFactory);
 
