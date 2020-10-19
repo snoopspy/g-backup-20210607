@@ -1,33 +1,42 @@
 #include "base/gerr.h"
 #include "gip.h"
+#include <cstdlib> // for atoi
 
 // ----------------------------------------------------------------------------
 // GIp
 // ----------------------------------------------------------------------------
 GIp::GIp(const QString& rhs) {
 	std::string s = rhs.toStdString();
-	char* p = pchar(s.c_str());
-	int res = inet_pton(AF_INET, p, &ip_);
+	const char* p = s.c_str();
+
+#ifdef Q_OS_WIN
+	LONG res = RtlIpv4StringToAddressA(p, true, nullptr, reinterpret_cast<IN_ADDR*>(&ip_)) ;
+	if (res != 0/*STATUS_SUCCESS*/) {
+		qWarning() << "RtlIpv4StringToAddressA return" << res;
+		ip_ = 0;
+	}
+#endif
+
+
+	int res = inet_pton(AF_INET6, p, &ip6_);
 	switch (res) {
-		case 0:
-			qWarning() << "inet_pton return zero ip=" << rhs;
-			break;
-		case 1: // succeed
-			ip_ = ntohl(ip_);
-			break;
-		default:
-			qWarning() << "inet_pton return " << res << " " << GLastErr();
+	case 0:
+		qWarning() << "inet_pton return zero ip=" << rhs;
+		break;
+	case 1: // succeed
+		break;
+	default:
+		qWarning() << "inet_pton return " << res << " " << GLastErr();
 	}
 }
 
 GIp::operator QString() const {
-	uint32_t ip = htonl(ip_);
 	char s[INET_ADDRSTRLEN];
-	const char* res = inet_ntop(AF_INET, &ip, s, INET_ADDRSTRLEN);
-	if (res == nullptr) {
-		qWarning() << "inet_ntop return null " << GLastErr();
-		return QString();
-	}
+	sprintf(s, "%d.%d.%d.%d",
+	(ip_ & 0xFF000000) >> 24,
+	(ip_ & 0x00FF0000) >> 16,
+	(ip_ & 0x0000FF00) >> 8,
+	(ip_ & 0x000000FF) >> 0);
 	return QString(s);
 }
 

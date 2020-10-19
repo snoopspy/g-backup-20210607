@@ -16,6 +16,9 @@
 // GIp
 // ----------------------------------------------------------------------------
 struct G_EXPORT GIp final {
+public:
+	static constexpr int SIZE = 4;
+
 protected:
 	uint32_t ip_;
 

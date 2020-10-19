@@ -37,7 +37,7 @@ protected:
 	typedef __sighandler_t Handler;
 #endif
 #ifdef Q_OS_WIN
-	typedef _crt_signal_t Handler;
+	typedef __p_sig_fn_t Handler;
 #endif
 	typedef QHash<int, Handler> Handlers;
 	Handlers handlers_;

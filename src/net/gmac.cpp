@@ -6,7 +6,7 @@
 GMac::GMac(const QString& rhs) {
 	std::string s = rhs.toStdString();
 	gbyte* p = pbyte(s.c_str());
-	for (int i = 0 ; i < SIZE; i++) {
+	for (int i = 0; i < SIZE; i++) {
 		gbyte ch1 = *p++;
 		if (ch1 >= 'a')
 			ch1 = ch1 - 'a' + 10;

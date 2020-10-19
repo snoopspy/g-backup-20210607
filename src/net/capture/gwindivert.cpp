@@ -109,7 +109,6 @@ bool GWinDivert::doOpen() {
 			case ERROR_INVALID_PARAMETER:  msg = "ERROR_INVALID_PARAMETER";     break;
 			case ERROR_FILE_NOT_FOUND:     msg = "ERROR_FILE_NOT_FOUND";        break;
 			case ERROR_ACCESS_DENIED:      msg = "ERROR_ACCESS_DENIED";         break;
-			case ERROR_INVALID_IMAGE_HASH: msg = "ERROR_INVALID_IMAGE_HASH";    break;
 			default:                       msg = QString("unknown error %1").arg(lastError); break;
 		}
 		SET_ERR(GErr::FAIL, QString("error in WinDivertOpen %1").arg(msg));
