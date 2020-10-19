@@ -8,14 +8,17 @@ GIp6::GIp6(const QString& rhs) {
 	std::string s = rhs.toStdString();
 	char* p = pchar(s.c_str());
 	int res = inet_pton(AF_INET6, p, &ip6_);
-	switch (res) {
-		case 0:
-			qWarning() << "inet_pton return zero ip=" << rhs;
-			break;
-		case 1: // succeed
-			break;
-		default:
-			qWarning() << "inet_pton return " << res << " " << GLastErr();
+	if (res == 1) { // succeed
+	} else { // fail
+		switch (res) {
+			case 0:
+				qWarning() << "inet_pton return zero ip=" << rhs;
+				break;
+			default:
+				qWarning() << "inet_pton return " << res << " " << GLastErr();
+				break;
+		}
+		memset(ip6_, 0, SIZE);
 	}
 }
 
