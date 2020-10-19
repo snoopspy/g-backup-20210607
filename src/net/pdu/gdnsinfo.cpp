@@ -198,7 +198,7 @@ QByteArray GDnsInfo::encodeName(QString name) {
 		QString label = labels.at(i);
 		uint8_t size = label.size();
 		res.append((const char*)&size, sizeof(uint8_t));
-		res += label;
+		res += label.toLatin1();
 	}
 	res.append((char)0x00);
 

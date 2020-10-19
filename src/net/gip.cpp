@@ -7,27 +7,31 @@
 // ----------------------------------------------------------------------------
 GIp::GIp(const QString& rhs) {
 	std::string s = rhs.toStdString();
-	const char* p = s.c_str();
+	char* p = pchar(s.c_str());
 
+#ifdef Q_OS_LINUX
+	int res = inet_pton(AF_INET, p, &ip_);
+	if (res == 1) { // succeed
+		ip_ = ntohl(ip_);
+	} else { // fail
+		switch (res) {
+			case 0:
+				qWarning() << "inet_pton return zero ip=" << rhs;
+				break;
+			default:
+				qWarning() << "inet_pton return " << res << " " << GLastErr();
+				break;
+		}
+		ip_ = 0;
+	}
+#endif // Q_OS_LINUX
 #ifdef Q_OS_WIN
 	LONG res = RtlIpv4StringToAddressA(p, true, nullptr, reinterpret_cast<IN_ADDR*>(&ip_)) ;
 	if (res != 0/*STATUS_SUCCESS*/) {
 		qWarning() << "RtlIpv4StringToAddressA return" << res;
 		ip_ = 0;
 	}
-#endif
-
-
-	int res = inet_pton(AF_INET6, p, &ip6_);
-	switch (res) {
-	case 0:
-		qWarning() << "inet_pton return zero ip=" << rhs;
-		break;
-	case 1: // succeed
-		break;
-	default:
-		qWarning() << "inet_pton return " << res << " " << GLastErr();
-	}
+#endif // Q_OS_LINUX
 }
 
 GIp::operator QString() const {

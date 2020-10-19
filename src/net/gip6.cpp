@@ -8,26 +8,41 @@
 GIp6::GIp6(const QString& rhs) {
 	std::string s = rhs.toStdString();
 	char* p = pchar(s.c_str());
+
+#ifdef Q_OS_LINUX
 	int res = inet_pton(AF_INET6, p, &ip6_);
-	switch (res) {
-		case 0:
-			qWarning() << "inet_pton return zero ip=" << rhs;
-			break;
-		case 1: // succeed
-			break;
-		default:
-			qWarning() << "inet_pton return " << res << " " << GLastErr();
+	if (res == 1) { // succeed
+	} else { // fail
+		switch (res) {
+			case 0:
+				qWarning() << "inet_pton return zero ip=" << rhs;
+				break;
+			default:
+				qWarning() << "inet_pton return " << res << " " << GLastErr();
+				break;
+		}
+		memset(ip6_, 0, SIZE);
 	}
+#endif // Q_OS_LINUX
+#ifdef Q_OS_WIN
+	(void)s;(void)p;
+#endif // Q_OS_LINUX
 }
 
 GIp6::operator QString() const {
 	char s[INET6_ADDRSTRLEN];
+#ifdef Q_OS_LINUX
 	const char* res = inet_ntop(AF_INET6, &ip6_, s, INET6_ADDRSTRLEN);
 	if (res == nullptr) {
 		qWarning() << "inet_ntop return null " << GLastErr();
 		return QString();
 	}
 	return QString(s);
+#endif // Q_OS_LINUX
+#ifdef Q_OS_WIN
+	(void)s;
+	return QString(); // gilgil temp
+#endif // Q_OS_WIN
 }
 
 // ----------------------------------------------------------------------------

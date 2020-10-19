@@ -1,9 +1,6 @@
 #include "gipforwardtable.h"
 #include <QDebug>
 
-#pragma comment(lib, "iphlpapi.lib")
-#pragma comment(lib, "ws2_32.lib")
-
 // ----------------------------------------------------------------------------
 // GIpForwardTable
 // ----------------------------------------------------------------------------
