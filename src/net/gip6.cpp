@@ -1,6 +1,5 @@
 #include "base/gerr.h"
 #include "gip6.h"
-#include <wsipv6ok.h>
 
 // ----------------------------------------------------------------------------
 // GIp6
@@ -30,8 +29,8 @@ GIp6::GIp6(const QString& rhs) {
 }
 
 GIp6::operator QString() const {
-	char s[INET6_ADDRSTRLEN];
 #ifdef Q_OS_LINUX
+	char s[INET6_ADDRSTRLEN];
 	const char* res = inet_ntop(AF_INET6, &ip6_, s, INET6_ADDRSTRLEN);
 	if (res == nullptr) {
 		qWarning() << "inet_ntop return null " << GLastErr();
@@ -40,8 +39,7 @@ GIp6::operator QString() const {
 	return QString(s);
 #endif // Q_OS_LINUX
 #ifdef Q_OS_WIN
-	(void)s;
-	return QString(); // gilgil temp
+	return QString(); // gilgil temp 2010.10.20
 #endif // Q_OS_WIN
 }
 

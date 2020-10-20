@@ -7,40 +7,21 @@
 // ----------------------------------------------------------------------------
 GIp::GIp(const QString& rhs) {
 	std::string s = rhs.toStdString();
-	char* p = pchar(s.c_str());
-
-#ifdef Q_OS_LINUX
-	int res = inet_pton(AF_INET, p, &ip_);
-	if (res == 1) { // succeed
-		ip_ = ntohl(ip_);
-	} else { // fail
-		switch (res) {
-			case 0:
-				qWarning() << "inet_pton return zero ip=" << rhs;
-				break;
-			default:
-				qWarning() << "inet_pton return " << res << " " << GLastErr();
-				break;
-		}
+	pbyte p = pbyte(&ip_);
+	int res = sscanf(s.c_str(), "%hhu.%hhu.%hhu.%hhu", &p[0], &p[1], &p[2], &p[3]);
+	if (res != SIZE) {
+		qWarning() << QString("sscanf(%1) return %2").arg(rhs).arg(res);
 		ip_ = 0;
 	}
-#endif // Q_OS_LINUX
-#ifdef Q_OS_WIN
-	LONG res = RtlIpv4StringToAddressA(p, true, nullptr, reinterpret_cast<IN_ADDR*>(&ip_)) ;
-	if (res != 0/*STATUS_SUCCESS*/) {
-		qWarning() << "RtlIpv4StringToAddressA return" << res;
-		ip_ = 0;
-	}
-#endif // Q_OS_LINUX
 }
 
 GIp::operator QString() const {
 	char s[INET_ADDRSTRLEN];
 	sprintf(s, "%d.%d.%d.%d",
-	(ip_ & 0xFF000000) >> 24,
-	(ip_ & 0x00FF0000) >> 16,
-	(ip_ & 0x0000FF00) >> 8,
-	(ip_ & 0x000000FF) >> 0);
+		(ip_ & 0xFF000000) >> 24,
+		(ip_ & 0x00FF0000) >> 16,
+		(ip_ & 0x0000FF00) >> 8,
+		(ip_ & 0x000000FF) >> 0);
 	return QString(s);
 }
 

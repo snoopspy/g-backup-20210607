@@ -4,60 +4,28 @@
 // GMac
 // ----------------------------------------------------------------------------
 GMac::GMac(const QString& rhs) {
-	std::string s = rhs.toStdString();
-	gbyte* p = pbyte(s.c_str());
-	for (int i = 0; i < SIZE; i++) {
-		gbyte ch1 = *p++;
-		if (ch1 >= 'a')
-			ch1 = ch1 - 'a' + 10;
-		else
-			if (ch1 >= 'A')
-				ch1 = ch1 - 'A' + 10;
-			else
-				ch1 = ch1 - '0';
-		gbyte ch2 = *p++;
-		if (ch2 >= 'a')
-			ch2 = ch2 - 'a' + 10;
-		else if (ch2 >= 'A')
-			ch2 = ch2 - 'A' + 10;
-		else
-			ch2 = ch2 - '0';
-		mac_[i] = static_cast<gbyte>((ch1 << 4) + ch2);
-		while (*p == '-' || *p == ':') p++;
+	std::string s;
+	for (QChar ch : rhs) {
+		if ((ch >= '0' && ch <= '9') || (ch >= 'A' && ch <= 'F') || (ch >= 'a' && ch <= 'f'))
+			s += ch.toLatin1();
+	}
+	int res = sscanf(s.c_str(), "%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx", &mac_[0], &mac_[1], &mac_[2], &mac_[3], &mac_[4], &mac_[5]);
+	if (res != SIZE) {
+		qWarning() << QString("sscanf(%1) return %2").arg(rhs).arg(res);
+		memset(mac_, 0, SIZE);
 	}
 }
 
 GMac::operator QString() const {
-	gbyte ch1, ch2;
-	int i, index;
-	char buf[SIZE * 3]; // enough size
-
-	index = 0;
-	for (i = 0; i < SIZE; i++) {
-		ch1 = mac_[i] & 0xF0;
-		ch1 = ch1 >> 4;
-		if (ch1 > 9)
-			ch1 = ch1 + 'A' - 10;
-		else
-			ch1 = ch1 + '0';
-		ch2 = mac_[i] & 0x0F;
-		if (ch2 > 9)
-			ch2 = ch2 + 'A' - 10;
-		else
-			ch2 = ch2 + '0';
-		buf[index++] = char(ch1);
-		buf[index++] = char(ch2);
-		if (i == 2)
-			buf[index++] = '-';
-	}
-	buf[index] = '\0';
-	return (QString(reinterpret_cast<char*>(buf)));
+	char s[20]; // enough size
+	sprintf(s, "%02X%02X%02X-%02X%02X%02X", mac_[0], mac_[1], mac_[2], mac_[3], mac_[4], mac_[5]);
+	return QString(s);
 }
 
 GMac GMac::randomMac() {
 	GMac res;
 	for (int i = 0; i < SIZE; i++)
-		res.mac_[i] = static_cast<gbyte>(rand() % 256);
+		res.mac_[i] = gbyte(rand() % 256);
 	res.mac_[0] &= 0x7F;
 	return res;
 }
