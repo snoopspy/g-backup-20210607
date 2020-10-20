@@ -6,7 +6,7 @@ DEFINES += G_BUILD
 include(../g.pri)
 TARGET = $${G_NAME}-test
 linux: LIBS *= -lpcap -lnetfilter_queue
-android-g++: LIBS *= -lmnl -lnfnetlink
+android: LIBS *= -lmnl -lnfnetlink
 DESTDIR = $${PWD}/../bin
 include(libg-files.pri)
 DEFINES *= GTEST
