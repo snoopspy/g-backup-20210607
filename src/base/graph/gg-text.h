@@ -26,7 +26,7 @@
 struct G_EXPORT GGText : QGraphicsTextItem {
 public:
 	enum { Type = UserType + 5 };
-	int type() const { return Type; }
+	int type() const override { return Type; }
 
 public:
 	GGText(GGraph::Node* node);
