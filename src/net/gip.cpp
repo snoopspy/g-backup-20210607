@@ -12,7 +12,9 @@ GIp::GIp(const QString& rhs) {
 	if (res != SIZE) {
 		qWarning() << QString("sscanf(%1) return %2").arg(rhs).arg(res);
 		ip_ = 0;
+		return;
 	}
+	ip_ = ntohl(ip_);
 }
 
 GIp::operator QString() const {
