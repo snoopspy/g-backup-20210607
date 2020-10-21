@@ -15,7 +15,7 @@ DEFINES *= QT_MESSAGELOGCONTEXT
 # G_NAME
 #------------------------------------------------------------------------------
 G_NAME = g
-android: G_NAME = $${G_NAME}-android
+# android: G_NAME = $${G_NAME}-android # gilgil temp 2020.10.21
 CONFIG(qt): contains(QT, gui) G_NAME = $${G_NAME}-gui
 CONFIG(debug, debug|release) G_NAME = $${G_NAME}-d
 
@@ -26,7 +26,8 @@ G_DIR = $${PWD}
 INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
 	win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.dll
-	# linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
+	android: G_NAME = $${G_NAME}_armeabi-v7a
+	linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
 	LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
 	ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
 }
