@@ -68,7 +68,7 @@ GNetIntfs::GNetIntfs() {
 
 	int i = pcap_findalldevs(&allDevs_, errBuf);
 	if (i != 0) { // if error occured
-		qWarning() << QString("error in pcap_findalldevs_ex (%s)").arg(errBuf);
+		qWarning() << QString("error in pcap_findalldevs_ex (%1)").arg(errBuf);
 		return;
 	}
 
