@@ -11,8 +11,8 @@ DESTDIR = $${PWD}/../bin
 include(libg-files.pri)
 DEFINES *= GTEST
 win32 {
-	INCLUDEPATH *= $${PWD}/../../gtest/include
-	LIBS *= -L$${PWD}/../../gtest/lib
+	INCLUDEPATH *= $${PWD}/../../gtest/googletest/include
+	LIBS *= -L$${PWD}/../../gtest/googletest/lib
 	CONFIG(debug, debug|release) LIBS *= -lgtest_maind -lgtestd
 	CONFIG(release, debug|release) LIBS *= -lgtest_main -lgtest
 }
