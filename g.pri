@@ -57,9 +57,8 @@ win32 {
 	LIBS *= -L$${PWD}/../npcap/Lib/x64
 	LIBS *= -lwpcap -lpacket -lws2_32 -liphlpapi
 }
-linux {
-	INCLUDEPATH *= $${PWD}/../android-build/pcap/sysroot/include
-	LIBS *= -L$${PWD}/../android-build/pcap/sysroot/lib
-	INCLUDEPATH *= $${PWD}/../android-build/netfilter/sysroot/include
-	LIBS *= -L$${PWD}/../android-build/netfilter/sysroot/lib
+android {
+	HOME=$$system(echo $HOME)
+	INCLUDEPATH *= $$HOME/android/sysroot/include
+	LIBS *= $$HOME/android/sysroot/lib
 }
