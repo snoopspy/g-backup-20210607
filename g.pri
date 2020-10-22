@@ -60,5 +60,5 @@ win32 {
 android {
 	HOME=$$system(echo $HOME)
 	INCLUDEPATH *= $$HOME/android/sysroot/include
-	LIBS *= $$HOME/android/sysroot/lib
+	LIBS *= -L$$HOME/android/sysroot/lib
 }
