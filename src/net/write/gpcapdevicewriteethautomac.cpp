@@ -69,7 +69,7 @@ bool GPcapDeviceWriteEthAutoMac::doClose() {
 GPacket::Result GPcapDeviceWriteEthAutoMac::writeEth(GPacket* packet) {
 	GBuf oldBuf = packet->buf_;
 	GBuf newBuf;
-	GEthHdr* ethHdr;
+	GEthHdr* ethHdr = nullptr; // for remove warning
 	switch (packet->dataLinkType()) {
 		case GPacket::Eth:
 			newBuf = packet->buf_;

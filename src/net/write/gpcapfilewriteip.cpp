@@ -21,7 +21,7 @@ bool GPcapFileWriteIp::doClose() {
 }
 
 GPacket::Result GPcapFileWriteIp::write(GPacket* packet) {
-	GPacket::Result res;
+	GPacket::Result res = GPacket::Ok; // for remove warning
 	switch (packet->dataLinkType()) {
 		case GPacket::Eth: {
 			GBuf oldBuf = packet->buf_;

@@ -25,7 +25,7 @@ bool GPcapFileWriteEth::doClose() {
 GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
 	GBuf oldBuf = packet->buf_;
 	GBuf newBuf;
-	GEthHdr* ethHdr;
+	GEthHdr* ethHdr = nullptr; // for remove warning
 	switch (packet->dataLinkType()) {
 		case GPacket::Eth:
 			newBuf = packet->buf_;
