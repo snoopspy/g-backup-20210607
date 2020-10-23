@@ -4,7 +4,9 @@ SUBDIRS += \
 	netinfo \
 	netserver \
 	pcap-exam \
-	pcap-findalldevs-test
+	pcap-findalldevs-test \
+	snoopspy \
+	sscon
 win32 {
 SUBDIRS += \
 	getipforwardtable-test \
