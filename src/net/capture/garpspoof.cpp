@@ -56,9 +56,9 @@ bool GArpSpoof::doOpen() {
 		Flow flow(senderIp, senderMac, targetIp, targetMac);
 		flowList_.push_back(flow);
 		if (atm_.find(senderIp) == atm_.end())
-			atm_[flow.senderIp_] = flow.senderMac_;
+			atm_.insert(flow.senderIp_, flow.senderMac_);
 		if (atm_.find(targetIp) == atm_.end())
-			atm_[flow.targetIp_] = flow.targetMac_;
+			atm_.insert(flow.targetIp_, flow.targetMac_);
 	}
 
 	GSyncPcapDevice device;
@@ -85,10 +85,15 @@ bool GArpSpoof::doOpen() {
 	flowMap_.clear();
 	for(Flow& flow: flowList_) {
 		if (flow.senderMac_.isClean())
-			flow.senderMac_ = atm_[flow.senderIp_];
+			flow.senderMac_ = atm_.find(flow.senderIp_).value();
 		if (flow.targetMac_.isClean())
-			flow.targetMac_ = atm_[flow.targetIp_];
-		flowMap_[GFlow::IpFlowKey(flow.senderIp_, flow.targetIp_)] = flow;
+			flow.targetMac_ = atm_.find(flow.targetIp_).value();
+		GFlow::IpFlowKey ipFlowKey(flow.senderIp_, flow.targetIp_);
+		FlowMap::iterator it = flowMap_.find(ipFlowKey);
+		if (it == flowMap_.end())
+			flowMap_.insert(ipFlowKey, flow);
+		else
+			*it = flow;
 	}
 
 	myMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
