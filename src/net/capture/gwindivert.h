@@ -23,7 +23,7 @@ struct G_EXPORT GWinDivert : GCapture {
 	Q_PROPERTY(QString filter MEMBER filter_)
 	Q_PROPERTY(qint16 priority MEMBER priority_)
 	Q_PROPERTY(int layer MEMBER layer_)
-	Q_PROPERTY(qint16 flags_ MEMBER flags_)
+	Q_PROPERTY(quint64 flags_ MEMBER flags_)
 	Q_PROPERTY(quint64 queueLen_ MEMBER queueLen_)
 	Q_PROPERTY(quint64 queueTime_ MEMBER queueTime_)
 	Q_PROPERTY(int tos MEMBER tos_)

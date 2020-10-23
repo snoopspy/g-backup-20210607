@@ -97,7 +97,7 @@ bool GWinDivert::doOpen() {
 	GWinDivertLib& lib = GWinDivertLib::instance();
 	if (!lib.ok) {
 		SET_ERR(GErr::FAIL, lib.lib_->errorString())
-				return false;
+		return false;
 	}
 
 	handle_ = lib.WinDivertOpen(qPrintable(filter_), WINDIVERT_LAYER(layer_), priority_, flags_);
