@@ -55,8 +55,8 @@ void GPropWidget::init() {
 
 void GPropWidget::setObject(QObject* object) {
 	if (object == object_) return;
-	object_ = object;
 	clear();
+	object_ = object;
 	if (object == nullptr) return;
 
 	GProp* prop = dynamic_cast<GProp*>(object_);
@@ -75,7 +75,7 @@ void GPropWidget::setObject(QObject* object) {
 }
 
 void GPropWidget::update() {
-	QObjectList list = children();
+	QObjectList list = treeWidget_->children();
 	for (QObject* object: list) {
 		GPropItem* item = dynamic_cast<GPropItem*>(object);
 		if (item != nullptr)
@@ -86,7 +86,7 @@ void GPropWidget::update() {
 }
 
 void GPropWidget::clear() {
-	QObjectList list = children();
+	QObjectList list = treeWidget_->children();
 	for (QObject* object: list) {
 		GPropItem* item = dynamic_cast<GPropItem*>(object);
 		if (item != nullptr)
