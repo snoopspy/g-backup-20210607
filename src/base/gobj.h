@@ -42,7 +42,7 @@ public:
 	static bool disconnect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot);
 
 public:
-	static QObject* createInstance(QString className);
+	static GObj* createInstance(QString className, QObject* parent);
 };
 
 // ----------------------------------------------------------------------------
@@ -113,6 +113,18 @@ struct GObjRefArray : _GObjRefArray {
 			delete obj;
 		_GObjRefArray::clear();
 	}
+};
+
+// ----------------------------------------------------------------------------
+// GObjList
+// ----------------------------------------------------------------------------
+struct GObjList : GObj, QList<GObj*> {
+	GObjList(QObject* parent = nullptr);
+	~GObjList() override;
+
+	void clear();
+	void propLoad(QJsonObject jo) override;
+	void propSave(QJsonObject& jo) override;
 };
 
 // ----------------------------------------------------------------------------

@@ -36,7 +36,7 @@ void GGScene::clear() {
 	QGraphicsScene::clear();
 }
 
-GGText* GGScene::createText(GGraph::Node* node, QPointF pos) {
+GGText* GGScene::createText(GObj* node, QPointF pos) {
 	GGText* text = new GGText(node);
 	text->setPlainText(node->objectName());
 	addItem(text);
@@ -78,7 +78,7 @@ GGText* GGScene::findTextByObjectName(QString objectName) {
 void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	switch (m_mode) {
 		case InsertItem: {
-			GGraph::Node* newNode = graphWidget_->createNodeIfItemNodeSelected();
+			GObj* newNode = graphWidget_->createNodeIfItemNodeSelected();
 			if (newNode != nullptr) {
 				createText(newNode, event->scenePos());
 			}

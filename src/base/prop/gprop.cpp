@@ -99,7 +99,7 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
 		if (graph != nullptr) {
 			QString s = variant.toString();
 			if (s != "") {
-				GGraph::Node* node = graph->nodes_.findNode(s);
+				GObj* node = graph->nodes_.findNode(s);
 				if (node != nullptr) {
 					GObjPtr objPtr = node;
 					res = object->setProperty(propName, QVariant::fromValue<GObjPtr>(objPtr));

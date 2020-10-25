@@ -4,50 +4,12 @@
 // ----------------------------------------------------------------------------
 // GGraph::Nodes
 // ----------------------------------------------------------------------------
-GGraph::Node* GGraph::Nodes::findNode(QString objectName) {
-	for (GGraph::Node* node: *this) {
+GObj* GGraph::Nodes::findNode(QString objectName) {
+	for (GGraph::GObj* node: *this) {
 		if (node->objectName() == objectName)
 			return node;
 	}
 	return nullptr;
-}
-
-void GGraph::Nodes::clear() {
-	for (GGraph::Node* node: *this) {
-		delete node;
-	}
-	QList::clear();
-}
-
-void GGraph::Nodes::load(GGraph* graph, QJsonArray ja) {
-	clear();
-	for (QJsonValue jv: ja) {
-		QJsonObject nodeJo = jv.toObject();
-		QString className = nodeJo["_class"].toString();
-		if (className == "") {
-			qWarning() << QString("className is empty");
-			continue;
-		}
-		GGraph::Node* node = GGraph::createInstance(className);
-		if (node == nullptr) {
-			qWarning() << QString("GGraph::createInstance(%1) return null").arg(className);
-			continue;
-		}
-		node->setParent(graph);
-		node->propLoad(nodeJo);
-		append(node);
-	}
-}
-
-void GGraph::Nodes::save(QJsonArray& ja) {
-	ja = QJsonArray(); // clear
-	for (GGraph::Node* node: *this) {
-		QJsonObject nodeJo;
-		node->propSave(nodeJo);
-		QString className = node->metaObject()->className();
-		nodeJo["_class"] = className;
-		ja.append(nodeJo);
-	}
 }
 
 // ----------------------------------------------------------------------------
@@ -60,20 +22,23 @@ void GGraph::Connections::clear() {
 	QList::clear();
 }
 
-void GGraph::Connections::load(GGraph* graph, QJsonArray ja) {
+void GGraph::Connections::propLoad(QJsonObject jo) {
 	clear();
+	QJsonArray ja = jo["connections"].toArray();
+	GGraph* graph = dynamic_cast<GGraph*>(parent());
+	Q_ASSERT(graph != nullptr);
 	for (QJsonValue jv: ja) {
 		QJsonObject connectionJo = jv.toObject();
 
 		QString senderObjectName = connectionJo["sender"].toString();
-		GGraph::Node* sender = graph->nodes_.findNode(senderObjectName);
+		GObj* sender = graph->nodes_.findNode(senderObjectName);
 		if (sender == nullptr) {
 			qWarning() << QString("can not find node for %1").arg(senderObjectName);
 			continue;
 		}
 		QString signal = connectionJo["signal"].toString();
 		QString receiverObjectName = connectionJo["receiver"].toString();
-		GGraph::Node* receiver = graph->nodes_.findNode(receiverObjectName);
+		GObj* receiver = graph->nodes_.findNode(receiverObjectName);
 		if (receiver == nullptr) {
 			qWarning() << QString("can not find node for %1").arg(receiverObjectName);
 			continue;
@@ -92,8 +57,8 @@ void GGraph::Connections::load(GGraph* graph, QJsonArray ja) {
 	}
 }
 
-void GGraph::Connections::save(QJsonArray& ja) {
-	ja = QJsonArray(); // clear
+void GGraph::Connections::propSave(QJsonObject& jo) {
+	QJsonArray ja;
 	for (Connection* connection: *this) {
 		QJsonObject connectionJo;
 		connectionJo["sender"] = connection->sender_->objectName();
@@ -102,6 +67,7 @@ void GGraph::Connections::save(QJsonArray& ja) {
 		connectionJo["slot"] = connection->slot_;
 		ja.append(connectionJo);
 	}
+	jo["connections"] = ja;
 }
 
 // ----------------------------------------------------------------------------
@@ -121,8 +87,8 @@ GGraph::Factory::~Factory() {
 // ----------------------------------------------------------------------------
 bool GGraph::doOpen() {
 	GThreadMgr::suspendStart();
-	for (Node* node: nodes_) {
-		GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
+	for (GObj* obj: nodes_) {
+		GStateObj* stateObj = dynamic_cast<GStateObj*>(obj);
 		if (stateObj != nullptr) {
 			if (closeGraphOnNodeClosed_)
 				QObject::connect(stateObj, &GStateObj::closed, this, &GGraph::stop);
@@ -146,8 +112,8 @@ bool GGraph::doOpen() {
 }
 
 bool GGraph::doClose() {
-	for (Node* node: nodes_) {
-		GStateObj* stateObj = dynamic_cast<GStateObj*>(node);
+	for (GObj* obj: nodes_) {
+		GStateObj* stateObj = dynamic_cast<GStateObj*>(obj);
 		if (stateObj != nullptr) {
 			if (closeGraphOnNodeClosed_)
 				QObject::disconnect(stateObj, &GStateObj::closed, this, &GGraph::stop);
@@ -155,16 +121,6 @@ bool GGraph::doClose() {
 		}
 	}
 	return true;
-}
-
-GGraph::Node* GGraph::createInstance(QString className) {
-	QObject* obj = GObj::createInstance(className);
-	if (obj == nullptr) return nullptr;
-	Node* node = dynamic_cast<Node*>(obj);
-	if (node == nullptr) {
-		qWarning() << QString("dynamic_cast<Node*> failed for (%1)").arg(className);
-	}
-	return node;
 }
 
 void GGraph::clear() {
@@ -181,14 +137,11 @@ void GGraph::stop() {
 }
 
 void GGraph::propLoad(QJsonObject jo) {
-	nodes_.load(this, jo["nodes"].toArray());
-	connections_.load(this, jo["connections"].toArray());
+	jo["nodes"] >> nodes_;
+	jo["connections"] >> connections_;
 }
 
 void GGraph::propSave(QJsonObject& jo) {
-	QJsonArray ja;
-	nodes_.save(ja);
-	jo["nodes"] = ja;
-	connections_.save(ja);
-	jo["connections"] = ja;
+	jo["nodes"] << nodes_;
+	jo["connections"] << connections_;
 }

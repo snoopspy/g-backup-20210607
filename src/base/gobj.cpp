@@ -95,7 +95,7 @@ bool GObj::disconnect(QObject *sender, const QMetaMethod &signal, QObject *recei
 	return GObj::disconnect(sender, baSignal.data(), receiver, baSlot.data());
 }
 
-QObject* GObj::createInstance(QString className) {
+GObj* GObj::createInstance(QString className, QObject* parent) {
 	if (!className.endsWith('*'))
 		className += "*";
 	int id = QMetaType::type(qPrintable(className));
@@ -105,10 +105,65 @@ QObject* GObj::createInstance(QString className) {
 	}
 	const QMetaObject* mobj = QMetaType::metaObjectForType(id);
 	Q_ASSERT(mobj != nullptr);
-	QObject* obj = mobj->newInstance();
-	if (obj == nullptr) {
+	QObject* object = mobj->newInstance();
+	if (object == nullptr) {
 		qWarning() << QString("newInstance failed for (%1)").arg(className);
 		return nullptr;
 	}
+	GObj* obj = dynamic_cast<GObj*>(object);
+	if (obj == nullptr) {
+		qWarning() << QString("dynamic_cast<GObj*>(object) for %1 return null").arg(className);
+		delete object;
+	}
+	obj->setParent(parent);
 	return obj;
+}
+
+// ----------------------------------------------------------------------------
+// GObjList
+// ----------------------------------------------------------------------------
+GObjList::GObjList(QObject* parent) : GObj(parent) {
+}
+
+GObjList::~GObjList() {
+	clear();
+}
+
+void GObjList::clear() {
+	for (GObj* obj: *this) {
+		delete obj;
+		QList::clear();
+	}
+}
+
+void GObjList::propLoad(QJsonObject jo) {
+	clear();
+	QJsonArray ja = jo["objects"].toArray();
+	for (QJsonValue jv: ja) {
+		QJsonObject nodeJo = jv.toObject();
+		QString className = nodeJo["_class"].toString();
+		if (className == "") {
+			qWarning() << QString("className is empty");
+			continue;
+		}
+		GObj* obj =  GObj::createInstance(className, this);
+		if (obj == nullptr) {
+			qWarning() << QString("GObj::createInstance(%1) return null").arg(className);
+			continue;
+		}
+		obj->propLoad(nodeJo);
+		append(obj);
+	}
+}
+
+void GObjList::propSave(QJsonObject& jo) {
+	QJsonArray ja;
+	for (GObj* obj: *this) {
+		QJsonObject nodeJo;
+		obj->propSave(nodeJo);
+		QString className = obj->metaObject()->className();
+		nodeJo["_class"] = className;
+		ja.append(nodeJo);
+	}
+	jo["objects"] = ja;
 }

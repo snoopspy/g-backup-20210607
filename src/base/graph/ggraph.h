@@ -21,37 +21,35 @@ struct G_EXPORT GGraph : GStateObj {
 
 public:
 	// --------------------------------------------------------------------------
-	// GObj
-	// --------------------------------------------------------------------------
-	typedef GObj Node;
-
-	// --------------------------------------------------------------------------
 	// Nodes
 	// --------------------------------------------------------------------------
-	struct Nodes : public QList<Node*> {
-		void clear();
-		GGraph::Node* findNode(QString objectName);
-		void load(GGraph* graph, QJsonArray ja);
-		void save(QJsonArray& ja);
+	struct Nodes : public GObjList {
+		Nodes(QObject* parent = nullptr) : GObjList(parent) {}
+		~Nodes() override {}
+
+		GObj* findNode(QString objectName);
 	};
 
 	// --------------------------------------------------------------------------
 	// Connection
 	// --------------------------------------------------------------------------
 	struct Connection {
-		Node* sender_{nullptr};
+		GObj* sender_{nullptr};
 		QString signal_{""};
-		Node* receiver_{nullptr};
+		GObj* receiver_{nullptr};
 		QString slot_{""};
 	};
 
 	// --------------------------------------------------------------------------
 	// Connections
 	// --------------------------------------------------------------------------
-	struct Connections : QList<Connection*> {
+	struct Connections : GObj, QList<Connection*> {
+		Connections(QObject* parent = nullptr) : GObj(parent) {}
+		~Connections() override { clear(); }
+
 		void clear();
-		void load(GGraph* graph, QJsonArray ja);
-		void save(QJsonArray& ja);
+		void propLoad(QJsonObject jo) override;
+		void propSave(QJsonObject& jo) override;
 	};
 
 	// --------------------------------------------------------------------------
@@ -121,11 +119,8 @@ protected:
 	bool doClose() override;
 
 public:
-	static Node* createInstance(QString className);
-
-public:
-	Nodes nodes_;
-	Connections connections_;
+	Nodes nodes_{this};
+	Connections connections_{this};
 	bool closeGraphOnNodeClosed_{true};
 
 public slots:

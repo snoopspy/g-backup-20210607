@@ -29,7 +29,7 @@ public:
 	int type() const override { return Type; }
 
 public:
-	GGText(GGraph::Node* node);
+	GGText(GObj* node);
 	~GGText() override;
 
 public:
@@ -39,7 +39,7 @@ public:
 	void removeArrows();
 
 public:
-	GGraph::Node* node_;
+	GObj* node_;
 
 public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;

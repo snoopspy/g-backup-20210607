@@ -4,7 +4,7 @@
 #include "gg-scene.h"
 #include "ggraphwidget.h"
 
-GGText::GGText(GGraph::Node* node) {
+GGText::GGText(GObj* node) {
 	setFlag(QGraphicsItem::ItemIsMovable);
 	setFlag(QGraphicsItem::ItemIsSelectable);
 	node_ = node;

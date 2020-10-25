@@ -36,7 +36,7 @@ void GPropItemObjPtr::myCurrentIndexChanged(int index) {
 	GGraph* graph = dynamic_cast<GGraph*>(object_->parent());
 	if (graph != nullptr) {
 		QString key = comboBox_->currentText();
-		GGraph::Node* node = graph->nodes_.findNode(key);
+		GObj* node = graph->nodes_.findNode(key);
 		if (node != nullptr) {
 			GObjPtr objPtr = node;
 			bool res = object_->setProperty(this->mpro_.name(), QVariant::fromValue<GObjPtr>(objPtr));

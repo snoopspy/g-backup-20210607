@@ -49,8 +49,8 @@ protected:
 	void updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* parent);
 
 public:
-	GGraph::Node* createInstance(QString className);
-	GGraph::Node* createNodeIfItemNodeSelected();
+	GObj* createInstance(QString className);
+	GObj* createNodeIfItemNodeSelected();
 
 protected:
 	GGraph* graph_{nullptr};

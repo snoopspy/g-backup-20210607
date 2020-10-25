@@ -49,7 +49,7 @@ public:
 	GGSignalSlotForm* signalSlotForm_;
 
 public:
-	GGText* createText(GGraph::Node* node, QPointF pos);
+	GGText* createText(GObj* node, QPointF pos);
 	GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
 	GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
 	GGText* findTextByObjectName(QString objectName);

@@ -137,7 +137,7 @@ void GGraphWidget::loadGraph(QJsonObject jo) {
 			qWarning() << "objectName is empty" << nodeJo;
 			continue;
 		}
-		GGraph::Node* node = graph_->nodes_.findNode(objectName);
+		GObj* node = graph_->nodes_.findNode(objectName);
 		if (node == nullptr) {
 			qWarning() << "node is null" << nodeJo;
 			continue;
@@ -199,8 +199,8 @@ void GGraphWidget::updateFactory(GGraph::Factory::Item* item, QTreeWidgetItem* p
 	}
 }
 
-GGraph::Node* GGraphWidget::createInstance(QString className) {
-	GGraph::Node* node = graph()->createInstance(className);
+GObj* GGraphWidget::createInstance(QString className) {
+	GObj* node = GObj::createInstance(className, &graph_->nodes_);
 	if (node == nullptr) return nullptr;
 
 	QString objectName = node->metaObject()->className();
@@ -225,7 +225,7 @@ GGraph::Node* GGraphWidget::createInstance(QString className) {
 	while (true) {
 		QString _objectName = objectName + QString::number(suffix);
 		bool isExist = false;
-		for (GGraph::Node* node: graph()->nodes_) {
+		for (GObj* node: graph()->nodes_) {
 			if (node->objectName() == _objectName) {
 				isExist = true;
 				break;
@@ -240,7 +240,7 @@ GGraph::Node* GGraphWidget::createInstance(QString className) {
 	return node;
 }
 
-GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
+GObj* GGraphWidget::createNodeIfItemNodeSelected() {
 	QList<QTreeWidgetItem*> widgetItems = factoryWidget_->selectedItems();
 	if (widgetItems.count() == 0)
 		return nullptr;
@@ -252,7 +252,7 @@ GGraph::Node* GGraphWidget::createNodeIfItemNodeSelected() {
 	if (itemNode == nullptr)
 		return nullptr;
 	QString className = itemNode->displayName_;
-	GGraph::Node* node = createInstance(className);
+	GObj* node = createInstance(className);
 	if (node == nullptr) {
 		QString msg = QString("createInstance failed for (%1)").arg(className);
 		QMessageBox::warning(nullptr, "Error", msg);
@@ -408,7 +408,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
 
 	GGText* text = dynamic_cast<GGText*>(item);
 	if (text != nullptr) {
-		GGraph::Node* node = text->node_;
+		GObj* node = text->node_;
 
 		for (QGraphicsItem* item: scene_->items()) {
 			GGArrow* arrow = dynamic_cast<GGArrow*>(item);
