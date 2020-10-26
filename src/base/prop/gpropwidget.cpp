@@ -55,8 +55,8 @@ void GPropWidget::init() {
 
 void GPropWidget::setObject(QObject* object) {
 	if (object == object_) return;
-	clear();
 	object_ = object;
+	clear();
 	if (object == nullptr) return;
 
 	GProp* prop = dynamic_cast<GProp*>(object_);

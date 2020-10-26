@@ -43,13 +43,13 @@ public:
 	// --------------------------------------------------------------------------
 	// Connections
 	// --------------------------------------------------------------------------
-	struct Connections : GObj, QList<Connection*> {
-		Connections(QObject* parent = nullptr) : GObj(parent) {}
+	struct Connections : QObject, QList<Connection*> {
+		Connections(QObject* parent = nullptr) : QObject(parent) {}
 		~Connections() override { clear(); }
 
 		void clear();
-		void propLoad(QJsonObject jo) override;
-		void propSave(QJsonObject& jo) override;
+		void load(QJsonArray ja);
+		void save(QJsonArray& ja);
 	};
 
 	// --------------------------------------------------------------------------

@@ -22,9 +22,8 @@ void GGraph::Connections::clear() {
 	QList::clear();
 }
 
-void GGraph::Connections::propLoad(QJsonObject jo) {
+void GGraph::Connections::load(QJsonArray ja) {
 	clear();
-	QJsonArray ja = jo["connections"].toArray();
 	GGraph* graph = dynamic_cast<GGraph*>(parent());
 	Q_ASSERT(graph != nullptr);
 	for (QJsonValue jv: ja) {
@@ -57,8 +56,8 @@ void GGraph::Connections::propLoad(QJsonObject jo) {
 	}
 }
 
-void GGraph::Connections::propSave(QJsonObject& jo) {
-	QJsonArray ja;
+void GGraph::Connections::save(QJsonArray& ja) {
+	// ja.clear(); // gilgil temp 2020.10.26
 	for (Connection* connection: *this) {
 		QJsonObject connectionJo;
 		connectionJo["sender"] = connection->sender_->objectName();
@@ -67,7 +66,6 @@ void GGraph::Connections::propSave(QJsonObject& jo) {
 		connectionJo["slot"] = connection->slot_;
 		ja.append(connectionJo);
 	}
-	jo["connections"] = ja;
 }
 
 // ----------------------------------------------------------------------------
@@ -137,11 +135,27 @@ void GGraph::stop() {
 }
 
 void GGraph::propLoad(QJsonObject jo) {
+	// ----- gilgil temp 2020.10.26 -----
+	/*
 	jo["nodes"] >> nodes_;
 	jo["connections"] >> connections_;
+	*/
+	// ----------------------------------
+	nodes_.load(jo["nodes"].toArray());
+	connections_.load(jo["connections"].toArray());
 }
 
 void GGraph::propSave(QJsonObject& jo) {
+	// ----- gilgil temp 2020.10.26 -----
+	/*
 	jo["nodes"] << nodes_;
 	jo["connections"] << connections_;
+	*/
+	// ----------------------------------
+	QJsonArray nodesJa;
+	nodes_.save(nodesJa);
+	jo["nodes"] = nodesJa;
+	QJsonArray connectionsJa;
+	connections_.save(connectionsJa);
+	jo["connections"] = connectionsJa;
 }

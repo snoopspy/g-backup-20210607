@@ -122,13 +122,6 @@ GObj* GObj::createInstance(QString className, QObject* parent) {
 // ----------------------------------------------------------------------------
 // GObjList
 // ----------------------------------------------------------------------------
-GObjList::GObjList(QObject* parent) : GObj(parent) {
-}
-
-GObjList::~GObjList() {
-	clear();
-}
-
 void GObjList::clear() {
 	for (GObj* obj: *this) {
 		delete obj;
@@ -136,9 +129,8 @@ void GObjList::clear() {
 	}
 }
 
-void GObjList::propLoad(QJsonObject jo) {
+void GObjList::load(QJsonArray ja) {
 	clear();
-	QJsonArray ja = jo["objects"].toArray();
 	for (QJsonValue jv: ja) {
 		QJsonObject nodeJo = jv.toObject();
 		QString className = nodeJo["_class"].toString();
@@ -156,8 +148,8 @@ void GObjList::propLoad(QJsonObject jo) {
 	}
 }
 
-void GObjList::propSave(QJsonObject& jo) {
-	QJsonArray ja;
+void GObjList::save(QJsonArray& ja) {
+	// ja.clear(); // gilgil temp 2020.10.26
 	for (GObj* obj: *this) {
 		QJsonObject nodeJo;
 		obj->propSave(nodeJo);
@@ -165,5 +157,4 @@ void GObjList::propSave(QJsonObject& jo) {
 		nodeJo["_class"] = className;
 		ja.append(nodeJo);
 	}
-	jo["objects"] = ja;
 }

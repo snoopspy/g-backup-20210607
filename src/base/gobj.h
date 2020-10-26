@@ -118,13 +118,13 @@ struct GObjRefArray : _GObjRefArray {
 // ----------------------------------------------------------------------------
 // GObjList
 // ----------------------------------------------------------------------------
-struct GObjList : GObj, QList<GObj*> {
-	GObjList(QObject* parent = nullptr);
-	~GObjList() override;
+struct GObjList : QObject, QList<GObj*> {
+	GObjList(QObject *parent = nullptr) : QObject(parent) {}
+	~GObjList() override {}
 
 	void clear();
-	void propLoad(QJsonObject jo) override;
-	void propSave(QJsonObject& jo) override;
+	void load(QJsonArray ja);
+	void save(QJsonArray& ja);
 };
 
 // ----------------------------------------------------------------------------
