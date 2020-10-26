@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 SUBDIRS += \
 	err-exam \
 	getline \
-	prop-gui
+	prop-gui \
+	sslog

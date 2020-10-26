@@ -13,14 +13,14 @@
 #include "glog.h"
 
 // ----------------------------------------------------------------------------
-// GLogStdout
+// GLogStderr
 // ----------------------------------------------------------------------------
-struct G_EXPORT GLogStdout : GLog {
+struct G_EXPORT GLogStderr : GLog {
 	Q_OBJECT
 
 public:
-	Q_INVOKABLE GLogStdout(QObject* parent = nullptr) : GLog(parent) {}
-	~GLogStdout() override {}
+	Q_INVOKABLE GLogStderr(QObject* parent = nullptr) : GLog(parent) {}
+	~GLogStderr() override {}
 
 	void write(QString& msg) override;
 };

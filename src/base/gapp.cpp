@@ -4,8 +4,7 @@
 #include "net/grtm.h"
 #include "base/log/glogmanager.h"
 #include "base/log/glogdbwin32.h"
-#include "base/log/glogfile.h"
-#include "base/log/glogstdout.h"
+#include "base/log/glogstderr.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -20,10 +19,18 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 
 void GApp::init() {
 	GLogManager& logManager = GLogManager::instance();
+	if (QFile::exists("sslog.ss")) {
+		QJsonObject jo = GJson::loadFromFile("sslog.ss");
+		QJsonArray ja = jo["logs"].toArray();
+		logManager.load(ja);
+	} else {
 #ifdef Q_OS_WIN
-	logManager.logs_.push_back(new GLogDbWin32);
+	logManager.push_back(new GLogDbWin32);
 #endif // Q_OS_WIN
-	logManager.logs_.push_back(new GLogFile);
+#ifdef Q_OS_LINUX
+	logManager.push_back(new GLogStderr);
+#endif // Q_OS_LINUX
+	}
 
 	GNetIntf::all().init();
 	GRtm::instance().init();

@@ -15,14 +15,13 @@
 // ----------------------------------------------------------------------------
 // GLogManager
 // ----------------------------------------------------------------------------
-struct G_EXPORT GLogManager : GObj {
+struct G_EXPORT GLogManager : GObjList {
 private: // singleton
-	GLogManager(QObject* parent = nullptr);
+	GLogManager();
 	~GLogManager() override;
 
 public:
 	bool enabled_{true};
-	QList<GLog*> logs_;
 	static GLogManager& instance();
 
 protected:

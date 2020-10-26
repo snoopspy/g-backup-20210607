@@ -22,17 +22,27 @@ static QT_PREPEND_NAMESPACE(qint64) qt_gettid()
 }
 #endif
 
+#include "base/log/glogdbwin32.h"
+#include "base/log/glogfile.h"
+#include "base/log/glogstderr.h"
+#include "base/log/glogstdout.h"
 // ----------------------------------------------------------------------------
 // GLogManager
 // ----------------------------------------------------------------------------
-GLogManager::GLogManager(QObject* parent) : GObj(parent) {
+GLogManager::GLogManager() {
 	qInstallMessageHandler(myMessageOutput);
+#ifdef Q_OS_WINDOWS
+	qRegisterMetaType<GLogDbWin32*>();
+#endif // Q_OS_WINDOWS
+	qRegisterMetaType<GLogFile*>();
+	qRegisterMetaType<GLogStderr*>();
+	qRegisterMetaType<GLogStdout*>();
 }
 
 GLogManager::~GLogManager() {
 	enabled_ = false;
-	for (GLog* log: logs_) {
-		delete log;
+	for (GObj* obj: *this) {
+		delete obj;
 	}
 }
 
@@ -65,6 +75,8 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	if (i != -1) funcStr = funcStr.mid(i + 1);
 	QString finalMsg = QString("%1 %2 %3 [%4:%5 %6] %7\n").arg(typeStr, nowStr, threadStr, fileStr, lineStr, funcStr, msg);
 
-	for (GLog* log: logManager.logs_)
+	for (GObj* obj: logManager) {
+		GLog* log = reinterpret_cast<GLog*>(obj);
 		log->write(finalMsg);
+	}
 }

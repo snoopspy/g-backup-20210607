@@ -19,6 +19,7 @@ SOURCES += \
 	$${PWD}/../src/base/log/glogdbwin32.cpp \
 	$${PWD}/../src/base/log/glogfile.cpp \
 	$${PWD}/../src/base/log/glogmanager.cpp \
+	$${PWD}/../src/base/log/glogstderr.cpp \
 	$${PWD}/../src/base/log/glogstdout.cpp \
 	$${PWD}/../src/base/other/gcommand.cpp \
 	$${PWD}/../src/base/prop/gprop.cpp \
@@ -129,6 +130,7 @@ HEADERS += \
 	$${PWD}/../src/base/log/glogdbwin32.h \
 	$${PWD}/../src/base/log/glogfile.h \
 	$${PWD}/../src/base/log/glogmanager.h \
+	$${PWD}/../src/base/log/glogstderr.h \
 	$${PWD}/../src/base/log/glogstdout.h \
 	$${PWD}/../src/base/other/gcommand.h \
 	$${PWD}/../src/base/prop/gprop.h \

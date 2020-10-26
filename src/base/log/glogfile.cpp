@@ -4,8 +4,26 @@
 // ----------------------------------------------------------------------------
 // GLogFile
 // ----------------------------------------------------------------------------
-GLogFile::GLogFile(QString folder) : GLog(nullptr), thread_(this) {
-	folder_ = folder;
+GLogFile::GLogFile(QObject* parent) : GLog(parent) {
+}
+
+GLogFile::~GLogFile() {
+	thread_.quit();
+	thread_.wait();
+	file_.close();
+}
+
+void GLogFile::write(QString& msg) {
+	if (!configured_) {
+		configure();
+		configured_ = true;
+	}
+	QMutexLocker ml(&m_);
+	file_.write(qPrintable(msg));
+	file_.flush();
+}
+
+void GLogFile::configure() {
 	if (!folder_.endsWith(QDir::separator()))
 		folder_ += QDir::separator();
 	QDir dir;
@@ -14,17 +32,6 @@ GLogFile::GLogFile(QString folder) : GLog(nullptr), thread_(this) {
 	}
 	changeFileName();
 	thread_.start();
-}
-
-GLogFile::~GLogFile() {
-	thread_.quit();
-	thread_.wait();
-}
-
-void GLogFile::write(QString& msg) {
-	QMutexLocker ml(&m_);
-	file_.write(qPrintable(msg));
-	file_.flush();
 }
 
 void GLogFile::changeFileName(){

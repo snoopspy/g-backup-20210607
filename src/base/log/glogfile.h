@@ -20,12 +20,21 @@
 // GLogFile
 // ----------------------------------------------------------------------------
 struct G_EXPORT GLogFile : GLog {
-	GLogFile(QString folder = QString("log") + QDir::separator());
+	Q_OBJECT
+	Q_PROPERTY(QString folder MEMBER folder_)
+
+public:
+	Q_INVOKABLE GLogFile(QObject* parent = nullptr);
 	~GLogFile() override;
+
 	void write(QString& msg) override;
 
 protected:
-	QString folder_;
+	void configure();
+	bool configured_{false};
+
+protected:
+	QString folder_{QString("log") + QDir::separator()};
 	QMutex m_;
 	QString fileName_;
 	QFile file_;
@@ -37,5 +46,5 @@ protected:
 		GWaitEvent we_;
 		void quit();
 		void run() override;
-	} thread_;
+	} thread_{this};
 };

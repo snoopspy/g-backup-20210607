@@ -1,9 +1,8 @@
-#include "glogstdout.h"
+#include "glogstderr.h"
 
 // ----------------------------------------------------------------------------
-// GLogStdout
+// GLogStderr
 // ----------------------------------------------------------------------------
-void GLogStdout::write(QString& msg) {
-	printf("%s", qPrintable(msg));
-	fflush(stdout);
+void GLogStderr::write(QString& msg) {
+	fprintf(stderr, "%s", qPrintable(msg));
 }
