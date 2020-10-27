@@ -26,9 +26,7 @@ void debug_ip4(struct sockaddr* addr) {
 	inet_ntop(AF_INET, &addr_in->sin_addr, s, INET_ADDRSTRLEN);
 #endif // __linux__
 #ifdef WIN32
-	//char* s = inet_ntoa(*((struct in_addr*)addr_in));
 	char* s = inet_ntoa(addr_in->sin_addr);
-
 #endif // WIN32
 	cout << s;
 }
