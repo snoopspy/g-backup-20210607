@@ -57,8 +57,6 @@ static GMac getMac(char* name) {
 #endif
 
 GNetIntfs::GNetIntfs() {
-	GDEBUG_CTOR;
-
 	//
 	// Initialize allDevs using pcap API.
 	//
@@ -120,8 +118,6 @@ GNetIntfs::GNetIntfs() {
 }
 
 GNetIntfs::~GNetIntfs() {
-	GDEBUG_DTOR;
-
 	clear();
 
 	//
@@ -168,7 +164,6 @@ GNetIntfs& GNetIntfs::instance() {
 void GNetIntfs::init() {
 	if (initialized_) return;
 	initialized_ = true;
-	qDebug() << "GNetIntfs::init()";
 
 	for (GNetIntf& intf: *this) {
 		intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);

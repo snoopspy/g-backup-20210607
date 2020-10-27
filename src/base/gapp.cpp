@@ -1,7 +1,6 @@
 #include "gapp.h"
+#include <QFile>
 #include "base/graph/ggraphwidget.h"
-#include "net/gnetintf.h"
-#include "net/grtm.h"
 #include "base/log/glogmanager.h"
 #include "base/log/glogdbwin32.h"
 #include "base/log/glogstderr.h"
@@ -31,9 +30,6 @@ void GApp::init() {
 	logManager.push_back(new GLogStderr);
 #endif // Q_OS_LINUX
 	}
-
-	GNetIntf::all().init();
-	GRtm::instance().init();
 }
 
 #ifdef QT_GUI_LIB
