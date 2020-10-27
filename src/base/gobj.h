@@ -118,7 +118,7 @@ struct GObjRefArray : _GObjRefArray {
 // ----------------------------------------------------------------------------
 // GObjList
 // ----------------------------------------------------------------------------
-struct GObjList : QObject, QList<GObj*> {
+struct G_EXPORT GObjList : QObject, QList<GObj*> {
 	GObjList(QObject *parent = nullptr) : QObject(parent) {}
 	~GObjList() override {}
 
