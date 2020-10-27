@@ -15,28 +15,28 @@ debug-test: g-d-test g-gui-d-test
 release-test: g-test g-gui-test
 
 libg-d:
-	mkdir -p libg-d;      cd libg-d;        qmake ../libg.pro           "CONFIG+=debug"; make -j4
+	mkdir -p libg-d;      cd libg-d;        qmake ../libg.pro          "CONFIG+=debug";   make -j4
 	
 libg-gui-d:
-	mkdir -p libg-gui-d;   cd libg-gui-d;   qmake ../libg-gui.pro       "CONFIG+=debug"; make -j4
+	mkdir -p libg-gui-d;   cd libg-gui-d;   qmake ../libg-gui.pro      "CONFIG+=debug";   make -j4
 
 libg:
-	mkdir -p libg;         cd libg;         qmake ../libg.pro;          "CONFIG+=release"; make -j4
+	mkdir -p libg;         cd libg;         qmake ../libg.pro          "CONFIG+=release"; make -j4
 
 libg-gui:
-	mkdir -p libg-gui;     cd libg-gui;     qmake ../libg-gui.pro;      "CONFIG+=release"; make -j4
+	mkdir -p libg-gui;     cd libg-gui;     qmake ../libg-gui.pro      "CONFIG+=release"; make -j4
 
 g-d-test:
-	mkdir -p g-d-test;     cd g-d-test;     qmake ../libg-test.pro      "CONFIG+=debug"; make -j4
+	mkdir -p g-d-test;     cd g-d-test;     qmake ../libg-test.pro     "CONFIG+=debug";   make -j4
 
 g-gui-d-test:
-	mkdir -p g-gui-d-test; cd g-gui-d-test; qmake ../libg-gui-test.pro  "CONFIG+=debug"; make -j4
+	mkdir -p g-gui-d-test; cd g-gui-d-test; qmake ../libg-gui-test.pro "CONFIG+=debug";   make -j4
 
 g-test:
-	mkdir -p g-test;       cd g-test;       qmake ../libg-test.pro;     "CONFIG+=release"; make -j4
+	mkdir -p g-test;       cd g-test;       qmake ../libg-test.pro     "CONFIG+=release"; make -j4
 
 g-gui-test:
-	mkdir -p g-gui-test;   cd g-gui-test;   qmake ../libg-gui-test.pro; "CONFIG+=release"; make -j4
+	mkdir -p g-gui-test;   cd g-gui-test;   qmake ../libg-gui-test.pro "CONFIG+=release"; make -j4
 
 clean:
 	rm -rf libg-d
