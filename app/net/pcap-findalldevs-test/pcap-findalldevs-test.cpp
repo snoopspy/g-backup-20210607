@@ -21,15 +21,28 @@ using namespace std;
 
 void debug_ip4(struct sockaddr* addr) {
 	sockaddr_in* addr_in = reinterpret_cast<sockaddr_in*>(addr);
+#ifdef __linux__
 	char s[INET_ADDRSTRLEN];
 	inet_ntop(AF_INET, &addr_in->sin_addr, s, INET_ADDRSTRLEN);
+#endif // __linux__
+#ifdef WIN32
+	//char* s = inet_ntoa(*((struct in_addr*)addr_in));
+	char* s = inet_ntoa(addr_in->sin_addr);
+
+#endif // WIN32
 	cout << s;
 }
 
 void debug_ip6(struct sockaddr* addr) {
 	sockaddr_in6* addr6_in = reinterpret_cast<sockaddr_in6*>(addr);
+#ifdef __linux__
 	char s[INET6_ADDRSTRLEN];
 	inet_ntop(AF_INET6, &addr6_in->sin6_addr, s, INET6_ADDRSTRLEN);
+#endif // __linux__
+#ifdef WIN32
+	(void)addr6_in;
+	const char* s = "not implemented yet"; // gilgil temp 2020.10.27
+#endif // WIN32
 	cout << s;
 }
 
