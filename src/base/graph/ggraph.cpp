@@ -57,7 +57,6 @@ void GGraph::Connections::load(QJsonArray ja) {
 }
 
 void GGraph::Connections::save(QJsonArray& ja) {
-	// ja.clear(); // gilgil temp 2020.10.26
 	for (Connection* connection: *this) {
 		QJsonObject connectionJo;
 		connectionJo["sender"] = connection->sender_->objectName();

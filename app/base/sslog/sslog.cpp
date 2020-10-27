@@ -1,14 +1,15 @@
 #include <GJson>
 #include "base/log/glogmanager.h"
-#ifdef Q_OS_WINDOWS
 #include "base/log/glogdbwin32.h"
-#endif // Q_OS_WINDOWS
 #include "base/log/glogfile.h"
 #include "base/log/glogstderr.h"
 #include "base/log/glogstdout.h"
 
 int main() {
 	GLogManager& logManager = GLogManager::instance();
+#ifdef Q_OS_WINDOWS
+	logManager.push_back(new GLogDbWin32);
+#endif // Q_OS_WINDOWS
 	logManager.push_back(new GLogFile);
 	logManager.push_back(new GLogStderr);
 	logManager.push_back(new GLogStdout);

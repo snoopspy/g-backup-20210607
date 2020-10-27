@@ -149,7 +149,6 @@ void GObjList::load(QJsonArray ja) {
 }
 
 void GObjList::save(QJsonArray& ja) {
-	// ja.clear(); // gilgil temp 2020.10.26
 	for (GObj* obj: *this) {
 		QJsonObject nodeJo;
 		obj->propSave(nodeJo);
