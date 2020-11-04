@@ -19,7 +19,7 @@ bool GArpSpoof::doOpen() {
 	flowList_.clear();
 	for (GAtm::iterator it = atm_.begin(); it != atm_.end();) {
 		GMac mac = it.value();
-		if (mac == GMac::cleanMac())
+		if (mac == GMac::nullMac())
 			it = atm_.erase(it);
 		else
 			it++;
@@ -72,7 +72,7 @@ bool GArpSpoof::doOpen() {
 		QString msg = "can not find all host(s) ";
 		for (GAtm::iterator it = atm_.begin(); it != atm_.end(); it++) {
 			GMac mac = it.value();
-			if (mac.isClean()) {
+			if (mac.isNull()) {
 				GIp ip = it.key();
 				msg += QString(ip) += " ";
 			}
@@ -84,9 +84,9 @@ bool GArpSpoof::doOpen() {
 
 	flowMap_.clear();
 	for(Flow& flow: flowList_) {
-		if (flow.senderMac_.isClean())
+		if (flow.senderMac_.isNull())
 			flow.senderMac_ = atm_.find(flow.senderIp_).value();
-		if (flow.targetMac_.isClean())
+		if (flow.targetMac_.isNull())
 			flow.targetMac_ = atm_.find(flow.targetIp_).value();
 		GFlow::IpFlowKey ipFlowKey(flow.senderIp_, flow.targetIp_);
 		FlowMap::iterator it = flowMap_.find(ipFlowKey);
@@ -96,7 +96,7 @@ bool GArpSpoof::doOpen() {
 			*it = flow;
 	}
 
-	myMac_ = virtualMac_.isClean() ? intf_->mac() : virtualMac_;
+	myMac_ = virtualMac_.isNull() ? intf_->mac() : virtualMac_;
 
 	sendArpInfectAll();
 

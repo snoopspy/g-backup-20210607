@@ -38,7 +38,7 @@ bool GPcapDeviceWriteEthAutoMac::doOpen() {
 
 	Q_ASSERT(intf_ != nullptr);
 	myMac_ = intf_->mac();
-	if (myMac_.isClean()) {
+	if (myMac_.isNull()) {
 		QString msg = QString("not specified mac");
 		SET_ERR(GErr::VALUE_IS_NOT_ZERO, msg);
 		return false;
@@ -102,7 +102,7 @@ GPacket::Result GPcapDeviceWriteEthAutoMac::writeEth(GPacket* packet) {
 	if (it == atm.end()) {
 		GAtm atmOne;
 		GMac mac = atmOne.waitOne(adjIp, device_);
-		if (mac.isClean()) {
+		if (mac.isNull()) {
 			qCritical() << QString("can not resolve mac for ip %1").arg(QString(adjIp));
 			return GPacket::Fail;
 		}

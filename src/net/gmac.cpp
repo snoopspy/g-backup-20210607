@@ -30,7 +30,7 @@ GMac GMac::randomMac() {
 	return res;
 }
 
-GMac& GMac::cleanMac() {
+GMac& GMac::nullMac() {
 	static gbyte _value[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 	static GMac res(_value);
 	return res;
@@ -67,7 +67,7 @@ TEST(GMac, ctorTest) {
 TEST(GMac, castingTest) {
 	GMac mac("001122-334455");
 
-	const gbyte* uc = mac; // operator gbyte*()
+	const gbyte* uc = (gbyte*)mac; // operator gbyte*()
 	gbyte temp[GMac::SIZE];
 	for (int i = 0; i < GMac::SIZE; i++)
 		temp[i] = *uc++;
@@ -81,7 +81,7 @@ TEST(GMac, funcTest) {
 	GMac mac;
 
 	mac.clear();
-	EXPECT_TRUE(mac.isClean());
+	EXPECT_TRUE(mac.isNull());
 
 	mac = QString("FF:FF:FF:FF:FF:FF");
 	EXPECT_TRUE(mac.isBroadcast());

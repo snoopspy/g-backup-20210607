@@ -37,9 +37,9 @@ struct GArpSpoofFlow : GObj {
 public:
 	bool enabled_{true};
 	GIp senderIp_{0};
-	GMac senderMac_{GMac::cleanMac()};
+	GMac senderMac_{GMac::nullMac()};
 	GIp targetIp_{0};
-	GMac targetMac_{GMac::cleanMac()};
+	GMac targetMac_{GMac::nullMac()};
 };
 typedef GArpSpoofFlow *PArpSpoofFlow;
 
@@ -73,7 +73,7 @@ protected:
 	void run() override;
 
 public:
-	GMac virtualMac_{GMac::cleanMac()};
+	GMac virtualMac_{GMac::nullMac()};
 	GDuration infectInterval_{1000};
 	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
@@ -93,7 +93,7 @@ protected:
 	FlowMap flowMap_; // for relay
 
 	GAtm atm_;
-	GMac myMac_{GMac::cleanMac()};
+	GMac myMac_{GMac::nullMac()};
 
 	struct InfectThread : GThread {
 		InfectThread(GArpSpoof* arpSpoof) : GThread(arpSpoof), arpSpoof_(arpSpoof) {}

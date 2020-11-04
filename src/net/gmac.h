@@ -37,7 +37,7 @@ public:
 	//
 	// casting operator
 	//
-	operator gbyte*() const { return const_cast<gbyte*>(mac_); } // default casting operator
+	explicit operator gbyte*() const { return const_cast<gbyte*>(mac_); } // default casting operator
 	explicit operator QString() const;
 
 	//
@@ -53,11 +53,11 @@ public:
 
 public:
 	void clear() {
-		*this = cleanMac();
+		*this = nullMac();
 	}
 
-	bool isClean() const {
-		return *this == cleanMac();
+	bool isNull() const {
+		return *this == nullMac();
 	}
 
 	bool isBroadcast() const { // FF:FF:FF:FF:FF:FF
@@ -69,6 +69,6 @@ public:
 	}
 
 	static GMac randomMac();
-	static GMac& cleanMac();
+	static GMac& nullMac();
 	static GMac& broadcastMac();
 };

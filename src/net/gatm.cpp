@@ -6,14 +6,14 @@
 // ----------------------------------------------------------------------------
 bool GAtm::allResolved() {
 	for (GMac& mac: *this)
-		if (mac.isClean()) return false;
+		if (mac.isNull()) return false;
 	return true;
 }
 
 void GAtm::deleteUnresolved() {
 	for (GAtmMap::iterator it = begin(); it != end();) {
 		GMac mac = it.value();
-		if (mac.isClean()) {
+		if (mac.isNull()) {
 			it = erase(it);
 		} else {
 			it++;
@@ -55,7 +55,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
 			QString msg = "can not resolve all ip";
 			for (GAtmMap::iterator it = begin(); it != end(); it++) {
 				GMac mac = it.value();
-				if (mac.isClean()) {
+				if (mac.isNull()) {
 					GIp ip = it.key();
 					msg += " ";
 					msg += QString(ip);
@@ -113,13 +113,13 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
 	query.arpHdr_.op_ = htons(GArpHdr::Request);
 	query.arpHdr_.smac_ = intf->mac();
 	query.arpHdr_.sip_ = htonl(intf->ip());
-	query.arpHdr_.tmac_ = GMac::cleanMac();
+	query.arpHdr_.tmac_ = GMac::nullMac();
 	GBuf queryBuf(pbyte(&query), sizeof(query));
 
 	for (GAtmMap::iterator it = begin(); it != end(); it++) {
 		GIp ip = it.key();
 		GMac mac = it.value();
-		if (mac.isClean()) {
+		if (mac.isNull()) {
 			query.arpHdr_.tip_ = htonl(ip);
 			GPacket::Result res = pcapDevice->write(queryBuf);
 			if (res != GPacket::Ok) {
@@ -140,13 +140,13 @@ GMac GAtm::waitOne(GIp ip, GPcapDevice* device, GDuration timeout) {
 	GAtmMap::iterator it = find(ip);
 	if (it != end()) {
 		GMac mac = it.value();
-		if (!mac.isClean())
+		if (!mac.isNull())
 			return mac;
 	} else
-		it = insert(ip, GMac::cleanMac());
+		it = insert(ip, GMac::nullMac());
 
 	if (!waitAll(device, timeout)) {
-		return GMac::cleanMac();
+		return GMac::nullMac();
 	}
 	return it.value();
 }
@@ -200,7 +200,7 @@ TEST(GAtm, resolveTest) {
 
 	GAtm atm;
 	GMac mac = atm.waitOne(ip, &device);
-	ASSERT_FALSE(mac.isClean());
+	ASSERT_FALSE(mac.isNull());
 
 	qDebug() << QString("ip:%1 mac:%2").arg(QString(ip), QString(mac));
 }

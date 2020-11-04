@@ -20,7 +20,7 @@ void showNetIntf() {
 		cout << qPrintable(msg) << endl;
 
 		msg = "";
-		if (!intf.mac().isClean()) msg += QString("mac:%1 ").arg(QString(intf.mac()));
+		if (!intf.mac().isNull()) msg += QString("mac:%1 ").arg(QString(intf.mac()));
 		if (intf.ip() != 0) msg += QString("ip:%1 ").arg(QString(intf.ip()));
 		if (intf.mask() != 0) msg += QString("mask:%1 ").arg(QString(intf.mask()));
 		if (intf.gateway() != 0) msg += QString("gateway:%1 ").arg(QString(intf.gateway()));

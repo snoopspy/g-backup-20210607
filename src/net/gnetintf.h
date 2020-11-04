@@ -38,7 +38,7 @@ protected:
 	QString name_;
 	QString desc_;
 	pcap_if_t* dev_{nullptr};
-	GMac mac_{GMac::cleanMac()};
+	GMac mac_{GMac::nullMac()};
 	GIp ip_{0};
 	GIp mask_{0};
 	GIp gateway_{0};
