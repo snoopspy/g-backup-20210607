@@ -113,4 +113,5 @@ TEST(GMac, unordered_mapTest) {
 	m.insert(std::make_pair(GMac("001122-334457"), 3));
 	//EXPECT_EQ(m.size(), 3);
 }
+
 #endif // GTEST
