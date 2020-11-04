@@ -90,4 +90,27 @@ TEST(GMac, funcTest) {
 	EXPECT_TRUE(mac.isMulticast());
 }
 
+#include <map>
+TEST(GMac, mapTest) {
+	typedef std::map<GMac, int> MacMap;
+	MacMap m;
+	m.insert(std::make_pair(GMac("001122-334455"), 1));
+	m.insert(std::make_pair(GMac("001122-334456"), 2));
+	m.insert(std::make_pair(GMac("001122-334457"), 3));
+	EXPECT_EQ(m.size(), 3);
+	MacMap::iterator it = m.begin();
+	EXPECT_EQ(it->second, 1); it++;
+	EXPECT_EQ(it->second, 2); it++;
+	EXPECT_EQ(it->second, 3);
+}
+
+#include <unordered_map>
+TEST(GMac, unordered_mapTest) {
+	typedef std::unordered_map<GMac, int> MacUnorderedMap;
+	MacUnorderedMap m;
+	m.insert(std::make_pair(GMac("001122-334455"), 1));
+	m.insert(std::make_pair(GMac("001122-334456"), 2));
+	m.insert(std::make_pair(GMac("001122-334457"), 3));
+	//EXPECT_EQ(m.size(), 3);
+}
 #endif // GTEST

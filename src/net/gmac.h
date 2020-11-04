@@ -37,7 +37,7 @@ public:
 	//
 	// casting operator
 	//
-	explicit operator gbyte*() const { return const_cast<gbyte*>(mac_); } // default casting operator
+	explicit operator gbyte*() const { return const_cast<gbyte*>(mac_); }
 	explicit operator QString() const;
 
 	//
@@ -72,3 +72,15 @@ public:
 	static GMac& nullMac();
 	static GMac& broadcastMac();
 };
+
+namespace std {
+	template<>
+	struct hash<GMac> {
+		size_t operator() (const GMac & rhs) const {
+			gbyte* p = (gbyte*)rhs;
+			uint16_t* p1 = (uint16_t*)p;
+			uint32_t* p2 = (uint32_t*)(p + 2);
+			return *p1 + *p2;
+		}
+	};
+}
