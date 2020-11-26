@@ -38,6 +38,9 @@ protected:
 	bool doClose() override;
 
 public:
+	GPacket::Result read(GPacket* packet) override;
+
+public:
 	GNetIntf* intf() { return intf_; }
 protected:
 	GNetIntf* intf_{nullptr};
