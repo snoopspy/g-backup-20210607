@@ -4,11 +4,9 @@
 // GBlock
 // ----------------------------------------------------------------------------
 GBlock::GBlock(QObject* parent) : GStateObj(parent) {
-	GDEBUG_CTOR;
 }
 
 GBlock::~GBlock() {
-	GDEBUG_DTOR;
 }
 
 void GBlock::block(GPacket* packet) {

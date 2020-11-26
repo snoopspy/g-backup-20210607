@@ -30,8 +30,8 @@ void GEthPacket::parse() {
 #endif // _DEBUG
 }
 
-GPacket* GEthPacket::clone() {
+GPacket* GEthPacket::clone(size_t extra) {
 	GPacket* res = new GEthPacket;
-	res->doClone(this);
+	res->doClone(this, extra);
 	return res;
 }

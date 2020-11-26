@@ -1,9 +1,19 @@
 #include "gpcapdevicewrite.h"
-#include "base/prop/gpropitem-device.h"
+#include "net/grtm.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite
 // ----------------------------------------------------------------------------
+GPcapDeviceWrite::GPcapDeviceWrite(QObject* parent) : GPcapWrite(parent) {
+	GRtmEntry* entry = GRtm::instance().getBestEntry(QString("8.8.8.8"));
+	if (entry != nullptr)
+		devName_ = entry->intf()->name();
+}
+
+GPcapDeviceWrite::~GPcapDeviceWrite() {
+	close();
+}
+
 bool GPcapDeviceWrite::doOpen() {
 	if (devName_ == "") {
 		SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
@@ -59,6 +69,7 @@ GPacket::Result GPcapDeviceWrite::write(GPacket* packet) {
 
 #ifdef QT_GUI_LIB
 
+#include "base/prop/gpropitem-device.h"
 GPropItem* GPcapDeviceWrite::propCreateItem(GPropItemParam* param) {
 	if (QString(param->mpro_.name()) == "devName") {
 		GPropItemDevice* res = new GPropItemDevice(param);

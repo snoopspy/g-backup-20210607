@@ -130,22 +130,22 @@ void GPacket::parse() {
 	qCritical() << "virtual function call";
 }
 
-GPacket* GPacket::clone() {
+GPacket* GPacket::clone(size_t extra) {
+	(void)extra;
 	qCritical() << "virtual function call";
 	return nullptr;
 }
 
-void GPacket::doClone(GPacket* source) {
+void GPacket::doClone(GPacket* source, size_t extra) {
+	clear();
 	ts_ = source->ts_;
-
 	size_t size = source->buf_.size_;
-	buf_.data_ = pbyte(malloc(size));
+	buf_.data_ = pbyte(malloc(size + extra));
 	memcpy(buf_.data_, source->buf_.data_, size);
 	buf_.size_ = size;
 	bufSelfAlloc_ = true;
 
 	ctrl = source->ctrl;
 
-	clear();
 	parse();
 }

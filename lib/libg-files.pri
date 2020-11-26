@@ -48,6 +48,7 @@ SOURCES += \
 	$${PWD}/../src/base/sys/gthread.cpp \
 	$${PWD}/../src/base/sys/gwaitevent.cpp \
 	$${PWD}/../src/net/block/gblock.cpp \
+	$${PWD}/../src/net/block/gtcpblock.cpp \
 	$${PWD}/../src/net/capture/garpspoof.cpp \
 	$${PWD}/../src/net/capture/gcapture.cpp \
 	$${PWD}/../src/net/capture/gnetfilter.cpp \
@@ -159,6 +160,7 @@ HEADERS += \
 	$${PWD}/../src/base/sys/gthread.h \
 	$${PWD}/../src/base/sys/gwaitevent.h \
 	$${PWD}/../src/net/block/gblock.h \
+	$${PWD}/../src/net/block/gtcpblock.h \
 	$${PWD}/../src/net/capture/garpspoof.h \
 	$${PWD}/../src/net/capture/gcapture.h \
 	$${PWD}/../src/net/capture/gnetfilter.h \

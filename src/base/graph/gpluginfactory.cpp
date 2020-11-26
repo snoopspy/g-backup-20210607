@@ -32,12 +32,15 @@ void GPluginFactory::loadDefault() {
 // Block
 // ----------------------------------------------------------------------------
 #include <GBlock>
+#include <GTcpBlock>
 
 void GPluginFactory::loadBlock() {
 	qRegisterMetaType<GBlock*>();
+	qRegisterMetaType<GTcpBlock*>();
 
 	ItemCategory* category = new ItemCategory("block");
 	category->items_.push_back(new ItemNode(GBlock::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GTcpBlock::staticMetaObject.className()));
 
 	items_.push_back(category);
 }

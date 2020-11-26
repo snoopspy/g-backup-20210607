@@ -24,8 +24,8 @@ public:
 	QString devName_{""};
 
 public:
-	Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr) : GPcapWrite(parent) {}
-	~GPcapDeviceWrite() override { close(); }
+	Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr);
+	~GPcapDeviceWrite() override;
 
 protected:
 	bool doOpen() override;

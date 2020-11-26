@@ -136,7 +136,7 @@ public:
 	explicit operator QString() const;
 	virtual void parse();
 
-	virtual GPacket* clone();
-	void doClone(GPacket* source);
+	virtual GPacket* clone(size_t extra  = 0);
+	void doClone(GPacket* source, size_t extra);
 };
 typedef GPacket *PPacket;
