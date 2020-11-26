@@ -30,7 +30,7 @@ bool GPcapDevice::doOpen() {
 	}
 
 	char errBuf[PCAP_ERRBUF_SIZE];
-	pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, -1, errBuf);
+	pcap_ = pcap_open_live(qPrintable(devName_), snapLen_, flags_, timeout_, errBuf);
 	if (pcap_ == nullptr) {
 		SET_ERR(GErr::RETURN_NULL, errBuf);
 		return false;
@@ -49,8 +49,7 @@ bool GPcapDevice::doClose() {
 
 GPacket::Result GPcapDevice::read(GPacket* packet) {
 	GPacket::Result res = GPcap::read(packet);
-	if (res == GPacket::TimeOut)
-		QThread::msleep(timeout_);
+	if (res == GPacket::TimeOut) QThread::msleep(waitTimeout_);
 	return res;
 }
 

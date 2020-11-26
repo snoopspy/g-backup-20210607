@@ -22,12 +22,19 @@ struct G_EXPORT GPcapDevice : GPcap {
 	Q_PROPERTY(int snapLen MEMBER snapLen_)
 	Q_PROPERTY(int flags MEMBER flags_)
 	Q_PROPERTY(int timeout MEMBER timeout_)
+	Q_PROPERTY(int waitTimeout MEMBER waitTimeout_)
 
 public:
 	QString devName_{""};
 	int snapLen_{65536}; // 65536 bytes
 	int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
+#ifdef Q_OS_LINUX
+	int timeout_{-1}; // 1 msec
+	int waitTimeout_{1}; // 1 msec
+#else // Q_OSWIN
 	int timeout_{1}; // 1 msec
+	int waitTimeout_{0}; // 1 msec
+#endif // Q_OS_LINUX
 
 public:
 	Q_INVOKABLE GPcapDevice(QObject* parent = nullptr);
