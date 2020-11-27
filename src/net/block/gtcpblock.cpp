@@ -24,9 +24,6 @@ bool GTcpBlock::doOpen() {
 
 	forwardFinMsgStr_ = forwardFinMsg_.join("\r\n");
 	backwardFinMsgStr_ = backwardFinMsg_.join("\r\n");
-	maxMsgSize_ = forwardFinMsgStr_.size();
-	if (maxMsgSize_ < backwardFinMsgStr_.size())
-		maxMsgSize_ = backwardFinMsgStr_.size();
 
 	return true;
 }
@@ -36,14 +33,15 @@ bool GTcpBlock::doClose() {
 }
 
 void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction, GTcpBlock::BlockType blockType, uint32_t seq, uint32_t ack, QString msg) {
-	GTcpHdr* tcpHdr = packet->tcpHdr_;
-	Q_ASSERT(tcpHdr != nullptr);
-
 	GPacket* blockPacket = nullptr;
 	if (msg != "") {
 		blockPacket = packet->clone(msg.size());
 		packet = blockPacket;
 	}
+
+	GTcpHdr* tcpHdr = packet->tcpHdr_;
+	Q_ASSERT(tcpHdr != nullptr);
+
 	//
 	// Data
 	//
@@ -56,13 +54,11 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 	//
 	// TCP
 	//
-	if (direction == Backward && (tcpHdr->flags() & GTcpHdr::Syn) != 0)
-		tcpHdr->seq_ = 0;
-	else
-		tcpHdr->seq_ = htonl(seq);
+	if (direction == Backward)
+		std::swap(tcpHdr->sport_, tcpHdr->dport_);
+	tcpHdr->seq_ = htonl(seq);
 	tcpHdr->ack_ = htonl(ack);
 	if (blockType == Rst) {
-		std::swap(tcpHdr->sport_, tcpHdr->dport_);
 		tcpHdr->flags_ = GTcpHdr::Rst | GTcpHdr::Ack;
 		tcpHdr->win_ = 0;
 	} else {
@@ -76,14 +72,15 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 	//
 	GIpHdr* ipHdr = packet->ipHdr_;
 	Q_ASSERT(ipHdr != nullptr);
-	if (blockType == Rst) {
+	if (blockType == Rst)
 		ipHdr->len_ = htons(sizeof(GIpHdr) + sizeof(GTcpHdr));
-		ipHdr->ttl_ = 0x80;
-	} else
+	else
 		ipHdr->len_ = htons(sizeof(GIpHdr) + sizeof(GTcpHdr) + msg.size());
 	ipHdr->tos_ = 0x44;
-	if (direction == Backward)
+	if (direction == Backward) {
+		ipHdr->ttl_ = 0x80;
 		std::swap(ipHdr->sip_, ipHdr->dip_);
+	}
 
 	// checksum
 	tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
@@ -148,17 +145,24 @@ void GTcpBlock::block(GPacket* packet) {
 		_blocked = true;
 	}
 	if (forwardFin_) {
-		// sendBlockPacket(blockPacket, Forward, Fin, seq, ack, forwardFinMsgStr_); // gilgil temp 2020.11.26
-		sendBlockPacket(packet, Forward, Fin, nextSeq, ack, forwardFinMsgStr_);
-		_blocked = true;
+		if (!synExist) {
+			// sendBlockPacket(blockPacket, Forward, Fin, seq, ack, forwardFinMsgStr_); // gilgil temp 2020.11.26
+			sendBlockPacket(packet, Forward, Fin, nextSeq, ack, forwardFinMsgStr_);
+			_blocked = true;
+		}
 	}
 	if (backwardRst_) {
-		sendBlockPacket(packet, Backward, Rst, ack, nextSeq);
+		if (synExist && !ackExist)
+			sendBlockPacket(packet, Backward, Rst, 0, nextSeq);
+		else
+			sendBlockPacket(packet, Backward, Rst, ack, nextSeq);
 		_blocked = true;
 	}
 	if (backwardFin_) {
-		sendBlockPacket(packet, Backward, Fin, ack, nextSeq, backwardFinMsgStr_);
-		_blocked = true;
+		if (!synExist) {
+			sendBlockPacket(packet, Backward, Fin, ack, nextSeq, backwardFinMsgStr_);
+			_blocked = true;
+		}
 	}
 
 	if (_blocked)

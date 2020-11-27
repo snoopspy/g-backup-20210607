@@ -45,7 +45,6 @@ protected:
 protected:
 	QString forwardFinMsgStr_;
 	QString backwardFinMsgStr_;
-	int maxMsgSize_{0};
 
 	enum Direction {
 		Forward,
