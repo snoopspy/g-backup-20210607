@@ -19,18 +19,18 @@ struct G_EXPORT GTcpBlock : GPcapDeviceWrite {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled MEMBER enabled_)
 	Q_PROPERTY(bool forwardRst MEMBER forwardRst_)
-	Q_PROPERTY(bool backwardRst MEMBER backwardRst_)
 	Q_PROPERTY(bool forwardFin MEMBER forwardFin_)
 	Q_PROPERTY(QStringList forwardFinMsg MEMBER forwardFinMsg_)
+	Q_PROPERTY(bool backwardRst MEMBER backwardRst_)
 	Q_PROPERTY(bool backwardFin MEMBER backwardFin_)
 	Q_PROPERTY(QStringList backwardFinMsg MEMBER backwardFinMsg_)
 
 public:
 	bool enabled_{true};
 	bool forwardRst_{true};
-	bool backwardRst_{true};
 	bool forwardFin_{false};
 	QStringList forwardFinMsg_;
+	bool backwardRst_{true};
 	bool backwardFin_{false};
 	QStringList backwardFinMsg_;
 
