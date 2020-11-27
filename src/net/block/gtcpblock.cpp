@@ -8,6 +8,7 @@ GTcpBlock::GTcpBlock(QObject* parent) : GPcapDeviceWrite(parent) {
 }
 
 GTcpBlock::~GTcpBlock() {
+	close();
 }
 
 bool GTcpBlock::doOpen() {
