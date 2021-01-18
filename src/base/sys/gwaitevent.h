@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <climits>
 #include <QDeadlineTimer>
 #include <QWaitCondition>
 #include <QMutex>
