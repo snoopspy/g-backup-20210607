@@ -5,11 +5,12 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 GRtmLinux::GRtmLinux() : GRtm() {
-	QString command = "cat /proc/net/route";
+	QString command = "cat";
+	QStringList args("/proc/net/route");
 	QProcess p;
-	p.start(command);
+	p.start(command, args);
 	if (!p.waitForFinished()) {
-		qWarning() << QString("waitForFinished(%1) return false").arg(command);
+		qWarning() << QString("waitForFinished(%1) return false").arg(command) << args;
 		return;
 	}
 
