@@ -74,11 +74,12 @@ SOURCES += \
 	$${PWD}/../src/net/flow/gtcpflowmgr.cpp \
 	$${PWD}/../src/net/flow/gudpflowmgr.cpp \
 	$${PWD}/../src/net/gatm.cpp \
-	$${PWD}/../src/net/gip.cpp \
+        $${PWD}/../src/net/ginterface.cpp \
+        $${PWD}/../src/net/gip.cpp \
 	$${PWD}/../src/net/gip6.cpp \
 	$${PWD}/../src/net/gmac.cpp \
 	$${PWD}/../src/net/gnet.cpp \
-	$${PWD}/../src/net/gnetintf.cpp \
+        $${PWD}/../src/net/gnetinfo.cpp \
 	$${PWD}/../src/net/grtm.cpp \
 	$${PWD}/../src/net/packet/gdot11packet.cpp \
 	$${PWD}/../src/net/packet/gethpacket.cpp \
@@ -186,11 +187,12 @@ HEADERS += \
 	$${PWD}/../src/net/flow/gtcpflowmgr.h \
 	$${PWD}/../src/net/flow/gudpflowmgr.h \
 	$${PWD}/../src/net/gatm.h \
-	$${PWD}/../src/net/gip.h \
+        $${PWD}/../src/net/ginterface.h \
+        $${PWD}/../src/net/gip.h \
 	$${PWD}/../src/net/gip6.h \
 	$${PWD}/../src/net/gmac.h \
 	$${PWD}/../src/net/gnet.h \
-	$${PWD}/../src/net/gnetintf.h \
+        $${PWD}/../src/net/gnetinfo.h \
 	$${PWD}/../src/net/grtm.h \
 	$${PWD}/../src/net/packet/gdot11packet.h \
 	$${PWD}/../src/net/packet/gethpacket.h \

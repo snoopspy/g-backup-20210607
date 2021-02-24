@@ -11,13 +11,15 @@
 #pragma once
 
 #include <QList>
-#include "gnetintf.h"
+#include "ginterface.h"
 
 // ----------------------------------------------------------------------------
 // GRtmEntry
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmEntry {
 	friend struct GRtm;
+	friend struct GNetInfo;
+
 #ifdef Q_OS_LINUX
 	friend struct GRtmLinux;
 #endif
@@ -29,14 +31,14 @@ public:
 	GIp mask() const { return mask_; }
 	GIp gateway() const { return gateway_; }
 	int metric() const { return metric_; }
-	GNetIntf* intf() const;
+	GInterface* intf() const { return intf_; }
 
 protected:
 	GIp dst_{0};
 	GIp mask_{0};
 	GIp gateway_{0};
 	int metric_{0};
-	GNetIntf* intf_{nullptr};
+	GInterface* intf_{nullptr};
 
 public:
 	bool operator==(const GRtmEntry& r) const;
@@ -48,15 +50,13 @@ uint qHash(GRtmEntry q);
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtm : QList<GRtmEntry> {
 	friend struct GRtmEntry;
+
 protected: // inherited singleton
 	GRtm();
 	virtual ~GRtm();
-
-public:
-	virtual void init() = 0;
+	QStringList intfNames_;
 
 public:
 	GRtmEntry* getBestEntry(GIp ip);
 	GIp findGateway(QString intfName, GIp ip);
-	static GRtm& instance();
 };

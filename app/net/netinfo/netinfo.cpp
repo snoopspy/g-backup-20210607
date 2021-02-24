@@ -1,16 +1,15 @@
 #include <iostream>
 #include <GApp>
-#include <GNetIntf>
-#include <GRtm>
+#include <GNetInfo>
 
 using namespace std;
 
 void showNetIntf() {
-	GRtmEntry* entry = GRtm::instance().getBestEntry(QString("8.8.8.8"));
-	GNetIntfs& intfs = GNetIntf::all();
+	GAllInterface& allInterface = GNetInfo::instance().allInterface();
+	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 
 	int index = 1;
-	for(GNetIntf& intf: intfs) {
+	for(GInterface& intf: allInterface) {
 		bool best = entry != nullptr && entry->intf()->name() == intf.name();
 		QString msg = QString("index %1 %2").arg(index).arg(best ? "(Best)" : "");
 		cout << qPrintable(msg) << endl;
@@ -35,7 +34,7 @@ void showNetIntf() {
 }
 
 void showRtm() {
-	GRtm& rtm = GRtm::instance();
+	GRtm& rtm = GNetInfo::instance().rtm();
 
 	cout << "dst             mask            gateway         metric intf" << endl;
 	for (GRtmEntry& entry: rtm) {

@@ -17,13 +17,9 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmLinux : GRtm {
 	friend struct GRtm;
+	friend struct GNetInfo;
+
 protected:
 	GRtmLinux();
 	~GRtmLinux() override;
-
-	QStringList intfNames_;
-	bool initialized_{false};
-
-public:
-	void init() override;
 };

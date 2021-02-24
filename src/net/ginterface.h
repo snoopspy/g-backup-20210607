@@ -17,11 +17,12 @@
 #include "gmac.h"
 
 // ----------------------------------------------------------------------------
-// GNetIntf
+// GInterface
 // ----------------------------------------------------------------------------
-struct GNetIntfs;
-struct G_EXPORT GNetIntf {
-	friend struct GNetIntfs;
+struct GAllInterface;
+struct G_EXPORT GInterface {
+	friend struct GAllInterface;
+	friend struct GNetInfo;
 
 public:
 	int index() const { return index_; }
@@ -31,7 +32,7 @@ public:
 	GMac mac() const { return mac_; }
 	GIp ip() const { return ip_; }
 	GIp mask() const { return mask_; }
-	GIp gateway() const;
+	GIp gateway() const { return gateway_; }
 
 protected:
 	int index_{-1};
@@ -47,7 +48,7 @@ protected:
 	GIp ip_and_mask_{0}; // used for isSameLanIP
 
 public:
-	GNetIntf() {}
+	GInterface() {}
 
 public:
 	bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
@@ -56,29 +57,25 @@ public:
 	GIp  getEndIp()          { return (ip_ | ~mask_);                   }
 
 public:
-	static GNetIntfs& all();
-
-	bool operator==(const GNetIntf& r) const;
+	bool operator==(const GInterface& r) const;
 };
-uint qHash(GNetIntf q);
+uint qHash(GInterface q);
 
 // ----------------------------------------------------------------------------
-// GNetIntfs
+// GAllInterface
 // ----------------------------------------------------------------------------
-struct G_EXPORT GNetIntfs : QList<GNetIntf> {
-	friend struct GNetIntf;
+struct G_EXPORT GAllInterface : QList<GInterface> {
+	friend struct GInterface;
+	friend struct GNetInfo;
 
 private: // singleton
-	GNetIntfs();
-	virtual ~GNetIntfs();
+	GAllInterface();
+	virtual ~GAllInterface();
 
 public:
-	GNetIntf* findByName(QString name);
-	GNetIntf* findByIp(GIp ip);
+	GInterface* findByName(QString name);
+	GInterface* findByIp(GIp ip);
 	pcap_if_t* allDevs_{nullptr};
-	static GNetIntfs& instance();
 
-public:
-	bool initialized_{false};
 	void init();
 };

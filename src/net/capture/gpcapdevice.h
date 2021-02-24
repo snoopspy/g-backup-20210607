@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gpcap.h"
-#include "net/gnetintf.h"
+#include "net/ginterface.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
@@ -48,9 +48,9 @@ public:
 	GPacket::Result read(GPacket* packet) override;
 
 public:
-	GNetIntf* intf() { return intf_; }
+	GInterface* intf() { return intf_; }
 protected:
-	GNetIntf* intf_{nullptr};
+	GInterface* intf_{nullptr};
 
 #ifdef QT_GUI_LIB
 public:

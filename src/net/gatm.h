@@ -12,7 +12,7 @@
 
 #include "net/capture/gpcapdevice.h"
 #include "net/packet/gpacket.h"
-#include "net/gnetintf.h"
+#include "net/gnetinfo.h"
 #include "base/sys/gwaitevent.h"
 
 // ----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ struct G_EXPORT GAtm : GAtmMap {
 	GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout);
 
 protected:
-	bool sendQueries(GPcapDevice* device, GNetIntf* intf);
+	bool sendQueries(GPcapDevice* device, GInterface* intf);
 
 public:
 	static GAtm& instance();
@@ -46,10 +46,10 @@ protected:
 	// SendThread
 	// --------------------------------------------------------------------------
 	struct SendThread : QThread {
-		SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout);
+		SendThread(GAtm* resolve, GPcapDevice* device, GInterface* intf, GDuration timeout);
 		GAtm* atm_;
 		GPcapDevice* device_;
-		GNetIntf* intf_;
+		GInterface* intf_;
 		GDuration timeout_;
 		GWaitEvent we_;
 	protected:

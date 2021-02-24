@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gpcapwrite.h"
-#include "net/gnetintf.h"
+#include "net/ginterface.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite
@@ -32,9 +32,9 @@ protected:
 	bool doClose() override;
 
 public:
-	GNetIntf* intf() { return intf_; }
+	GInterface* intf() { return intf_; }
 protected:
-	GNetIntf* intf_{nullptr};
+	GInterface* intf_{nullptr};
 
 public:
 	GPacket::Result write(GBuf buf);

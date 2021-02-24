@@ -1,11 +1,11 @@
 #include "gpcapdevicewrite.h"
-#include "net/grtm.h"
+#include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite
 // ----------------------------------------------------------------------------
 GPcapDeviceWrite::GPcapDeviceWrite(QObject* parent) : GPcapWrite(parent) {
-	GRtmEntry* entry = GRtm::instance().getBestEntry(QString("8.8.8.8"));
+	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr)
 		devName_ = entry->intf()->name();
 }
@@ -20,7 +20,7 @@ bool GPcapDeviceWrite::doOpen() {
 		return false;
 	}
 
-	intf_ = GNetIntf::all().findByName(devName_);
+	intf_ = GNetInfo::instance().allInterface().findByName(devName_);
 	if (intf_ == nullptr) {
 		QString msg = QString("can not find interface for %1").arg(devName_);
 		SET_ERR(GErr::VALUE_IS_NULL, msg);

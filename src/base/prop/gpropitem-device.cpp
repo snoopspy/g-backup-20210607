@@ -1,5 +1,5 @@
 #include "gpropitem-device.h"
-#include "net/gnetintf.h"
+#include "net/gnetinfo.h"
 
 #ifdef QT_GUI_LIB
 
@@ -7,9 +7,9 @@
 // GPropItemDevice
 // ----------------------------------------------------------------------------
 GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(param) {
-	GNetIntfs& intfs = GNetIntf::all();
-	for (int i = 0; i < intfs.count(); i++) {
-		const GNetIntf& intf = intfs.at(i);
+	GAllInterface& allInterface = GNetInfo::instance().allInterface();
+	for (int i = 0; i < allInterface.count(); i++) {
+		const GInterface& intf = allInterface.at(i);
 #ifdef Q_OS_LINUX
 		QString s = intf.name();
 #endif
@@ -24,9 +24,9 @@ GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(para
 
 void GPropItemDevice::update() {
 	QString devName = object_->property(mpro_.name()).toString();
-	GNetIntfs& intfs = GNetIntf::all();
-	for (int i = 0; i < intfs.count(); i++) {
-		const GNetIntf& intf = intfs.at(i);
+	GAllInterface& allInterface = GNetInfo::instance().allInterface();
+	for (int i = 0; i < allInterface.count(); i++) {
+		const GInterface& intf = allInterface.at(i);
 		if (intf.name() == devName) {
 			comboBox_->setCurrentIndex(i);
 			return;

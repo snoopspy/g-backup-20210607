@@ -35,7 +35,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
 		return false;
 	}
 
-	GNetIntf* intf = GNetIntf::all().findByName(pcapDevice->devName_);
+	GInterface* intf = GNetInfo::instance().allInterface().findByName(pcapDevice->devName_);
 	if (intf == nullptr) {
 		qWarning() << QString("can not find intf for %1").arg(pcapDevice->devName_);
 		return false;
@@ -100,7 +100,7 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
 	return succeed;
 }
 
-bool GAtm::sendQueries(GPcapDevice* pcapDevice, GNetIntf* intf) {
+bool GAtm::sendQueries(GPcapDevice* pcapDevice, GInterface* intf) {
 	GEthArpHdr query;
 	query.ethHdr_.dmac_ = GMac::broadcastMac();
 	query.ethHdr_.smac_ = intf->mac();
@@ -154,7 +154,7 @@ GMac GAtm::waitOne(GIp ip, GPcapDevice* device, GDuration timeout) {
 // --------------------------------------------------------------------------
 // GAtm::SendThread
 // --------------------------------------------------------------------------
-GAtm::SendThread::SendThread(GAtm* resolve, GPcapDevice* device, GNetIntf* intf, GDuration timeout) {
+GAtm::SendThread::SendThread(GAtm* resolve, GPcapDevice* device, GInterface* intf, GDuration timeout) {
 	atm_ = resolve;
 	device_ = device;
 	intf_ = intf;
@@ -192,7 +192,7 @@ TEST(GAtm, resolveTest) {
 	QString devName = device.devName_;
 	ASSERT_NE(devName, "");
 
-	GNetIntf* intf = GNetIntf::all().findByName(devName);
+	GInterface* intf = GNetInfo::instance().allInterface().findByName(devName);
 	ASSERT_TRUE(intf != nullptr);
 
 	GIp ip = intf->gateway();

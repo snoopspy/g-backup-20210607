@@ -6,11 +6,6 @@
 // ----------------------------------------------------------------------------
 // GRtmEntry
 // ----------------------------------------------------------------------------
-GNetIntf* GRtmEntry::intf() const {
-	GRtm::instance().init();
-	return intf_;
-}
-
 bool GRtmEntry::operator==(const GRtmEntry& r) const {
 	if (dst_ != r.dst_) return false;
 	if (mask_ != r.mask_) return false;
@@ -71,29 +66,15 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
 	return res;
 }
 
-#ifdef Q_OS_LINUX
-#include "net/_linux/grtmlinux.h"
-GRtm& GRtm::instance() {
-	static GRtmLinux rtm;
-	return rtm;
-}
-#endif
-#ifdef Q_OS_WIN
-#include "net/_win/grtmwin32.h"
-GRtm& GRtm::instance() {
-	static GRtmWin32 rtm;
-	return rtm;
-}
-#endif
-
 // ----------------------------------------------------------------------------
 // GTEST
 // ----------------------------------------------------------------------------
 #ifdef GTEST
 #include <gtest/gtest.h>
+#include "net/gnetinfo.h"
 
 TEST(GRtm, loadTest) {
-	GRtm& rtm = GRtm::instance();
+	GRtm& rtm = GNetInfo::instance().rtm();
 	qDebug() << "Routing Table Manager : count =" << rtm.count();
 	for (GRtm::iterator it = rtm.begin(); it != rtm.end(); it++) {
 		GRtmEntry& entry = *it;
@@ -108,7 +89,7 @@ TEST(GRtm, loadTest) {
 }
 
 TEST(GRtm, bestTest) {
-	GRtm& rtm = GRtm::instance();
+	GRtm& rtm = GNetInfo::instance().rtm();
 	GRtmEntry* entry = rtm.getBestEntry(QString("8.8.8.8"));
 	EXPECT_NE(entry, nullptr);
 	qDebug() << "best entry for 8.8.8.8 is" << entry->intf()->name();

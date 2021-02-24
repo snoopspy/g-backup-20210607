@@ -1,23 +1,14 @@
 #include <QDebug>
-#include "gnetintf.h"
+#include "ginterface.h"
 #include "grtm.h"
 #ifdef Q_OS_WIN
 #include "net/_win/gipadapterinfo.h"
 #endif
 
 // ----------------------------------------------------------------------------
-// GNetIntf
+// GInterface
 // ----------------------------------------------------------------------------
-GIp GNetIntf::gateway() const {
-	GNetIntfs::instance().init();
-	return gateway_;
-}
-
-GNetIntfs& GNetIntf::all() {
-	return GNetIntfs::instance();
-}
-
-bool GNetIntf::operator==(const GNetIntf& r) const {
+bool GInterface::operator==(const GInterface& r) const {
 	if (index_ != r.index_) return false;
 	if (name_ != r.name_) return false;
 	if (desc_ != r.desc_) return false;
@@ -29,12 +20,12 @@ bool GNetIntf::operator==(const GNetIntf& r) const {
 	return true;
 }
 
-uint qHash(GNetIntf q) {
+uint qHash(GInterface q) {
 	return uint(uint32_t(q.index()) + q.ip() + q.mask() + q.gateway());
 }
 
 // ----------------------------------------------------------------------------
-// GNetIntfs
+// GAllInterface
 // ----------------------------------------------------------------------------
 #ifdef Q_OS_LINUX
 #include <net/if.h> // for ifreq
@@ -56,7 +47,7 @@ static GMac getMac(char* name) {
 }
 #endif
 
-GNetIntfs::GNetIntfs() {
+GAllInterface::GAllInterface() {
 	//
 	// Initialize allDevs using pcap API.
 	//
@@ -76,7 +67,7 @@ GNetIntfs::GNetIntfs() {
 	pcap_if_t* dev = allDevs_;
 	i = 1;
 	while (dev != nullptr) {
-		GNetIntf intf;
+		GInterface intf;
 
 		intf.index_ = i;
 		intf.name_ = dev->name;
@@ -111,13 +102,14 @@ GNetIntfs::GNetIntfs() {
 		}
 #endif
 		intf.ip_and_mask_ = intf.ip_ & intf.mask_;
+		// gateway_ is initialized in GNetInfo
 		push_back(intf);
 		dev = dev->next;
 		i++;
 	}
 }
 
-GNetIntfs::~GNetIntfs() {
+GAllInterface::~GAllInterface() {
 	clear();
 
 	//
@@ -130,8 +122,8 @@ GNetIntfs::~GNetIntfs() {
 }
 
 #ifdef Q_OS_LINUX
-GNetIntf* GNetIntfs::findByName(QString name) {
-	for (GNetIntf& intf: *this) {
+GInterface* GAllInterface::findByName(QString name) {
+	for (GInterface& intf: *this) {
 		if (intf.name_ == name)
 			return &intf;
 	}
@@ -139,8 +131,8 @@ GNetIntf* GNetIntfs::findByName(QString name) {
 }
 #endif
 #ifdef Q_OS_WIN
-GNetIntf* GNetIntfs::findByName(QString name) {
-	for (GNetIntf& intf: *this) {
+GInterface* GAllInterface::findByName(QString name) {
+	for (GInterface& intf: *this) {
 		if (intf.name_.indexOf(name) != -1)
 			return &intf;
 	}
@@ -148,24 +140,10 @@ GNetIntf* GNetIntfs::findByName(QString name) {
 }
 #endif
 
-GNetIntf* GNetIntfs::findByIp(GIp ip) {
-	for (GNetIntf& intf: *this) {
+GInterface* GAllInterface::findByIp(GIp ip) {
+	for (GInterface& intf: *this) {
 		if (intf.ip() == ip)
 			return &intf;
 	}
 	return nullptr;
-}
-
-GNetIntfs& GNetIntfs::instance() {
-	static GNetIntfs intfs;
-	return intfs;
-}
-
-void GNetIntfs::init() {
-	if (initialized_) return;
-	initialized_ = true;
-
-	for (GNetIntf& intf: *this) {
-		intf.gateway_ = GRtm::instance().findGateway(intf.name_, intf.ip_);
-	}
 }

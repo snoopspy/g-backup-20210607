@@ -1,5 +1,5 @@
 #include "grtmlinux.h"
-#include "net/gnetintf.h"
+#include "net/ginterface.h"
 
 // ----------------------------------------------------------------------------
 // GRtmLinux
@@ -18,7 +18,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
 	bool firstLine = true;
 	QList<QString> fields;
 
-	for (QByteArray ba: baList) {
+	for (QByteArray& ba: baList) {
 		QTextStream ts(ba);
 		if (firstLine) {
 			firstLine = false;
@@ -49,6 +49,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
 					entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
 				else if (field == "Metric")
 					entry.metric_ = value.toInt(nullptr, 16);
+				// intf_ is initialized in GNetInfo
 			}
 			if (appending)
 				append(entry);
@@ -60,19 +61,3 @@ GRtmLinux::~GRtmLinux() {
 	clear();
 }
 
-void GRtmLinux::init() {
-	if (initialized_) return;
-	initialized_ = true;
-
-	Q_ASSERT(count() == intfNames_.count());
-	for (int i = 0; i < count(); i++) {
-		GRtmEntry& entry = const_cast<GRtmEntry&>(at(i));
-		QString intfName = intfNames_.at(i);
-		GNetIntf* netIntf = GNetIntfs::instance().findByName(intfName);
-		if (netIntf == nullptr) {
-			QString msg = QString("GNetIntfs::instance().findByName(%1) return false").arg(intfName);
-			qFatal("%s", qPrintable(msg));
-		}
-		entry.intf_ = netIntf;
-	}
-}
