@@ -73,7 +73,6 @@ private: // singleton
 public:
 	GInterface* findByName(QString name);
 	GInterface* findByIp(GIp ip);
-	pcap_if_t* allDevs_{nullptr};
 
 	void init();
 };

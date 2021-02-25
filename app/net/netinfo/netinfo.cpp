@@ -8,10 +8,9 @@ void showNetIntf() {
 	GAllInterface& allInterface = GNetInfo::instance().allInterface();
 	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 
-	int index = 1;
 	for(GInterface& intf: allInterface) {
 		bool best = entry != nullptr && entry->intf()->name() == intf.name();
-		QString msg = QString("index %1 %2").arg(index).arg(best ? "(Best)" : "");
+		QString msg = QString("index %1 %2").arg(intf.index()).arg(best ? "(Best)" : "");
 		cout << qPrintable(msg) << endl;
 
 		msg = QString("  %1").arg(intf.name());
@@ -29,7 +28,6 @@ void showNetIntf() {
 		}
 
 		cout << endl;
-		index++;
 	}
 }
 

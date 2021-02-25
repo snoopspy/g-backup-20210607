@@ -1,8 +1,23 @@
 #include "gdemon.h"
+#include <sys/socket.h>
 
 // ----------------------------------------------------------------------------
 // GDemon
 // ----------------------------------------------------------------------------
+bool GDemon::readAll(int sd, pvoid buf, int32_t size) {
+	pchar _buf = pchar(buf);
+	int32_t remain = size;
+	while (true) {
+		ssize_t once = ::recv(sd, _buf, remain, 0);
+		if (once == 0 || once == -1)
+			return false;
+		_buf += once;
+		remain -= once;
+		if (remain == 0) break;
+	}
+	return true;
+}
+
 int32_t GDemon::Interface::encode(pchar buf, int32_t size) {
 	int32_t res = 0;
 
@@ -17,7 +32,16 @@ int32_t GDemon::Interface::encode(pchar buf, int32_t size) {
 	// desc_
 	len = desc_.size();
 	*pint32_t(buf) = int32_t(len); res += sizeof(len); buf += sizeof(len);
-	memcpy(buf, desc_.data(), len); res += len; // buf += len;
+	memcpy(buf, desc_.data(), len); res += len; buf += len;
+
+	// mac_
+	memcpy(buf, mac_, MacSize); res += MacSize; buf += MacSize;
+
+	// ip
+	memcpy(buf, &ip_, sizeof(ip_)); res += sizeof(ip_); buf += sizeof(ip_);
+
+	// mask_
+	memcpy(buf, &mask_, sizeof(mask_)); res += sizeof(mask_); // buf += sizeof(mask_);
 
 	if (res > size) {
 		fprintf(stderr, "GDemon::Interface::encode size=%d res=%d\n", size, res);

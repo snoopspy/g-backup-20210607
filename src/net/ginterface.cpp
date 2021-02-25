@@ -26,35 +26,67 @@ uint qHash(GInterface q) {
 // ----------------------------------------------------------------------------
 // GAllInterface
 // ----------------------------------------------------------------------------
+#ifdef GILGIL_ANDROID_DEBUG
+
+#include "net/demon/gdemonclient.h"
+
+GAllInterface::GAllInterface() {
+	GDemonClient client;
+	if (!client.connect()) return;
+
+	int index = 1;
+	GDemon::InterfaceList interfaceList = client.getDeviceList();
+	for (GDemon::Interface& interface: interfaceList) {
+		GInterface intf;
+		intf.index_ = index;
+		intf.name_ = interface.name_.data();
+		intf.desc_ = interface.desc_.data();
+		intf.mac_ = interface.mac_;
+		intf.ip_ = interface.ip_;
+		intf.mask_ = interface.mask_;
+		intf.ip_and_mask_ = intf.ip_ & intf.mask_;
+		// gateway_ is initialized in GNetInfo
+		push_back(intf);
+		index++;
+	}
+}
+
+#else // GILGIL_ANDROID_DEBUG
+
 #ifdef Q_OS_LINUX
 #include <net/if.h> // for ifreq
 #include <sys/ioctl.h> // for SIOCGIFHWADDR
-static GMac getMac(char* name) {
-	int s;
+static GMac getMac(char* devName) {
+	int s = socket(PF_INET, SOCK_DGRAM, 0);
+	if (s == -1) {
+		qDebug() << "socket return -1" << strerror(errno);
+		return GMac::nullMac();
+	}
+
 	struct ifreq buffer;
-
-	s = socket(PF_INET, SOCK_DGRAM, 0);
 	memset(&buffer, 0x00, sizeof(buffer));
+	strncpy(buffer.ifr_name, devName, IFNAMSIZ);
 
-	strncpy(buffer.ifr_name, name, IFNAMSIZ);
-	ioctl(s, SIOCGIFHWADDR, &buffer);
+	int i = ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
+	if (i  == -1) {
+		qDebug() << "ioctl return -1" << strerror(errno);
+		return GMac::nullMac();
+	}
 
 	const u_char* p = const_cast<const u_char*>(reinterpret_cast<u_char*>(buffer.ifr_ifru.ifru_hwaddr.sa_data));
-	GMac res = p;
+	GMac res(p);
 	return res;
 }
-#endif
+#endif // Q_OS_LINUX
 
 GAllInterface::GAllInterface() {
 	//
 	// Initialize allDevs using pcap API.
 	//
-	if (allDevs_ != nullptr) return;
-
+	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
-
-	int i = pcap_findalldevs(&allDevs_, errBuf);
+	int i = pcap_findalldevs(&allDevs, errBuf);
 	if (i != 0) { // if error occured
 		qWarning() << QString("error in pcap_findalldevs_ex (%1)").arg(errBuf);
 		return;
@@ -63,7 +95,7 @@ GAllInterface::GAllInterface() {
 	//
 	// Add all interfaces
 	//
-	pcap_if_t* dev = allDevs_;
+	pcap_if_t* dev = allDevs;
 	i = 1;
 	while (dev != nullptr) {
 		GInterface intf;
@@ -105,18 +137,14 @@ GAllInterface::GAllInterface() {
 		dev = dev->next;
 		i++;
 	}
+
+	pcap_freealldevs(allDevs);
 }
+
+#endif // GILGIL_ANDROID_DEBUG
 
 GAllInterface::~GAllInterface() {
 	clear();
-
-	//
-	// Finalize allDevs_
-	//
-	if (allDevs_ != nullptr) {
-		pcap_freealldevs(allDevs_);
-		allDevs_ = nullptr;
-	}
 }
 
 #ifdef Q_OS_LINUX

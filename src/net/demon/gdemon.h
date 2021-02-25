@@ -8,21 +8,30 @@
 //
 // ----------------------------------------------------------------------------
 
+#pragma once
+
 #include <cstdint>
 #include <cstring>
 #include <list>
 #include <string>
 #include <pcap.h>
+#include <unistd.h>
 
 // ----------------------------------------------------------------------------
 // GDemon
 // ----------------------------------------------------------------------------
 struct GDemon {
 	typedef char *pchar;
+	typedef void *pvoid;
 	typedef int32_t *pint32_t;
 
 	static const uint16_t DefaultPort = 8908;
-	static const int MaxBufferSize = 65536;
+	static const int MaxBufferSize = 8192;
+
+	static bool readAll(int sd, pvoid buf, int32_t size);
+
+	GDemon() {}
+	virtual ~GDemon() {}
 
 	enum: int32_t {
 		getInterfaceList = 0,
@@ -31,9 +40,13 @@ struct GDemon {
 	};
 
 	struct Interface {
+		static const int MacSize = 6;
 		int32_t index_;
 		std::string name_;
 		std::string desc_;
+		uint8_t mac_[MacSize];
+		uint32_t ip_;
+		uint32_t mask_;
 		int32_t encode(pchar buf, int32_t size);
 		int32_t decode(pchar buf, int32_t size);
 	};
@@ -65,20 +78,3 @@ struct GDemon {
 		int32_t decode(pchar buf, int32_t size);
 	};
 };
-
-struct GDemonClient : GDemon {
-	std::string error_;
-	bool connect(std::string ip = "127.0.0.1", uint16_t port = DefaultPort);
-	bool disconnect();
-
-	InterfaceList getDeviceList();
-};
-
-
-#ifdef SSDEMON
-struct GDemonServer: GDemon {
-	std::string error_;
-	bool start(std::string ip = "0.0.0.0", uint16_t port = DefaultPort);
-	bool stop();
-};
-#endif // SSDEMON
