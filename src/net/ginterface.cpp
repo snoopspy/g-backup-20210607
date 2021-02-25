@@ -36,7 +36,7 @@ static GMac getMac(char* name) {
 	s = socket(PF_INET, SOCK_DGRAM, 0);
 	memset(&buffer, 0x00, sizeof(buffer));
 
-	strcpy(buffer.ifr_name, name);
+	strncpy(buffer.ifr_name, name, IFNAMSIZ);
 	ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
 
