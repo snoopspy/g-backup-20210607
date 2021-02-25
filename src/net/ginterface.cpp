@@ -12,7 +12,6 @@ bool GInterface::operator==(const GInterface& r) const {
 	if (index_ != r.index_) return false;
 	if (name_ != r.name_) return false;
 	if (desc_ != r.desc_) return false;
-	if (dev_ != r.dev_) return false;
 	if (mac_ != r.mac_) return false;
 	if (ip_ != r.ip_) return false;
 	if (mask_ != r.mask_) return false;
@@ -73,7 +72,6 @@ GAllInterface::GAllInterface() {
 		intf.name_ = dev->name;
 		intf.desc_ = dev->description;
 		if (intf.desc_ == "") intf.desc_ = intf.name_;
-		intf.dev_ = dev;
 
 #ifdef Q_OS_LINUX
 		intf.mac_ = getMac(dev->name);

@@ -28,7 +28,6 @@ public:
 	int index() const { return index_; }
 	QString name() const { return name_; }
 	QString desc() const { return desc_; }
-	pcap_if_t* dev() const { return dev_; }
 	GMac mac() const { return mac_; }
 	GIp ip() const { return ip_; }
 	GIp mask() const { return mask_; }
@@ -38,7 +37,6 @@ protected:
 	int index_{-1};
 	QString name_;
 	QString desc_;
-	pcap_if_t* dev_{nullptr};
 	GMac mac_{GMac::nullMac()};
 	GIp ip_{0};
 	GIp mask_{0};
