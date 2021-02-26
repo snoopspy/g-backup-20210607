@@ -70,7 +70,7 @@ static GMac getMac(char* devName) {
 	int i = ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
 	if (i  == -1) {
-		qDebug() << "ioctl return -1" << strerror(errno);
+		qDebug() << "ioctl return -1" << devName << strerror(errno);
 		return GMac::nullMac();
 	}
 
@@ -102,7 +102,7 @@ GAllInterface::GAllInterface() {
 
 		intf.index_ = i;
 		intf.name_ = dev->name;
-		intf.desc_ = dev->description;
+		intf.desc_ = dev->description != nullptr ? dev->description : intf.name_;
 		if (intf.desc_ == "") intf.desc_ = intf.name_;
 
 #ifdef Q_OS_LINUX

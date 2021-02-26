@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <list>
@@ -28,32 +29,32 @@ struct GDemon {
 	static const uint16_t DefaultPort = 8908;
 	static const int MaxBufferSize = 8192;
 
-	static bool readAll(int sd, pvoid buf, int32_t size);
+	static bool readAll(int sd, pvoid buffer, int32_t size);
 
 	GDemon() {}
 	virtual ~GDemon() {}
 
 	enum: int32_t {
-		getInterfaceList = 0,
-		pcapOpen = 1,
-		pcapClose = 2
+		cmdGetInterfaceList = 0,
+		cmdPcapOpen = 1,
+		cmdPcapClose = 2
 	};
 
 	struct Interface {
 		static const int MacSize = 6;
-		int32_t index_;
+		int32_t index_{0};
 		std::string name_;
 		std::string desc_;
-		uint8_t mac_[MacSize];
-		uint32_t ip_;
-		uint32_t mask_;
-		int32_t encode(pchar buf, int32_t size);
-		int32_t decode(pchar buf, int32_t size);
+		uint8_t mac_[MacSize]{0,0,0,0,0,0};
+		uint32_t ip_{0};
+		uint32_t mask_{0};
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
 	};
 
 	struct InterfaceList : std::list<Interface> {
-		int32_t encode(pchar buf, int32_t size);
-		int32_t decode(pchar buf, int32_t size);
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
 	};
 
 	struct PcapOpen {
@@ -74,7 +75,7 @@ struct GDemon {
 		uint32_t size_;
 		pchar* data;
 
-		int32_t encode(pchar buf, int32_t size);
-		int32_t decode(pchar buf, int32_t size);
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
 	};
 };

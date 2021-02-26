@@ -35,6 +35,8 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 	res = ::connect(sd_, (struct sockaddr *)&addr, sizeof(addr));
 	if (res == -1) {
 		qWarning() << strerror(errno);
+		::close(sd_);
+		sd_ = 0;
 		return -1;
 	}
 
@@ -51,7 +53,7 @@ bool GDemonClient::disconnect() {
 }
 
 GDemon::InterfaceList GDemonClient::getDeviceList() {
-	GDemon::InterfaceList interfaceList;
+	InterfaceList interfaceList;
 
 	if (sd_ == 0) {
 		qWarning() << "sd_ is 0";
@@ -59,27 +61,25 @@ GDemon::InterfaceList GDemonClient::getDeviceList() {
 	}
 
 	char buffer[MaxBufferSize];
-	pchar buf = buffer;
-	uint32_t size = 0;
+	pchar buf = buffer + sizeof(int32_t);
+	int32_t cmd = cmdGetInterfaceList;
+	int32_t writeLen;
+	*pint32_t(buf) = cmd; writeLen = sizeof(cmd); // buf += sizeof(cmd);
+	*pint32_t(buffer) = writeLen; writeLen += sizeof(writeLen);
 
-	int32_t cmd = getInterfaceList;
-	*pint32_t(buf) = sizeof(cmd); size += sizeof(cmd); buf += sizeof(cmd);
-	*pint32_t(buf) = cmd; size += sizeof(cmd); buf += sizeof(cmd);
-
-	int res = ::send(sd_, buffer, size, 0);
+	int res = ::send(sd_, buffer, writeLen, 0);
 	if (res == 0 || res == -1) {
 		qWarning() << "send return " << res;
 		return interfaceList;
 	}
 
-	int32_t len;
-	if (!readAll(sd_, &len, sizeof(len)))
+	int32_t readLen;
+	if (!readAll(sd_, &readLen, sizeof(readLen)))
 		return interfaceList;
 
-	if (!readAll(sd_, buffer, MaxBufferSize))
+	if (!readAll(sd_, buffer, readLen))
 		return interfaceList;
 
-	buf = buffer;
-	interfaceList.decode(buf, len);
+	interfaceList.decode(buffer, readLen);
 	return interfaceList;
 }
