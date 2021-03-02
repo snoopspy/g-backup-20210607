@@ -101,26 +101,29 @@ void GDemonServer::Session::run() {
 
 	bool active = true;
 	while (active) {
-		int32_t readLen;
-		if (!readAll(sd_, &readLen, sizeof(readLen)))
+		int32_t recvLen;
+		if (!recvAll(sd_, &recvLen, sizeof(recvLen)))
 			break;
+		if (recvLen < 0 || recvLen > MaxBufferSize) {
+			GTRACE("invalid recvLen %d", recvLen);
+			break;
+		}
 
 		char buffer[MaxBufferSize];
-		assert(readLen < MaxBufferSize);
-		if (!readAll(sd_, buffer, readLen))
+		if (!recvAll(sd_, buffer, recvLen))
 			break;
 
 		pchar buf = buffer;
-		int32_t cmd = *pint32_t(buf); buf += sizeof(cmd); readLen -= sizeof(cmd);
+		int32_t cmd = *pint32_t(buf); buf += sizeof(cmd); recvLen -= sizeof(cmd);
 		switch (cmd) {
-			case cmdGetInterfaceList:
-				active = processGetInterfaceList(buf, readLen);
+			case cmdGetAllInterface:
+				active = processGetAllInterface(buf, recvLen);
 				break;
 			case cmdPcapOpen:
-				active = processPcapOpen(buf, readLen);
+				active = processPcapOpen(buf, recvLen);
 				break;
 			case cmdPcapClose:
-				active = processPcapClose(buf, readLen);
+				active = processPcapClose(buf, recvLen);
 				break;
 			default:
 				GTRACE("invalid cmd %d", cmd);
@@ -156,7 +159,7 @@ bool getMac(char* devName, uint8_t* mac) {
 	return true;
 }
 
-bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
+bool GDemonServer::Session::processGetAllInterface(pchar, int32_t) {
 	GTRACE("processGetInterfaceList"); // gilgil temp 2021.02.26
 
 	pcap_if_t* allDevs;
@@ -171,7 +174,7 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 	// Add all interfaces
 	//
 	pcap_if_t* dev = allDevs;
-	InterfaceList interfaceList;
+	GetAllInterfaceRep rep;
 	i = 1;
 	while (dev != nullptr) {
 		Interface interface;
@@ -192,20 +195,22 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 				interface.mask_ = ntohl(addr_in->sin_addr.s_addr);
 			}
 		}
-		interfaceList.push_back(interface);
+		rep.allInterface_.push_back(interface);
 		dev = dev->next;
 		i++;
 	}
 	pcap_freealldevs(allDevs);
 
 	char buffer[MaxBufferSize];
-	pchar buf = buffer + sizeof(int32_t);
-	int32_t writeLen = interfaceList.encode(buf, MaxBufferSize - sizeof(int32_t));
-	*pint32_t(buffer) = writeLen; writeLen += sizeof(writeLen);
+	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("rep.encode return -1");
+		return false;
+	}
 
-	int res = ::send(sd_, buffer, writeLen, 0);
-	if (res == 0 || res == -1) {
-		GTRACE("send return %d", res);
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
 		return false;
 	}
 	return true;

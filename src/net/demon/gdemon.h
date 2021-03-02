@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <list>
@@ -29,16 +28,18 @@ struct GDemon {
 	static const uint16_t DefaultPort = 8908;
 	static const int MaxBufferSize = 8192;
 
-	static bool readAll(int sd, pvoid buffer, int32_t size);
+	static bool recvAll(int sd, pvoid buffer, int32_t size);
 
 	GDemon() {}
 	virtual ~GDemon() {}
 
-	enum: int32_t {
-		cmdGetInterfaceList = 0,
-		cmdPcapOpen = 1,
-		cmdPcapClose = 2
+	enum Cmd: int32_t {
+		cmdRunCommand = 0,
+		cmdGetAllInterface = 1,
+		cmdPcapOpen = 2,
+		cmdPcapClose = 3
 	};
+	typedef Cmd *PCmd;
 
 	struct Interface {
 		static const int MacSize = 6;
@@ -52,26 +53,54 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct InterfaceList : std::list<Interface> {
+	struct AllInterface : std::list<Interface> {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct PcapOpen {
+	#pragma pack(push, 1)
+	struct Header {
+		int32_t len_;
+		Cmd cmd_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct GetAllInterfaceReq : Header {
+		int32_t encode(pchar buffer, int32_t size);
+		// int32_t decode(pchar buffer, int32_t size); // useless
+	};
+
+	struct GetAllInterfaceRep : Header {
+		AllInterface allInterface_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	#pragma pack(pop)
+
+	struct PcapOpenReq : Header {
 		std::string dev_;
 		int32_t snaplen_;
 		int32_t promisc_;
 		int32_t timeout_;
-		std::string errbuf_;
+		char errBuf_[PCAP_ERRBUF_SIZE];
+		int32_t encode(pchar buffer, int32_t size);
 	};
 
-	struct PcapClose {
-		uint64_t pcap_;
+	struct PcapOpenRes {
+		pcap* pcap_;
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct PcapCloseReq {
+		pcap* pcap_;
+		int32_t encode(pchar buffer, uint32_t size);
 	};
 
 	struct PcapRead {
 		uint64_t pcap_;
-		struct pkthdr_;
+		struct pcap_pkthdr pktHdr_;
 		uint32_t size_;
 		pchar* data;
 

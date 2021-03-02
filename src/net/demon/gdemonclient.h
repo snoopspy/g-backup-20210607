@@ -25,5 +25,5 @@ struct GDemonClient : GDemon {
 	bool connect(std::string ip = "127.0.0.1", uint16_t port = DefaultPort);
 	bool disconnect();
 
-	InterfaceList getDeviceList();
+	AllInterface getDeviceList();
 };

@@ -4,15 +4,15 @@
 // ----------------------------------------------------------------------------
 // GDemon
 // ----------------------------------------------------------------------------
-bool GDemon::readAll(int sd, pvoid buffer, int32_t size) {
+bool GDemon::recvAll(int sd, pvoid buffer, int32_t size) {
 	pchar buf = pchar(buffer);
 	int32_t remain = size;
 	while (true) {
-		ssize_t once = ::recv(sd, buf, remain, 0);
-		if (once == 0 || once == -1)
+		ssize_t recvLen = ::recv(sd, buf, remain, 0);
+		if (recvLen == 0 || recvLen == -1)
 			return false;
-		buf += once;
-		remain -= once;
+		buf += recvLen;
+		remain -= recvLen;
 		if (remain == 0) break;
 	}
 	return true;
@@ -80,7 +80,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::InterfaceList::encode(pchar buffer, int32_t size) {
+int32_t GDemon::AllInterface::encode(pchar buffer, int32_t size) {
 	pchar buf = buffer;
 
 	// count
@@ -95,13 +95,13 @@ int32_t GDemon::InterfaceList::encode(pchar buffer, int32_t size) {
 	}
 
 	if (size < 0) {
-		fprintf(stderr, "GDemon::InterfaceList::encode size=%d\n", size);
+		fprintf(stderr, "GDemon::AllInterface::encode size=%d\n", size);
 		return -1;
 	}
 	return buf - buffer;
 }
 
-int32_t GDemon::InterfaceList::decode(pchar buffer, int32_t size) {
+int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
 	pchar buf = buffer;
 
 	// count
@@ -117,8 +117,69 @@ int32_t GDemon::InterfaceList::decode(pchar buffer, int32_t size) {
 	}
 
 	if (size < 0) {
-		fprintf(stderr, "GDemon::InterfaceList::decode size=%d\n", size);
+		fprintf(stderr, "GDemon::AllInterface::decode size=%d\n", size);
 		return -1;
 	}
 	return buf - buffer;
+}
+
+
+int32_t GDemon::Header::encode(pchar buffer, int32_t size) {
+	pchar buf = buffer;
+
+	*pint32_t(buf) = len_; buf += sizeof(len_); size -= sizeof(len_);
+	*PCmd(buf) = cmd_; buf += sizeof(cmd_); size -= sizeof(cmd_);
+
+	if (size < 0) {
+		fprintf(stderr, "GDemon::Header::encode size=%d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
+	pchar buf = buffer;
+
+	len_ = *pint32_t(buf); buf += sizeof(len_); size -= sizeof(len_);
+	cmd_ = *PCmd(buf); buf += sizeof(cmd_); size -= sizeof(cmd_);
+
+	if (size < 0) {
+		fprintf(stderr, "GDemon::Header::decode size=%d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::GetAllInterfaceReq::encode(pchar buffer, int32_t size) {
+	pchar buf = buffer;
+
+	int32_t encLen = Header::encode(buf, size); buf += encLen; size -= encLen;
+
+	if (size < 0) {
+		fprintf(stderr, "GDemon::AllInterface::decode size=%d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+
+int32_t GDemon::GetAllInterfaceRep::encode(pchar buffer, int32_t size) {
+	pchar buf = buffer;
+
+	buf += sizeof(len_); size -= sizeof(len_); // skip len_
+
+	int32_t encLen = Header::encode(buf, size); buf += encLen; size -= encLen;
+	encLen = allInterface_.encode(buf, size); buf += encLen; size -= encLen;
+
+	if (size < 0) {
+		fprintf(stderr, "GDemon::AllInterface::decode size=%d\n", size);
+		return -1;
+	}
+	len_ = buf - buffer;
+	*pint32_t(buffer) = len_;
+	return buf - buffer;
+}
+
+int32_t GDemon::GetAllInterfaceRep::decode(pchar buffer, int32_t size) {
+	return allInterface_.decode(buffer, size);
 }

@@ -52,34 +52,39 @@ bool GDemonClient::disconnect() {
 	return true;
 }
 
-GDemon::InterfaceList GDemonClient::getDeviceList() {
-	InterfaceList interfaceList;
+GDemon::AllInterface GDemonClient::getDeviceList() {
+	AllInterface allInterface;
 
 	if (sd_ == 0) {
 		qWarning() << "sd_ is 0";
-		return interfaceList;
+		return allInterface;
 	}
 
 	char buffer[MaxBufferSize];
-	pchar buf = buffer + sizeof(int32_t);
-	int32_t cmd = cmdGetInterfaceList;
-	int32_t writeLen;
-	*pint32_t(buf) = cmd; writeLen = sizeof(cmd); // buf += sizeof(cmd);
-	*pint32_t(buffer) = writeLen; writeLen += sizeof(writeLen);
-
-	int res = ::send(sd_, buffer, writeLen, 0);
-	if (res == 0 || res == -1) {
-		qWarning() << "send return " << res;
-		return interfaceList;
+	GetAllInterfaceReq req;
+	int32_t encLen = req.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		qWarning() << "req.encode return -1";
+		return allInterface;
+	}
+	int sendLen = ::send(sd_, &req, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		qWarning() << "send return " << sendLen;
+		return allInterface;
 	}
 
-	int32_t readLen;
-	if (!readAll(sd_, &readLen, sizeof(readLen)))
-		return interfaceList;
+	GetAllInterfaceRep rep;
+	if (!recvAll(sd_, &rep.len_, sizeof(rep.len_)))
+		return allInterface;
 
-	if (!readAll(sd_, buffer, readLen))
-		return interfaceList;
+	int32_t recvLen;
+	if (!readAll(sd_, &recvLen, sizeof(recvLen)))
+		return allInterface;
 
-	interfaceList.decode(buffer, readLen);
-	return interfaceList;
+	char buffer[MaxBufferSize];
+	if (!readAll(sd_, buffer, resParam.len_))
+		return allInterface;
+
+	allInterface.decode(buffer, readLen);
+	return allInterface;
 }

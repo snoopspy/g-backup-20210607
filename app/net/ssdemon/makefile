@@ -2,7 +2,8 @@ TARGET=../../../bin/ssdemon
 SRCS=$(wildcard *.cpp) $(wildcard ../../../src/net/demon/gdemon.cpp)
 OBJS=$(SRCS:%.cpp=%.o)
 
-CPPFLAGS+=-g #-O2
+CPPFLAGS+=-g
+CPPFLAGS+=-O2 # for release
 CPPFLAGS+=-I../../../src/net/demon
 LDLIBS+=-lpcap -pthread
 
