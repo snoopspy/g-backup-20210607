@@ -20,6 +20,7 @@ lib/libg_gui_d/
 *.so
 *.dll
 *.exe
+*.user
 Makefile
 Makefile.*
 moc_*
