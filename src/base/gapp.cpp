@@ -32,9 +32,13 @@ void GApp::init() {
 #endif // Q_OS_LINUX
 #ifdef Q_OS_ANDROID
 	logManager.push_back(new GLogFile);
-	qInfo() << "android test";
 #endif // Q_OS_ANDROID
 	}
+
+	QString appName = QCoreApplication::applicationName();
+	qInfo() << appName << " " << G::version();
+	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
+	qInfo() << G::pcap_lib_version();
 }
 
 #ifdef QT_GUI_LIB

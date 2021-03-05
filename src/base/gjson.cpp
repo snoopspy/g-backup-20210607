@@ -1,6 +1,6 @@
 #include "gjson.h"
 #include <QDebug>
-#include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 
 // ----------------------------------------------------------------------------
@@ -45,9 +45,10 @@ bool GJson::saveToFile(QJsonObject jo, QString fileName) {
 
 #include <QCoreApplication>
 QString GJson::defaultFileName() {
-	QString res;
-	res = QCoreApplication::applicationFilePath();
+	QFileInfo fileInfo(QCoreApplication::applicationFilePath());
+	QString res = fileInfo.fileName();
 	if (res.endsWith(".exe")) res = res.left(res.length() - 4);
+	if (res.endsWith(".so")) res = res.left(res.length() - 3);
 	res += ".json";
 	return res;
 }

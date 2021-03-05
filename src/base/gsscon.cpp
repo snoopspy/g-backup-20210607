@@ -20,10 +20,6 @@ struct GSsConParam {
 	static void usage() {
 		using namespace std;
 		QString appName = QCoreApplication::applicationName();
-		cout << qPrintable(appName) << " " << G::version() << endl;
-		cout << "Copyright (c) Gilbert Lee All rights reserved" << endl;
-		cout << G::pcap_lib_version() << endl;
-		cout << endl;
 		cout << "usage : " << qPrintable(appName) << " <filename>" << endl;
 		cout << endl;
 		cout << "example : " << qPrintable(appName) << " ss/test.ss" << endl;
