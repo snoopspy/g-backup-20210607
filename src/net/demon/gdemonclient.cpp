@@ -93,3 +93,8 @@ GDemon::AllInterface GDemonClient::getAllInterface() {
 
 	return rep.allInterface_;
 }
+
+GDemonClient& GDemonClient::instance() {
+	static GDemonClient demonClient;
+	return demonClient;
+}

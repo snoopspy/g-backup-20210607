@@ -31,7 +31,7 @@ uint qHash(GInterface q) {
 #include "net/demon/gdemonclient.h"
 
 GAllInterface::GAllInterface() {
-	GDemonClient client;
+	GDemonClient& client = GDemonClient::instance();
 	if (!client.connect()) return;
 
 	int index = 1;
