@@ -3,6 +3,7 @@
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"
 #include "base/log/glogdbwin32.h"
+#include "base/log/glogfile.h"
 #include "base/log/glogstderr.h"
 
 // ----------------------------------------------------------------------------
@@ -29,6 +30,10 @@ void GApp::init() {
 #ifdef Q_OS_LINUX
 	logManager.push_back(new GLogStderr);
 #endif // Q_OS_LINUX
+#ifdef Q_OS_ANDROID
+	logManager.push_back(new GLogFile);
+	qInfo() << "android test";
+#endif // Q_OS_ANDROID
 	}
 }
 
