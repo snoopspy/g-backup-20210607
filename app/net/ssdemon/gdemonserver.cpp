@@ -101,32 +101,32 @@ void GDemonServer::Session::run() {
 
 	bool active = true;
 	while (active) {
-		int32_t recvLen;
-		if (!recvAll(sd_, &recvLen, sizeof(recvLen)))
+		char buffer[MaxBufferSize];
+		Header* header = GDemon::PHeader(buffer);
+		if (!recvAll(sd_, header, sizeof(Header)))
 			break;
-		if (recvLen < 0 || recvLen > MaxBufferSize) {
-			GTRACE("invalid recvLen %d", recvLen);
+		if (header->len_ < 0 || header->len_ > MaxBufferSize) {
+			GTRACE("invalid len_ %d", header->len_);
 			break;
 		}
 
-		char buffer[MaxBufferSize];
-		if (!recvAll(sd_, buffer, recvLen))
+		if (!recvAll(sd_, buffer + sizeof(Header), header->len_))
 			break;
 
 		pchar buf = buffer;
-		int32_t cmd = *pint32_t(buf); buf += sizeof(cmd); recvLen -= sizeof(cmd);
-		switch (cmd) {
+		int size = header->len_;
+		switch (header->cmd_) {
 			case cmdGetAllInterface:
-				active = processGetAllInterface(buf, recvLen);
+				active = processGetAllInterface(buf, size);
 				break;
 			case cmdPcapOpen:
-				active = processPcapOpen(buf, recvLen);
+				active = processPcapOpen(buf, size);
 				break;
 			case cmdPcapClose:
-				active = processPcapClose(buf, recvLen);
+				active = processPcapClose(buf, size);
 				break;
 			default:
-				GTRACE("invalid cmd %d", cmd);
+				GTRACE("invalid cmd %d", header->cmd_);
 				active = false;
 				break;
 		}
@@ -160,7 +160,7 @@ bool getMac(char* devName, uint8_t* mac) {
 }
 
 bool GDemonServer::Session::processGetAllInterface(pchar, int32_t) {
-	GTRACE("processGetInterfaceList"); // gilgil temp 2021.02.26
+	GTRACE("processGetAllInterface"); // gilgil temp 2021.02.26
 
 	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];

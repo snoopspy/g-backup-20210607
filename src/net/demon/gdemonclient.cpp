@@ -52,7 +52,7 @@ bool GDemonClient::disconnect() {
 	return true;
 }
 
-GDemon::AllInterface GDemonClient::getDeviceList() {
+GDemon::AllInterface GDemonClient::getAllInterface() {
 	AllInterface allInterface;
 
 	if (sd_ == 0) {
@@ -67,24 +67,29 @@ GDemon::AllInterface GDemonClient::getDeviceList() {
 		qWarning() << "req.encode return -1";
 		return allInterface;
 	}
-	int sendLen = ::send(sd_, &req, encLen, 0);
+	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		qWarning() << "send return " << sendLen;
 		return allInterface;
 	}
 
+	Header* header = GDemon::PHeader(buffer);
+	if (!recvAll(sd_, header, sizeof(Header))) {
+		qWarning() << "recvAll(header) return false";
+		return allInterface;
+	}
+
+	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
+		qWarning() << "recvAll(body) return false";
+		return allInterface;
+	}
+
 	GetAllInterfaceRep rep;
-	if (!recvAll(sd_, &rep.len_, sizeof(rep.len_)))
+	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
+	if (decLen == -1) {
+		qWarning() << "rep.decode return -1";
 		return allInterface;
+	}
 
-	int32_t recvLen;
-	if (!readAll(sd_, &recvLen, sizeof(recvLen)))
-		return allInterface;
-
-	char buffer[MaxBufferSize];
-	if (!readAll(sd_, buffer, resParam.len_))
-		return allInterface;
-
-	allInterface.decode(buffer, readLen);
-	return allInterface;
+	return rep.allInterface_;
 }

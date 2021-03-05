@@ -35,8 +35,8 @@ GAllInterface::GAllInterface() {
 	if (!client.connect()) return;
 
 	int index = 1;
-	GDemon::InterfaceList interfaceList = client.getDeviceList();
-	for (GDemon::Interface& interface: interfaceList) {
+	GDemon::AllInterface allInterface = client.getAllInterface();
+	for (GDemon::Interface& interface: allInterface) {
 		GInterface intf;
 		intf.index_ = index;
 		intf.name_ = interface.name_.data();

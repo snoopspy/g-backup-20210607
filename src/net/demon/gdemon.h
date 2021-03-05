@@ -65,10 +65,11 @@ struct GDemon {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
+	typedef Header* PHeader;
 
 	struct GetAllInterfaceReq : Header {
 		int32_t encode(pchar buffer, int32_t size);
-		// int32_t decode(pchar buffer, int32_t size); // useless
+		int32_t decode(pchar buffer, int32_t size);
 	};
 
 	struct GetAllInterfaceRep : Header {
@@ -76,8 +77,6 @@ struct GDemon {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
-
-	#pragma pack(pop)
 
 	struct PcapOpenReq : Header {
 		std::string dev_;
@@ -107,4 +106,5 @@ struct GDemon {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
+	#pragma pack(pop)
 };
