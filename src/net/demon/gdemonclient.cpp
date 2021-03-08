@@ -53,13 +53,16 @@ bool GDemonClient::disconnect() {
 }
 
 GDemon::AllInterface GDemonClient::getAllInterface() {
+	qWarning() << "getAllInterface 1000";
 	AllInterface allInterface;
+	qWarning() << "getAllInterface 2000";
 
 	if (sd_ == 0) {
 		qWarning() << "sd_ is 0";
 		return allInterface;
 	}
 
+	qWarning() << "getAllInterface 3000 ";
 	char buffer[MaxBufferSize];
 	GetAllInterfaceReq req;
 	int32_t encLen = req.encode(buffer, MaxBufferSize);
@@ -67,29 +70,34 @@ GDemon::AllInterface GDemonClient::getAllInterface() {
 		qWarning() << "req.encode return -1";
 		return allInterface;
 	}
+	qWarning() << "getAllInterface 4000";
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		qWarning() << "send return " << sendLen;
 		return allInterface;
 	}
 
+	qWarning() << "getAllInterface 5000";
 	Header* header = GDemon::PHeader(buffer);
 	if (!recvAll(sd_, header, sizeof(Header))) {
 		qWarning() << "recvAll(header) return false";
 		return allInterface;
 	}
 
+	qWarning() << "getAllInterface 6000 header->len_=" << header->len_;
 	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
 		qWarning() << "recvAll(body) return false";
 		return allInterface;
 	}
 
+	qWarning() << "getAllInterface 8000";
 	GetAllInterfaceRep rep;
 	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
 	if (decLen == -1) {
 		qWarning() << "rep.decode return -1";
 		return allInterface;
 	}
+	qWarning() << "getAllInterface 9000";
 
 	return rep.allInterface_;
 }

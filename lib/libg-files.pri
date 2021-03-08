@@ -5,6 +5,7 @@ SOURCES += \
 	$${PWD}/../src/base/gerr.cpp \
 	$${PWD}/../src/base/gjson.cpp \
 	$${PWD}/../src/base/gobj.cpp \
+        $${PWD}/../src/base/gtrace.cpp \
 	$${PWD}/../src/base/graph/gg-arrow.cpp \
 	$${PWD}/../src/base/graph/gg-scene.cpp \
 	$${PWD}/../src/base/graph/gg-signalslotform.cpp \
@@ -120,6 +121,7 @@ HEADERS += \
 	$${PWD}/../src/base/gerrcategory.h \
 	$${PWD}/../src/base/gjson.h \
 	$${PWD}/../src/base/gobj.h \
+        $${PWD}/../src/base/gtrace.h \
 	$${PWD}/../src/base/graph/gg-arrow.h \
 	$${PWD}/../src/base/graph/gg-scene.h \
 	$${PWD}/../src/base/graph/gg-signalslotform.h \
