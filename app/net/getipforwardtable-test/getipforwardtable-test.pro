@@ -1,5 +1,6 @@
 CONFIG -= qt
 CONFIG += console
+DESTDIR = $${PWD}/../../../bin
 SOURCES += *.cpp
 #------------------------------------------------------------------------------
 # pcap
@@ -10,4 +11,3 @@ win32 {
 	LIBS *= -lwpcap -lpacket -lws2_32 -liphlpapi
 }
 linux : LIBS += -lpcap
-DESTDIR = $${PWD}/../../../bin
