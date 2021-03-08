@@ -1,6 +1,6 @@
 #include "gdemon.h"
 #include <sys/socket.h>
-#include "base/gtrace.h"
+#include "gtrace.h"
 
 // ----------------------------------------------------------------------------
 // GDemon
@@ -61,14 +61,14 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
 	char temp[MaxBufferSize];
 	memcpy(temp, buf, len);
-	temp[len] = '\0';
+        temp[len + 1] = '\0';
 	name_ = std::string(temp); buf += len; size -= len;
 	GTRACE("name_=%s", name_.data());
 
 	// desc_
 	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
 	memcpy(temp, buf, len);
-	temp[len] = '\0';
+        temp[len + 1] = '\0';
 	desc_ = std::string(buf); buf += len; size -= len;
 	GTRACE("desc_=%s", desc_.data());
 

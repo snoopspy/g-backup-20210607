@@ -5,7 +5,6 @@ SOURCES += \
 	$${PWD}/../src/base/gerr.cpp \
 	$${PWD}/../src/base/gjson.cpp \
 	$${PWD}/../src/base/gobj.cpp \
-        $${PWD}/../src/base/gtrace.cpp \
 	$${PWD}/../src/base/graph/gg-arrow.cpp \
 	$${PWD}/../src/base/graph/gg-scene.cpp \
 	$${PWD}/../src/base/graph/gg-signalslotform.cpp \
@@ -67,6 +66,7 @@ SOURCES += \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.cpp \
         $${PWD}/../src/net/demon/gdemon.cpp \
         $${PWD}/../src/net/demon/gdemonclient.cpp \
+        $${PWD}/../src/net/demon/gtrace.cpp \
 	$${PWD}/../src/net/extract/gextract.cpp \
 	$${PWD}/../src/net/extract/ghttpextract.cpp \
 	$${PWD}/../src/net/filter/gbpfilter.cpp \
@@ -121,7 +121,6 @@ HEADERS += \
 	$${PWD}/../src/base/gerrcategory.h \
 	$${PWD}/../src/base/gjson.h \
 	$${PWD}/../src/base/gobj.h \
-        $${PWD}/../src/base/gtrace.h \
 	$${PWD}/../src/base/graph/gg-arrow.h \
 	$${PWD}/../src/base/graph/gg-scene.h \
 	$${PWD}/../src/base/graph/gg-signalslotform.h \
@@ -183,6 +182,7 @@ HEADERS += \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.h \
         $${PWD}/../src/net/demon/gdemon.h \
         $${PWD}/../src/net/demon/gdemonclient.h \
+        $${PWD}/../src/net/demon/gtrace.h \
 	$${PWD}/../src/net/extract/gextract.h \
 	$${PWD}/../src/net/extract/ghttpextract.h \
 	$${PWD}/../src/net/filter/gbpfilter.h \
