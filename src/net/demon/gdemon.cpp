@@ -1,4 +1,5 @@
 #include "gdemon.h"
+#include <atomic>
 #include <sys/socket.h>
 #include "gtrace.h"
 
@@ -19,7 +20,7 @@ bool GDemon::recvAll(int sd, pvoid buffer, int32_t size) {
 }
 
 int32_t GDemon::Interface::encode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	// index_
 	*pint32_t(buf) = index_; buf += sizeof(index_); size -= sizeof(index_);
@@ -51,28 +52,25 @@ int32_t GDemon::Interface::encode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	// index_
 	index_ = *pint32_t(buf); buf += sizeof(index_); size -= sizeof(index_);
-	// GTRACE("index_ = %d", index_);
+	GTRACE("index_ = %d", index_);
 
 	// name_
-	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
-	//char temp[MaxBufferSize];
-	//memcpy(temp, buf, len);
-	//temp[len + 1] = '\0';
-	//name_ = std::string(temp); buf += len; size -= len;
+	int32_t len = *pint32_t(buf);
+	buf += sizeof(len);
+	size -= sizeof(len);
 	name_ = std::string(buf, len); buf += len; size -= len;
 	//GTRACE("name_222=%s", name_.data());
 
 	// desc_
-	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
-	//memcpy(temp, buf, len);
-	//temp[len + 1] = '\0';
-	//desc_ = std::string(temp); buf += len; size -= len;
+	len = *pint32_t(buf);
+	buf += sizeof(len);
+	size -= sizeof(len);
 	desc_ = std::string(buf, len); buf += len; size -= len;
-	// GTRACE("desc_=%s", desc_.data());
+	//GTRACE("desc_=%s", desc_.data());
 
 	// mac_
 	memcpy(mac_, buf, MacSize); buf += MacSize; size -= MacSize;
@@ -92,7 +90,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::AllInterface::encode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	// count
 	int32_t cnt = this->size();
@@ -112,7 +110,7 @@ int32_t GDemon::AllInterface::encode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	// count
 	int32_t cnt = *pint32_t(buf); buf += sizeof(cnt); size -= sizeof(cnt);
@@ -136,7 +134,7 @@ int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::Header::encode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	*pint32_t(buf) = len_; buf += sizeof(len_); size -= sizeof(len_);
 	*PCmd(buf) = cmd_; buf += sizeof(cmd_); size -= sizeof(cmd_);
@@ -149,7 +147,7 @@ int32_t GDemon::Header::encode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	len_ = *pint32_t(buf); buf += sizeof(len_); size -= sizeof(len_);
 	cmd_ = *PCmd(buf); buf += sizeof(cmd_); size -= sizeof(cmd_);
@@ -162,7 +160,7 @@ int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::GetAllInterfaceReq::encode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	len_ = 0;
 	cmd_ = cmdGetAllInterface;
@@ -176,7 +174,7 @@ int32_t GDemon::GetAllInterfaceReq::encode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::GetAllInterfaceReq::decode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; // size -= decLen;
 	if (len_ != 0) {
@@ -191,7 +189,7 @@ int32_t GDemon::GetAllInterfaceReq::decode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::GetAllInterfaceRep::encode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	buf += sizeof(Header); size -= sizeof(Header);
 
@@ -209,7 +207,7 @@ int32_t GDemon::GetAllInterfaceRep::encode(pchar buffer, int32_t size) {
 }
 
 int32_t GDemon::GetAllInterfaceRep::decode(pchar buffer, int32_t size) {
-	pchar buf = buffer;
+	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
 	if (cmd_ != cmdGetAllInterface) {
