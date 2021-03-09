@@ -10,9 +10,9 @@ Widget::Widget(QWidget *parent)
 	ui->setupUi(this);
 
 	setWindowTitle("NetInfo");
-
 	const QFont fixedFont = QFontDatabase::systemFont(QFontDatabase::FixedFont);
 	setFont(fixedFont);
+	ui->plainTextEdit->setReadOnly(true);
 
 	showAllInterface();
 	showRtm();
