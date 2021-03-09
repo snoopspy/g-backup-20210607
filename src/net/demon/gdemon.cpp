@@ -59,22 +59,24 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 
 	// name_
 	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
-	char temp[MaxBufferSize];
-	memcpy(temp, buf, len);
-        temp[len + 1] = '\0';
-	name_ = std::string(temp); buf += len; size -= len;
-	GTRACE("name_=%s", name_.data());
+	//char temp[MaxBufferSize];
+	//memcpy(temp, buf, len);
+	//temp[len + 1] = '\0';
+	//name_ = std::string(temp); buf += len; size -= len;
+	name_ = std::string(buf, len); buf += len; size -= len;
+	GTRACE("name_222=%s", name_.data());
 
 	// desc_
 	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
-	memcpy(temp, buf, len);
-        temp[len + 1] = '\0';
-	desc_ = std::string(buf); buf += len; size -= len;
-	GTRACE("desc_=%s", desc_.data());
+	//memcpy(temp, buf, len);
+	//temp[len + 1] = '\0';
+	//desc_ = std::string(temp); buf += len; size -= len;
+	desc_ = std::string(buf, len); buf += len; size -= len;
+	// GTRACE("desc_=%s", desc_.data());
 
 	// mac_
 	memcpy(mac_, buf, MacSize); buf += MacSize; size -= MacSize;
-	GTRACE("mac_= %02x:%02x:%02x:%02x:%02x:%02x", mac_[0], mac_[1], mac_[2], mac_[3], mac_[4], mac_[5]);
+	//GTRACE("mac_222= %02x:%02x:%02x:%02x:%02x:%02x", mac_[0], mac_[1], mac_[2], mac_[3], mac_[4], mac_[5]);
 
 	// ip_
 	memcpy(&ip_, buf, sizeof(ip_)); buf += sizeof(ip_); size -= sizeof(ip_);
@@ -114,7 +116,6 @@ int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
 
 	// count
 	int32_t cnt = *pint32_t(buf); buf += sizeof(cnt); size -= sizeof(cnt);
-	GTRACE("cnt=%d size=%d", cnt, size);
 
 	// InterfaceList
 	for (int32_t i = 0; i < cnt; i++) {
@@ -210,16 +211,13 @@ int32_t GDemon::GetAllInterfaceRep::encode(pchar buffer, int32_t size) {
 int32_t GDemon::GetAllInterfaceRep::decode(pchar buffer, int32_t size) {
 	pchar buf = buffer;
 
-	GTRACE("size=%d", size);
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
-	GTRACE("decLen=%d size=%d", decLen, size);
 	if (cmd_ != cmdGetAllInterface) {
 		GTRACE("cmd_ is not cmdGetAllInterface %d\n", cmd_);
 		return -1;
 	}
 
 	decLen = allInterface_.decode(buf, size); buf += decLen; size -= decLen;
-	GTRACE("decLen=%d size=%d", decLen, size);
 
 	if (size < 0) {
 		GTRACE("GDemon::GetAllInterfaceRep::decode size is %d\n", size);

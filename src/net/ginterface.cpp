@@ -32,13 +32,10 @@ uint qHash(GInterface q) {
 
 GAllInterface::GAllInterface() {
 	GDemonClient& client = GDemonClient::instance();
-	qWarning() << ""; // gilgil temp 2021.03.18
 	if (!client.connect()) return;
-	qWarning() << ""; // gilgil temp 2021.03.18
 
 	int index = 1;
 	GDemon::AllInterface allInterface = client.getAllInterface();
-	qWarning() << ""; // gilgil temp 2021.03.18
 	for (GDemon::Interface& interface: allInterface) {
 		GInterface intf;
 		intf.index_ = index;
@@ -50,10 +47,8 @@ GAllInterface::GAllInterface() {
 		intf.ip_and_mask_ = intf.ip_ & intf.mask_;
 		// gateway_ is initialized in GNetInfo
 		push_back(intf);
-		qWarning() << intf.name(); // gilgil temp 2021.03.18
 		index++;
 	}
-	qWarning() << ""; // gilgil temp 2021.03.18
 }
 
 #else // GILGIL_ANDROID_DEBUG
