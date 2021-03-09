@@ -1,5 +1,4 @@
 #include "gdemon.h"
-#include <atomic>
 #include <sys/socket.h>
 #include "gtrace.h"
 
@@ -56,25 +55,23 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 
 	// index_
 	index_ = *pint32_t(buf); buf += sizeof(index_); size -= sizeof(index_);
-	GTRACE("index_ = %d", index_);
+	// GTRACE("index_ = %d", index_); // gilgil temp 2021.03.09
 
 	// name_
-	int32_t len = *pint32_t(buf);
-	buf += sizeof(len);
-	size -= sizeof(len);
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
 	name_ = std::string(buf, len); buf += len; size -= len;
-	//GTRACE("name_222=%s", name_.data());
+	// GTRACE("name_222=%s", name_.data()); // gilgil temp 2021.03.09
 
 	// desc_
 	len = *pint32_t(buf);
 	buf += sizeof(len);
 	size -= sizeof(len);
 	desc_ = std::string(buf, len); buf += len; size -= len;
-	//GTRACE("desc_=%s", desc_.data());
+	// GTRACE("desc_=%s", desc_.data()); // gilgil temp 2021.03.09
 
 	// mac_
 	memcpy(mac_, buf, MacSize); buf += MacSize; size -= MacSize;
-	//GTRACE("mac_222= %02x:%02x:%02x:%02x:%02x:%02x", mac_[0], mac_[1], mac_[2], mac_[3], mac_[4], mac_[5]);
+	// GTRACE("mac_222= %02x:%02x:%02x:%02x:%02x:%02x", mac_[0], mac_[1], mac_[2], mac_[3], mac_[4], mac_[5]); // gilgil temp 2021.03.09
 
 	// ip_
 	memcpy(&ip_, buf, sizeof(ip_)); buf += sizeof(ip_); size -= sizeof(ip_);
