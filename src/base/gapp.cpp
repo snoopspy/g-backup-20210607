@@ -5,6 +5,7 @@
 #include "base/log/glogdbwin32.h"
 #include "base/log/glogfile.h"
 #include "base/log/glogstderr.h"
+#include "base/log/glogudp.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -33,6 +34,7 @@ void GApp::init() {
 #ifdef Q_OS_ANDROID
 	logManager.push_back(new GLogFile);
 #endif // Q_OS_ANDROID
+	logManager.push_back(new GLogUdp);
 	}
 
 	QString appName = QCoreApplication::applicationName();

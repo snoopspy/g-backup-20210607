@@ -26,6 +26,7 @@ static QT_PREPEND_NAMESPACE(qint64) qt_gettid()
 #include "base/log/glogfile.h"
 #include "base/log/glogstderr.h"
 #include "base/log/glogstdout.h"
+#include "base/log/glogudp.h"
 // ----------------------------------------------------------------------------
 // GLogManager
 // ----------------------------------------------------------------------------
@@ -37,6 +38,7 @@ GLogManager::GLogManager() {
 	qRegisterMetaType<GLogFile*>();
 	qRegisterMetaType<GLogStderr*>();
 	qRegisterMetaType<GLogStdout*>();
+	qRegisterMetaType<GLogUdp*>();
 }
 
 GLogManager::~GLogManager() {

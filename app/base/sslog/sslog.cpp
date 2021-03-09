@@ -4,6 +4,7 @@
 #include "base/log/glogfile.h"
 #include "base/log/glogstderr.h"
 #include "base/log/glogstdout.h"
+#include "base/log/glogudp.h"
 
 int main() {
 	GLogManager& logManager = GLogManager::instance();
@@ -13,6 +14,7 @@ int main() {
 	logManager.push_back(new GLogFile);
 	logManager.push_back(new GLogStderr);
 	logManager.push_back(new GLogStdout);
+	logManager.push_back(new GLogUdp);
 
 	QJsonArray ja;
 	logManager.save(ja);

@@ -30,8 +30,8 @@ public:
 	void write(QString& msg) override;
 
 protected:
-	void configure();
 	bool configured_{false};
+	void configure();
 
 protected:
 	QString folder_{QString("log") + QDir::separator()};
