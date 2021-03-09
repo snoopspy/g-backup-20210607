@@ -55,7 +55,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 
 	// index_
 	index_ = *pint32_t(buf); buf += sizeof(index_); size -= sizeof(index_);
-	GTRACE("index_ = %d", index_);
+	// GTRACE("index_ = %d", index_);
 
 	// name_
 	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
@@ -64,7 +64,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 	//temp[len + 1] = '\0';
 	//name_ = std::string(temp); buf += len; size -= len;
 	name_ = std::string(buf, len); buf += len; size -= len;
-	GTRACE("name_222=%s", name_.data());
+	//GTRACE("name_222=%s", name_.data());
 
 	// desc_
 	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
@@ -122,10 +122,10 @@ int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
 		Interface interface;
 
 		int32_t len = interface.decode(buf, size);
-		GTRACE("len=%d name=%s", len, interface.name_.data());
+		//GTRACE("len=%d name=%s", len, interface.name_.data());
 		push_back(interface);
 		buf += len; size -= len;
-		GTRACE("len=%d name=%s size=%d", len, interface.name_.data(), size);
+		//GTRACE("len=%d name=%s size=%d", len, interface.name_.data(), size);
 	}
 
 	if (size < 0) {
