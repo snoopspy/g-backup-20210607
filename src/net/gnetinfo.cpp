@@ -4,10 +4,9 @@
 // GNetInfo
 // ----------------------------------------------------------------------------
 GNetInfo::GNetInfo() {
-	Q_ASSERT(rtm_.count() == rtm_.intfNames_.count());
 	for (int i = 0; i < rtm_.count(); i++) {
 		GRtmEntry& entry = const_cast<GRtmEntry&>(rtm_.at(i));
-		QString intfName = rtm_.intfNames_.at(i);
+		QString intfName = entry.intfName_;
 		GInterface* intf = interfaceList_.findByName(intfName);
 		if (intf == nullptr) {
 			QString msg = QString("interfaceList_.findByName(%1) return false").arg(intfName);

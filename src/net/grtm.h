@@ -39,6 +39,7 @@ protected:
 	GIp gateway_{0};
 	int metric_{0};
 	GInterface* intf_{nullptr};
+	QString intfName_;
 
 public:
 	bool operator==(const GRtmEntry& r) const;
@@ -54,7 +55,6 @@ struct G_EXPORT GRtm : QList<GRtmEntry> {
 protected: // inherited singleton
 	GRtm();
 	virtual ~GRtm();
-	QStringList intfNames_;
 
 public:
 	GRtmEntry* getBestEntry(GIp ip);

@@ -6,14 +6,13 @@
 // ----------------------------------------------------------------------------
 GRtmLinux::GRtmLinux() : GRtm() {
 	QString command = "cat";
-	QStringList args("/proc/net/route");
+	QStringList args = QStringList{"/proc/net/route"};
 	QProcess p;
 	p.start(command, args);
 	if (!p.waitForFinished()) {
 		qWarning() << QString("waitForFinished(%1) return false").arg(command) << args;
 		return;
 	}
-
 	QList<QByteArray> baList = p.readAll().split('\n');
 	bool firstLine = true;
 	QList<QString> fields;
@@ -39,7 +38,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
 				if (field == "Iface") {
 					appending = true;
 					Q_ASSERT(value != "");
-					intfNames_.push_back(value);
+					entry.intfName_ = value;
 				}
 				else if (field == "Destination")
 					entry.dst_ = ntohl(value.toUInt(nullptr, 16));
@@ -55,6 +54,34 @@ GRtmLinux::GRtmLinux() : GRtm() {
 				append(entry);
 		}
 	}
+
+
+	#ifdef GILGIL_ANDROID_DEBUG
+	// for gathering gateway
+	command = "ip";
+	args = QStringList{"route", "show", "table", "0"};
+	p.start(command, args);
+	if (!p.waitForFinished()) {
+		qWarning() << QString("waitForFinished(%1) return false").arg(command) << args;
+		return;
+	}
+	baList = p.readAll().split('\n');
+	for (QByteArray& ba: baList) {
+		char gateway[256];
+		char dev[256];
+		// default via 10.2.2.1 dev wlan0  table 1021  proto static
+		int res = sscanf(ba.data(), "default via %s dev %s", gateway, dev);
+		if (res == 2) {
+			GRtmEntry entry;
+			entry.intfName_ = dev;
+			entry.dst_ = 0;
+			entry.mask_ = 0;
+			entry.gateway_ = GIp(gateway);
+			entry.metric_ = 0;
+			append(entry);
+		}
+	}
+	#endif // GILGIL_ANDROID_DEBUG
 }
 
 GRtmLinux::~GRtmLinux() {

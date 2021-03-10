@@ -16,7 +16,7 @@ GRtmWin32::GRtmWin32() : GRtm() {
 		if (adapter == nullptr) continue;
 		QString adapterName = adapter->AdapterName;
 		Q_ASSERT(adapterName != "");
-		intfNames_.push_back(adapterName);
+		entry.intfName_ = adapterName;
 		entry.dst_ = ntohl(row->dwForwardDest);
 		entry.gateway_ = ntohl(row->dwForwardNextHop);
 		entry.mask_ = ntohl(row->dwForwardMask);
