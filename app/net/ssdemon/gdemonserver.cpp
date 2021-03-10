@@ -116,8 +116,8 @@ void GDemonServer::Session::run() {
 		pchar buf = buffer;
 		int size = header->len_;
 		switch (header->cmd_) {
-			case cmdGetAllInterface:
-				active = processGetAllInterface(buf, size);
+			case cmdGetInterfaceList:
+				active = processGetInterfaceList(buf, size);
 				break;
 			case cmdPcapOpen:
 				active = processPcapOpen(buf, size);
@@ -159,8 +159,8 @@ bool getMac(char* devName, uint8_t* mac) {
 	return true;
 }
 
-bool GDemonServer::Session::processGetAllInterface(pchar, int32_t) {
-	GTRACE("processGetAllInterface"); // gilgil temp 2021.02.26
+bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
+	GTRACE("processGetInterfaceList"); // gilgil temp 2021.02.26
 
 	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
@@ -174,7 +174,7 @@ bool GDemonServer::Session::processGetAllInterface(pchar, int32_t) {
 	// Add all interfaces
 	//
 	pcap_if_t* dev = allDevs;
-	GetAllInterfaceRep rep;
+	GetInterfaceListRep rep;
 	i = 1;
 	while (dev != nullptr) {
 		Interface interface;
@@ -195,7 +195,7 @@ bool GDemonServer::Session::processGetAllInterface(pchar, int32_t) {
 				interface.mask_ = ntohl(addr_in->sin_addr.s_addr);
 			}
 		}
-		rep.allInterface_.push_back(interface);
+		rep.interfaceList_.push_back(interface);
 		dev = dev->next;
 		i++;
 	}

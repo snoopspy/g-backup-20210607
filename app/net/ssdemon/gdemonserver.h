@@ -39,7 +39,7 @@ struct GDemonServer: GDemon {
 		static void _run(SessionList* sessions, Session* session);
 		void run();
 
-		bool processGetAllInterface(pchar buf, int32_t size);
+		bool processGetInterfaceList(pchar buf, int32_t size);
 		bool processPcapOpen(pchar buf, int32_t size);
 		bool processPcapClose(pchar buf, int32_t size);
 	};
