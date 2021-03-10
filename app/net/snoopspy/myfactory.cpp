@@ -1,4 +1,4 @@
-#include "mygraph.h"
+#include "myfactory.h"
 
 MyFactory::MyFactory(QObject* parent) : GPluginFactory(parent) {
 }
