@@ -14,7 +14,7 @@ Widget::Widget(QWidget *parent)
 	setFont(fixedFont);
 	ui->plainTextEdit->setReadOnly(true);
 
-	showAllInterface();
+	showIntrerfaceList();
 	showRtm();
 }
 
@@ -22,11 +22,11 @@ Widget::~Widget()
 {
 }
 
-void Widget::showAllInterface() {
-	GAllInterface& allInterface = GNetInfo::instance().allInterface();
+void Widget::showIntrerfaceList() {
+	GInterfaceList& interfaceList = GNetInfo::instance().interfaceList();
 	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 
-	for(GInterface& intf: allInterface) {
+	for(GInterface& intf: interfaceList) {
 		bool best = entry != nullptr && entry->intf()->name() == intf.name();
 		QString msg = QString("index %1 %2").arg(intf.index()).arg(best ? "(Best)" : "");
 		ui->plainTextEdit->insertPlainText(msg + "\n");

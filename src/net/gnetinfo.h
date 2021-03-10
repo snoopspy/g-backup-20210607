@@ -26,7 +26,7 @@ protected:
 	GNetInfo();
 	~GNetInfo();
 
-	GAllInterface allInterface_;
+	GInterfaceList interfaceList_;
 #ifdef Q_OS_LINUX
 	GRtmLinux rtm_;
 #endif // Q_OS_LINUX
@@ -35,7 +35,7 @@ protected:
 #endif // Q_OS_WIN
 
 public:
-	GAllInterface& allInterface() { return allInterface_; }
+	GInterfaceList& interfaceList() { return interfaceList_; }
 	GRtm& rtm() { return rtm_; }
 	static GNetInfo& instance();
 };

@@ -22,7 +22,7 @@ bool GPcapDevice::doOpen() {
 		return false;
 	}
 
-	intf_ = GNetInfo::instance().allInterface().findByName(devName_);
+	intf_ = GNetInfo::instance().interfaceList().findByName(devName_);
 	if (intf_ == nullptr) {
 		QString msg = QString("can not find interface for %1").arg(devName_);
 		SET_ERR(GErr::VALUE_IS_NULL, msg);

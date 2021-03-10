@@ -24,19 +24,19 @@ uint qHash(GInterface q) {
 }
 
 // ----------------------------------------------------------------------------
-// GAllInterface
+// GInterfaceList
 // ----------------------------------------------------------------------------
 #ifdef GILGIL_ANDROID_DEBUG
 
 #include "net/demon/gdemonclient.h"
 
-GAllInterface::GAllInterface() {
+GInterfaceList::GInterfaceList() {
 	GDemonClient& client = GDemonClient::instance();
 	if (!client.connect()) return;
 
 	int index = 1;
-	GDemon::AllInterface allInterface = client.getAllInterface();
-	for (GDemon::Interface& interface: allInterface) {
+	GDemon::InterfaceList interfaceList = client.getInterfaceList();
+	for (GDemon::Interface& interface: interfaceList) {
 		GInterface intf;
 		intf.index_ = index;
 		intf.name_ = interface.name_.data();
@@ -80,7 +80,7 @@ static GMac getMac(char* devName) {
 }
 #endif // Q_OS_LINUX
 
-GAllInterface::GAllInterface() {
+GInterfaceList::GInterfaceList() {
 	//
 	// Initialize allDevs using pcap API.
 	//
@@ -143,12 +143,12 @@ GAllInterface::GAllInterface() {
 
 #endif // GILGIL_ANDROID_DEBUG
 
-GAllInterface::~GAllInterface() {
+GInterfaceList::~GInterfaceList() {
 	clear();
 }
 
 #ifdef Q_OS_LINUX
-GInterface* GAllInterface::findByName(QString name) {
+GInterface* GInterfaceList::findByName(QString name) {
 	for (GInterface& intf: *this) {
 		if (intf.name_ == name)
 			return &intf;
@@ -157,7 +157,7 @@ GInterface* GAllInterface::findByName(QString name) {
 }
 #endif
 #ifdef Q_OS_WIN
-GInterface* GAllInterface::findByName(QString name) {
+GInterface* GInterfaceList::findByName(QString name) {
 	for (GInterface& intf: *this) {
 		if (intf.name_.indexOf(name) != -1)
 			return &intf;
@@ -166,7 +166,7 @@ GInterface* GAllInterface::findByName(QString name) {
 }
 #endif
 
-GInterface* GAllInterface::findByIp(GIp ip) {
+GInterface* GInterfaceList::findByIp(GIp ip) {
 	for (GInterface& intf: *this) {
 		if (intf.ip() == ip)
 			return &intf;

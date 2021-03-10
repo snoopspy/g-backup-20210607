@@ -19,9 +19,9 @@
 // ----------------------------------------------------------------------------
 // GInterface
 // ----------------------------------------------------------------------------
-struct GAllInterface;
+struct GInterfaceList;
 struct G_EXPORT GInterface {
-	friend struct GAllInterface;
+	friend struct GInterfaceList;
 	friend struct GNetInfo;
 
 public:
@@ -60,15 +60,15 @@ public:
 uint qHash(GInterface q);
 
 // ----------------------------------------------------------------------------
-// GAllInterface
+// GInterfaceList
 // ----------------------------------------------------------------------------
-struct G_EXPORT GAllInterface : QList<GInterface> {
+struct G_EXPORT GInterfaceList : QList<GInterface> {
 	friend struct GInterface;
 	friend struct GNetInfo;
 
 private: // singleton
-	GAllInterface();
-	virtual ~GAllInterface();
+	GInterfaceList();
+	virtual ~GInterfaceList();
 
 public:
 	GInterface* findByName(QString name);

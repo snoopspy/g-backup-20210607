@@ -36,7 +36,7 @@ struct GDemon {
 
 	enum Cmd: int32_t {
 		cmdRunCommand = 0,
-		cmdGetAllInterface = 1,
+		cmdGetInterfaceList = 1,
 		cmdPcapOpen = 2,
 		cmdPcapClose = 3
 	};
@@ -54,7 +54,7 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct AllInterface : std::list<Interface> {
+	struct InterfaceList : std::list<Interface> {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
@@ -68,13 +68,13 @@ struct GDemon {
 	};
 	typedef Header* PHeader;
 
-	struct GetAllInterfaceReq : Header {
+	struct GetInterfaceListReq : Header {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct GetAllInterfaceRep : Header {
-		AllInterface allInterface_;
+	struct GetInterfaceListRep : Header {
+		InterfaceList interfaceList_;
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};

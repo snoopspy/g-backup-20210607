@@ -52,46 +52,46 @@ bool GDemonClient::disconnect() {
 	return true;
 }
 
-GDemon::AllInterface GDemonClient::getAllInterface() {
-	AllInterface allInterface;
+GDemon::InterfaceList GDemonClient::getInterfaceList() {
+	InterfaceList interfaceList;
 
 	if (sd_ == 0) {
 		qWarning() << "sd_ is 0";
-		return allInterface;
+		return interfaceList;
 	}
 
 	char buffer[MaxBufferSize];
-	GetAllInterfaceReq req;
+	GetInterfaceListReq req;
 	int32_t encLen = req.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
 		qWarning() << "req.encode return -1";
-		return allInterface;
+		return interfaceList;
 	}
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		qWarning() << "send return " << sendLen;
-		return allInterface;
+		return interfaceList;
 	}
 
 	Header* header = GDemon::PHeader(buffer);
 	if (!recvAll(sd_, header, sizeof(Header))) {
 		qWarning() << "recvAll(header) return false";
-		return allInterface;
+		return interfaceList;
 	}
 
 	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
 		qWarning() << "recvAll(body) return false";
-		return allInterface;
+		return interfaceList;
 	}
 
-	GetAllInterfaceRep rep;
+	GetInterfaceListRep rep;
 	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
 	if (decLen == -1) {
 		qWarning() << "rep.decode return -1";
-		return allInterface;
+		return interfaceList;
 	}
 
-	return rep.allInterface_;
+	return rep.interfaceList_;
 }
 
 GDemonClient& GDemonClient::instance() {

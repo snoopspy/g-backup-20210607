@@ -86,7 +86,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::AllInterface::encode(pchar buffer, int32_t size) {
+int32_t GDemon::InterfaceList::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	// count
@@ -100,13 +100,13 @@ int32_t GDemon::AllInterface::encode(pchar buffer, int32_t size) {
 	}
 
 	if (size < 0) {
-		GTRACE("GDemon::AllInterface::encode size is %d\n", size);
+		GTRACE("GDemon::InterfaceList::encode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
 }
 
-int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
+int32_t GDemon::InterfaceList::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	// count
@@ -124,7 +124,7 @@ int32_t GDemon::AllInterface::decode(pchar buffer, int32_t size) {
 	}
 
 	if (size < 0) {
-		GTRACE("GDemon::AllInterface::decode size is %d\n", size);
+		GTRACE("GDemon::InterfaceList::decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
@@ -156,21 +156,21 @@ int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::GetAllInterfaceReq::encode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListReq::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	len_ = 0;
-	cmd_ = cmdGetAllInterface;
+	cmd_ = cmdGetInterfaceList;
 	int32_t encLen = Header::encode(buf, size);	buf += encLen; size -= encLen;
 
 	if (size < 0) {
-		GTRACE("GDemon::GetAllInterfaceReq::encode size is %d\n", size);
+		GTRACE("GDemon::GetInterfaceListReq::encode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
 }
 
-int32_t GDemon::GetAllInterfaceReq::decode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListReq::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; // size -= decLen;
@@ -178,44 +178,44 @@ int32_t GDemon::GetAllInterfaceReq::decode(pchar buffer, int32_t size) {
 		GTRACE("len_ is not zero %d\n", len_);
 		return -1;
 	}
-	if (cmd_ != cmdGetAllInterface) {
-		GTRACE("cmd_ is not cmdGetAllInterface %d\n", cmd_);
+	if (cmd_ != cmdGetInterfaceList) {
+		GTRACE("cmd_ is not cmdGetInterfaceList %d\n", cmd_);
 		return -1;
 	}
 	return buf - buffer;
 }
 
-int32_t GDemon::GetAllInterfaceRep::encode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListRep::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	buf += sizeof(Header); size -= sizeof(Header);
 
-	int32_t encLen = allInterface_.encode(buf, size); buf += encLen; size -= encLen;
+	int32_t encLen = interfaceList_.encode(buf, size); buf += encLen; size -= encLen;
 
 	len_ = encLen;
-	cmd_ = cmdGetAllInterface;
+	cmd_ = cmdGetInterfaceList;
 	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen; // gilgil temp 2021.03.05
 
 	if (size < 0) {
-		GTRACE("GDemon::GetAllInterfaceRep::encode size is %d\n", size);
+		GTRACE("GDemon::GetInterfaceListRep::encode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
 }
 
-int32_t GDemon::GetAllInterfaceRep::decode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListRep::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
-	if (cmd_ != cmdGetAllInterface) {
-		GTRACE("cmd_ is not cmdGetAllInterface %d\n", cmd_);
+	if (cmd_ != cmdGetInterfaceList) {
+		GTRACE("cmd_ is not cmdGetInterfaceList %d\n", cmd_);
 		return -1;
 	}
 
-	decLen = allInterface_.decode(buf, size); buf += decLen; size -= decLen;
+	decLen = interfaceList_.decode(buf, size); buf += decLen; size -= decLen;
 
 	if (size < 0) {
-		GTRACE("GDemon::GetAllInterfaceRep::decode size is %d\n", size);
+		GTRACE("GDemon::GetInterfaceListRep::decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;

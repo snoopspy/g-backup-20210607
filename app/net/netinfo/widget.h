@@ -16,7 +16,7 @@ public:
 	~Widget();
 
 public:
-	void showAllInterface();
+	void showIntrerfaceList();
 	void showRtm();
 
 private:
