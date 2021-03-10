@@ -14,22 +14,22 @@ private:
 int main() {
 	{
 		GErr err;
-		qDebug() << err << endl;
+		qDebug() << err << Qt::endl;
 	}
 
 	{
 		GErr err{ GErr::NOT_SUPPORTED };
-		qDebug() << err << endl;
+		qDebug() << err << Qt::endl;
 	}
 
 	{
 		GErr err { GErr::NOT_SUPPORTED, "NOT_SUPPORTED" };
-		qDebug() << err << endl;
+		qDebug() << err << Qt::endl;
 	}
 
 	{
 		Obj obj;
 		GErr& err = obj.err();
-		qDebug() << err << endl;
+		qDebug() << err << Qt::endl;
 	}
 }
