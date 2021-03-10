@@ -1,5 +1,5 @@
 #include <GApp>
-#include "mygraph.h"
+#include "myfactory.h"
 
 int main(int argc, char *argv[]) {
 	GApp a(argc, argv);
