@@ -97,7 +97,7 @@ void GDemonServer::Session::_run(SessionList* sessions, Session* session) {
 }
 
 void GDemonServer::Session::run() {
-	GTRACE("run beg");
+	GTRACE("beg");
 
 	bool active = true;
 	while (active) {
@@ -136,7 +136,7 @@ void GDemonServer::Session::run() {
 	if (pcap_ != nullptr)
 		pcap_close(pcap_);
 
-	GTRACE("run end");
+	GTRACE("end");
 }
 
 #include <net/if.h> // for ifreq

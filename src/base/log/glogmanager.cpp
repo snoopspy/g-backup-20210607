@@ -57,6 +57,8 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	GLogManager& logManager = GLogManager::instance();
 	if (!logManager.enabled_) return;
 
+	QDateTime now = QDateTime::currentDateTime();
+	QString nowStr = now.toString("yyMMdd hhmmss-zzz");
 	QString typeStr;
 	switch (type) {
 		case QtDebugMsg: typeStr = "D"; break;
@@ -65,8 +67,6 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 		case QtFatalMsg: typeStr = "F"; break;
 		case QtInfoMsg: typeStr = "I"; break;
 	}
-	QDateTime now = QDateTime::currentDateTime();
-	QString nowStr = now.toString("yyMMdd hhmmss-zzz");
 	QString threadStr = QString::number(qt_gettid());
 	QString fileStr = context.file;
 	int i = fileStr.lastIndexOf(QDir::separator());
@@ -75,7 +75,7 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	QString funcStr = context.function;
 	i = funcStr.lastIndexOf(' ');
 	if (i != -1) funcStr = funcStr.mid(i + 1);
-	QString finalMsg = QString("%1 %2 %3 [%4:%5 %6] %7\n").arg(typeStr, nowStr, threadStr, fileStr, lineStr, funcStr, msg);
+	QString finalMsg = QString("%1 %2 %3 [%4:%5 %6] %7\n").arg(nowStr, typeStr, threadStr, fileStr, lineStr, funcStr, msg);
 
 	for (GObj* obj: logManager) {
 		GLog* log = reinterpret_cast<GLog*>(obj);

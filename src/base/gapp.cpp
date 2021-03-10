@@ -38,9 +38,28 @@ void GApp::init() {
 	}
 
 	QString appName = QCoreApplication::applicationName();
-	qInfo() << appName << " " << G::version();
+	qInfo() << appName << G::version();
 	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
 	qInfo() << G::pcap_lib_version();
+}
+
+bool GApp::copyFileFromAssets(QString fileName, QFile::Permissions permissions) {
+	QString sourceFileName = QString("assets:/") + fileName;
+	QFile sFile(sourceFileName);
+	QFile dFile(fileName);
+	if (!dFile.exists()) {
+		if (!sFile.exists()) {
+			qWarning() << QString("src file(%1) not exists").arg(sourceFileName);
+			return false;
+		}
+
+		if (!sFile.copy(fileName)) {
+			qWarning() << QString("file copy(%1) return false").arg(fileName);
+			return false;
+		}
+		QFile::setPermissions(fileName, permissions);
+	}
+	return true;
 }
 
 #ifdef QT_GUI_LIB

@@ -27,6 +27,7 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	GTRACE("ssdemon started");
 	GDemonServer server;
 	if (!server.start(param.port_)) {
 		return -1;
@@ -34,4 +35,5 @@ int main(int argc, char* argv[]) {
 	server.exec();
 	server.stop();
 	server.wait();
+	GTRACE("ssdemon terminated");
 }

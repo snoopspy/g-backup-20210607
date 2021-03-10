@@ -55,7 +55,6 @@ GRtmLinux::GRtmLinux() : GRtm() {
 		}
 	}
 
-
 	#ifdef GILGIL_ANDROID_DEBUG
 	// for gathering gateway
 	command = "ip";
