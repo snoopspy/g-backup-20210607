@@ -15,6 +15,7 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 	sd_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (sd_ == -1) {
 		qWarning() << strerror(errno);
+		sd_ = 0;
 		return false;
 	}
 
@@ -37,7 +38,7 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 		qWarning() << strerror(errno);
 		::close(sd_);
 		sd_ = 0;
-		return -1;
+		return false;
 	}
 
 	return true;

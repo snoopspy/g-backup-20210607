@@ -32,7 +32,13 @@ uint qHash(GInterface q) {
 
 GInterfaceList::GInterfaceList() {
 	GDemonClient& client = GDemonClient::instance();
-	if (!client.connect()) return;
+	for (int i = 0; i < 60 ; i++) { // 60 seconds == 1 minute
+		if (client.connect()) break;
+		QThread::sleep(1);
+	}
+	if (client.sd_ == 0) {
+		qFatal("can not connect to ssdemon");
+	}
 
 	int index = 1;
 	GDemon::InterfaceList interfaceList = client.getInterfaceList();

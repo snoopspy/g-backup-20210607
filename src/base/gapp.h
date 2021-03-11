@@ -17,6 +17,10 @@
 #endif // QT_GUI_LIB
 #include <QFile>
 
+#ifdef GILGIL_ANDROID_DEBUG
+#include <QProcess>
+#endif // GILGIL_ANDROID_DEBUG
+
 #include "base/graph/ggraph.h"
 #include "base/graph/gpluginfactory.h"
 
@@ -31,8 +35,13 @@ struct G_EXPORT GApp : QCoreApplication {
 
 public:
 	GApp(int &argc, char** argv);
-	static void init();
+	~GApp() override;
+	void init();
+
+#ifdef GILGIL_ANDROID_DEBUG
+	QProcess* demon_{nullptr};
 	static bool copyFileFromAssets(QString fileName, QFile::Permissions permissions);
+#endif // GILGIL_ANDROID_DEBUG
 
 #ifdef QT_GUI_LIB
 	static bool execObj(GObj* obj);
