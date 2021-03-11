@@ -1,6 +1,9 @@
 #include "gapp.h"
 
 #include <QFile>
+#ifdef GILGIL_ANDROID_DEBUG
+#include <QProcess>
+#endif // GILGIL_ANDROID_DEBUG
 
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"
@@ -21,12 +24,6 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 }
 
 GApp::~GApp() {
-#ifdef GILGIL_ANDROID_DEBUG
-	if (demon_ != nullptr) {
-		delete demon_;
-		demon_ = nullptr;
-	}
-#endif // GILGIL_ANDROID_DEBUG
 }
 
 void GApp::init() {
@@ -56,9 +53,8 @@ void GApp::init() {
 #ifdef GILGIL_ANDROID_DEBUG
 	copyFileFromAssets("ssdemon",  QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 	QString command = "su";
-	QStringList arguments{"-c" ,QDir::currentPath() + "/ssdemon"};
-	demon_ = new QProcess;
-	demon_->start(command, arguments);
+	QStringList arguments{"-c" ,QDir::currentPath() + "/ssdemon &"};
+	QProcess::execute(command, arguments);
 #endif // GILGIL_ANDROID_DEBUG
 }
 

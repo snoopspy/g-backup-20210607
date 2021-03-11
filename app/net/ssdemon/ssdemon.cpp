@@ -19,6 +19,16 @@ struct Param {
 	}
 } param;
 
+void runServer() {
+	GDemonServer server;
+	if (!server.start(param.port_)) {
+		return;
+	}
+	server.exec();
+	server.stop();
+	server.wait();
+}
+
 int main(int argc, char* argv[]) {
 	gtrace_default("127.0.0.1", 8908, true, nullptr);
 
@@ -28,12 +38,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	GTRACE("ssdemon started");
-	GDemonServer server;
-	if (!server.start(param.port_)) {
-		return -1;
-	}
-	server.exec();
-	server.stop();
-	server.wait();
+	runServer();
 	GTRACE("ssdemon terminated");
 }
