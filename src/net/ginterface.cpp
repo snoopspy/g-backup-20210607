@@ -32,7 +32,7 @@ uint qHash(GInterface q) {
 
 GInterfaceList::GInterfaceList() {
 	GDemonClient& client = GDemonClient::instance();
-	for (int i = 0; i < 60 ; i++) { // 60 seconds == 1 minute
+	for (int i = 0; i < 10 ; i++) { // 10 seconds
 		if (client.connect()) break;
 		QThread::sleep(1);
 	}

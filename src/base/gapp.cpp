@@ -3,7 +3,7 @@
 #include <QFile>
 #ifdef GILGIL_ANDROID_DEBUG
 #include <QProcess>
-#endif // GILGIL_ANDROID_DEBUG
+#endif // #ifdef GILGIL_ANDROID_DEBUG
 
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"
@@ -52,9 +52,10 @@ void GApp::init() {
 
 #ifdef GILGIL_ANDROID_DEBUG
 	copyFileFromAssets("ssdemon",  QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
-	QString command = "su";
-	QStringList arguments{"-c" ,QDir::currentPath() + "/ssdemon &"};
-	QProcess::execute(command, arguments);
+	QString program = "su";
+	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
+	bool res = QProcess::startDetached(program, arguments);
+	qDebug() << QString("system %1 %2 return %3").arg(program).arg(arguments.join(" ")).arg(res);
 #endif // GILGIL_ANDROID_DEBUG
 }
 
