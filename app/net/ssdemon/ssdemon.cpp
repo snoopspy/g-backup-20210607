@@ -29,6 +29,29 @@ void runServer() {
 	server.wait();
 }
 
+#include <csignal>
+void signalHandler(int signo) {
+	std::string signal = "unknown";
+	switch (signo) {
+		case SIGINT: signal = "SIGINT"; break;
+		case SIGILL: signal = "SIGILL"; break;
+		case SIGABRT: signal = "SIGABRT"; break;
+		case SIGFPE: signal = "SIGFPE"; break;
+		case SIGSEGV: signal = "SIGSEGV"; break;
+		case SIGTERM: signal = "SIGTERM"; break;
+		case SIGHUP: signal = "SIGHUP"; break;
+		case SIGQUIT: signal = "SIGQUIT"; break;
+		case SIGTRAP: signal = "SIGTRAP"; break;
+		case SIGKILL: signal = "SIGKILL"; break;
+		case SIGBUS: signal = "SIGBUS"; break;
+		case SIGSYS: signal = "SIGSYS"; break;
+		case SIGPIPE: signal = "SIGPIPE"; break;
+		case SIGALRM: signal = "SIGALRM"; break;
+	}
+	GTRACE("signalHandler signo=%s(%d)", signal.c_str(), signo);
+	exit(0);
+}
+
 int main(int argc, char* argv[]) {
 	gtrace_default("127.0.0.1", 8908, true, nullptr);
 
@@ -36,6 +59,25 @@ int main(int argc, char* argv[]) {
 		usage();
 		return -1;
 	}
+
+	std::signal(SIGINT, signalHandler);
+	std::signal(SIGILL, signalHandler);
+	std::signal(SIGABRT, signalHandler);
+	std::signal(SIGFPE, signalHandler);
+	std::signal(SIGSEGV, signalHandler);
+	std::signal(SIGTERM, signalHandler);
+	std::signal(SIGHUP, signalHandler);
+	std::signal(SIGQUIT, signalHandler);
+	std::signal(SIGTRAP, signalHandler);
+	std::signal(SIGKILL, signalHandler);
+	std::signal(SIGBUS, signalHandler);
+	std::signal(SIGSYS, signalHandler);
+	// ----- by gilgil 2021.03.13 -----
+	// Ignore SIGPIPE which can be signaled when TCP socket operation on linux
+	// std::signal(SIGPIPE, signalHandler);
+	std::signal(SIGPIPE, SIG_IGN);
+	// --------------------------------
+	std::signal(SIGALRM, signalHandler);
 
 	GTRACE("ssdemon started");
 	runServer();

@@ -34,9 +34,8 @@ struct GDemonServer: GDemon {
 	struct Session {
 		int sd_{0};
 		pcap_t* pcap_{nullptr};
-		std::thread* t_{nullptr};
 
-		static void _run(SessionList* sessions, Session* session);
+		static void _run(GDemonServer* owner, int new_sd);
 		void run();
 
 		bool processGetInterfaceList(pchar buf, int32_t size);

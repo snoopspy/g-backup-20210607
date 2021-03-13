@@ -55,9 +55,7 @@ void GDemonServer::exec() {
 			GTRACE("%s", strerror(errno));
 			break;
 		}
-		Session* session = new Session;
-		session->sd_ = new_sd;
-		session->t_ = new std::thread(Session::_run, &sessions_, session);
+		new std::thread(Session::_run, this, new_sd);
 	}
 }
 
@@ -84,16 +82,19 @@ void GDemonServer::wait() {
 	}
 }
 
-void GDemonServer::Session::_run(SessionList* sessions, Session* session) {
-	sessions->lock();
-	sessions->push_back(session);
-	sessions->unlock();
+void GDemonServer::Session::_run(GDemonServer* owner, int new_sd) {
+	Session* session = new Session;
+	session->sd_ = new_sd;
+
+	owner->sessions_.lock();
+	owner->sessions_.push_back(session);
+	owner->sessions_.unlock();
 
 	session->run();
 
-	sessions->lock();
-	sessions->remove(session);
-	sessions->unlock();
+	owner->sessions_.lock();
+	owner->sessions_.remove(session);
+	owner->sessions_.unlock();
 }
 
 void GDemonServer::Session::run() {
@@ -164,7 +165,9 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 
 	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
+	GTRACE("bef call pcap_findalldevs"); // gilgil temp 2021.03.11
 	int i = pcap_findalldevs(&allDevs, errBuf);
+	GTRACE("aft call pcap_findalldevs i=%d", i); // gilgil temp 2021.03.11
 	if (i != 0) { // if error occured
 		GTRACE("error in pcap_findalldevs_ex (%s)", errBuf);
 		return false;
