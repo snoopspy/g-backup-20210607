@@ -63,9 +63,7 @@ int32_t GDemon::Interface::decode(pchar buffer, int32_t size) {
 	// GTRACE("name_222=%s", name_.data()); // gilgil temp 2021.03.09
 
 	// desc_
-	len = *pint32_t(buf);
-	buf += sizeof(len);
-	size -= sizeof(len);
+	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
 	desc_ = std::string(buf, len); buf += len; size -= len;
 	// GTRACE("desc_=%s", desc_.data()); // gilgil temp 2021.03.09
 
