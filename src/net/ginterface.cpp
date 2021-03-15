@@ -75,7 +75,7 @@ static GMac getMac(char* devName) {
 
 	int i = ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
-	if (i  == -1) {
+	if (i == -1) {
 		qDebug() << "ioctl return -1" << devName << strerror(errno);
 		return GMac::nullMac();
 	}

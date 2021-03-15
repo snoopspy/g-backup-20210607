@@ -5,7 +5,7 @@ SOURCES += *.cpp
 HEADERS += *.h
 
 android {
-        deployment.files += $${PWD}/../../../bin/ssdemon
-        deployment.path = /assets
-        INSTALLS += deployment
+	deployment.files += $${PWD}/../../../bin/ssdemon
+	deployment.path = /assets
+	INSTALLS += deployment
 }

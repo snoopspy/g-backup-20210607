@@ -29,7 +29,7 @@ QStringList GObj::slotList() {
 
 bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const char* slot, Qt::ConnectionType type) {
 	//qDebug() << QString("connect %1::%2 > %3::%4 %5").
-	//  arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type)); // gilgil temp 2019.05.25
+	// arg(sender->metaObject()->className(), signal, receiver->metaObject()->className(), slot).arg(int(type)); // gilgil temp 2019.05.25
 
 	QByteArray newSignal;
 	Q_ASSERT(signal != nullptr);
@@ -57,7 +57,7 @@ bool GObj::connect(QObject* sender, const char* signal, QObject* receiver, const
 
 bool GObj::connect(QObject *sender, const QMetaMethod &signal, QObject *receiver, const QMetaMethod &slot, Qt::ConnectionType type) {
 	QByteArray baSignal = signal.methodSignature();
-	QByteArray baSlot  = slot.methodSignature();
+	QByteArray baSlot = slot.methodSignature();
 	return GObj::connect(sender, baSignal.data(), receiver, baSlot.data(), type);
 }
 
@@ -138,7 +138,7 @@ void GObjList::load(QJsonArray ja) {
 			qWarning() << QString("className is empty");
 			continue;
 		}
-		GObj* obj =  GObj::createInstance(className, this);
+		GObj* obj = GObj::createInstance(className, this);
 		if (obj == nullptr) {
 			qWarning() << QString("GObj::createInstance(%1) return null").arg(className);
 			continue;

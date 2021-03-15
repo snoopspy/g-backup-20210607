@@ -51,7 +51,7 @@ void GApp::init() {
 	qInfo() << G::pcap_lib_version();
 
 #ifdef GILGIL_ANDROID_DEBUG
-	copyFileFromAssets("ssdemon",  QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
+	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 	QString program = "su";
 	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
 	bool res = QProcess::startDetached(program, arguments); // gilgil temp 2021.03.12

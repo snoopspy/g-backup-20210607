@@ -21,7 +21,7 @@ SOURCES += \
 	$${PWD}/../src/base/log/glogmanager.cpp \
 	$${PWD}/../src/base/log/glogstderr.cpp \
 	$${PWD}/../src/base/log/glogstdout.cpp \
-        $${PWD}/../src/base/log/glogudp.cpp \
+	$${PWD}/../src/base/log/glogudp.cpp \
 	$${PWD}/../src/base/other/gcommand.cpp \
 	$${PWD}/../src/base/prop/gprop.cpp \
 	$${PWD}/../src/base/prop/gpropitem-bool.cpp \
@@ -54,6 +54,7 @@ SOURCES += \
 	$${PWD}/../src/net/capture/gcapture.cpp \
 	$${PWD}/../src/net/capture/gnetfilter.cpp \
 	$${PWD}/../src/net/capture/gpcap.cpp \
+	$${PWD}/../src/net/capture/gpcapdemon.cpp \
 	$${PWD}/../src/net/capture/gpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gpcapfile.cpp \
 	$${PWD}/../src/net/capture/gsyncnetfilter.cpp \
@@ -65,9 +66,9 @@ SOURCES += \
 	$${PWD}/../src/net/delay/gdelay.cpp \
 	$${PWD}/../src/net/delay/gsyncdelay.cpp \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.cpp \
-        $${PWD}/../src/net/demon/gdemon.cpp \
-        $${PWD}/../src/net/demon/gdemonclient.cpp \
-        $${PWD}/../src/net/demon/gtrace.cpp \
+	$${PWD}/../src/net/demon/gdemon.cpp \
+	$${PWD}/../src/net/demon/gdemonclient.cpp \
+	$${PWD}/../src/net/demon/gtrace.cpp \
 	$${PWD}/../src/net/extract/gextract.cpp \
 	$${PWD}/../src/net/extract/ghttpextract.cpp \
 	$${PWD}/../src/net/filter/gbpfilter.cpp \
@@ -78,12 +79,12 @@ SOURCES += \
 	$${PWD}/../src/net/flow/gtcpflowmgr.cpp \
 	$${PWD}/../src/net/flow/gudpflowmgr.cpp \
 	$${PWD}/../src/net/gatm.cpp \
-        $${PWD}/../src/net/ginterface.cpp \
-        $${PWD}/../src/net/gip.cpp \
+	$${PWD}/../src/net/ginterface.cpp \
+	$${PWD}/../src/net/gip.cpp \
 	$${PWD}/../src/net/gip6.cpp \
 	$${PWD}/../src/net/gmac.cpp \
 	$${PWD}/../src/net/gnet.cpp \
-        $${PWD}/../src/net/gnetinfo.cpp \
+	$${PWD}/../src/net/gnetinfo.cpp \
 	$${PWD}/../src/net/grtm.cpp \
 	$${PWD}/../src/net/packet/gdot11packet.cpp \
 	$${PWD}/../src/net/packet/gethpacket.cpp \
@@ -138,7 +139,7 @@ HEADERS += \
 	$${PWD}/../src/base/log/glogmanager.h \
 	$${PWD}/../src/base/log/glogstderr.h \
 	$${PWD}/../src/base/log/glogstdout.h \
-        $${PWD}/../src/base/log/glogudp.h \
+	$${PWD}/../src/base/log/glogudp.h \
 	$${PWD}/../src/base/other/gcommand.h \
 	$${PWD}/../src/base/prop/gprop.h \
 	$${PWD}/../src/base/prop/gpropitem-bool.h \
@@ -171,6 +172,7 @@ HEADERS += \
 	$${PWD}/../src/net/capture/gcapture.h \
 	$${PWD}/../src/net/capture/gnetfilter.h \
 	$${PWD}/../src/net/capture/gpcap.h \
+	$${PWD}/../src/net/capture/gpcapdemon.h \
 	$${PWD}/../src/net/capture/gpcapdevice.h \
 	$${PWD}/../src/net/capture/gpcapfile.h \
 	$${PWD}/../src/net/capture/gsyncnetfilter.h \
@@ -182,9 +184,9 @@ HEADERS += \
 	$${PWD}/../src/net/delay/gdelay.h \
 	$${PWD}/../src/net/delay/gsyncdelay.h \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.h \
-        $${PWD}/../src/net/demon/gdemon.h \
-        $${PWD}/../src/net/demon/gdemonclient.h \
-        $${PWD}/../src/net/demon/gtrace.h \
+	$${PWD}/../src/net/demon/gdemon.h \
+	$${PWD}/../src/net/demon/gdemonclient.h \
+	$${PWD}/../src/net/demon/gtrace.h \
 	$${PWD}/../src/net/extract/gextract.h \
 	$${PWD}/../src/net/extract/ghttpextract.h \
 	$${PWD}/../src/net/filter/gbpfilter.h \
@@ -195,12 +197,12 @@ HEADERS += \
 	$${PWD}/../src/net/flow/gtcpflowmgr.h \
 	$${PWD}/../src/net/flow/gudpflowmgr.h \
 	$${PWD}/../src/net/gatm.h \
-        $${PWD}/../src/net/ginterface.h \
-        $${PWD}/../src/net/gip.h \
+	$${PWD}/../src/net/ginterface.h \
+	$${PWD}/../src/net/gip.h \
 	$${PWD}/../src/net/gip6.h \
 	$${PWD}/../src/net/gmac.h \
 	$${PWD}/../src/net/gnet.h \
-        $${PWD}/../src/net/gnetinfo.h \
+	$${PWD}/../src/net/gnetinfo.h \
 	$${PWD}/../src/net/grtm.h \
 	$${PWD}/../src/net/packet/gdot11packet.h \
 	$${PWD}/../src/net/packet/gethpacket.h \
