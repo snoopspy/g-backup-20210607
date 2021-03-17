@@ -22,7 +22,7 @@ struct GDemonClient : GDemon {
 	std::string error_;
 	int sd_{0};
 
-	bool connect(std::string ip = "127.0.0.1", uint16_t port = DefaultPort);
+	bool connect(std::string ip = "", uint16_t port = DefaultPort);
 	bool disconnect();
 
 	InterfaceList getInterfaceList();
