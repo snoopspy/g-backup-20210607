@@ -24,6 +24,8 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 }
 
 GApp::~GApp() {
+	QString appName = QCoreApplication::applicationName();
+	qInfo() << appName << "terminated";
 }
 
 void GApp::init() {
