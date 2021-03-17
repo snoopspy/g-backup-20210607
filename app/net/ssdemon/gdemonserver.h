@@ -39,6 +39,7 @@ struct GDemonServer: GDemon {
 		void run();
 
 		bool processGetInterfaceList(pchar buf, int32_t size);
+		bool processGetRtm(pchar buf, int32_t size);
 		bool processPcapOpen(pchar buf, int32_t size);
 		bool processPcapClose(pchar buf, int32_t size);
 	};
@@ -50,4 +51,14 @@ struct GDemonServer: GDemon {
 		void lock() { m_.lock(); }
 		void unlock() { m_.unlock(); }
 	} sessions_;
+
+protected:
+	struct RtmFunc {
+		static bool checkA(char* buf, RtmEntry* entry);
+		static bool checkB(char* buf, RtmEntry* entry);
+		static bool checkC(char* buf, RtmEntry* entry);
+		static bool checkD(char* buf, RtmEntry* entry);
+		static bool decodeCidr(std::string cidr, uint32_t* dst, uint32_t* mask);
+		static uint32_t numberToMask(int number);
+	};
 };

@@ -4,6 +4,33 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
+#ifdef GILGIL_ANDROID_DEBUG
+
+#include "net/demon/gdemonclient.h"
+
+GRtmLinux::GRtmLinux() {
+	GDemonClient& client = GDemonClient::instance();
+	for (int i = 0; i < 10 ; i++) { // 10 seconds
+		if (client.connect()) break;
+		QThread::sleep(1);
+	}
+	if (client.sd_ == 0) {
+		qFatal("can not connect to ssdemon");
+	}
+
+	GDemon::Rtm rtm= client.getRtm();
+	for (GDemon::RtmEntry& entry: rtm) {
+		GRtmEntry rtmEntry;
+		rtmEntry.dst_ = entry.dst_;
+		rtmEntry.mask_ = entry.mask_;
+		rtmEntry.gateway_ = entry.gateway_;
+		rtmEntry.metric_ = entry.metric_;
+		rtmEntry.intfName_ = entry.intfName_.data();
+		push_back(rtmEntry);
+	}
+}
+
+#else // GILGIL_ANDROID_DEBUG
 
 // ip route show table 0 output
 //
@@ -27,17 +54,19 @@ GRtmLinux::GRtmLinux() : GRtm() {
 	while (true) {
 		char buf[256];
 		if (std::fgets(buf, 256, p) == nullptr) break;
-		GRtmEntry rtmEntry;
-		if (checkA(buf, &rtmEntry))
-			append(rtmEntry);
-		else if (checkB(buf, &rtmEntry))
-			append(rtmEntry);
-		else if (checkC(buf, &rtmEntry))
-			append(rtmEntry);
-		else if (checkD(buf, &rtmEntry))
-			append(rtmEntry);
+		GRtmEntry entry;
+		if (checkA(buf, &entry))
+			push_back(entry);
+		else if (checkB(buf, &entry))
+			push_back(entry);
+		else if (checkC(buf, &entry))
+			push_back(entry);
+		else if (checkD(buf, &entry))
+			push_back(entry);
 	}
 }
+
+#endif // GILGIL_ANDROID_DEBUG
 
 GRtmLinux::~GRtmLinux() {
 	clear();
@@ -66,8 +95,8 @@ bool GRtmLinux::checkB(char* buf, GRtmEntry* entry) {
 	// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
 	int res  = sscanf(buf, "%s dev %s proto kernel scope link src %s metric %d", cidr, intf, myip, &metric);
 	if (res == 4) {
-		GIp dst;
-		GIp mask;
+		uint32_t dst;
+		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;
 		entry->dst_ = dst;
 		entry->mask_ = mask;
@@ -97,8 +126,8 @@ bool GRtmLinux::checkD(char* buf, GRtmEntry* entry) {
 	// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
 	int res = sscanf(buf, "%s dev %s", cidr, intf);
 	if (res == 3) {
-		GIp dst;
-		GIp mask;
+		uint32_t dst;
+		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;
 		entry->dst_ = dst;
 		entry->mask_ = mask;
@@ -108,7 +137,7 @@ bool GRtmLinux::checkD(char* buf, GRtmEntry* entry) {
 	return false;
 }
 
-bool GRtmLinux::decodeCidr(std::string cidr, GIp* dst, GIp* mask) {
+bool GRtmLinux::decodeCidr(std::string cidr, uint32_t* dst, uint32_t* mask) {
 	size_t found = cidr.find("/");
 	if (found == std::string::npos) return false;
 	std::string dstStr = cidr.substr(0, found);
@@ -118,7 +147,7 @@ bool GRtmLinux::decodeCidr(std::string cidr, GIp* dst, GIp* mask) {
 	return true;
 }
 
-GIp GRtmLinux::numberToMask(int number) {
+uint32_t GRtmLinux::numberToMask(int number) {
 	uint32_t res = 0;
 	for (int i = 0; i < number; i++) {
 		res = (res >> 1);

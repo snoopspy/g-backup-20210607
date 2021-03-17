@@ -120,6 +120,9 @@ void GDemonServer::Session::run() {
 			case cmdGetInterfaceList:
 				active = processGetInterfaceList(buf, size);
 				break;
+			case cmdGetRtm:
+				active = processGetRtm(buf, size);
+				break;
 			case cmdPcapOpen:
 				active = processPcapOpen(buf, size);
 				break;
@@ -161,7 +164,7 @@ bool getMac(char* devName, uint8_t* mac) {
 }
 
 bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
-	GTRACE("processGetInterfaceList"); // gilgil temp 2021.02.26
+	GTRACE("");
 
 	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
@@ -219,6 +222,57 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 	return true;
 }
 
+//
+// ip route show table 0 output
+//
+// [kali linux]
+// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
+// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
+//
+// [android]
+// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
+// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+//
+bool GDemonServer::Session::processGetRtm(pchar buf, int32_t size) {
+	GTRACE("");
+
+	std::string command("ip route show table 0");
+	FILE* p = popen(command.data(), "r");
+	if (p == nullptr) {
+		GTRACE("failed to call %s", command.data());
+		return false;
+	}
+
+	GetRtmRep rep;
+	while (true) {
+		char buf[256];
+		if (std::fgets(buf, 256, p) == nullptr) break;
+		RtmEntry entry;
+		if (RtmFunc::checkA(buf, &entry))
+			rep.rtm_.push_back(entry);
+		else if (RtmFunc::checkB(buf, &entry))
+			rep.rtm_.push_back(entry);
+		else if (RtmFunc::checkC(buf, &entry))
+			rep.rtm_.push_back(entry);
+		else if (RtmFunc::checkD(buf, &entry))
+			rep.rtm_.push_back(entry);
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("rep.encode return -1");
+		return false;
+	}
+
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+		return false;
+	}
+	return true;
+}
+
 bool GDemonServer::Session::processPcapOpen(pchar buf, int32_t size) {
 	GTRACE("processPcapOpen");
 	(void)buf; (void)size;
@@ -229,4 +283,94 @@ bool GDemonServer::Session::processPcapClose(pchar buf, int32_t size) {
 	GTRACE("processPcapClose");
 	(void)buf; (void)size;
 	return false;
+}
+
+bool GDemonServer::RtmFunc::checkA(char* buf, RtmEntry* entry) {
+	char gateway[256];
+	char intf[256];
+	int metric;
+	// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
+	int res = sscanf(buf, "default via %s dev %s proto dhcp metric %d", gateway, intf, &metric);
+	if (res == 3) {
+		struct in_addr addr;
+		inet_aton(gateway, &addr);
+		entry->gateway_ = ntohl(addr.s_addr);
+		entry->intfName_ = intf;
+		entry->metric_ = metric;
+		return true;
+	}
+	return false;
+}
+
+bool GDemonServer::RtmFunc::checkB(char* buf, RtmEntry* entry) {
+	char cidr[256];
+	char intf[256];
+	char myip[256];
+	int metric;
+	// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
+	int res  = sscanf(buf, "%s dev %s proto kernel scope link src %s metric %d", cidr, intf, myip, &metric);
+	if (res == 4) {
+		uint32_t dst;
+		uint32_t mask;
+		if (!decodeCidr(cidr, &dst, &mask)) return false;
+		entry->dst_ = dst;
+		entry->mask_ = mask;
+		entry->intfName_ = intf;
+		entry->metric_ = metric;
+		return true;
+	}
+	return false;
+}
+
+bool GDemonServer::RtmFunc::checkC(char* buf, RtmEntry* entry) {
+	char gateway[256];
+	char intf[256];
+	// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
+	int res = sscanf(buf, "default via %s dev %s", gateway, intf);
+	if (res == 2) {
+		struct in_addr addr;
+		inet_aton(gateway, &addr);
+		entry->gateway_ = ntohl(addr.s_addr);
+		entry->intfName_ = intf;
+		return true;
+	}
+	return false;
+}
+
+bool GDemonServer::RtmFunc::checkD(char* buf, RtmEntry* entry) {
+	char cidr[256];
+	char intf[256];
+	// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+	int res = sscanf(buf, "%s dev %s", cidr, intf);
+	if (res == 3) {
+		uint32_t dst;
+		uint32_t mask;
+		if (!decodeCidr(cidr, &dst, &mask)) return false;
+		entry->dst_ = dst;
+		entry->mask_ = mask;
+		entry->intfName_ = intf;
+		return true;
+	}
+	return false;
+}
+
+bool GDemonServer::RtmFunc::decodeCidr(std::string cidr, uint32_t* dst, uint32_t* mask) {
+	size_t found = cidr.find("/");
+	if (found == std::string::npos) return false;
+	std::string dstStr = cidr.substr(0, found);
+	struct in_addr addr;
+	inet_aton(dstStr.data(), &addr);
+	*dst = ntohl(addr.s_addr);
+	std::string maskStr = cidr.substr(found + 1);
+	*mask = numberToMask(std::stoi(maskStr.data()));
+	return true;
+}
+
+uint32_t GDemonServer::RtmFunc::numberToMask(int number) {
+	uint32_t res = 0;
+	for (int i = 0; i < number; i++) {
+		res = (res >> 1);
+		res |= 0x80000000;
+	}
+	return res;
 }

@@ -62,10 +62,11 @@ struct GDemon {
 	};
 
 	struct RtmEntry {
-		uint32_t dst_;
-		uint32_t mask_;
-		uint32_t gateway_;
-		int32_t metric_;
+		uint32_t dst_{0};
+		uint32_t mask_{0};
+		uint32_t gateway_{0};
+		int32_t metric_{0};
+		std::string intfName_;
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};

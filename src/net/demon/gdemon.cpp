@@ -143,6 +143,11 @@ int32_t GDemon::RtmEntry::encode(pchar buffer, int32_t size) {
 	// metric_
 	*puint32_t(buf) = metric_; buf += sizeof(metric_); size -= sizeof(metric_);
 
+	// intfName_
+	int32_t len = intfName_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, intfName_.data(), len); buf += len; size -= len;
+
 	if (size < 0) {
 		GTRACE("size is %d\n", size);
 		return -1;
@@ -165,6 +170,10 @@ int32_t GDemon::RtmEntry::decode(pchar buffer, int32_t size) {
 
 	// dst_
 	metric_ = *pint32_t(buf); buf += sizeof(metric_); size -= sizeof(metric_);
+
+	// name_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	intfName_ = std::string(buf, len); buf += len; size -= len;
 
 	if (size < 0) {
 		GTRACE("GDemon::Interface::decode size is %d\n", size);

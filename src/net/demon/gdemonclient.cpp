@@ -112,7 +112,7 @@ GDemon::Rtm GDemonClient::getRtm() {
 	}
 
 	char buffer[MaxBufferSize];
-	GetInterfaceListReq req;
+	GetRtmReq req;
 	int32_t encLen = req.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
 		qWarning() << "req.encode return -1";

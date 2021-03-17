@@ -28,6 +28,6 @@ protected:
 	static bool checkB(char* buf, GRtmEntry* entry);
 	static bool checkC(char* buf, GRtmEntry* entry);
 	static bool checkD(char* buf, GRtmEntry* entry);
-	static bool decodeCidr(std::string cidr, GIp* dst, GIp* mask);
-	static GIp numberToMask(int number);
+	static bool decodeCidr(std::string cidr, uint32_t* dst, uint32_t* mask);
+	static uint32_t numberToMask(int number);
 };
