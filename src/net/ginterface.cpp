@@ -40,11 +40,10 @@ GInterfaceList::GInterfaceList() {
 		qFatal("can not connect to ssdemon");
 	}
 
-	int index = 1;
 	GDemon::InterfaceList interfaceList = client.getInterfaceList();
 	for (GDemon::Interface& interface: interfaceList) {
 		GInterface intf;
-		intf.index_ = index;
+		intf.index_ = interface.index_;
 		intf.name_ = interface.name_.data();
 		intf.desc_ = interface.desc_.data();
 		intf.mac_ = interface.mac_;
@@ -53,7 +52,6 @@ GInterfaceList::GInterfaceList() {
 		intf.ip_and_mask_ = intf.ip_ & intf.mask_;
 		// gateway_ is initialized in GNetInfo
 		push_back(intf);
-		index++;
 	}
 }
 

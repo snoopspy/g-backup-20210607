@@ -12,8 +12,13 @@ GDemonClient::~GDemonClient() {
 }
 
 bool GDemonClient::connect(std::string ip, uint16_t port) {
-	if (ip == "") ip = "10.2.2.107";
+	if (ip == "") ip = "127.0.0.1"; // gilgil temp 2021.03.17
 	if (port == 0) port = DefaultPort;
+
+	if (sd_ != 0) {
+		qDebug() << "already connected";
+		return true;
+	}
 
 	sd_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (sd_ == -1) {
@@ -96,6 +101,48 @@ GDemon::InterfaceList GDemonClient::getInterfaceList() {
 	}
 
 	return rep.interfaceList_;
+}
+
+GDemon::Rtm GDemonClient::getRtm() {
+	Rtm rtm;
+
+	if (sd_ == 0) {
+		qWarning() << "sd_ is 0";
+		return rtm;
+	}
+
+	char buffer[MaxBufferSize];
+	GetInterfaceListReq req;
+	int32_t encLen = req.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		qWarning() << "req.encode return -1";
+		return rtm;
+	}
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		qWarning() << "send return " << sendLen;
+		return rtm;
+	}
+
+	Header* header = GDemon::PHeader(buffer);
+	if (!recvAll(sd_, header, sizeof(Header))) {
+		qWarning() << "recvAll(header) return false";
+		return rtm;
+	}
+
+	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
+		qWarning() << "recvAll(body) return false";
+		return rtm;
+	}
+
+	GetRtmRep rep;
+	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
+	if (decLen == -1) {
+		qWarning() << "rep.decode return -1";
+		return rtm;
+	}
+
+	return rep.rtm_;
 }
 
 GDemonClient& GDemonClient::instance() {

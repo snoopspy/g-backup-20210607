@@ -165,9 +165,9 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 
 	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
-	GTRACE("bef call pcap_findalldevs"); // gilgil temp 2021.03.11
+	// GTRACE("bef call pcap_findalldevs"); // gilgil temp 2021.03.11
 	int i = pcap_findalldevs(&allDevs, errBuf);
-	GTRACE("aft call pcap_findalldevs i=%d", i); // gilgil temp 2021.03.11
+	// GTRACE("aft call pcap_findalldevs i=%d", i); // gilgil temp 2021.03.11
 	if (i != 0) { // if error occured
 		GTRACE("error in pcap_findalldevs_ex (%s)", errBuf);
 		return false;

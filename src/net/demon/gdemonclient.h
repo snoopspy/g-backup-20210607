@@ -26,6 +26,7 @@ struct GDemonClient : GDemon {
 	bool disconnect();
 
 	InterfaceList getInterfaceList();
+	Rtm getRtm();
 
 	static GDemonClient& instance();
 };

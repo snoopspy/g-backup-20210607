@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 #include "gdemonserver.h"
 #include "gtrace.h"
@@ -48,7 +49,8 @@ void signalHandler(int signo) {
 		case SIGPIPE: signal = "SIGPIPE"; break;
 		case SIGALRM: signal = "SIGALRM"; break;
 	}
-	GTRACE("signalHandler signo=%s(%d)", signal.c_str(), signo);
+	std::string msg = strsignal(signo);
+	GTRACE("signalHandler signo=%s(%d) %s", signal.data(), signo, msg.data());
 	exit(0);
 }
 

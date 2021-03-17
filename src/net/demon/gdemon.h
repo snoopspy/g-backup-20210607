@@ -25,6 +25,7 @@ struct GDemon {
 	typedef char *pchar;
 	typedef void *pvoid;
 	typedef int32_t *pint32_t;
+	typedef uint32_t *puint32_t;
 
 	static const uint16_t DefaultPort = 8908;
 	static const int MaxBufferSize = 8192;
@@ -37,8 +38,9 @@ struct GDemon {
 	enum Cmd: int32_t {
 		cmdRunCommand = 0,
 		cmdGetInterfaceList = 1,
-		cmdPcapOpen = 2,
-		cmdPcapClose = 3
+		cmdGetRtm = 2,
+		cmdPcapOpen = 3,
+		cmdPcapClose = 4
 	};
 	typedef Cmd *PCmd;
 
@@ -59,7 +61,21 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	#pragma pack(push, 1)
+	struct RtmEntry {
+		uint32_t dst_;
+		uint32_t mask_;
+		uint32_t gateway_;
+		int32_t metric_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct Rtm : std::list<RtmEntry> {
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+#pragma pack(push, 1)
 	struct Header {
 		int32_t len_;
 		Cmd cmd_;
@@ -67,6 +83,8 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 	typedef Header* PHeader;
+#pragma pack(pop)
+
 
 	struct GetInterfaceListReq : Header {
 		int32_t encode(pchar buffer, int32_t size);
@@ -75,6 +93,17 @@ struct GDemon {
 
 	struct GetInterfaceListRep : Header {
 		InterfaceList interfaceList_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct GetRtmReq : Header {
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct GetRtmRep : Header {
+		Rtm rtm_;
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
@@ -107,5 +136,4 @@ struct GDemon {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
-	#pragma pack(pop)
 };
