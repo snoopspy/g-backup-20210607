@@ -4,86 +4,125 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
+
+// ip route show table 0 output
+//
+// [kali linux]
+// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
+// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
+//
+// [android]
+// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
+// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+//
+
 GRtmLinux::GRtmLinux() : GRtm() {
-	QString command = "cat";
-	QStringList args = QStringList{"/proc/net/route"};
-	QProcess p;
-	p.start(command, args);
-	if (!p.waitForFinished()) {
-		qWarning() << QString("waitForFinished(%1) return false").arg(command) << args;
+	std::string command("ip route show table 0");
+	FILE* p = popen(command.data(), "r");
+	if (p == nullptr) {
+		qFatal("failed to call %s", command.data());
 		return;
 	}
-	QList<QByteArray> baList = p.readAll().split('\n');
-	bool firstLine = true;
-	QList<QString> fields;
 
-	for (QByteArray& ba: baList) {
-		QTextStream ts(ba);
-		if (firstLine) {
-			firstLine = false;
-			while (true) {
-				QString field;
-				ts >> field;
-				if (field == "") break;
-				fields.append(field);
-			}
-		} else {
-			GRtmEntry entry;
-			bool appending = false;
-			for (int i = 0; i < fields.count(); i++) {
-				QString field = fields.at(i);
-				QString value;
-				ts >> value;
-				if (value == "") break;
-				if (field == "Iface") {
-					appending = true;
-					Q_ASSERT(value != "");
-					entry.intfName_ = value;
-				}
-				else if (field == "Destination")
-					entry.dst_ = ntohl(value.toUInt(nullptr, 16));
-				else if (field == "Mask")
-					entry.mask_ = ntohl(value.toUInt(nullptr, 16));
-				else if (field == "Gateway")
-					entry.gateway_ = ntohl(value.toUInt(nullptr, 16));
-				else if (field == "Metric")
-					entry.metric_ = value.toInt(nullptr, 16);
-				// intf_ is initialized in GNetInfo
-			}
-			if (appending)
-				append(entry);
-		}
+	while (true) {
+		char buf[256];
+		if (std::fgets(buf, 256, p) == nullptr) break;
+		GRtmEntry rtmEntry;
+		if (checkA(buf, &rtmEntry))
+			append(rtmEntry);
+		else if (checkB(buf, &rtmEntry))
+			append(rtmEntry);
+		else if (checkC(buf, &rtmEntry))
+			append(rtmEntry);
+		else if (checkD(buf, &rtmEntry))
+			append(rtmEntry);
 	}
-
-	#ifdef GILGIL_ANDROID_DEBUG
-	// for gathering gateway
-	command = "ip";
-	args = QStringList{"route", "show", "table", "0"};
-	p.start(command, args);
-	if (!p.waitForFinished()) {
-		qWarning() << QString("waitForFinished(%1) return false").arg(command) << args;
-		return;
-	}
-	baList = p.readAll().split('\n');
-	for (QByteArray& ba: baList) {
-		char gateway[256];
-		char dev[256];
-		// default via 10.2.2.1 dev wlan0  table 1021  proto static
-		int res = sscanf(ba.data(), "default via %s dev %s", gateway, dev);
-		if (res == 2) {
-			GRtmEntry entry;
-			entry.intfName_ = dev;
-			entry.dst_ = 0;
-			entry.mask_ = 0;
-			entry.gateway_ = GIp(gateway);
-			entry.metric_ = 0;
-			append(entry);
-		}
-	}
-	#endif // GILGIL_ANDROID_DEBUG
 }
 
 GRtmLinux::~GRtmLinux() {
 	clear();
 }
 
+bool GRtmLinux::checkA(char* buf, GRtmEntry* entry) {
+	char gateway[256];
+	char intf[256];
+	int metric;
+	// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
+	int res = sscanf(buf, "default via %s dev %s proto dhcp metric %d", gateway, intf, &metric);
+	if (res == 3) {
+		entry->gateway_ = GIp(gateway);
+		entry->intfName_ = intf;
+		entry->metric_ = metric;
+		return true;
+	}
+	return false;
+}
+
+bool GRtmLinux::checkB(char* buf, GRtmEntry* entry) {
+	char cidr[256];
+	char intf[256];
+	char myip[256];
+	int metric;
+	// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
+	int res  = sscanf(buf, "%s dev %s proto kernel scope link src %s metric %d", cidr, intf, myip, &metric);
+	if (res == 4) {
+		GIp dst;
+		GIp mask;
+		if (!decodeCidr(cidr, &dst, &mask)) return false;
+		entry->dst_ = dst;
+		entry->mask_ = mask;
+		entry->intfName_ = intf;
+		entry->metric_ = metric;
+		return true;
+	}
+	return false;
+}
+
+bool GRtmLinux::checkC(char* buf, GRtmEntry* entry) {
+	char gateway[256];
+	char intf[256];
+	// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
+	int res = sscanf(buf, "default via %s dev %s", gateway, intf);
+	if (res == 2) {
+		entry->gateway_ = GIp(gateway);
+		entry->intfName_ = intf;
+		return true;
+	}
+	return false;
+}
+
+bool GRtmLinux::checkD(char* buf, GRtmEntry* entry) {
+	char cidr[256];
+	char intf[256];
+	// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+	int res = sscanf(buf, "%s dev %s", cidr, intf);
+	if (res == 3) {
+		GIp dst;
+		GIp mask;
+		if (!decodeCidr(cidr, &dst, &mask)) return false;
+		entry->dst_ = dst;
+		entry->mask_ = mask;
+		entry->intfName_ = intf;
+		return true;
+	}
+	return false;
+}
+
+bool GRtmLinux::decodeCidr(std::string cidr, GIp* dst, GIp* mask) {
+	size_t found = cidr.find("/");
+	if (found == std::string::npos) return false;
+	std::string dstStr = cidr.substr(0, found);
+	*dst = GIp(dstStr.data());
+	std::string maskStr = cidr.substr(found + 1);
+	*mask = numberToMask(std::stoi(maskStr.data()));
+	return true;
+}
+
+GIp GRtmLinux::numberToMask(int number) {
+	uint32_t res = 0;
+	for (int i = 0; i < number; i++) {
+		res = (res >> 1);
+		res |= 0x80000000;
+	}
+	return res;
+}

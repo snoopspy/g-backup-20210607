@@ -22,4 +22,12 @@ struct G_EXPORT GRtmLinux : GRtm {
 protected:
 	GRtmLinux();
 	~GRtmLinux() override;
+
+protected:
+	static bool checkA(char* buf, GRtmEntry* entry);
+	static bool checkB(char* buf, GRtmEntry* entry);
+	static bool checkC(char* buf, GRtmEntry* entry);
+	static bool checkD(char* buf, GRtmEntry* entry);
+	static bool decodeCidr(std::string cidr, GIp* dst, GIp* mask);
+	static GIp numberToMask(int number);
 };
