@@ -13,6 +13,7 @@ GDemonClient::~GDemonClient() {
 
 bool GDemonClient::connect(std::string ip, uint16_t port) {
 	if (ip == "") ip = "127.0.0.1";
+	if (port == 0) port = DefaultPort;
 
 	sd_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (sd_ == -1) {
