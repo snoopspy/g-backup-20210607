@@ -53,6 +53,10 @@ GLogManager& GLogManager::instance() {
 	return logManager;
 }
 
+#ifdef QT_GUI_LIB
+#include <QMessageBox>
+#endif // QT_GUI_LIB
+
 void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
 	GLogManager& logManager = GLogManager::instance();
 	if (!logManager.enabled_) return;
@@ -80,5 +84,10 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	for (GObj* obj: logManager) {
 		GLog* log = reinterpret_cast<GLog*>(obj);
 		log->write(finalMsg);
+		}
+#ifdef QT_GUI_LIB
+		if (type == QtFatalMsg) {
+			QMessageBox::critical(nullptr, "Fatal Error", finalMsg);
+#endif // QT_GUI_LIB
 	}
 }
