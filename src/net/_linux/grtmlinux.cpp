@@ -40,7 +40,7 @@ GRtmLinux::GRtmLinux() {
 //
 // [android]
 // default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
-// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+// 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
 //
 
 GRtmLinux::GRtmLinux() : GRtm() {
@@ -123,8 +123,9 @@ bool GRtmLinux::checkC(char* buf, GRtmEntry* entry) {
 bool GRtmLinux::checkD(char* buf, GRtmEntry* entry) {
 	char cidr[256];
 	char intf[256];
-	// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
-	int res = sscanf(buf, "%s dev %s", cidr, intf);
+	char ip[256];
+	// 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
+	int res = sscanf(buf, "%s dev %s proto kernel scope link src %s", cidr, intf, ip);
 	if (res == 3) {
 		uint32_t dst;
 		uint32_t mask;

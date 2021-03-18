@@ -231,7 +231,7 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 //
 // [android]
 // default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
-// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
+// 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
 //
 bool GDemonServer::Session::processGetRtm(pchar buf, int32_t size) {
 	GTRACE("");
@@ -292,6 +292,7 @@ bool GDemonServer::RtmFunc::checkA(char* buf, RtmEntry* entry) {
 	// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
 	int res = sscanf(buf, "default via %s dev %s proto dhcp metric %d", gateway, intf, &metric);
 	if (res == 3) {
+		GTRACE("checkA %s", buf); // gilgil temp
 		struct in_addr addr;
 		inet_aton(gateway, &addr);
 		entry->gateway_ = ntohl(addr.s_addr);
@@ -310,6 +311,7 @@ bool GDemonServer::RtmFunc::checkB(char* buf, RtmEntry* entry) {
 	// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
 	int res  = sscanf(buf, "%s dev %s proto kernel scope link src %s metric %d", cidr, intf, myip, &metric);
 	if (res == 4) {
+		GTRACE("checkB %s", buf); // gilgil temp
 		uint32_t dst;
 		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;
@@ -328,6 +330,7 @@ bool GDemonServer::RtmFunc::checkC(char* buf, RtmEntry* entry) {
 	// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
 	int res = sscanf(buf, "default via %s dev %s", gateway, intf);
 	if (res == 2) {
+		GTRACE("checkC %s", buf); // gilgil temp
 		struct in_addr addr;
 		inet_aton(gateway, &addr);
 		entry->gateway_ = ntohl(addr.s_addr);
@@ -340,9 +343,11 @@ bool GDemonServer::RtmFunc::checkC(char* buf, RtmEntry* entry) {
 bool GDemonServer::RtmFunc::checkD(char* buf, RtmEntry* entry) {
 	char cidr[256];
 	char intf[256];
-	// 10.2.2.0/24 dev wlan0  table 1021  proto static  scope link (D)
-	int res = sscanf(buf, "%s dev %s", cidr, intf);
+	char ip[256];
+	// 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
+	int res = sscanf(buf, "%s dev %s proto kernel scope link src %s", cidr, intf, ip);
 	if (res == 3) {
+		GTRACE("checkD %s", buf); // gilgil temp
 		uint32_t dst;
 		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;
