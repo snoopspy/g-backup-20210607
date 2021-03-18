@@ -41,14 +41,22 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 	addr.sin_addr = ip_addr;
 	memset(&addr.sin_zero, 0, sizeof(addr.sin_zero));
 
-	res = ::connect(sd_, (struct sockaddr *)&addr, sizeof(addr));
-	if (res == -1) {
+	bool connected = false;
+	for (int i = 0; i < 10 ; i++) { // 10 seconds
+		res = ::connect(sd_, (struct sockaddr *)&addr, sizeof(addr));
+		if (res != -1) {
+			connected = true;
+			break;
+		}
 		qWarning() << strerror(errno);
+		sleep(1);
+	}
+
+	if (!connected) {
 		::close(sd_);
 		sd_ = 0;
 		return false;
 	}
-
 	return true;
 }
 

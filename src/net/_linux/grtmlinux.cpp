@@ -10,11 +10,7 @@
 
 GRtmLinux::GRtmLinux() {
 	GDemonClient& client = GDemonClient::instance();
-	for (int i = 0; i < 10 ; i++) { // 10 seconds
-		if (client.connect()) break;
-		QThread::sleep(1);
-	}
-	if (client.sd_ == 0) {
+	if (!client.connect()) {
 		qFatal("can not connect to ssdemon");
 	}
 
