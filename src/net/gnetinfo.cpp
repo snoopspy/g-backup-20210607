@@ -10,7 +10,7 @@ GNetInfo::GNetInfo() {
 		GInterface* intf = interfaceList_.findByName(intfName);
 		if (intf == nullptr) {
 			QString msg = QString("interfaceList_.findByName(%1) return false").arg(intfName);
-			qFatal("%s", qPrintable(msg));
+			qCritical() << msg;
 		}
 		entry.intf_ = intf;
 	}
