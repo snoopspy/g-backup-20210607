@@ -129,26 +129,36 @@ void gtrace(const char* fmt, ...) {
 	int len = 0;
 	ssize_t remn = BUFSIZE;
 
+#ifdef WIN32
+	SYSTEMTIME now;
+	::GetLocalTime(&now);
+	res = snprintf(p, remn, "%02d%02d%02d %02d%02d%02d-%03d ",
+		now.wYear % 100, now.wMonth, now.wDay,
+		now.wHour, now.wMinute, now.wSecond, now.wMilliseconds);
+#endif // WIN32
+#ifdef __linux__
 	struct timeval now;
 	struct tm* local;
 	gettimeofday(&now, NULL);
 	local = localtime(&now.tv_sec);
 	res = snprintf(p, remn, "%02d%02d%02d %02d%02d%02d-%03lu ",
 		(local->tm_year) % 100, local->tm_mon + 1, local->tm_mday,
-		 local->tm_hour, local->tm_min, local->tm_sec, now.tv_usec / 1000);
+		local->tm_hour, local->tm_min, local->tm_sec, now.tv_usec / 1000);
+#endif // __linux__
 	if (res < 0) {
 		fprintf(stderr, "time: snprintf return %d\n", res);
 		return;
 	}
-	p += res; len += res; remn -= res;	
+
+	p += res; len += res; remn -= res;
 	if (remn <= 0) {
 		fprintf(stderr, "time: not enough buffer size res=%d len=%d\n", res, len);
 		return;
 	}
 
 #ifdef SHOW_THREAD_ID
-	pthread_t id = pthread_self() & 0xFFFF;
-	res = snprintf(p, remn, "%04lX ", id);
+	unsigned id = (unsigned)(pthread_self() & 0xFFFF);
+	res = snprintf(p, remn, "%04X ", id);
 	if (res < 0) {
 		fprintf(stderr, "thread: snprintf return %d\n", res);
 		return;
@@ -176,7 +186,7 @@ void gtrace(const char* fmt, ...) {
 
 	memcpy(p, "\n\0", 2);
 	res = 2;
-	p += res; len += res; remn -= res;
+	/*p += res;*/ len += res; remn -= res;
 	if (remn <= 0) {
 		fprintf(stderr, "linefeed: not enough buffer size res=%d len=%d\n", res, len);
 		return;
@@ -197,7 +207,7 @@ void gtrace(const char* fmt, ...) {
 
 void gtrace_default(const char* ip, int port, bool se /*stderr*/, const char* file) {
 	if (ip != NULL && strlen(ip) > 0 && port != 0) {
-		strncpy(_gtrace.def.ip, ip, BUFSIZE);
+		strncpy(_gtrace.def.ip, ip, BUFSIZE - 1);
 		_gtrace.def.port = port;
 	} else {
 		memset(_gtrace.def.ip, 0, BUFSIZE);
@@ -205,7 +215,7 @@ void gtrace_default(const char* ip, int port, bool se /*stderr*/, const char* fi
 	}
 	_gtrace.def.se = se;
 	if (file != NULL && strlen(file) > 0)
-		strncpy(_gtrace.def.file, file, BUFSIZE);
+		strncpy(_gtrace.def.file, file, BUFSIZE - 1);
 	else
 		memset(_gtrace.def.file, 0, BUFSIZE);
 }
