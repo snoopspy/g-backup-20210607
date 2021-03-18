@@ -84,10 +84,8 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	for (GObj* obj: logManager) {
 		GLog* log = reinterpret_cast<GLog*>(obj);
 		log->write(finalMsg);
-#ifdef QT_GUI_LIB
-		if (type == QtFatalMsg) {
-			QMessageBox::critical(nullptr, "Fatal Error", finalMsg);
-		}
-#endif // QT_GUI_LIB
 	}
+#ifdef QT_GUI_LIB
+	if (type == QtFatalMsg) QMessageBox::critical(nullptr, "Fatal Error", finalMsg);
+#endif // QT_GUI_LIB
 }
