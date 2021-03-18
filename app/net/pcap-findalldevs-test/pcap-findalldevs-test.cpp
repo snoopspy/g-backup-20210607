@@ -74,20 +74,21 @@ void debug(pcap_if_t* dev) {
 }
 
 int main() {
-	pcap_if_t* allDevs_;
+	pcap_if_t* allDevs;
 	char errBuf[PCAP_ERRBUF_SIZE];
-	int i = pcap_findalldevs(&allDevs_, errBuf);
+	int i = pcap_findalldevs(&allDevs, errBuf);
 	if (i != 0) {
 		cout << "error in pcap_findalldevs " << errBuf << endl;
 		return -1;
 	}
 
 	i = 0;
-	pcap_if_t* dev = allDevs_;
+	pcap_if_t* dev = allDevs;
 	while (dev != nullptr) {
 		cout << ++i << " ================================" << endl;
 		debug(dev);
 		dev = dev->next;
 		cout << endl;
 	}
+	pcap_freealldevs(allDevs);
 }
