@@ -4,6 +4,7 @@ OBJS=$(SRCS:%.cpp=%.o)
 
 CPPFLAGS+=-g
 CPPFLAGS+=-O2 # for release
+CPPFLAGS+=-Wall -Wextra
 CPPFLAGS+=-I../../../src/net/demon
 LDLIBS+=-lpcap -pthread
 

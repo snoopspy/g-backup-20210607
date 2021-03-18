@@ -154,7 +154,7 @@ bool getMac(char* devName, uint8_t* mac) {
 
 	struct ifreq buffer;
 	memset(&buffer, 0x00, sizeof(buffer));
-	strncpy(buffer.ifr_name, devName, IFNAMSIZ);
+	strncpy(buffer.ifr_name, devName, IFNAMSIZ - 1);
 
 	ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
@@ -233,7 +233,7 @@ bool GDemonServer::Session::processGetInterfaceList(pchar, int32_t) {
 // default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
 // 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
 //
-bool GDemonServer::Session::processGetRtm(pchar buf, int32_t size) {
+bool GDemonServer::Session::processGetRtm(pchar, int32_t) {
 	GTRACE("");
 
 	std::string command("ip route show table 0");
