@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
-#ifdef GILGIL_ANDROID_DEBUG11
+#ifdef GILGIL_ANDROID_DEBUG
 
 #include "net/demon/gdemonclient.h"
 

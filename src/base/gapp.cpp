@@ -58,7 +58,7 @@ void GApp::init() {
 	QString program = "su";
 	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon.sh"};
 	bool res = QProcess::startDetached(program, arguments); // gilgil temp 2021.03.12
-	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program).arg(arguments.join(" ")).arg(res);
+	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
 #endif // GILGIL_ANDROID_DEBUG
 }
 
