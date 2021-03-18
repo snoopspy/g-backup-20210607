@@ -63,3 +63,14 @@ android {
 	INCLUDEPATH *= $$HOME/android/sysroot/include
 	LIBS *= -L$$HOME/android/sysroot/lib
 }
+
+#------------------------------------------------------------------------------
+# android deploy files
+#------------------------------------------------------------------------------
+android {
+	deployment.files += $${G_DIR}/bin/ssdemon
+	deployment.files += $${G_DIR}/bin/ssdemon.sh
+	deployment.path = /assets
+	INSTALLS += deployment
+}
+

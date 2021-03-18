@@ -257,6 +257,7 @@ bool GDemonServer::Session::processGetRtm(pchar buf, int32_t size) {
 		else if (RtmFunc::checkD(buf, &entry))
 			rep.rtm_.push_back(entry);
 	}
+	pclose(p);
 
 	char buffer[MaxBufferSize];
 	int32_t encLen = rep.encode(buffer, MaxBufferSize);

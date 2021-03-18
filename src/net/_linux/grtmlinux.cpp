@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 // GRtmLinux
 // ----------------------------------------------------------------------------
-#ifdef GILGIL_ANDROID_DEBUG
+#ifdef GILGIL_ANDROID_DEBUG11
 
 #include "net/demon/gdemonclient.h"
 
@@ -64,6 +64,7 @@ GRtmLinux::GRtmLinux() : GRtm() {
 		else if (checkD(buf, &entry))
 			push_back(entry);
 	}
+	pclose(p);
 }
 
 #endif // GILGIL_ANDROID_DEBUG
