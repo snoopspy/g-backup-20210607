@@ -85,8 +85,9 @@ int main() {
 	i = 0;
 	pcap_if_t* dev = allDevs_;
 	while (dev != nullptr) {
-		cout << i++ << " ================================" << endl;
+		cout << ++i << " ================================" << endl;
 		debug(dev);
 		dev = dev->next;
+		cout << endl;
 	}
 }
