@@ -58,11 +58,6 @@ win32 {
 	LIBS *= -L$${PWD}/../npcap/Lib/x64
 	LIBS *= -lwpcap -lpacket -lws2_32 -liphlpapi
 }
-android {
-	HOME=$$system(echo $HOME)
-	INCLUDEPATH *= $$HOME/android/sysroot/include
-	LIBS *= -L$$HOME/android/sysroot/lib
-}
 
 #------------------------------------------------------------------------------
 # android deploy files

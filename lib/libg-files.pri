@@ -82,6 +82,9 @@ SOURCES += \
 	$${PWD}/../src/net/gnet.cpp \
 	$${PWD}/../src/net/gnetinfo.cpp \
 	$${PWD}/../src/net/grtm.cpp \
+	$${PWD}/../src/net/demon/gdemon.cpp \
+	$${PWD}/../src/net/demon/gdemonclient.cpp \
+	$${PWD}/../src/net/demon/gtrace.cpp \
 	$${PWD}/../src/net/packet/gdot11packet.cpp \
 	$${PWD}/../src/net/packet/gethpacket.cpp \
 	$${PWD}/../src/net/packet/gippacket.cpp \
@@ -196,6 +199,9 @@ HEADERS += \
 	$${PWD}/../src/net/gnet.h \
 	$${PWD}/../src/net/gnetinfo.h \
 	$${PWD}/../src/net/grtm.h \
+	$${PWD}/../src/net/demon/gdemon.h \
+	$${PWD}/../src/net/demon/gdemonclient.h \
+	$${PWD}/../src/net/demon/gtrace.h \
 	$${PWD}/../src/net/packet/gdot11packet.h \
 	$${PWD}/../src/net/packet/gethpacket.h \
 	$${PWD}/../src/net/packet/gippacket.h \
@@ -227,16 +233,10 @@ HEADERS += \
 
 linux {
 	SOURCES += \
-		$${PWD}/../src/net/_linux/grtmlinux.cpp \
-		$${PWD}/../src/net/demon/gdemon.cpp \
-		$${PWD}/../src/net/demon/gdemonclient.cpp \
-		$${PWD}/../src/net/demon/gtrace.cpp
+		$${PWD}/../src/net/_linux/grtmlinux.cpp
 
 	HEADERS += \
-		$${PWD}/../src/net/_linux/grtmlinux.h \
-		$${PWD}/../src/net/demon/gdemon.h \
-		$${PWD}/../src/net/demon/gdemonclient.h \
-		$${PWD}/../src/net/demon/gtrace.h
+		$${PWD}/../src/net/_linux/grtmlinux.h
 }
 win32 {
 	SOURCES += $${PWD}/../src/net/_win/gipadapterinfo.cpp
