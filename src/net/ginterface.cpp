@@ -156,14 +156,14 @@ GLocalInterfaceList::GLocalInterfaceList() {
 GRemoteInterfaceList::GRemoteInterfaceList(QString ip, quint16 port) {
 	GDemonClient* client = GDemonClient::instance(ip.toStdString(), port);
 	GDemon::InterfaceList interfaceList = client->getInterfaceList();
-	for (GDemon::Interface& interface: interfaceList) {
+	for (GDemon::Interface& dIntf: interfaceList) {
 		GInterface intf;
-		intf.index_ = interface.index_;
-		intf.name_ = interface.name_.data();
-		intf.desc_ = interface.desc_.data();
-		intf.mac_ = interface.mac_;
-		intf.ip_ = interface.ip_;
-		intf.mask_ = interface.mask_;
+		intf.index_ = dIntf.index_;
+		intf.name_ = dIntf.name_.data();
+		intf.desc_ = dIntf.desc_.data();
+		intf.mac_ = dIntf.mac_;
+		intf.ip_ = dIntf.ip_;
+		intf.mask_ = dIntf.mask_;
 		intf.ip_and_mask_ = intf.ip_ & intf.mask_;
 		// gateway_ is initialized in GNetInfo
 		push_back(intf);

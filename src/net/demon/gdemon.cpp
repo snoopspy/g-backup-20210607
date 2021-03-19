@@ -112,13 +112,13 @@ int32_t GDemon::InterfaceList::decode(pchar buffer, int32_t size) {
 
 	// InterfaceList
 	for (int32_t i = 0; i < cnt; i++) {
-		Interface interface;
+		Interface intf;
 
-		int32_t len = interface.decode(buf, size);
-		//GTRACE("len=%d name=%s", len, interface.name_.data());
-		push_back(interface);
+		int32_t len = intf.decode(buf, size);
+		//GTRACE("len=%d name=%s", len, intf.name_.data());
+		push_back(intf);
 		buf += len; size -= len;
-		//GTRACE("len=%d name=%s size=%d", len, interface.name_.data(), size);
+		//GTRACE("len=%d name=%s size=%d", len, intf.name_.data(), size);
 	}
 
 	if (size < 0) {
