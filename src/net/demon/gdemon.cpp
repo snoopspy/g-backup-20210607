@@ -1,6 +1,12 @@
 #include "gdemon.h"
-#include <sys/socket.h>
 #include "gtrace.h"
+
+#ifdef __linux__
+#include <sys/socket.h>
+#endif // __linux__
+#ifdef WIN32
+#include <winsock2.h>
+#endif // WIN32
 
 // ----------------------------------------------------------------------------
 // GDemon

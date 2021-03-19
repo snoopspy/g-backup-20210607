@@ -25,7 +25,12 @@ bool GDemonClient::connect() {
 		return false;
 	}
 
+#ifdef __linux__
 	in_addr_t ip_addr = inet_addr(ip_.data());
+#endif // __linux__
+#ifdef WIN32
+	unsigned ip_addr = inet_addr(ip_.data());
+#endif // WIN32
 
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;

@@ -36,7 +36,7 @@ protected:
 	GLocalInterfaceList interfaceList_;
 	GRtmWin32 rtm_;
 #endif // Q_OS_WIN
-#ifdef GILGIL_ANDROID_DEBUG
+#if !defined(Q_OS_WIN) && defined(GILGIL_ANDROID_DEBUG)
 	GRemoteInterfaceList interfaceList_{QString("127.0.0.1"), GDemon::DefaultPort};
 	GRemoteRtm rtm_{QString("127.0.0.1"), GDemon::DefaultPort};
 #endif // GILGIL_ANDROID_DEBUG
