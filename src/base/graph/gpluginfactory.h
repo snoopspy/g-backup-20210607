@@ -46,5 +46,8 @@ protected:
 	QList<QLibrary*> libraries_;
 
 public:
-	static GPluginFactory& instance();
+	static GPluginFactory& instance() {
+		static GPluginFactory pluginFactory;
+		return pluginFactory;
+	}
 };

@@ -48,11 +48,6 @@ GLogManager::~GLogManager() {
 	}
 }
 
-GLogManager& GLogManager::instance() {
-	static GLogManager logManager;
-	return logManager;
-}
-
 #ifdef QT_GUI_LIB
 #include <QMessageBox>
 #endif // QT_GUI_LIB

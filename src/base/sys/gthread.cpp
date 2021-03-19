@@ -51,8 +51,3 @@ void GThreadMgr::resumeStart() {
 	threadMgr.threadInfos_.clear();
 	threadMgr.suspended_ = false;
 }
-
-GThreadMgr& GThreadMgr::instance() {
-	static GThreadMgr threadMgr;
-	return threadMgr;
-}

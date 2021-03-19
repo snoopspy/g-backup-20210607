@@ -30,6 +30,9 @@ public:
 	PIP_ADAPTER_INFO findByAdapterName(char* value);
 	PIP_ADAPTER_INFO findByComboIndex(DWORD comboIndex);
 
-	static GIpAdapterInfo& instance();
+	static GIpAdapterInfo& instance() {
+		static GIpAdapterInfo ipAdapterInfo;
+		return ipAdapterInfo;
+	}
 };
 

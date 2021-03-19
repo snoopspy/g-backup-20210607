@@ -22,7 +22,10 @@ private: // singleton
 
 public:
 	bool enabled_{true};
-	static GLogManager& instance();
+	static GLogManager& instance() {
+		static GLogManager logManager;
+		return logManager;
+	}
 
 protected:
 	static void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);

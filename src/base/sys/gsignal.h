@@ -46,7 +46,10 @@ protected:
 
 public:
 	void setup(int signo);
-	static GSignal& instance();
+	static GSignal& instance() {
+		static GSignal signal;
+		return signal;
+	}
 
 signals:
 	void signaled(int signo);

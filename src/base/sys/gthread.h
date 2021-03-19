@@ -42,5 +42,8 @@ private: // singleton
 		QThread::Priority priority_;
 	};
 	QList<ThreadInfo> threadInfos_;
-	static GThreadMgr& instance();
+	static GThreadMgr& instance() {
+		static GThreadMgr threadMgr;
+		return threadMgr;
+	}
 };

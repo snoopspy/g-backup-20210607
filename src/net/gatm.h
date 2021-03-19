@@ -39,7 +39,10 @@ protected:
 	bool sendQueries(GPcapDevice* device, GInterface* intf);
 
 public:
-	static GAtm& instance();
+	static GAtm& instance() {
+		static GAtm atm;
+		return atm;
+	}
 
 protected:
 	// --------------------------------------------------------------------------

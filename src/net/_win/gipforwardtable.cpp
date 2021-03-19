@@ -36,8 +36,3 @@ GIpForwardTable::~GIpForwardTable() {
 		ipForwardTable_ = nullptr;
 	}
 }
-
-GIpForwardTable& GIpForwardTable::instance() {
-	static GIpForwardTable ipForwardTable;
-	return ipForwardTable;
-}

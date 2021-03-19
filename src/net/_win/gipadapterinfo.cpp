@@ -59,8 +59,3 @@ PIP_ADAPTER_INFO GIpAdapterInfo::findByComboIndex(DWORD comboIndex) {
 	}
 	return nullptr;
 }
-
-GIpAdapterInfo& GIpAdapterInfo::instance() {
-	static GIpAdapterInfo ipAdapterInfo;
-	return ipAdapterInfo;
-}

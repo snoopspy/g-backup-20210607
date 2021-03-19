@@ -308,8 +308,3 @@ void GPluginFactory::loadFolder(GGraph::Factory::ItemCategory* category, QString
 		loadFolder(subCategory, subFolder);
 	}
 }
-
-GPluginFactory& GPluginFactory::instance() {
-	static GPluginFactory pluginFactory;
-	return pluginFactory;
-}

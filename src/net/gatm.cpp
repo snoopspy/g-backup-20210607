@@ -131,11 +131,6 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GInterface* intf) {
 	return true;
 }
 
-GAtm& GAtm::instance() {
-	static GAtm atm;
-	return atm;
-}
-
 GMac GAtm::waitOne(GIp ip, GPcapDevice* device, GDuration timeout) {
 	GAtmMap::iterator it = find(ip);
 	if (it != end()) {

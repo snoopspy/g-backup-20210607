@@ -29,7 +29,10 @@ protected:
 	PMIB_IPFORWARDTABLE ipForwardTable_{nullptr};
 
 public:
-	static GIpForwardTable& instance();
+	static GIpForwardTable& instance() {
+		static GIpForwardTable ipForwardTable;
+		return ipForwardTable;
+	}
 };
 
 

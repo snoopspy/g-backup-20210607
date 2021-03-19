@@ -45,8 +45,3 @@ void GSignal::setup(int signo) {
 	Handler oldHandler = std::signal(signo, _signalHandler);
 	handlers_[signo] = oldHandler;
 }
-
-GSignal& GSignal::instance() {
-	static GSignal signal;
-	return signal;
-}
