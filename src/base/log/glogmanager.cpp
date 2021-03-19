@@ -74,7 +74,7 @@ void GLogManager::myMessageOutput(QtMsgType type, const QMessageLogContext &cont
 	QString funcStr = context.function;
 	i = funcStr.lastIndexOf(' ');
 	if (i != -1) funcStr = funcStr.mid(i + 1);
-	QString finalMsg = QString("%1 %2 %3 [%4:%5 %6] %7\n").arg(nowStr, typeStr, threadStr, fileStr, lineStr, funcStr, msg);
+	QString finalMsg = QString("%1 %2 %3 [%4:%5] %6 %7\n").arg(nowStr, typeStr, threadStr, fileStr, lineStr, funcStr, msg);
 
 	for (GObj* obj: logManager) {
 		GLog* log = reinterpret_cast<GLog*>(obj);
