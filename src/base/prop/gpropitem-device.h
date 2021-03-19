@@ -25,7 +25,7 @@ public:
 	void update() override;
 
 protected:
-	QStringList devNames_;
+	QStringList intfNames_;
 
 protected slots:
 	void myCurrentIndexChanged(int index);

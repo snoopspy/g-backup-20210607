@@ -18,10 +18,10 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPcapDeviceWrite : GPcapWrite {
 	Q_OBJECT
-	Q_PROPERTY(QString devName MEMBER devName_)
+	Q_PROPERTY(QString intfName MEMBER intfName_)
 
 public:
-	QString devName_{""};
+	QString intfName_{""};
 
 public:
 	Q_INVOKABLE GPcapDeviceWrite(QObject* parent = nullptr);

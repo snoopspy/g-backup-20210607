@@ -35,9 +35,9 @@ bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
 		return false;
 	}
 
-	GInterface* intf = GNetInfo::instance().interfaceList().findByName(pcapDevice->devName_);
+	GInterface* intf = GNetInfo::instance().interfaceList().findByName(pcapDevice->intfName_);
 	if (intf == nullptr) {
-		qWarning() << QString("can not find intf for %1").arg(pcapDevice->devName_);
+		qWarning() << QString("can not find intf for %1").arg(pcapDevice->intfName_);
 		return false;
 	}
 
@@ -189,10 +189,10 @@ TEST(GAtm, resolveTest) {
 
 	ASSERT_TRUE(device.open());
 
-	QString devName = device.devName_;
-	ASSERT_NE(devName, "");
+	QString intfName = device.intfName_;
+	ASSERT_NE(intfName, "");
 
-	GInterface* intf = GNetInfo::instance().interfaceList().findByName(devName);
+	GInterface* intf = GNetInfo::instance().interfaceList().findByName(intfName);
 	ASSERT_TRUE(intf != nullptr);
 
 	GIp ip = intf->gateway();

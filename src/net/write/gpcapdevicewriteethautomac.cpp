@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // GSyncPcapDeviceMgr
 // ----------------------------------------------------------------------------
-typedef QMap<QString /*devName*/, GSyncPcapDevice*> GSyncPcapDeviceMap;
+typedef QMap<QString /*intfName*/, GSyncPcapDevice*> GSyncPcapDeviceMap;
 struct GSyncPcapDeviceMgr : GSyncPcapDeviceMap {
 private: // singleton
 	GSyncPcapDeviceMgr() {}
@@ -45,16 +45,16 @@ bool GPcapDeviceWriteEthAutoMac::doOpen() {
 	}
 
 	GSyncPcapDeviceMgr& mgr = GSyncPcapDeviceMgr::instance();
-	GSyncPcapDeviceMap::iterator it = mgr.find(devName_);
+	GSyncPcapDeviceMap::iterator it = mgr.find(intfName_);
 	if (it == mgr.end()) {
 		GSyncPcapDevice* device = new GSyncPcapDevice;
-		device->devName_ = devName_;
+		device->intfName_ = intfName_;
 		if (!device->active() && !device->open()) {
 			err = device->err;
 			delete device;
 			return false;
 		}
-		it = mgr.insert(devName_, device);
+		it = mgr.insert(intfName_, device);
 	}
 	device_ = it.value();
 	Q_ASSERT(device_ != nullptr);

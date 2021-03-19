@@ -56,7 +56,7 @@ GInterfaceList::GInterfaceList() {
 #ifdef Q_OS_LINUX
 #include <net/if.h> // for ifreq
 #include <sys/ioctl.h> // for SIOCGIFHWADDR
-static GMac getMac(char* devName) {
+static GMac getMac(char* intfName) {
 	int s = socket(PF_INET, SOCK_DGRAM, 0);
 	if (s == -1) {
 		qDebug() << "socket return -1" << strerror(errno);
@@ -65,12 +65,12 @@ static GMac getMac(char* devName) {
 
 	struct ifreq buffer;
 	memset(&buffer, 0x00, sizeof(buffer));
-	strncpy(buffer.ifr_name, devName, IFNAMSIZ);
+	strncpy(buffer.ifr_name, intfName, IFNAMSIZ - 1);
 
 	int i = ioctl(s, SIOCGIFHWADDR, &buffer);
 	close(s);
 	if (i == -1) {
-		qDebug() << "ioctl return -1" << devName << strerror(errno);
+		qDebug() << "ioctl return -1" << intfName << strerror(errno);
 		return GMac::nullMac();
 	}
 

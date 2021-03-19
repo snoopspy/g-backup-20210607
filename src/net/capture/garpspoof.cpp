@@ -62,7 +62,7 @@ bool GArpSpoof::doOpen() {
 	}
 
 	GSyncPcapDevice device;
-	device.devName_ = this->devName_;
+	device.intfName_ = this->intfName_;
 	if (!device.open()) {
 		err = device.err;
 		return false;
