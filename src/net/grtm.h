@@ -18,10 +18,12 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmEntry {
 	friend struct GRtm;
+	friend struct GRtmLinux;
+	friend struct GRemoteRtm;
 	friend struct GNetInfo;
 
 #ifdef Q_OS_LINUX
-	friend struct GRtmLinux;
+	friend struct GRtmLinux_;
 #endif
 #ifdef Q_OS_WIN
 	friend struct GRtmWin32;
@@ -44,7 +46,7 @@ protected:
 public:
 	bool operator==(const GRtmEntry& r) const;
 };
-uint qHash(GRtmEntry q);
+// uint qHash(GRtmEntry q); // gilgil temp 2021.03.19
 
 // ----------------------------------------------------------------------------
 // GRtm(Routing Table Manager)
@@ -59,4 +61,16 @@ protected: // inherited singleton
 public:
 	GRtmEntry* getBestEntry(GIp ip);
 	GIp findGateway(QString intfName, GIp ip);
+};
+
+// ----------------------------------------------------------------------------
+// GRemoteRtm
+// ----------------------------------------------------------------------------
+struct G_EXPORT GRemoteRtm : GRtm {
+	friend struct GNetInfo;
+	friend struct GRemoteNetInfo;
+
+protected: // singleton
+	GRemoteRtm(QString ip, quint16 port);
+	~GRemoteRtm() override {}
 };

@@ -21,5 +21,5 @@ struct G_EXPORT GRtmWin32 : GRtm {
 
 protected:
 	GRtmWin32();
-	~GRtmWin32() override;
+	~GRtmWin32() override {}
 };

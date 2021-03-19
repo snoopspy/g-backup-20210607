@@ -4,17 +4,15 @@
 // ----------------------------------------------------------------------------
 // GDemonClient
 // ----------------------------------------------------------------------------
-GDemonClient::GDemonClient() {
+GDemonClient::GDemonClient(std::string ip, uint16_t port) : ip_(ip), port_(port) {
+	connect();
 }
 
 GDemonClient::~GDemonClient() {
 	disconnect();
 }
 
-bool GDemonClient::connect(std::string ip, uint16_t port) {
-	if (ip == "") ip = "127.0.0.1"; // gilgil temp 2021.03.17
-	if (port == 0) port = DefaultPort;
-
+bool GDemonClient::connect() {
 	if (sd_ != 0) {
 		qDebug() << "already connected";
 		return true;
@@ -28,7 +26,7 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 	}
 
 	struct in_addr ip_addr{0};
-	int res = inet_pton(AF_INET, ip.data(), &ip_addr);
+	int res = inet_pton(AF_INET, ip_.data(), &ip_addr);
 	switch (res) {
 		case 1: break;
 		case 0: qWarning() << strerror(errno); return false;
@@ -37,7 +35,7 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(port);
+	addr.sin_port = htons(port_);
 	addr.sin_addr = ip_addr;
 	memset(&addr.sin_zero, 0, sizeof(addr.sin_zero));
 
@@ -55,6 +53,7 @@ bool GDemonClient::connect(std::string ip, uint16_t port) {
 	if (!connected) {
 		::close(sd_);
 		sd_ = 0;
+		qCritical() << QString("can not connect to ssdemon %1 %2").arg(ip_.data()).arg(port_);
 		return false;
 	}
 	return true;
@@ -153,7 +152,23 @@ GDemon::Rtm GDemonClient::getRtm() {
 	return rep.rtm_;
 }
 
-GDemonClient& GDemonClient::instance() {
-	static GDemonClient demonClient;
-	return demonClient;
+GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
+	static GDemonClientMap map;
+	GDemonClientMapKey key(ip, port);
+	GDemonClientMap::iterator it = map.find(key);
+	if (it == map.end()) {
+		map.insert({key,  new GDemonClient(ip, port)});
+		it = map.find(key);
+	}
+	return it->second;
 }
+
+// ----------------------------------------------------------------------------
+// GDemonClientMap
+// ----------------------------------------------------------------------------
+GDemonClientMap::~GDemonClientMap() {
+	for (GDemonClientMap::iterator it = begin(); it != end(); it++) {
+		delete it->second;
+	}
+};
+

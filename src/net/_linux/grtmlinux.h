@@ -16,12 +16,9 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmLinux : GRtm {
-	friend struct GRtm;
-	friend struct GNetInfo;
-
-protected:
+protected: // singleton
 	GRtmLinux();
-	~GRtmLinux() override;
+	~GRtmLinux() override {}
 
 protected:
 	static bool checkA(char* buf, GRtmEntry* entry);

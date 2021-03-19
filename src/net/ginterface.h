@@ -19,10 +19,10 @@
 // ----------------------------------------------------------------------------
 // GInterface
 // ----------------------------------------------------------------------------
-struct GInterfaceList;
 struct G_EXPORT GInterface {
-	friend struct GInterfaceList;
 	friend struct GNetInfo;
+	friend struct GLocalInterfaceList;
+	friend struct GRemoteInterfaceList;
 
 public:
 	int index() const { return index_; }
@@ -49,30 +49,48 @@ public:
 	GInterface() {}
 
 public:
-	bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_);   }
-	GIp  getAdjIp(GIp ip)    { return isSameLanIp(ip) ? ip : gateway_;  }
-	GIp  getStartIp()        { return (ip_ & mask_) + 1;                }
-	GIp  getEndIp()          { return (ip_ | ~mask_);                   }
+	bool isSameLanIp(GIp ip) { return (ip_and_mask_) == (ip & mask_); }
+	GIp  getAdjIp(GIp ip) { return isSameLanIp(ip) ? ip : gateway_; }
+	GIp  getStartIp() { return (ip_ & mask_) + 1; }
+	GIp  getEndIp() { return (ip_ | ~mask_);}
 
 public:
 	bool operator==(const GInterface& r) const;
 };
-uint qHash(GInterface q);
+// uint qHash(GInterface q); // gilgil temp 2021.03.19
 
 // ----------------------------------------------------------------------------
 // GInterfaceList
 // ----------------------------------------------------------------------------
 struct G_EXPORT GInterfaceList : QList<GInterface> {
-	friend struct GInterface;
-	friend struct GNetInfo;
-
-private: // singleton
-	GInterfaceList();
-	virtual ~GInterfaceList();
+protected: // singleton
+	GInterfaceList() {}
+	virtual ~GInterfaceList() {}
 
 public:
 	GInterface* findByName(QString name);
 	GInterface* findByIp(GIp ip);
+};
 
-	void init();
+// ----------------------------------------------------------------------------
+// GLocalInterfaceList
+// ----------------------------------------------------------------------------
+struct G_EXPORT GLocalInterfaceList : GInterfaceList {
+	friend struct GNetInfo;
+
+protected: // singleton
+	GLocalInterfaceList();
+	~GLocalInterfaceList() override {}
+};
+
+// ----------------------------------------------------------------------------
+// GRemoteInterfaceList
+// ----------------------------------------------------------------------------
+struct G_EXPORT GRemoteInterfaceList : GInterfaceList {
+	friend struct GNetInfo;
+	friend struct GRemoteNetInfo;
+
+protected: // singleton
+	GRemoteInterfaceList(QString ip, quint16 port);
+	~GRemoteInterfaceList() override {}
 };

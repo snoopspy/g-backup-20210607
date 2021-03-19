@@ -15,9 +15,13 @@ bool GRtmEntry::operator==(const GRtmEntry& r) const {
 	return true;
 };
 
+// ----- gilgil temp 2021.03.19 -----
+/*
 uint qHash(GRtmEntry q) {
 	return uint(q.dst() + q.mask() + q.gateway() + uint32_t(q.metric()));
 }
+*/
+// ----------------------------------
 
 // ----------------------------------------------------------------------------
 // GRtm
@@ -65,6 +69,25 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
 	}
 
 	return res;
+}
+
+// ----------------------------------------------------------------------------
+// GRemoteRtm
+// ----------------------------------------------------------------------------
+#include "net/demon/gdemonclient.h"
+
+GRemoteRtm::GRemoteRtm(QString ip, quint16 port) {
+	GDemonClient* client = GDemonClient::instance(ip.toStdString(), port);
+	GDemon::Rtm rtm= client->getRtm();
+	for (GDemon::RtmEntry& entry: rtm) {
+		GRtmEntry rtmEntry;
+		rtmEntry.dst_ = entry.dst_;
+		rtmEntry.mask_ = entry.mask_;
+		rtmEntry.gateway_ = entry.gateway_;
+		rtmEntry.metric_ = entry.metric_;
+		rtmEntry.intfName_ = entry.intfName_.data();
+		push_back(rtmEntry);
+	}
 }
 
 // ----------------------------------------------------------------------------

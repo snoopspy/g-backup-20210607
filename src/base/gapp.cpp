@@ -1,9 +1,7 @@
 #include "gapp.h"
 
 #include <QFile>
-#ifdef GILGIL_ANDROID_DEBUG
 #include <QProcess>
-#endif // #ifdef GILGIL_ANDROID_DEBUG
 
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"

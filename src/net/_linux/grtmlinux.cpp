@@ -2,32 +2,9 @@
 #include "net/ginterface.h"
 
 // ----------------------------------------------------------------------------
-// GRtmLinux
+// GRtmLinux_
 // ----------------------------------------------------------------------------
-#ifdef GILGIL_ANDROID_DEBUG
-
-#include "net/demon/gdemonclient.h"
-
-GRtmLinux::GRtmLinux() {
-	GDemonClient& client = GDemonClient::instance();
-	if (!client.connect()) {
-		qFatal("can not connect to ssdemon");
-	}
-
-	GDemon::Rtm rtm= client.getRtm();
-	for (GDemon::RtmEntry& entry: rtm) {
-		GRtmEntry rtmEntry;
-		rtmEntry.dst_ = entry.dst_;
-		rtmEntry.mask_ = entry.mask_;
-		rtmEntry.gateway_ = entry.gateway_;
-		rtmEntry.metric_ = entry.metric_;
-		rtmEntry.intfName_ = entry.intfName_.data();
-		push_back(rtmEntry);
-	}
-}
-
-#else // GILGIL_ANDROID_DEBUG
-
+//
 // ip route show table 0 output
 //
 // [kali linux]
@@ -38,8 +15,7 @@ GRtmLinux::GRtmLinux() {
 // default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
 // 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
 //
-
-GRtmLinux::GRtmLinux() : GRtm() {
+GRtmLinux::GRtmLinux() {
 	std::string command("ip route show table 0");
 	FILE* p = popen(command.data(), "r");
 	if (p == nullptr) {
@@ -61,12 +37,6 @@ GRtmLinux::GRtmLinux() : GRtm() {
 			push_back(entry);
 	}
 	pclose(p);
-}
-
-#endif // GILGIL_ANDROID_DEBUG
-
-GRtmLinux::~GRtmLinux() {
-	clear();
 }
 
 bool GRtmLinux::checkA(char* buf, GRtmEntry* entry) {

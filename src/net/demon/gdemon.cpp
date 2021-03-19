@@ -365,7 +365,6 @@ int32_t GDemon::GetRtmRep::encode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-
 int32_t GDemon::GetRtmRep::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 

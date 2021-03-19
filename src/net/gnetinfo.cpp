@@ -20,10 +20,28 @@ GNetInfo::GNetInfo() {
 	}
 }
 
-GNetInfo::~GNetInfo() {
+// ----------------------------------------------------------------------------
+// GRemoteNetInfo
+// ----------------------------------------------------------------------------
+GRemoteNetInfo::GRemoteNetInfo(QString ip, quint16 port) : interfaceList_(ip, port), rtm_(ip, port) {
 }
 
-GNetInfo& GNetInfo::instance() {
-	static GNetInfo netInfo;
-	return netInfo;
+GRemoteNetInfo& GRemoteNetInfo::instance(QString ip, quint16 port) {
+	static GRemoteNetInfoMap map;
+	GRemoteNetInfoMapKey key(ip, port);
+	GRemoteNetInfoMap::iterator it = map.find(key);
+	if (it == map.end()) {
+		map.insert({key,  new GRemoteNetInfo(ip, port)});
+		it = map.find(key);
+	}
+	return *(it->second);
 }
+
+// ----------------------------------------------------------------------------
+// GRemoteNetInfoMap
+// ----------------------------------------------------------------------------
+GRemoteNetInfoMap::~GRemoteNetInfoMap() {
+	for (GRemoteNetInfoMap::iterator it = begin(); it != end(); it++) {
+		delete it->second;
+	}
+};

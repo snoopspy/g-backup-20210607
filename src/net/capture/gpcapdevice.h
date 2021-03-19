@@ -21,7 +21,7 @@ struct G_EXPORT GPcapDevice : GPcap {
 	Q_PROPERTY(QString intfName MEMBER intfName_)
 	Q_PROPERTY(int snapLen MEMBER snapLen_)
 	Q_PROPERTY(int flags MEMBER flags_)
-	Q_PROPERTY(int timeout MEMBER timeout_)
+	Q_PROPERTY(int readTimeout MEMBER readTimeout_)
 	Q_PROPERTY(int waitTimeout MEMBER waitTimeout_)
 
 public:
@@ -29,10 +29,10 @@ public:
 	int snapLen_{65536}; // 65536 bytes
 	int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
 #ifdef Q_OS_LINUX
-	int timeout_{-1}; // 1 msec
+	int readTimeout_{-1}; // 1 msec
 	int waitTimeout_{1}; // 1 msec
 #else // Q_OSWIN
-	int timeout_{1}; // 1 msec
+	int readTimeout_{1}; // 1 msec
 	int waitTimeout_{0}; // 1 msec
 #endif // Q_OS_LINUX
 
@@ -47,8 +47,6 @@ protected:
 public:
 	GPacket::Result read(GPacket* packet) override;
 
-public:
-	GInterface* intf() { return intf_; }
 protected:
 	GInterface* intf_{nullptr};
 

@@ -25,7 +25,3 @@ GRtmWin32::GRtmWin32() : GRtm() {
 		append(entry);
 	}
 }
-
-GRtmWin32::~GRtmWin32() {
-	clear();
-}
