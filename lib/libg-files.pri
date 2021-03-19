@@ -65,9 +65,6 @@ SOURCES += \
 	$${PWD}/../src/net/delay/gdelay.cpp \
 	$${PWD}/../src/net/delay/gsyncdelay.cpp \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.cpp \
-	$${PWD}/../src/net/demon/gdemon.cpp \
-	$${PWD}/../src/net/demon/gdemonclient.cpp \
-	$${PWD}/../src/net/demon/gtrace.cpp \
 	$${PWD}/../src/net/extract/gextract.cpp \
 	$${PWD}/../src/net/extract/ghttpextract.cpp \
 	$${PWD}/../src/net/filter/gbpfilter.cpp \
@@ -182,9 +179,6 @@ HEADERS += \
 	$${PWD}/../src/net/delay/gdelay.h \
 	$${PWD}/../src/net/delay/gsyncdelay.h \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.h \
-	$${PWD}/../src/net/demon/gdemon.h \
-	$${PWD}/../src/net/demon/gdemonclient.h \
-	$${PWD}/../src/net/demon/gtrace.h \
 	$${PWD}/../src/net/extract/gextract.h \
 	$${PWD}/../src/net/extract/ghttpextract.h \
 	$${PWD}/../src/net/filter/gbpfilter.h \
@@ -232,8 +226,17 @@ HEADERS += \
 	$${PWD}/../src/net/write/gpcapwrite.h
 
 linux {
-	SOURCES += $${PWD}/../src/net/_linux/grtmlinux.cpp
-	HEADERS += $${PWD}/../src/net/_linux/grtmlinux.h
+	SOURCES += \
+		$${PWD}/../src/net/_linux/grtmlinux.cpp \
+		$${PWD}/../src/net/demon/gdemon.cpp \
+		$${PWD}/../src/net/demon/gdemonclient.cpp \
+		$${PWD}/../src/net/demon/gtrace.cpp
+
+	HEADERS += \
+		$${PWD}/../src/net/_linux/grtmlinux.h \
+		$${PWD}/../src/net/demon/gdemon.h \
+		$${PWD}/../src/net/demon/gdemonclient.h \
+		$${PWD}/../src/net/demon/gtrace.h
 }
 win32 {
 	SOURCES += $${PWD}/../src/net/_win/gipadapterinfo.cpp

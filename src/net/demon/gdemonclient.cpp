@@ -25,23 +25,17 @@ bool GDemonClient::connect() {
 		return false;
 	}
 
-	struct in_addr ip_addr{0};
-	int res = inet_pton(AF_INET, ip_.data(), &ip_addr);
-	switch (res) {
-		case 1: break;
-		case 0: qWarning() << strerror(errno); return false;
-		case -1: qWarning() << strerror(errno); return false;
-	}
+	in_addr_t ip_addr = inet_addr(ip_.data());
 
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port_);
-	addr.sin_addr = ip_addr;
+	addr.sin_addr.s_addr = ip_addr;
 	memset(&addr.sin_zero, 0, sizeof(addr.sin_zero));
 
 	bool connected = false;
 	for (int i = 0; i < 10 ; i++) { // 10 seconds
-		res = ::connect(sd_, (struct sockaddr *)&addr, sizeof(addr));
+		int res = ::connect(sd_, (struct sockaddr *)&addr, sizeof(addr));
 		if (res != -1) {
 			connected = true;
 			break;
