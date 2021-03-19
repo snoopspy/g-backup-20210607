@@ -69,10 +69,10 @@ GPacket::Result GPcapDeviceWrite::write(GPacket* packet) {
 
 #ifdef QT_GUI_LIB
 
-#include "base/prop/gpropitem-device.h"
+#include "base/prop/gpropitem-interface.h"
 GPropItem* GPcapDeviceWrite::propCreateItem(GPropItemParam* param) {
 	if (QString(param->mpro_.name()) == "intfName") {
-		GPropItemDevice* res = new GPropItemDevice(param);
+		GPropItemInterface* res = new GPropItemInterface(param);
 		return res;
 	}
 	return GObj::propCreateItem(param);

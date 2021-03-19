@@ -28,10 +28,10 @@ SOURCES += \
 	$${PWD}/../src/base/prop/gpropitem-char.cpp \
 	$${PWD}/../src/base/prop/gpropitem-checkbox.cpp \
 	$${PWD}/../src/base/prop/gpropitem-combobox.cpp \
-	$${PWD}/../src/base/prop/gpropitem-device.cpp \
 	$${PWD}/../src/base/prop/gpropitem-dirpath.cpp \
 	$${PWD}/../src/base/prop/gpropitem-enum.cpp \
 	$${PWD}/../src/base/prop/gpropitem-filepath.cpp \
+	$${PWD}/../src/base/prop/gpropitem-interface.cpp \
 	$${PWD}/../src/base/prop/gpropitem-lineedit.cpp \
 	$${PWD}/../src/base/prop/gpropitem-objptr.cpp \
 	$${PWD}/../src/base/prop/gpropitem-objref.cpp \
@@ -146,10 +146,10 @@ HEADERS += \
 	$${PWD}/../src/base/prop/gpropitem-char.h \
 	$${PWD}/../src/base/prop/gpropitem-checkbox.h \
 	$${PWD}/../src/base/prop/gpropitem-combobox.h \
-	$${PWD}/../src/base/prop/gpropitem-device.h \
 	$${PWD}/../src/base/prop/gpropitem-dirpath.h \
 	$${PWD}/../src/base/prop/gpropitem-enum.h \
 	$${PWD}/../src/base/prop/gpropitem-filepath.h \
+	$${PWD}/../src/base/prop/gpropitem-interface.h \
 	$${PWD}/../src/base/prop/gpropitem-lineedit.h \
 	$${PWD}/../src/base/prop/gpropitem-objptr.h \
 	$${PWD}/../src/base/prop/gpropitem-objref.h \

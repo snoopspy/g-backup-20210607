@@ -1,12 +1,12 @@
-#include "gpropitem-device.h"
+#include "gpropitem-interface.h"
 #include "net/gnetinfo.h"
 
 #ifdef QT_GUI_LIB
 
 // ----------------------------------------------------------------------------
-// GPropItemDevice
+// GPropItemInterface
 // ----------------------------------------------------------------------------
-GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(param) {
+GPropItemInterface::GPropItemInterface(GPropItemParam* param) : GPropItemComboBox(param) {
 	GInterfaceList& interfaceList = GNetInfo::instance().interfaceList();
 	for (int i = 0; i < interfaceList.count(); i++) {
 		const GInterface& intf = interfaceList.at(i);
@@ -22,7 +22,7 @@ GPropItemDevice::GPropItemDevice(GPropItemParam* param) : GPropItemComboBox(para
 	QObject::connect(comboBox_, SIGNAL(currentIndexChanged(int)), this, SLOT(myCurrentIndexChanged(int)));
 }
 
-void GPropItemDevice::update() {
+void GPropItemInterface::update() {
 	QString intfName = object_->property(mpro_.name()).toString();
 	GInterfaceList& interfaceList = GNetInfo::instance().interfaceList();
 	for (int i = 0; i < interfaceList.count(); i++) {
@@ -35,7 +35,7 @@ void GPropItemDevice::update() {
 	comboBox_->setCurrentIndex(-1);
 }
 
-void GPropItemDevice::myCurrentIndexChanged(int index) {
+void GPropItemInterface::myCurrentIndexChanged(int index) {
 	if (index == -1) return;
 	Q_ASSERT(index <= intfNames_.count());
 	QString intfName = intfNames_.at(index);

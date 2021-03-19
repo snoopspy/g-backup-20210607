@@ -15,13 +15,13 @@
 #include "gpropitem-combobox.h"
 
 // ----------------------------------------------------------------------------
-// GPropItemDevice
+// GPropItemInterface
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPropItemDevice : public GPropItemComboBox {
+struct G_EXPORT GPropItemInterface : public GPropItemComboBox {
 	Q_OBJECT
 
 public:
-	GPropItemDevice(GPropItemParam* param);
+	GPropItemInterface(GPropItemParam* param);
 	void update() override;
 
 protected:
