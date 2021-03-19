@@ -31,7 +31,7 @@ GRemoteNetInfo& GRemoteNetInfo::instance(QString ip, quint16 port) {
 	GRemoteNetInfoMapKey key(ip, port);
 	GRemoteNetInfoMap::iterator it = map.find(key);
 	if (it == map.end()) {
-		map.insert({key,  new GRemoteNetInfo(ip, port)});
+		map.insert({key, new GRemoteNetInfo(ip, port)});
 		it = map.find(key);
 	}
 	return *(it->second);

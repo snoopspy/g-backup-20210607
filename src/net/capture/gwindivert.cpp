@@ -10,36 +10,36 @@ struct GWinDivertLib
 
 public:
 	typedef HANDLE (*WinDivertOpenFunc)(
-			__in        const char *filter,
-			__in        WINDIVERT_LAYER layer,
-			__in        int16_t priority,
-			__in        UINT64 flags);
+		__in const char *filter,
+		__in WINDIVERT_LAYER layer,
+		__in int16_t priority,
+		__in UINT64 flags);
 	WinDivertOpenFunc WinDivertOpen{nullptr};
 
 	typedef BOOL (*WinDivertCloseFunc)(
-			__in        HANDLE handle);
+		__in HANDLE handle);
 	WinDivertCloseFunc WinDivertClose{nullptr};
 
 	typedef BOOL (*WinDivertSetParamFunc)(
-			__in        HANDLE handle,
-			__in        WINDIVERT_PARAM param,
-			__in        UINT64 value);
+		__in HANDLE handle,
+		__in WINDIVERT_PARAM param,
+		__in UINT64 value);
 	WinDivertSetParamFunc WinDivertSetParam{nullptr};
 
 	typedef BOOL (*WinDivertRecvFunc)(
-			__in        HANDLE handle,
-			__out       PVOID pPacket,
-			__in        UINT packetLen,
-			__out_opt   PWINDIVERT_ADDRESS pAddr,
-			__out_opt   UINT *readLen);
+		__in HANDLE handle,
+		__out PVOID pPacket,
+		__in UINT packetLen,
+		__out_opt PWINDIVERT_ADDRESS pAddr,
+		__out_opt UINT *readLen);
 	WinDivertRecvFunc WinDivertRecv{nullptr};
 
 	typedef BOOL (*WinDivertSendFunc)(
-			__in        HANDLE handle,
-			__in        PVOID pPacket,
-			__in         UINT packetLen,
-			__in        PWINDIVERT_ADDRESS pAddr,
-			__out_opt   UINT *writeLen);
+		__in HANDLE handle,
+		__in PVOID pPacket,
+		__in UINT packetLen,
+		__in PWINDIVERT_ADDRESS pAddr,
+		__out_opt UINT *writeLen);
 	WinDivertSendFunc WinDivertSend{nullptr};
 
 public:
@@ -105,11 +105,11 @@ bool GWinDivert::doOpen() {
 		DWORD lastError = GetLastError();
 
 		QString msg;
-		switch (lastError)  {
-			case ERROR_INVALID_PARAMETER:  msg = "ERROR_INVALID_PARAMETER";     break;
-			case ERROR_FILE_NOT_FOUND:     msg = "ERROR_FILE_NOT_FOUND";        break;
-			case ERROR_ACCESS_DENIED:      msg = "ERROR_ACCESS_DENIED";         break;
-			default:                       msg = QString("unknown error %1").arg(lastError); break;
+		switch (lastError) {
+			case ERROR_INVALID_PARAMETER: msg = "ERROR_INVALID_PARAMETER"; break;
+			case ERROR_FILE_NOT_FOUND: msg = "ERROR_FILE_NOT_FOUND"; break;
+			case ERROR_ACCESS_DENIED: msg = "ERROR_ACCESS_DENIED"; break;
+			default: msg = QString("unknown error %1").arg(lastError); break;
 		}
 		SET_ERR(GErr::FAIL, QString("error in WinDivertOpen %1").arg(msg));
 		return false;

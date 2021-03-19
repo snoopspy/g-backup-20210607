@@ -157,7 +157,7 @@ GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
 	GDemonClientMapKey key(ip, port);
 	GDemonClientMap::iterator it = map.find(key);
 	if (it == map.end()) {
-		map.insert({key,  new GDemonClient(ip, port)});
+		map.insert({key, new GDemonClient(ip, port)});
 		it = map.find(key);
 	}
 	return it->second;

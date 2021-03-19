@@ -24,8 +24,8 @@ struct G_EXPORT GUdpHdr final { // libnet_tcp_hdr // gilgil temp 2019.05.13
 
 	uint16_t sport() { return ntohs(sport_); }
 	uint16_t dport() { return ntohs(dport_); }
-	uint16_t len()   { return ntohs(len_); }
-	uint16_t sum()   { return ntohs(sum_); }
+	uint16_t len() { return ntohs(len_); }
+	uint16_t sum() { return ntohs(sum_); }
 
 	static uint16_t calcChecksum(GIpHdr* ipHdr, GUdpHdr* udpHdr);
 	static GBuf parseData(GUdpHdr* udpHdr);

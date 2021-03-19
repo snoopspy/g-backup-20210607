@@ -50,12 +50,12 @@ public:
 // ----------------------------------------------------------------------------
 template <typename T>
 struct GPtr {
-	GPtr()              { p_ = nullptr; }
-	GPtr(T* p)          { p_ = p;       }
-	GPtr(T& t)          { p_ = &t;      }
-	T* data()           { return p_;    }
-	operator T*()       { return p_;    }
-	operator T*() const { return p_;    }
+	GPtr() { p_ = nullptr; }
+	GPtr(T* p) { p_ = p; }
+	GPtr(T& t) { p_ = &t; }
+	T* data() { return p_; }
+	operator T*() { return p_; }
+	operator T*() const { return p_; }
 	bool operator==(const T& other) { return p_ = other.p_; }
 protected:
 	T* p_;

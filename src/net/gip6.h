@@ -43,13 +43,13 @@ public:
 	//
 	// comparison operator
 	//
-	bool operator == (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) == 0; }
-	bool operator != (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) != 0; }
-	bool operator <  (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) <  0; }
-	bool operator >  (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) >  0; }
-	bool operator <= (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) <= 0; }
-	bool operator >= (const GIp6& rhs) const   { return memcmp(ip6_, rhs.ip6_, SIZE) >= 0; }
-	bool operator == (const u_char* rhs) const { return memcmp(ip6_, rhs,      SIZE) == 0; }
+	bool operator == (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) == 0; }
+	bool operator != (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) != 0; }
+	bool operator < (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) < 0; }
+	bool operator > (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) > 0; }
+	bool operator <= (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) <= 0; }
+	bool operator >= (const GIp6& rhs) const { return memcmp(ip6_, rhs.ip6_, SIZE) >= 0; }
+	bool operator == (const u_char* rhs) const { return memcmp(ip6_, rhs, SIZE) == 0; }
 
 public:
 	void clear() { memset(ip6_, 0, SIZE); }

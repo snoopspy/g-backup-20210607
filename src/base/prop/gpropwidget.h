@@ -42,7 +42,7 @@ public:
 
 public:
 	QVBoxLayout* mainLayout_;
-	// QToolBar*    toolBar_; // gilgil temp 2020.05.21
+	// QToolBar* toolBar_; // gilgil temp 2020.05.21
 	QTreeWidget* treeWidget_;
 
 protected:

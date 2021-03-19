@@ -33,20 +33,20 @@ public:
 	// Result
 	// --------------------------------------------------------------------------
 	typedef enum {
-		Eof     = -2, // read
-		Fail    = -1, // read write
-		TimeOut = 0,  // read
-		Ok      = 1,  // read write
+		Eof = -2, // read
+		Fail = -1, // read write
+		TimeOut = 0, // read
+		Ok = 1, // read write
 	} Result;
 
 	// --------------------------------------------------------------------------
 	// DataLinkType
 	// --------------------------------------------------------------------------
 	typedef enum {
-		Eth,   // DLT_EN10MB (1)
-		Ip,    // DLT_RAW (228)
+		Eth, // DLT_EN10MB (1)
+		Ip, // DLT_RAW (228)
 		Dot11, // DLT_IEEE802_11_RADIO (127)
-		Null,  // DLT_NULL (0)
+		Null, // DLT_NULL (0)
 	} DataLinkType;
 	static QString dataLinkTypeToString(DataLinkType dataLinkType);
 	static int dataLinkTypeToInt(DataLinkType dataLinkType);
@@ -136,7 +136,7 @@ public:
 	explicit operator QString() const;
 	virtual void parse();
 
-	virtual GPacket* clone(size_t extra  = 0);
+	virtual GPacket* clone(size_t extra = 0);
 	void doClone(GPacket* source, size_t extra);
 };
 typedef GPacket *PPacket;

@@ -91,7 +91,7 @@ struct GRemoteNetInfoMapKey {
 // ----------------------------------------------------------------------------
 // GRemoteNetInfoMap
 // ----------------------------------------------------------------------------
-struct GRemoteNetInfoMap : std::map<GRemoteNetInfoMapKey, GRemoteNetInfo*>  {
+struct GRemoteNetInfoMap : std::map<GRemoteNetInfoMapKey, GRemoteNetInfo*> {
 	friend struct GRemoteNetInfo;
 
 protected: // singleton

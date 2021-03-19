@@ -167,10 +167,10 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 							return;
 						}
 						GGraph::Connection* connection = new GGraph::Connection;
-						connection->sender_   = startText->node_;
-						connection->signal_   = signal;
+						connection->sender_ = startText->node_;
+						connection->signal_ = signal;
 						connection->receiver_ = endText->node_;
-						connection->slot_     = slot;
+						connection->slot_ = slot;
 						graphWidget_->graph()->connections_.push_back(connection);
 
 						createArrow(startText, endText, connection);

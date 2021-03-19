@@ -55,7 +55,7 @@ struct GDemonClientMapKey {
 // ----------------------------------------------------------------------------
 // GDemonClientMap
 // ----------------------------------------------------------------------------
-struct GDemonClientMap : std::map<GDemonClientMapKey, GDemonClient*>  {
+struct GDemonClientMap : std::map<GDemonClientMapKey, GDemonClient*> {
 	friend struct GDemonClient;
 
 protected: // singleton
