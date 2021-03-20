@@ -2,7 +2,7 @@
 //
 // gtrace version 1.2
 //
-// http://www.gilgil.net
+// http://gilgil.net
 //
 // Copyright (c) Gilbert Lee All rights reserved
 //
