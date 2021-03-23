@@ -64,7 +64,8 @@ bool GCommand::doClose() {
 	for (GObj* obj: openCommands_) {
 		GCommandItem* item = PCommandItem(obj);
 		if (item->commandType_ == GCommandItem::Start) {
-			if (!item->process_->waitForFinished()) {
+			item->process_->terminate();
+			if (item->process_->waitForFinished()) {
 				QString all = item->program_ + " " + item->arguments_.join(" ");
 				QString msg = QString("waitForFinished %1 return false").arg(all);
 				SET_ERR(GErr::FAIL, msg);
