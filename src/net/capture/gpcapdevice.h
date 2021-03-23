@@ -29,11 +29,11 @@ public:
 	int snapLen_{65536}; // 65536 bytes
 	int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
 #ifdef Q_OS_LINUX
-	int readTimeout_{-1}; // 1 msec
+	int readTimeout_{-1}; // -1 msec
 	int waitTimeout_{1}; // 1 msec
 #else // Q_OSWIN
 	int readTimeout_{1}; // 1 msec
-	int waitTimeout_{0}; // 1 msec
+	int waitTimeout_{0}; // 0 msec
 #endif // Q_OS_LINUX
 
 public:
