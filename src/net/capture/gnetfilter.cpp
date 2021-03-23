@@ -11,10 +11,13 @@
 GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 	GDEBUG_CTOR;
 
-	command_.openCommands_ << "sudo iptables -A OUTPUT -j NFQUEUE";
-	command_.openCommands_ << "sudo iptables -A INPUT -j NFQUEUE";
-	command_.closeCommands_ << "sudo iptables -D OUTPUT -j NFQUEUE";
-	command_.closeCommands_ << "sudo iptables -D INPUT -j NFQUEUE";
+	command_.openCommands_.clear();
+	command_.openCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-A", "OUTPUT", "-j", "NFQUEUE"}));
+	command_.openCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-A", "INPUT", "-j", "NFQUEUE"}));
+
+	command_.closeCommands_.clear();
+	command_.closeCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-D", "OUTPUT", "-j", "NFQUEUE"}));
+	command_.closeCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-D", "INPUT", "-j", "NFQUEUE"}));
 }
 
 GNetFilter::~GNetFilter() {
@@ -25,6 +28,11 @@ GNetFilter::~GNetFilter() {
 
 bool GNetFilter::doOpen() {
 	if (!enabled_) return true;
+
+	if (!command_.open()) {
+		err = command_.err;
+		return false;
+	}
 
 	if (!autoRead_) {
 		SET_ERR(GErr::NOT_SUPPORTED, "autoRead must be true");
@@ -65,11 +73,6 @@ bool GNetFilter::doOpen() {
 
 	fd_ = nfq_fd(h_);
 	qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
-
-	if (!command_.open()) {
-		err = command_.err;
-		return false;
-	}
 
 	return captureThreadOpen();
 }

@@ -119,6 +119,7 @@ bool GProp::propLoad(QJsonObject jo, QMetaProperty mpro) {
 	if (userType == qMetaTypeId<GObjRefArrayPtr>()) {
 		GObjRefArrayPtr array = qvariant_cast<GObjRefArrayPtr>(object->property(propName));
 		Q_ASSERT(array != nullptr);
+		array->clear();
 		QJsonArray ja = jo[propName].toArray();
 		for (QJsonValue value: ja) {
 			QJsonObject childJo = value.toObject();

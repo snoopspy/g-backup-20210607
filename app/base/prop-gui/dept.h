@@ -2,12 +2,13 @@
 
 #include "person.h"
 
-struct Dept : public GObj {
+struct G_EXPORT Dept : public GObj {
 	Q_OBJECT
 	Q_PROPERTY(GObjRef boss READ getBoss)
 	Q_PROPERTY(QString deptName MEMBER deptName_)
 	Q_PROPERTY(GObjRefArrayPtr members READ getMembers)
 
+public:
 	GObjRef getBoss() { return &boss_; }
 	GObjRefArrayPtr getMembers() { return &members_; }
 

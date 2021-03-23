@@ -28,13 +28,12 @@ struct G_EXPORT GNetFilter : GCapture {
 	Q_PROPERTY(GObjRef command READ getCommand)
 	Q_ENUMS(Verdict)
 
-	GObjRef getCommand() { return &command_; }
-
 public:
 	enum Verdict {
 		ACCEPT = 1,
 		REPEAT = 4
 	};
+	GObjRef getCommand() { return &command_; }
 
 public:
 	int queueNum_{0};

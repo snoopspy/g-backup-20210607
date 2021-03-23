@@ -2,7 +2,7 @@
 
 #include <GObj>
 
-class Person : public GObj {
+class G_EXPORT Person : public GObj {
 	Q_OBJECT
 	Q_PROPERTY(QString name MEMBER name_)
 	Q_PROPERTY(int age MEMBER age_)
