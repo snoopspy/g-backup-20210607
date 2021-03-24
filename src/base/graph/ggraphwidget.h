@@ -85,7 +85,7 @@ protected:
 	QAction* actionEdit_;
 	QAction* actionLink_;
 	QAction* actionDelete_;
-	QAction* actionOption_;
+	QAction* actionAbout_;
 
 	QVBoxLayout* mainLayout_;
 	QToolBar*    toolBar_;
@@ -111,7 +111,7 @@ public slots:
 	void actionEditTriggered(bool);
 	void actionLinkTriggered(bool);
 	void actionDeleteTriggered(bool);
-	void actionOptionTriggered(bool);
+	void actionAboutTriggered(bool);
 
 	void factoryWidgetClicked(const QModelIndex&);
 };

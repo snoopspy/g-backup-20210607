@@ -8,6 +8,11 @@ GGText::GGText(GObj* node) {
 	setFlag(QGraphicsItem::ItemIsMovable);
 	setFlag(QGraphicsItem::ItemIsSelectable);
 	node_ = node;
+#ifdef Q_OS_ANDROID // gilgil temp 2021.03.24
+	QFont font = this->font();
+	font.setPixelSize(font.pixelSize() * 3 / 2);
+	this->setFont(font);
+#endif // Q_OS_ANDROID
 }
 
 GGText::~GGText() {

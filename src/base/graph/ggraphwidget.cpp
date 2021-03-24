@@ -27,21 +27,46 @@ void GGraphWidget::init() {
 	fileDialog_.setViewMode(QFileDialog::Detail);
 
 	(actionNewFile_ = new QAction(this))->setText("New");
+	actionNewFile_->setIcon(QIcon(":/img/new.png"));
+
 	(actionOpenFile_ = new QAction(this))->setText("Open");
+	actionOpenFile_->setIcon(QIcon(":/img/open.png"));
+
 	(actionSaveFile_ = new QAction(this))->setText("Save");
+	actionSaveFile_->setIcon(QIcon(":/img/save.png"));
+
 	(actionSaveFileAs_ = new QAction(this))->setText("Save As");
+	actionSaveFileAs_->setIcon(QIcon(":/img/saveas.png"));
+
 	(actionStart_ = new QAction(this))->setText("Start");
+	actionStart_->setIcon(QIcon(":/img/start.png"));
+
 	(actionStop_ = new QAction(this))->setText("Stop");
+	actionStop_->setIcon(QIcon(":/img/stop.png"));
+
 	(actionEdit_ = new QAction(this))->setText("Edit");
+	actionEdit_->setIcon(QIcon(":/img/edit.png"));
+
 	(actionLink_ = new QAction(this))->setText("Link");
+	actionLink_->setIcon(QIcon(":/img/link.png"));
+
 	(actionDelete_ = new QAction(this))->setText("Delete");
-	(actionOption_ = new QAction(this))->setText("Option");
+	actionDelete_->setIcon(QIcon(":/img/delete.png"));
+
+	(actionAbout_ = new QAction(this))->setText("About");
+	actionAbout_->setIcon(QIcon(":/img/about.png"));
 
 	mainLayout_ = new QVBoxLayout(this);
 	mainLayout_->setMargin(0);
 	mainLayout_->setSpacing(0);
 
 	toolBar_ = new QToolBar(this);
+#ifdef Q_OS_ANDROID
+	toolBar_->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	toolBar_->setIconSize(QSize(96, 96));
+#else // Q_OS_ANDROID
+	toolBar_->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+#endif // Q_OS_ANDROID
 	midSplitter_ = new QSplitter(Qt::Horizontal, this);
 	midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
 	factoryWidget_ = new QTreeWidget(this);
@@ -81,10 +106,9 @@ void GGraphWidget::init() {
 	toolBar_->addSeparator();
 	toolBar_->addAction(actionEdit_);
 	toolBar_->addAction(actionLink_);
-	toolBar_->addSeparator();
 	toolBar_->addAction(actionDelete_);
 	toolBar_->addSeparator();
-	toolBar_->addAction(actionOption_);
+	toolBar_->addAction(actionAbout_);
 
 	QObject::connect(actionNewFile_, &QAction::triggered, this, &GGraphWidget::actionNewFileTriggered);
 	QObject::connect(actionOpenFile_, &QAction::triggered, this, &GGraphWidget::actionOpenFileTriggered);
@@ -95,7 +119,7 @@ void GGraphWidget::init() {
 	QObject::connect(actionEdit_, &QAction::triggered, this, &GGraphWidget::actionEditTriggered);
 	QObject::connect(actionLink_, &QAction::triggered, this, &GGraphWidget::actionLinkTriggered);
 	QObject::connect(actionDelete_, &QAction::triggered, this, &GGraphWidget::actionDeleteTriggered);
-	QObject::connect(actionOption_, &QAction::triggered, this, &GGraphWidget::actionOptionTriggered);
+	QObject::connect(actionAbout_, &QAction::triggered, this, &GGraphWidget::actionAboutTriggered);
 
 	QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
 	QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
@@ -321,6 +345,7 @@ void GGraphWidget::setControl() {
 	actionStop_->setEnabled(active);
 	actionEdit_->setEnabled(!active && mode != GGScene::MoveItem);
 	actionLink_->setEnabled(!active && mode != GGScene::InsertLine);
+	actionAbout_->setEnabled(!active);
 
 	factoryWidget_->setEnabled(!active);
 	propWidget_->setEnabled(!active);
@@ -336,7 +361,6 @@ void GGraphWidget::setControl() {
 			selectedObj = dynamic_cast<GObj*>(text->node_);
 	}
 	propWidget_->setObject(selectedObj);
-	actionOption_->setEnabled(!active && selectedObj != nullptr);
 }
 
 void GGraphWidget::stop() {
@@ -443,8 +467,8 @@ void GGraphWidget::actionDeleteTriggered(bool) {
 	}
 }
 
-void GGraphWidget::actionOptionTriggered(bool) {
-	qDebug() << ""; // gilgil temp 2016.09.18
+void GGraphWidget::actionAboutTriggered(bool) {
+	QMessageBox::information(nullptr, "About", "About"); // gilgil temp 2016.09.18
 }
 
 void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {

@@ -10,13 +10,12 @@ linux: QMAKE_LFLAGS *= -pthread
 CONFIG(debug, debug|release) DEFINES *= _DEBUG
 CONFIG(release, debug|release) DEFINES *= _RELEASE
 DEFINES *= QT_MESSAGELOGCONTEXT
-DEFINES *= GILGIL_ANDROID_DEBUG # gilgil temp for android
+DEFINES *= GILGIL_ANDROID_DEBUG # gilgil temp 2021.03.23 for android
 
 #------------------------------------------------------------------------------
 # G_NAME
 #------------------------------------------------------------------------------
 G_NAME = g
-# android: G_NAME = $${G_NAME}-android # gilgil temp 2020.10.21
 CONFIG(qt): contains(QT, gui) G_NAME = $${G_NAME}-gui
 CONFIG(debug, debug|release) G_NAME = $${G_NAME}-d
 
@@ -60,6 +59,13 @@ win32 {
 }
 
 #------------------------------------------------------------------------------
+# resource
+#------------------------------------------------------------------------------
+CONFIG(qt): contains(QT, gui) {
+	RESOURCES += $${PWD}/lib/libg-gui.qrc
+}
+
+#------------------------------------------------------------------------------
 # android deploy files
 #------------------------------------------------------------------------------
 android {
@@ -68,4 +74,3 @@ android {
 	deployment.path = /assets
 	INSTALLS += deployment
 }
-

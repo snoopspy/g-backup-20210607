@@ -29,9 +29,9 @@ public:
 	int type() const override { return Type; }
 	QRectF boundingRect() const override;
 	QPainterPath shape() const override;
-	void setColor(const QColor &color) { myColor = color; }
-	GGText *startText() const { return myStartText; }
-	GGText *endText() const { return myEndText; }
+	void setColor(const QColor &color) { myColor_ = color; }
+	GGText *startText() const { return myStartText_; }
+	GGText *endText() const { return myEndText_; }
 
 	void updatePosition();
 
@@ -39,10 +39,10 @@ protected:
 	void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*) override;
 
 private:
-	GGText* myStartText;
-	GGText* myEndText;
-	QColor myColor;
-	QPolygonF arrowHead;
+	GGText* myStartText_;
+	GGText* myEndText_;
+	QColor myColor_;
+	QPolygonF arrowHead_;
 
 public:
 	GGraph::Connection* connection_;

@@ -12,12 +12,17 @@ static constexpr qreal Pi = 3.14;
 // GGArrow
 // ----------------------------------------------------------------------------
 GGArrow::GGArrow(GGText *startText, GGText *endText, GGraph::Connection* connection) : QGraphicsLineItem(nullptr) {
-	myStartText = startText;
-	myEndText = endText;
+	myStartText_ = startText;
+	myEndText_ = endText;
 
 	setFlag(QGraphicsItem::ItemIsSelectable, true);
-	myColor = Qt::black;
-	setPen(QPen(myColor, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+	myColor_ = Qt::black;
+#ifdef Q_OS_ANDROID
+	qreal width = 20;
+#else // Q_OS_ANDROID
+	qreal width = 5;
+#endif // Q_OS_ANDROID
+	setPen(QPen(myColor_, width, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 	setZValue(-1000.0);
 
 	connection_ = connection;
@@ -35,30 +40,30 @@ QRectF GGArrow::boundingRect() const {
 
 QPainterPath GGArrow::shape() const {
 	QPainterPath path = QGraphicsLineItem::shape();
-	path.addPolygon(arrowHead);
+	path.addPolygon(arrowHead_);
 	return path;
 }
 
 void GGArrow::updatePosition() {
-	QLineF line(mapFromItem(myStartText, 0, 0), mapFromItem(myEndText, 0, 0));
+	QLineF line(mapFromItem(myStartText_, 0, 0), mapFromItem(myEndText_, 0, 0));
 	setLine(line);
 }
 
 void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) {
-	if (myStartText->collidesWithItem(myEndText))
+	if (myStartText_->collidesWithItem(myEndText_))
 		return;
 
 	QPen myPen = pen();
-	myPen.setColor(myColor);
+	myPen.setColor(myColor_);
 	qreal ArrowSize = 10;
 	painter->setPen(myPen);
-	painter->setBrush(myColor);
+	painter->setBrush(myColor_);
 
 	QPointF start, end;
-	start.setX(myStartText->pos().x() + myStartText->boundingRect().width() / 2);
-	start.setY(myStartText->pos().y() + myStartText->boundingRect().height() / 2);
-	end.setX(myEndText->pos().x() + myEndText->boundingRect().width() / 2);
-	end.setY(myEndText->pos().y() + myEndText->boundingRect().height() / 2);
+	start.setX(myStartText_->pos().x() + myStartText_->boundingRect().width() / 2);
+	start.setY(myStartText_->pos().y() + myStartText_->boundingRect().height() / 2);
+	end.setX(myEndText_->pos().x() + myEndText_->boundingRect().width() / 2);
+	end.setY(myEndText_->pos().y() + myEndText_->boundingRect().height() / 2);
 	QLineF centerLine(start, end);
 
 	QPointF intersectPoint;
@@ -66,19 +71,19 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
 	QLineF polyLine;
 
 	while (true) {
-		polyLine = QLineF(myEndText->sceneBoundingRect().topLeft(), myEndText->sceneBoundingRect().topRight());
+		polyLine = QLineF(myEndText_->sceneBoundingRect().topLeft(), myEndText_->sceneBoundingRect().topRight());
 		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
-		polyLine = QLineF(myEndText->sceneBoundingRect().topLeft(), myEndText->sceneBoundingRect().bottomLeft());
+		polyLine = QLineF(myEndText_->sceneBoundingRect().topLeft(), myEndText_->sceneBoundingRect().bottomLeft());
 		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
-		polyLine = QLineF(myEndText->sceneBoundingRect().topRight(), myEndText->sceneBoundingRect().bottomRight());
+		polyLine = QLineF(myEndText_->sceneBoundingRect().topRight(), myEndText_->sceneBoundingRect().bottomRight());
 		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
-		polyLine = QLineF(myEndText->sceneBoundingRect().bottomLeft(), myEndText->sceneBoundingRect().bottomRight());
+		polyLine = QLineF(myEndText_->sceneBoundingRect().bottomLeft(), myEndText_->sceneBoundingRect().bottomRight());
 		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
@@ -94,13 +99,13 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
 	QPointF ArrowP1 = line().p1() + QPointF(sin(angle + Pi / 3) * ArrowSize, cos(angle + Pi / 3) * ArrowSize);
 	QPointF ArrowP2 = line().p1() + QPointF(sin(angle + Pi - Pi / 3) * ArrowSize, cos(angle + Pi - Pi / 3) * ArrowSize);
 
-	arrowHead.clear();
-	arrowHead << line().p1() << ArrowP1 << ArrowP2;
+	arrowHead_.clear();
+	arrowHead_ << line().p1() << ArrowP1 << ArrowP2;
 
 	painter->drawLine(line());
-	painter->drawPolygon(arrowHead);
+	painter->drawPolygon(arrowHead_);
 	if (isSelected()) {
-		painter->setPen(QPen(myColor, 1, Qt::DashLine));
+		painter->setPen(QPen(myColor_, 1, Qt::DashLine));
 		QLineF myLine = line();
 		myLine.translate(0, 4.0);
 		painter->drawLine(myLine);
