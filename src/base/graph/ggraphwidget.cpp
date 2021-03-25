@@ -13,7 +13,6 @@ struct MyHeightItemDelegate : QStyledItemDelegate
 
 	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override	{
 		QSize res = QStyledItemDelegate::sizeHint(option, index);
-		qDebug() << "height = " << res.height();
 		res.setHeight(res.height() * 3 / 2);
 		return res;
 	}
@@ -496,7 +495,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
 }
 
 void GGraphWidget::actionAboutTriggered(bool) {
-	QMessageBox::information(nullptr, "About", QString("SnoopSpy ") + G::version());
+	QMessageBox::information(nullptr, "About", QString("SnoopSpy based on ") + G::version());
 }
 
 void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {
