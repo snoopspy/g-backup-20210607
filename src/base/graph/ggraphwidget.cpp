@@ -149,7 +149,7 @@ void GGraphWidget::init() {
 	propWidget_->treeWidget_->setItemDelegate(new MyHeightItemDelegate(this));
 	propWidget_->treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	propWidget_->treeWidget_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	QScroller::scroller(propWidget_)->grabGesture(propWidget_, QScroller::LeftMouseButtonGesture);
+	QScroller::scroller(propWidget_->treeWidget_)->grabGesture(propWidget_->treeWidget_, QScroller::LeftMouseButtonGesture);
 #endif // GILGIL_ANDROID_DEBUG
 }
 
