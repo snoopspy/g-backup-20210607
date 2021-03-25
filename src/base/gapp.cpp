@@ -54,7 +54,11 @@ void GApp::init() {
 	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 	copyFileFromAssets("ssdemon.sh", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 	QString program = "su";
+#ifdef Q_OS_ANDROID
 	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon.sh"};
+#else // Q_OS_ANDROID
+	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
+#endif // Q_OS_ANDROID
 	bool res = QProcess::startDetached(program, arguments); // gilgil temp 2021.03.12
 	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
 #endif // GILGIL_ANDROID_DEBUG

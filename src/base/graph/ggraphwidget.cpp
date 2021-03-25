@@ -3,7 +3,21 @@
 #include "ggraphwidget.h"
 
 #include <QMessageBox>
+#include <QStyledItemDelegate>
+#include <QScroller>
 #include "base/gjson.h"
+
+struct MyHeightItemDelegate : QStyledItemDelegate
+{
+	MyHeightItemDelegate(QObject *poParent = nullptr) : QStyledItemDelegate(poParent)  {}
+
+	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override	{
+		QSize res = QStyledItemDelegate::sizeHint(option, index);
+		qDebug() << "height = " << res.height();
+		res.setHeight(res.height() * 3 / 2);
+		return res;
+	}
+};
 
 // ----------------------------------------------------------------------------
 // GGraphWidget
@@ -72,7 +86,6 @@ void GGraphWidget::init() {
 	factoryWidget_ = new QTreeWidget(this);
 	factoryWidget_->setHeaderLabel("node");
 	factoryWidget_->setIndentation(12);
-
 	propWidget_ = new GPropWidget(this);
 	scene_ = new GGScene(this);
 	graphView_ = new QGraphicsView(this);
@@ -123,6 +136,21 @@ void GGraphWidget::init() {
 
 	QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
 	QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
+
+#ifdef GILGIL_ANDROID_DEBUG
+	midSplitter_->setHandleWidth(midSplitter_->handleWidth() * 5);
+	midLeftSplitter_->setHandleWidth(midLeftSplitter_->handleWidth() * 5);
+
+	factoryWidget_->setItemDelegate(new MyHeightItemDelegate(this));
+	factoryWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	factoryWidget_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	QScroller::scroller(factoryWidget_)->grabGesture(factoryWidget_, QScroller::LeftMouseButtonGesture);
+
+	propWidget_->treeWidget_->setItemDelegate(new MyHeightItemDelegate(this));
+	propWidget_->treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+	propWidget_->treeWidget_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	QScroller::scroller(propWidget_)->grabGesture(propWidget_, QScroller::LeftMouseButtonGesture);
+#endif // GILGIL_ANDROID_DEBUG
 }
 
 void GGraphWidget::setGraph(GGraph* graph) {
@@ -468,7 +496,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
 }
 
 void GGraphWidget::actionAboutTriggered(bool) {
-	QMessageBox::information(nullptr, "About", "About"); // gilgil temp 2016.09.18
+	QMessageBox::information(nullptr, "About", QString("SnoopSpy ") + G::version());
 }
 
 void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {
