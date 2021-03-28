@@ -36,7 +36,7 @@ bool GPcapFileWrite::doOpen() {
 
 	pcap_dumper_ = pcap_dump_open(pcap_, qPrintable(realFileName));
 	if (pcap_dumper_ == nullptr) {
-		SET_ERR(GErr::RETURN_NULL, QString("pcap_dump_open(, %1)) return null").arg(realFileName));
+		SET_ERR(GErr::RETURN_NULL, QString("pcap_dump_open(%1)) return null").arg(realFileName));
 		return false;
 	}
 	return true;
