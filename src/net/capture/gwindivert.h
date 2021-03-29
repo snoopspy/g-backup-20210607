@@ -49,8 +49,8 @@ protected:
 
 protected:
 	HANDLE handle_{nullptr};
-	static constexpr int MAXBUF = 0xFFFF;
-	gbyte pktData_[MAXBUF];
+	gbyte pktData_[GPacket::MaxBufSize];
+	WINDIVERT_ADDRESS windivertAddress_;
 
 public:
 	GPacket::Result read(GPacket* packet) override;

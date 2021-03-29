@@ -156,9 +156,8 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
 	Q_ASSERT(lib.ok);
 
 	packet->clear();
-	PWINDIVERT_ADDRESS addr = reinterpret_cast<PWINDIVERT_ADDRESS>(packet->userData_);
 	UINT recvLen;
-	BOOL res = lib.WinDivertRecv(handle_, pktData_, MAXBUF, &recvLen, addr);
+	BOOL res = lib.WinDivertRecv(handle_, pktData_, GPacket::MaxBufSize, &recvLen, &windivertAddress_);
 	if (!res) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertRecv return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));
@@ -178,12 +177,15 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
 }
 
 GPacket::Result GWinDivert::write(GPacket* packet) {
+	return write(packet->buf_);
+}
+
+GPacket::Result GWinDivert::write(GBuf buf) {
 	GWinDivertLib& lib = GWinDivertLib::instance();
 	Q_ASSERT(lib.ok);
 
-	PWINDIVERT_ADDRESS addr = reinterpret_cast<PWINDIVERT_ADDRESS>(packet->userData_);
 	UINT sendLen;
-	BOOL res = lib.WinDivertSend(handle_, packet->buf_.data_, UINT(packet->buf_.size_), &sendLen, addr);
+	BOOL res = lib.WinDivertSend(handle_, buf.data_, UINT(buf.size_), &sendLen, &windivertAddress_);
 	if (!res) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertSend return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));
@@ -191,12 +193,6 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
 		return GPacket::Fail;
 	}
 	return GPacket::Ok;
-}
-
-GPacket::Result GWinDivert::write(GBuf buf) {
-	(void)buf;
-	SET_ERR(GErr::FAIL, "not supported");
-	return GPacket::Fail;
 }
 
 GPacket::Result GWinDivert::relay(GPacket* packet) {
