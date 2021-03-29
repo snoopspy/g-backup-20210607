@@ -34,7 +34,7 @@ GPacket::Result GPcapFileWriteEth::write(GPacket* packet) {
 		case GPacket::Ip:
 			newBuf.data_ = temp_;
 			newBuf.size_ = sizeof(GEthHdr) + oldBuf.size_;
-			Q_ASSERT(newBuf.size_ <= MAXBUF);
+			Q_ASSERT(newBuf.size_ <= GPacket::MaxBufSize);
 			ethHdr = PEthHdr(temp_);
 			memcpy(temp_ + sizeof(GEthHdr), oldBuf.data_, oldBuf.size_);
 			break;

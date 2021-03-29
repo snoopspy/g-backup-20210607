@@ -103,6 +103,11 @@ public:
 	static constexpr int USER_DATA_SIZE = 256;
 	gbyte userData_[USER_DATA_SIZE];
 
+	//
+	// constant
+	//
+	static constexpr int MaxBufSize = 65536;
+
 #ifdef _DEBUG
 	//
 	// debug

@@ -34,8 +34,7 @@ protected:
 protected:
 	GMac myMac_;
 	GSyncPcapDevice* device_{nullptr};
-	static constexpr int MAXBUF = 65536;
-	gbyte temp_[MAXBUF];
+	gbyte temp_[GPacket::MaxBufSize];
 
 public slots:
 	GPacket::Result writeEth(GPacket* packet);

@@ -12,7 +12,7 @@ public:
 	typedef HANDLE (*WinDivertOpenFunc)(
 		__in const char *filter,
 		__in WINDIVERT_LAYER layer,
-		__in int16_t priority,
+		__in INT16 priority,
 		__in UINT64 flags);
 	WinDivertOpenFunc WinDivertOpen{nullptr};
 
@@ -28,18 +28,18 @@ public:
 
 	typedef BOOL (*WinDivertRecvFunc)(
 		__in HANDLE handle,
-		__out PVOID pPacket,
+		__out_opt VOID *pPacket,
 		__in UINT packetLen,
-		__out_opt PWINDIVERT_ADDRESS pAddr,
-		__out_opt UINT *readLen);
+		__out_opt UINT *pRecvLen,
+		__out_opt WINDIVERT_ADDRESS *pAddr);
 	WinDivertRecvFunc WinDivertRecv{nullptr};
 
 	typedef BOOL (*WinDivertSendFunc)(
 		__in HANDLE handle,
-		__in PVOID pPacket,
+		__in const VOID *pPacket,
 		__in UINT packetLen,
-		__in PWINDIVERT_ADDRESS pAddr,
-		__out_opt UINT *writeLen);
+		__out_opt UINT *pSendLen,
+		__in const WINDIVERT_ADDRESS *pAddr);
 	WinDivertSendFunc WinDivertSend{nullptr};
 
 public:
@@ -115,7 +115,7 @@ bool GWinDivert::doOpen() {
 		return false;
 	}
 
-	if (!lib.WinDivertSetParam(handle_, WINDIVERT_PARAM_QUEUE_LEN, queueLen_)) {
+	if (!lib.WinDivertSetParam(handle_, WINDIVERT_PARAM_QUEUE_LENGTH, queueLen_)) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("error in DivertSetParam(DIVERT_PARAM_QUEUE_LEN) %1").arg(lastError);
 		SET_ERR(GErr::FAIL, msg);
@@ -157,8 +157,8 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
 
 	packet->clear();
 	PWINDIVERT_ADDRESS addr = reinterpret_cast<PWINDIVERT_ADDRESS>(packet->userData_);
-	UINT readLen;
-	BOOL res = lib.WinDivertRecv(handle_, pktData_, MAXBUF, addr, &readLen);
+	UINT recvLen;
+	BOOL res = lib.WinDivertRecv(handle_, pktData_, MAXBUF, &recvLen, addr);
 	if (!res) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertRecv return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));
@@ -166,7 +166,7 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
 		return GPacket::Fail;
 	}
 	packet->buf_.data_ = pktData_;
-	packet->buf_.size_ = size_t(readLen);
+	packet->buf_.size_ = size_t(recvLen);
 	if (autoParse_) packet->parse();
 	if (correctIpChecksum_) {
 		GIpHdr* ipHdr = packet->ipHdr_;
@@ -182,8 +182,8 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
 	Q_ASSERT(lib.ok);
 
 	PWINDIVERT_ADDRESS addr = reinterpret_cast<PWINDIVERT_ADDRESS>(packet->userData_);
-	UINT writeLen;
-	BOOL res = lib.WinDivertSend(handle_, packet->buf_.data_, UINT(packet->buf_.size_), addr, &writeLen);
+	UINT sendLen;
+	BOOL res = lib.WinDivertSend(handle_, packet->buf_.data_, UINT(packet->buf_.size_), &sendLen, addr);
 	if (!res) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertSend return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));

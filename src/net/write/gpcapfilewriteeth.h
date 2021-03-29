@@ -37,8 +37,7 @@ protected:
 protected:
 	GMac smac_;
 	GMac dmac_;
-	static constexpr int MAXBUF = 65536;
-	gbyte temp_[MAXBUF];
+	gbyte temp_[GPacket::MaxBufSize];
 
 public slots:
 	GPacket::Result write(GPacket* packet);
