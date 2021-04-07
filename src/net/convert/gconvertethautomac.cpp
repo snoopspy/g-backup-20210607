@@ -109,7 +109,6 @@ void GConvertEthAutoMac::convert(GPacket* packet) {
 			ethHdr->type_ = htons(type_);
 
 			size_t copyLen = packet->buf_.size_;
-			qDebug() << "copyLen=" << copyLen; // gilgil temp 2021.04.07
 			memcpy(convertedEthBuf_ + sizeof(GEthHdr), packet->buf_.data_, copyLen);
 			convertedEthPacket_.copyFrom(packet, GBuf(convertedEthBuf_, sizeof(GEthHdr) + copyLen));
 			emit converted(&convertedEthPacket_);
