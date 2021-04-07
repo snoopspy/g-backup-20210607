@@ -8,13 +8,13 @@ GGText::GGText(GObj* node) {
 	setFlag(QGraphicsItem::ItemIsMovable);
 	setFlag(QGraphicsItem::ItemIsSelectable);
 	node_ = node;
-#ifdef GILGIL_ANDROID_DEBUG // gilgil temp 2021.03.24
+#ifdef Q_OS_ANDROID
 	QFont font = this->font();
 	if (font.pixelSize() != -1) {
 		font.setPixelSize(font.pixelSize() * 3 / 2);
 		this->setFont(font);
 	}
-#endif // GILGIL_ANDROID_DEBUG
+#endif // Q_OS_ANDROID
 }
 
 GGText::~GGText() {

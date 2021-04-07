@@ -185,21 +185,21 @@ void GPluginFactory::loadOther() {
 // ----------------------------------------------------------------------------
 // Process
 // ----------------------------------------------------------------------------
-#include <GBypassSslBlock>
+#include <GClientHelloSplit>
 #include <GCorrectChecksum>
 #include <GDnsProcessor>
 #include <GFlowMgrDebugger>
 #include <GPacketDebugger>
 
 void GPluginFactory::loadProcess() {
-	qRegisterMetaType<GBypassSslBlock*>();
+	qRegisterMetaType<GClientHelloSplit*>();
 	qRegisterMetaType<GCorrectChecksum*>();
 	qRegisterMetaType<GDnsProcessor*>();
 	qRegisterMetaType<GFlowMgrDebugger*>();
 	qRegisterMetaType<GPacketDebugger*>();
 
 	ItemCategory* category = new ItemCategory("process");
-	category->items_.push_back(new ItemNode(GBypassSslBlock::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GClientHelloSplit::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GCorrectChecksum::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GDnsProcessor::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GFlowMgrDebugger::staticMetaObject.className()));

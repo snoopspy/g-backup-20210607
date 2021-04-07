@@ -1,9 +1,9 @@
-#include "gbypasssslblock.h"
+#include "gclienthellosplit.h"
 
 // ----------------------------------------------------------------------------
-// GBypassSslBlock
+// GClientHelloSplit
 // ----------------------------------------------------------------------------
-bool GBypassSslBlock::doOpen() {
+bool GClientHelloSplit::doOpen() {
 	if (tcpFlowMgr_ == nullptr) {
 		SET_ERR(GErr::OBJECT_IS_NULL, "tcpFlowMgr must be specified");
 		return false;
@@ -14,22 +14,24 @@ bool GBypassSslBlock::doOpen() {
 	return true;
 }
 
-bool GBypassSslBlock::doClose() {
+bool GClientHelloSplit::doClose() {
 	return true;
 }
 
-void GBypassSslBlock::tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) {
-	qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+void GClientHelloSplit::tcpFlowCreated(GFlow::TcpFlowKey* key, GFlow::Value* value) {
+	// qDebug() << QString("_tcpFlowCreated %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_)); // gilgil temp 2021.04.07
+	(void)key;
 	FlowItem* flowItem = PFlowItem(value->mem(tcpFlowOffset_));
 	new (flowItem) FlowItem;
 }
 
-void GBypassSslBlock::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
+void GClientHelloSplit::tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) {
+	(void)key;
 	(void)value;
-	qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_));
+	// qDebug() << QString("_tcpFlowDeleted %1:%2>%3:%4").arg(QString(key->sip_), QString::number(key->sport_), QString(key->dip_), QString::number(key->dport_)); // gilgil temp 2021.04.07
 }
 
-void GBypassSslBlock::bypass(GPacket* packet) {
+void GClientHelloSplit::split(GPacket* packet) {
 	GIpHdr* ipHdr = packet->ipHdr_;
 	if (ipHdr == nullptr) return;
 	GTcpHdr* tcpHdr = packet->tcpHdr_;
@@ -45,7 +47,7 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 
 	if (tcpData.size_ <= 16) return; // too small data
 
-	if (tcpData.data_[0] != 0x16) return;
+	if (tcpData.data_[0] != 0x16 || tcpData.data_[1] != 0x03) return;
 
 	GFlow::TcpFlowKey* key = &tcpFlowMgr_->key_;
 	qDebug() << QString("split!!! tcp size=%1 %2:%3>%4:%5")
@@ -56,8 +58,8 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 	size_t firstDataSize = 16;
 	size_t secondDataSize = orgDataSize - firstDataSize;
 
-	gbyte* temp = pbyte(malloc(tcpData.size_));
-	memcpy(temp, tcpData.data_, tcpData.size_);
+	Q_ASSERT(tcpData.size_ < GPacket::MaxBufSize);
+	memcpy(splittedTcpData_, tcpData.data_, tcpData.size_);
 
 	{
 		//
@@ -66,12 +68,12 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 		GBuf backup = packet->buf_;
 		uint16_t oldIpHdrLen = ipHdr->len();
 		uint16_t newIpHdrLen = ipHdr->hl() * 4 + tcpHdr->off() * 4 + uint16_t(firstDataSize);
-		size_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
+		ssize_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
 		ipHdr->len_ = htons(newIpHdrLen);
 		tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
 		ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
 		packet->buf_.size_ += ipHdrLenDiff;
-		emit bypassed(packet);
+		emit splitted(packet);
 		packet->buf_ = backup;
 	}
 
@@ -81,18 +83,17 @@ void GBypassSslBlock::bypass(GPacket* packet) {
 		//
 		GBuf backup = packet->buf_;
 		uint16_t oldIpHdrLen = ipHdr->len();
-		uint16_t newIpHdrLen = htons(ipHdr->hl() * 4 + tcpHdr->off() * 4 + uint16_t(secondDataSize));
-		size_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
+		uint16_t newIpHdrLen = ipHdr->hl() * 4 + tcpHdr->off() * 4 + uint16_t(secondDataSize);
+		ssize_t ipHdrLenDiff = newIpHdrLen - oldIpHdrLen;
 		ipHdr->len_ = htons(newIpHdrLen);
-		memcpy(tcpData.data_, temp + firstDataSize, secondDataSize);
+		memcpy(tcpData.data_, splittedTcpData_ + firstDataSize, secondDataSize);
 		tcpHdr->seq_ = htonl(tcpHdr->seq() + 16);
 		tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
 		ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
 		packet->buf_.size_ += ipHdrLenDiff;
-		emit bypassed(packet);
+		emit splitted(packet);
 		packet->buf_ = backup;
 	}
 
-	free(temp);
 	packet->ctrl.block_ = true;
 }

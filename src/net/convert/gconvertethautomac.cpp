@@ -38,6 +38,7 @@ bool GConvertEthAutoMac::doOpen() {
 
 	Q_ASSERT(intf_ != nullptr);
 	myMac_ = intf_->mac();
+	myIp_ = intf_->ip();
 	if (myMac_.isNull()) {
 		QString msg = QString("not specified mac");
 		SET_ERR(GErr::VALUE_IS_NOT_ZERO, msg);
@@ -73,6 +74,7 @@ GMac GConvertEthAutoMac::resolveMacByDip(GPacket* packet) {
 		return GMac::nullMac();
 	}
 	GIp dip = ipHdr->dip();
+	if (dip == myIp_) return myMac_;
 	GIp adjIp = intf_->getAdjIp(dip);
 	GAtm& atm = GAtm::instance();
 	GAtmMap::iterator it = atm.find(adjIp);
@@ -107,6 +109,7 @@ void GConvertEthAutoMac::convert(GPacket* packet) {
 			ethHdr->type_ = htons(type_);
 
 			size_t copyLen = packet->buf_.size_;
+			qDebug() << "copyLen=" << copyLen; // gilgil temp 2021.04.07
 			memcpy(convertedEthBuf_ + sizeof(GEthHdr), packet->buf_.data_, copyLen);
 			convertedEthPacket_.copyFrom(packet, GBuf(convertedEthBuf_, sizeof(GEthHdr) + copyLen));
 			emit converted(&convertedEthPacket_);

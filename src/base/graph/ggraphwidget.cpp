@@ -136,7 +136,7 @@ void GGraphWidget::init() {
 	QObject::connect(factoryWidget_, &QTreeWidget::clicked, this, &GGraphWidget::factoryWidgetClicked);
 	QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
 
-#ifdef GILGIL_ANDROID_DEBUG
+#ifdef Q_OS_ANDROID
 	midSplitter_->setHandleWidth(midSplitter_->handleWidth() * 5);
 	midLeftSplitter_->setHandleWidth(midLeftSplitter_->handleWidth() * 5);
 
@@ -149,7 +149,7 @@ void GGraphWidget::init() {
 	propWidget_->treeWidget_->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 	propWidget_->treeWidget_->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	QScroller::scroller(propWidget_->treeWidget_)->grabGesture(propWidget_->treeWidget_, QScroller::LeftMouseButtonGesture);
-#endif // GILGIL_ANDROID_DEBUG
+#endif // Q_OS_ANDROID
 }
 
 void GGraphWidget::setGraph(GGraph* graph) {

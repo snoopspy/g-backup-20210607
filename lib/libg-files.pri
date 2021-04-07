@@ -102,7 +102,7 @@ SOURCES += \
 	$${PWD}/../src/net/pdu/gpdu.cpp \
 	$${PWD}/../src/net/pdu/gtcphdr.cpp \
 	$${PWD}/../src/net/pdu/gudphdr.cpp \
-	$${PWD}/../src/net/process/gbypasssslblock.cpp \
+	$${PWD}/../src/net/process/gclienthellosplit.cpp \
 	$${PWD}/../src/net/process/gcorrectchecksum.cpp \
 	$${PWD}/../src/net/process/gdnsprocessor.cpp \
 	$${PWD}/../src/net/process/gflowmgrdebugger.cpp \
@@ -217,7 +217,7 @@ HEADERS += \
 	$${PWD}/../src/net/pdu/gpdu.h \
 	$${PWD}/../src/net/pdu/gtcphdr.h \
 	$${PWD}/../src/net/pdu/gudphdr.h \
-	$${PWD}/../src/net/process/gbypasssslblock.h \
+	$${PWD}/../src/net/process/gclienthellosplit.h \
 	$${PWD}/../src/net/process/gcorrectchecksum.h \
 	$${PWD}/../src/net/process/gdnsprocessor.h \
 	$${PWD}/../src/net/process/gflowmgrdebugger.h \

@@ -54,7 +54,7 @@ bool GPcapDeviceWrite::doClose() {
 GPacket::Result GPcapDeviceWrite::write(GBuf buf) {
 	int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
 	if (i != 0) {
-		SET_ERR(GErr::FAIL, QString("pcap_sendpacket return %1 %2").arg(i).arg(pcap_geterr(pcap_)));
+		SET_ERR(GErr::FAIL, QString("pcap_sendpacket return %1 %2 size=%3").arg(i).arg(pcap_geterr(pcap_)).arg(buf.size_));
 		return GPacket::Fail;
 	}
 	return GPacket::Ok;

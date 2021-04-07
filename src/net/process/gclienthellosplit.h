@@ -14,9 +14,9 @@
 #include "net/flow/gtcpflowmgr.h"
 
 // ----------------------------------------------------------------------------
-// GBypassSslBlock
+// GClientHelloSplit
 // ----------------------------------------------------------------------------
-struct G_EXPORT GBypassSslBlock : GStateObj, GTcpFlowMgr::Managable {
+struct G_EXPORT GClientHelloSplit : GStateObj, GTcpFlowMgr::Managable {
 	Q_OBJECT
 	Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
 
@@ -37,8 +37,8 @@ public:
 	// --------------------------------------------------------------------------
 
 public:
-	Q_INVOKABLE GBypassSslBlock(QObject* parent = nullptr) : GStateObj(parent) {}
-	~GBypassSslBlock() override { close(); }
+	Q_INVOKABLE GClientHelloSplit(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GClientHelloSplit() override { close(); }
 
 protected:
 	bool doOpen() override;
@@ -46,6 +46,7 @@ protected:
 
 protected:
 	size_t tcpFlowOffset_{0};
+	gbyte splittedTcpData_[GPacket::MaxBufSize];
 
 public:
 	// GTcpFlowMgr::Managable
@@ -53,8 +54,8 @@ public:
 	void tcpFlowDeleted(GFlow::TcpFlowKey* key, GFlow::Value* value) override;
 
 public slots:
-	void bypass(GPacket* packet);
+	void split(GPacket* packet);
 
 signals:
-	void bypassed(GPacket* packet);
+	void splitted(GPacket* packet);
 };

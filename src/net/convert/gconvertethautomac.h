@@ -32,7 +32,8 @@ protected:
 	bool doClose() override;
 
 protected:
-	GMac myMac_;
+	GMac myMac_{GMac::nullMac()};
+	GIp myIp_{0};
 	GSyncPcapDevice* device_{nullptr};
 	GEthPacket convertedEthPacket_;
 	gbyte convertedEthBuf_[GPacket::MaxBufSize];
