@@ -16,7 +16,7 @@
 // GBuf
 // ----------------------------------------------------------------------------
 struct G_EXPORT GBuf final {
-	unsigned char* data_; // u_char*, gbyte*
+	gbyte* data_;
 	size_t size_;
 
 	GBuf() {}

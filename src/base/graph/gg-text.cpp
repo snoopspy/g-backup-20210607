@@ -10,8 +10,10 @@ GGText::GGText(GObj* node) {
 	node_ = node;
 #ifdef GILGIL_ANDROID_DEBUG // gilgil temp 2021.03.24
 	QFont font = this->font();
-	font.setPixelSize(font.pixelSize() * 3 / 2);
-	this->setFont(font);
+	if (font.pixelSize() != -1) {
+		font.setPixelSize(font.pixelSize() * 3 / 2);
+		this->setFont(font);
+	}
 #endif // GILGIL_ANDROID_DEBUG
 }
 

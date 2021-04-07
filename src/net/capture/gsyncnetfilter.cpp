@@ -25,26 +25,26 @@ bool GSyncNetFilter::doClose() {
 
 GPacket::Result GSyncNetFilter::read(GPacket* packet) {
 	(void)packet;
-	qDebug() << "GSyncNetFilter::read()";
-	return GPacket::Fail; // gilgil temp 2019.05.24
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
 }
 
 GPacket::Result GSyncNetFilter::write(GPacket* packet) {
 	(void)packet;
-	qDebug() << "GSyncNetFilter::write()";
-	return GPacket::Fail; // gilgil temp 2019.05.24
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
 }
 
 GPacket::Result GSyncNetFilter::write(GBuf buf) {
 	(void)buf;
-	qDebug() << "GSyncNetFilter::write()";
-	return GPacket::Fail; // gilgil temp 2019.05.24
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
 }
 
 GPacket::Result GSyncNetFilter::relay(GPacket* packet) {
 	(void)packet;
-	qDebug() << "GSyncNetFilter::relay()";
-	return GPacket::Fail; // gilgil temp 2019.05.24
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
 }
 
 #endif

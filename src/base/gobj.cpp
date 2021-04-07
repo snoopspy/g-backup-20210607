@@ -138,7 +138,7 @@ void GObjList::load(QJsonArray ja) {
 			qWarning() << QString("className is empty");
 			continue;
 		}
-		GObj* obj = GObj::createInstance(className, this);
+		GObj* obj = GObj::createInstance(className, parent());
 		if (obj == nullptr) {
 			qWarning() << QString("GObj::createInstance(%1) return null").arg(className);
 			continue;

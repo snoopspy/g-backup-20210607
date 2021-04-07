@@ -11,7 +11,10 @@ GPropItemObjPtr::GPropItemObjPtr(GPropItemParam* param) : GPropItemComboBox(para
 	GGraph* graph = dynamic_cast<GGraph*>(param->object_->parent());
 	if (graph != nullptr) {
 		const QObjectList& objectList = graph->children();
+		qDebug() << "objectList count is " << objectList.count(); // gilgil temp 2021.04.07
 		for (QObject* object: objectList) {
+			if (dynamic_cast<GObj*>(object) == nullptr) continue;
+			qDebug() << object->metaObject()->className() << object->objectName(); // gilgil temp 2021.04.07
 			comboBox_->addItem(object->objectName());
 		}
 	}

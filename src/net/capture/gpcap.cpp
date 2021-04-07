@@ -75,7 +75,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 }
 
 GPacket::Result GPcap::write(GPacket* packet) {
-	return write(GBuf(packet->buf_.data_, packet->buf_.size_));
+	return write(packet->buf_);
 }
 
 GPacket::Result GPcap::write(GBuf buf) {

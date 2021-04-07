@@ -19,6 +19,7 @@ GPluginFactory::~GPluginFactory() {
 void GPluginFactory::loadDefault() {
 	loadBlock();
 	loadCapture();
+	loadConvert();
 	loadDelay();
 	loadExtract();
 	loadFilter();
@@ -75,6 +76,26 @@ void GPluginFactory::loadCapture() {
 #ifdef Q_OS_WIN
 	category->items_.push_back(new ItemNode(GWinDivert::staticMetaObject.className()));
 #endif
+
+	items_.push_back(category);
+}
+
+// ----------------------------------------------------------------------------
+// Convert
+// ----------------------------------------------------------------------------
+#include <GConvertEth>
+#include <GConvertEthAutoMac>
+#include <GConvertIp>
+
+void GPluginFactory::loadConvert() {
+	qRegisterMetaType<GConvertEth*>();
+	qRegisterMetaType<GConvertEthAutoMac*>();
+	qRegisterMetaType<GConvertIp*>();
+
+	ItemCategory* category = new ItemCategory("convert");
+	category->items_.push_back(new ItemNode(GConvertEth::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GConvertEthAutoMac::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GConvertIp::staticMetaObject.className()));
 
 	items_.push_back(category);
 }
@@ -191,30 +212,15 @@ void GPluginFactory::loadProcess() {
 // Write
 // ----------------------------------------------------------------------------
 #include <GPcapDeviceWrite>
-#include <GPcapDeviceWriteEth>
-#include <GPcapDeviceWriteEthAutoMac>
-#include <GPcapDeviceWriteIp>
 #include <GPcapFileWrite>
-#include <GPcapFileWriteEth>
-#include <GPcapFileWriteIp>
 
 void GPluginFactory::loadWrite() {
 	qRegisterMetaType<GPcapDeviceWrite*>();
-	qRegisterMetaType<GPcapDeviceWriteEth*>();
-	qRegisterMetaType<GPcapDeviceWriteEthAutoMac*>();
-	qRegisterMetaType<GPcapDeviceWriteIp*>();
 	qRegisterMetaType<GPcapFileWrite*>();
-	qRegisterMetaType<GPcapFileWriteEth*>();
-	qRegisterMetaType<GPcapFileWriteIp*>();
 
 	ItemCategory* category = new ItemCategory("write");
 	category->items_.push_back(new ItemNode(GPcapDeviceWrite::staticMetaObject.className()));
-	category->items_.push_back(new ItemNode(GPcapDeviceWriteEth::staticMetaObject.className()));
-	category->items_.push_back(new ItemNode(GPcapDeviceWriteEthAutoMac::staticMetaObject.className()));
-	category->items_.push_back(new ItemNode(GPcapDeviceWriteIp::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GPcapFileWrite::staticMetaObject.className()));
-	category->items_.push_back(new ItemNode(GPcapFileWriteEth::staticMetaObject.className()));
-	category->items_.push_back(new ItemNode(GPcapFileWriteIp::staticMetaObject.className()));
 
 	items_.push_back(category);
 }

@@ -10,12 +10,15 @@
 
 #pragma once
 
-#include "net/write/gpcapdevicewrite.h"
+#include "base/gstateobj.h"
+#include "net/write/gwrite.h"
+#include "net/packet/gethpacket.h"
+#include "net/packet/gippacket.h"
 
 // ----------------------------------------------------------------------------
 // GTcpBlock
 // ----------------------------------------------------------------------------
-struct G_EXPORT GTcpBlock : GPcapDeviceWrite {
+struct G_EXPORT GTcpBlock : GStateObj {
 	Q_OBJECT
 	Q_PROPERTY(bool enabled MEMBER enabled_)
 	Q_PROPERTY(bool forwardRst MEMBER forwardRst_)
@@ -24,6 +27,14 @@ struct G_EXPORT GTcpBlock : GPcapDeviceWrite {
 	Q_PROPERTY(bool backwardRst MEMBER backwardRst_)
 	Q_PROPERTY(bool backwardFin MEMBER backwardFin_)
 	Q_PROPERTY(QStringList backwardFinMsg MEMBER backwardFinMsg_)
+	Q_PROPERTY(GObjPtr writer READ getWriter WRITE setWriter)
+
+public:
+	GObjPtr getWriter() { return writer_; }
+	void setWriter(GObjPtr value) { writer_ = dynamic_cast<GWrite*>(value.data()); }
+
+public:
+	GWrite* writer_{nullptr};
 
 public:
 	bool enabled_{true};
@@ -35,8 +46,8 @@ public:
 	QStringList backwardFinMsg_;
 
 public:
-	Q_INVOKABLE GTcpBlock(QObject* parent = nullptr);
-	~GTcpBlock() override;
+	Q_INVOKABLE GTcpBlock(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GTcpBlock() override { close(); }
 
 protected:
 	bool doOpen() override;
@@ -45,6 +56,10 @@ protected:
 protected:
 	QString forwardFinMsgStr_;
 	QString backwardFinMsgStr_;
+
+	GEthPacket blockEthPacket_;
+	GIpPacket blockIpPacket_;
+	gbyte blockBuf_[GPacket::MaxBufSize];
 
 	enum Direction {
 		Forward,

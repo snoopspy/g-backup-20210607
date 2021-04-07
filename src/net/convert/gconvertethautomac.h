@@ -8,38 +8,39 @@
 //
 // ----------------------------------------------------------------------------
 
-#include "gpcapdevicewrite.h"
+#include "net/write/gpcapdevicewrite.h"
+#include "net/capture/gsyncpcapdevice.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriteEth
+// GConvertEthAutoMac
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapDeviceWriteEth : GPcapDeviceWrite {
+struct G_EXPORT GConvertEthAutoMac : GPcapDeviceWrite {
 	Q_OBJECT
-	Q_PROPERTY(QString smac MEMBER smacStr_)
-	Q_PROPERTY(QString dmac MEMBER dmacStr_)
 	Q_PROPERTY(quint16 type MEMBER type_)
 
 public:
-	QString smacStr_{"000000-000000"};
-	QString dmacStr_{"000000-000000"};
 	uint16_t type_{GEthHdr::Ip4};
 
 public:
-	Q_INVOKABLE GPcapDeviceWriteEth(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
+	Q_INVOKABLE GConvertEthAutoMac(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
 		dataLinkType_ = GPacket::Eth;
 	}
-	~GPcapDeviceWriteEth() override { close(); }
+	~GConvertEthAutoMac() override { close(); }
 
 protected:
 	bool doOpen() override;
 	bool doClose() override;
 
 protected:
-	GMac smac_;
-	GMac dmac_;
-	static constexpr int MAXBUF = 65536;
-	gbyte temp_[MAXBUF];
+	GMac myMac_;
+	GSyncPcapDevice* device_{nullptr};
+	GEthPacket convertedEthPacket_;
+	gbyte convertedEthBuf_[GPacket::MaxBufSize];
+	GMac resolveMacByDip(GPacket* packet);
 
 public slots:
-	GPacket::Result writeEth(GPacket* packet);
+	void convert(GPacket* packet);
+
+signals:
+	void converted(GPacket* packet);
 };

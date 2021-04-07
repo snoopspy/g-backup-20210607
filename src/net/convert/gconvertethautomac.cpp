@@ -1,4 +1,4 @@
-#include "gpcapdevicewriteethautomac.h"
+#include "gconvertethautomac.h"
 #include <QMap>
 #include "net/gatm.h"
 
@@ -24,9 +24,9 @@ public:
 };
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriteEthAutoMac
+// GConvertEthAutoMac
 // ----------------------------------------------------------------------------
-bool GPcapDeviceWriteEthAutoMac::doOpen() {
+bool GConvertEthAutoMac::doOpen() {
 	if (!GPcapDeviceWrite::doOpen())
 		return false;
 
@@ -62,38 +62,15 @@ bool GPcapDeviceWriteEthAutoMac::doOpen() {
 	return true;
 }
 
-bool GPcapDeviceWriteEthAutoMac::doClose() {
+bool GConvertEthAutoMac::doClose() {
 	return GPcapDeviceWrite::doClose();
 }
 
-GPacket::Result GPcapDeviceWriteEthAutoMac::writeEth(GPacket* packet) {
-	GBuf oldBuf = packet->buf_;
-	GBuf newBuf;
-	GEthHdr* ethHdr = nullptr; // for remove warning
-	switch (packet->dataLinkType()) {
-		case GPacket::Eth:
-			newBuf = packet->buf_;
-			ethHdr = PEthHdr(oldBuf.data_);
-			break;
-		case GPacket::Ip:
-			newBuf.data_ = temp_;
-			newBuf.size_ = sizeof(GEthHdr) + oldBuf.size_;
-			Q_ASSERT(newBuf.size_ <= GPacket::MaxBufSize);
-			ethHdr = PEthHdr(temp_);
-			memcpy(temp_ + sizeof(GEthHdr), oldBuf.data_, oldBuf.size_);
-			break;
-		case GPacket::Dot11:
-		case GPacket::Null: {
-			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dataLinkType_));
-			SET_ERR(GErr::NOT_SUPPORTED, msg);
-			return GPacket::Fail;
-		}
-	}
-	ethHdr->smac_ = myMac_;
+GMac GConvertEthAutoMac::resolveMacByDip(GPacket* packet) {
 	GIpHdr* ipHdr = packet->ipHdr_;
 	if (ipHdr == nullptr) {
 		SET_ERR(GErr::VALUE_IS_NULL, "ip header is null");
-		return GPacket::Fail;
+		return GMac::nullMac();
 	}
 	GIp dip = ipHdr->dip();
 	GIp adjIp = intf_->getAdjIp(dip);
@@ -104,20 +81,42 @@ GPacket::Result GPcapDeviceWriteEthAutoMac::writeEth(GPacket* packet) {
 		GMac mac = atmOne.waitOne(adjIp, device_);
 		if (mac.isNull()) {
 			qCritical() << QString("can not resolve mac for ip %1").arg(QString(adjIp));
-			return GPacket::Fail;
+			return GMac::nullMac();
 		}
 		it = atm.insert(adjIp, mac);
 		if (!active()) {
 			QString msg = QString("not opened state %1").arg(int(state_));
 			SET_ERR(GErr::NOT_OPENED_STATE, msg); // gilgil temp 2019.06.02
-			return GPacket::Fail;
+			return GMac::nullMac();
 		}
 	}
-	GMac dmac = it.value();
-	ethHdr->dmac_ = dmac;
-	ethHdr->type_ = htons(type_);
-	packet->buf_ = newBuf;
-	GPacket::Result res = GPcapDeviceWrite::write(packet);
-	packet->buf_ = oldBuf;
-	return res;
+	return it.value();
+}
+
+void GConvertEthAutoMac::convert(GPacket* packet) {
+	GPacket::DataLinkType dlt = packet->dataLinkType();
+	switch (dlt) {
+		case GPacket::Eth: {
+			emit converted(packet);
+			break;
+		}
+		case GPacket::Ip: {
+			GEthHdr* ethHdr = PEthHdr(convertedEthBuf_);
+			ethHdr->smac_ = myMac_;
+			ethHdr->dmac_ = resolveMacByDip(packet);
+			ethHdr->type_ = htons(type_);
+
+			size_t copyLen = packet->buf_.size_;
+			memcpy(convertedEthBuf_ + sizeof(GEthHdr), packet->buf_.data_, copyLen);
+			convertedEthPacket_.copyFrom(packet, GBuf(convertedEthBuf_, sizeof(GEthHdr) + copyLen));
+			emit converted(&convertedEthPacket_);
+			break;
+		}
+		case GPacket::Dot11:
+		case GPacket::Null: {
+			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dlt));
+			SET_ERR(GErr::NOT_SUPPORTED, msg);
+			return;
+		}
+	}
 }

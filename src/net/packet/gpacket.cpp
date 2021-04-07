@@ -83,6 +83,34 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
 */
 // ----------------------------------
 
+GPacket::GPacket(const GPacket& r) : QObject(r.parent()) {
+	operator =(r);
+}
+
+GPacket& GPacket::operator = (const GPacket& r) {
+	dataLinkType_ = r.dataLinkType_;
+	ts_ = r.ts_;
+	buf_ = r.buf_;
+	ctrl.block_ = r.ctrl.block_;
+	ctrl.changed_ = r.ctrl.changed_;
+
+	ethHdr_ = r.ethHdr_;
+	arpHdr_ = r.arpHdr_;
+	ipHdr_ = r.ipHdr_;
+	ip6Hdr_ = r.ip6Hdr_;
+	tcpHdr_ = r.tcpHdr_;
+	udpHdr_ = r.udpHdr_;
+	icmpHdr_ = r.icmpHdr_;
+	tcpData_ = r.tcpData_;
+	udpData_ = r.udpData_;
+
+#ifdef _DEBUG
+	parsed_ = r.parsed_;
+#endif // _DEBUG
+
+	return *this;
+}
+
 GPacket::operator QString() const {
 	QString smac;
 	QString dmac;
@@ -115,13 +143,10 @@ GPacket::operator QString() const {
 		}
 	}
 
-	QString msg = QString("%1 %2:%3 > %4:%5")
-		.arg(protoStr)
-		.arg(QString(sip)).arg(QString::number(sport))
-		.arg(QString(dip)).arg(QString::number(dport));
+	QString msg = QString("%1 %2:%3 > %4:%5").arg(protoStr, QString(sip), QString::number(sport), QString(dip), QString::number(dport));
 
 	if (smac != "")
-		msg = QString("%1 > %2 %3").arg(smac).arg(dmac).arg(msg);
+		msg = QString("%1 > %2 %3").arg(smac, dmac, msg);
 
 	return msg;
 }
@@ -130,21 +155,10 @@ void GPacket::parse() {
 	qCritical() << "virtual function call";
 }
 
-GPacket* GPacket::clone(size_t extra) {
-	(void)extra;
-	qCritical() << "virtual function call";
-	return nullptr;
-}
-
-void GPacket::doClone(GPacket* source, size_t extra) {
+void GPacket::copyFrom(GPacket* source, GBuf newBuf) {
 	clear();
 	ts_ = source->ts_;
-	size_t size = source->buf_.size_;
-	buf_.data_ = pbyte(malloc(size + extra));
-	memcpy(buf_.data_, source->buf_.data_, size);
-	buf_.size_ = size;
-	bufSelfAlloc_ = true;
-
+	buf_ = newBuf;
 	ctrl = source->ctrl;
 
 	parse();

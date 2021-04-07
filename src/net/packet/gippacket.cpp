@@ -32,17 +32,17 @@ void GIpPacket::parse() {
 	switch (proto) {
 		case GIpHdr::Tcp: // Tcp
 			tcpHdr_ = PTcpHdr(p);
-			p += tcpHdr_->off() * 4;
+			// p += tcpHdr_->off() * 4;
 			tcpData_ = GTcpHdr::parseData(ipHdr_, tcpHdr_);
 			break;
 		case GIpHdr::Udp: // Udp
 			udpHdr_ = PUdpHdr(p);
-			p += sizeof(GUdpHdr);
+			// p += sizeof(GUdpHdr);
 			udpData_ = GUdpHdr::parseData(udpHdr_);
 			break;
 		case GIpHdr::Icmp: // Icmp
 			icmpHdr_ = PIcmpHdr(p);
-			p += sizeof(GIcmpHdr);
+			// p += sizeof(GIcmpHdr);
 			break;
 		default:
 			// qDebug() << "unknown protocol" << proto; // gilgil temp 2019.08.19
@@ -51,10 +51,4 @@ void GIpPacket::parse() {
 #ifdef _DEBUG
 	parsed_ = true;
 #endif // _DEBUG
-}
-
-GPacket* GIpPacket::clone(size_t extra) {
-	GPacket* res = new GIpPacket;
-	res->doClone(this, extra);
-	return res;
 }

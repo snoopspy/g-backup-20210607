@@ -24,8 +24,8 @@ public:
 	bool enabled_{true};
 
 public:
-	Q_INVOKABLE GBlock(QObject* parent = nullptr);
-	~GBlock() override;
+	Q_INVOKABLE GBlock(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GBlock() override {}
 
 protected:
 	bool doOpen() override { return true; }

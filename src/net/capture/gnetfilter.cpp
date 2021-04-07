@@ -122,25 +122,25 @@ bool GNetFilter::doClose() {
 
 GPacket::Result GNetFilter::read(GPacket* packet) {
 	(void)packet;
-	SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
 GPacket::Result GNetFilter::write(GPacket* packet) {
 	(void)packet;
-	SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
 GPacket::Result GNetFilter::write(GBuf buf) {
 	(void)buf;
-	SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
 GPacket::Result GNetFilter::relay(GPacket* packet) {
 	(void)packet;
-	SET_ERR(GErr::NOT_SUPPORTED, "not supported"); // gilgil temp 2019.09.25
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 

@@ -61,8 +61,9 @@ SOURCES += \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapfile.cpp \
 	$${PWD}/../src/net/capture/gwindivert.cpp \
-	$${PWD}/../src/net/convert/gconvertipeth.cpp \
-	$${PWD}/../src/net/convert/gconvertipethautomac.cpp \
+	$${PWD}/../src/net/convert/gconverteth.cpp \
+	$${PWD}/../src/net/convert/gconvertethautomac.cpp \
+	$${PWD}/../src/net/convert/gconvertip.cpp \
 	$${PWD}/../src/net/delay/gdelay.cpp \
 	$${PWD}/../src/net/delay/gsyncdelay.cpp \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.cpp \
@@ -107,13 +108,9 @@ SOURCES += \
 	$${PWD}/../src/net/process/gflowmgrdebugger.cpp \
 	$${PWD}/../src/net/process/gpacketdebugger.cpp \
 	$${PWD}/../src/net/write/gpcapdevicewrite.cpp \
-	$${PWD}/../src/net/write/gpcapdevicewriteeth.cpp \
-	$${PWD}/../src/net/write/gpcapdevicewriteethautomac.cpp \
-	$${PWD}/../src/net/write/gpcapdevicewriteip.cpp \
 	$${PWD}/../src/net/write/gpcapfilewrite.cpp \
-	$${PWD}/../src/net/write/gpcapfilewriteeth.cpp \
-	$${PWD}/../src/net/write/gpcapfilewriteip.cpp \
-	$${PWD}/../src/net/write/gpcapwrite.cpp
+	$${PWD}/../src/net/write/gpcapwrite.cpp \
+	$${PWD}/../src/net/write/gwrite.cpp
 
 HEADERS += \
 	$${PWD}/../src/base/gapp.h \
@@ -179,8 +176,9 @@ HEADERS += \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.h \
 	$${PWD}/../src/net/capture/gsyncpcapfile.h \
 	$${PWD}/../src/net/capture/gwindivert.h \
-	$${PWD}/../src/net/convert/gconvertipeth.h \
-	$${PWD}/../src/net/convert/gconvertipethautomac.h \
+	$${PWD}/../src/net/convert/gconverteth.h \
+	$${PWD}/../src/net/convert/gconvertethautomac.h \
+	$${PWD}/../src/net/convert/gconvertip.h \
 	$${PWD}/../src/net/delay/gdelay.h \
 	$${PWD}/../src/net/delay/gsyncdelay.h \
 	$${PWD}/../src/net/delay/gtimestampsyncdelay.h \
@@ -225,13 +223,9 @@ HEADERS += \
 	$${PWD}/../src/net/process/gflowmgrdebugger.h \
 	$${PWD}/../src/net/process/gpacketdebugger.h \
 	$${PWD}/../src/net/write/gpcapdevicewrite.h \
-	$${PWD}/../src/net/write/gpcapdevicewriteeth.h \
-	$${PWD}/../src/net/write/gpcapdevicewriteethautomac.h \
-	$${PWD}/../src/net/write/gpcapdevicewriteip.h \
 	$${PWD}/../src/net/write/gpcapfilewrite.h \
-	$${PWD}/../src/net/write/gpcapfilewriteeth.h \
-	$${PWD}/../src/net/write/gpcapfilewriteip.h \
-	$${PWD}/../src/net/write/gpcapwrite.h
+	$${PWD}/../src/net/write/gpcapwrite.h \
+	$${PWD}/../src/net/write/gwrite.h
 
 linux {
 	SOURCES += \

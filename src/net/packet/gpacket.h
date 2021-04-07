@@ -55,7 +55,9 @@ public:
 
 public:
 	GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
-	~GPacket() override { if (bufSelfAlloc_) free(buf_.data_); }
+	GPacket(const GPacket& r);
+	~GPacket() override {}
+	GPacket& operator = (const GPacket& r);
 
 protected:
 	DataLinkType dataLinkType_{Null};
@@ -71,7 +73,6 @@ public:
 	//
 	struct timeval ts_;
 	GBuf buf_;
-	bool bufSelfAlloc_{false};
 
 	//
 	// control
@@ -113,8 +114,6 @@ public:
 	void clear() {
 		ts_.tv_sec = 0;
 		ts_.tv_usec = 0;
-		if (bufSelfAlloc_)
-			free(buf_.data_);
 		buf_.clear();
 		ctrl.block_ = false;
 		ctrl.changed_ = false;
@@ -135,7 +134,6 @@ public:
 	explicit operator QString() const;
 	virtual void parse();
 
-	virtual GPacket* clone(size_t extra = 0);
-	void doClone(GPacket* source, size_t extra);
+	void copyFrom(GPacket* source, GBuf newBuf);
 };
 typedef GPacket *PPacket;

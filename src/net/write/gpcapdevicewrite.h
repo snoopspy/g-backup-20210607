@@ -37,10 +37,10 @@ protected:
 	GInterface* intf_{nullptr};
 
 public:
-	GPacket::Result write(GBuf buf);
+	GPacket::Result write(GBuf buf) override;
 
 public slots:
-	GPacket::Result write(GPacket* packet);
+	GPacket::Result write(GPacket* packet) override;
 
 signals:
 	void written(GPacket* packet);

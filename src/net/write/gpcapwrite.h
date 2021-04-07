@@ -10,21 +10,18 @@
 
 #pragma once
 
-#include "base/gstateobj.h"
-#include "net/packet/gpacket.h"
+#include "net/write/gwrite.h"
 
 // ----------------------------------------------------------------------------
 // GPcapWrite
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapWrite : GStateObj {
+struct G_EXPORT GPcapWrite : GWrite {
+	Q_OBJECT
 
 public:
-	Q_INVOKABLE GPcapWrite(QObject* parent = nullptr) : GStateObj(parent) {}
+	Q_INVOKABLE GPcapWrite(QObject* parent = nullptr) : GWrite(parent) {}
 	~GPcapWrite() override {}
-
-	GPacket::DataLinkType dataLinkType() { return dataLinkType_; }
 
 protected:
 	pcap_t* pcap_{nullptr};
-	GPacket::DataLinkType dataLinkType_{GPacket::Null};
 };

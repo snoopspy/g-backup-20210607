@@ -8,24 +8,27 @@
 //
 // ----------------------------------------------------------------------------
 
-#include "gpcapdevicewrite.h"
+#pragma once
+
+#include "base/gstateobj.h"
+#include "net/packet/gpacket.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDeviceWriteIp
+// GWrite
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapDeviceWriteIp : GPcapDeviceWrite {
-	Q_OBJECT
+struct G_EXPORT GWrite : GStateObj {
 
 public:
-	Q_INVOKABLE GPcapDeviceWriteIp(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
-		dataLinkType_ = GPacket::Ip;
-	}
-	~GPcapDeviceWriteIp() override { close(); }
+	Q_INVOKABLE GWrite(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GWrite() override {}
+
+	GPacket::DataLinkType dataLinkType() { return dataLinkType_; }
 
 protected:
-	bool doOpen() override;
-	bool doClose() override;
+	GPacket::DataLinkType dataLinkType_{GPacket::Null};
 
-public slots:
-	GPacket::Result write(GPacket* packet);
+public:
+	virtual GPacket::Result write(GPacket* packet);
+	virtual GPacket::Result write(GBuf buf);
 };
+

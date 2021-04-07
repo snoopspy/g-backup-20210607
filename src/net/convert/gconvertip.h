@@ -8,24 +8,30 @@
 //
 // ----------------------------------------------------------------------------
 
-#include "gpcapfilewrite.h"
+#include "base/gstateobj.h"
+#include "net/packet/gippacket.h"
 
 // ----------------------------------------------------------------------------
-// GPcapFileWriteIp
+// GConvertIp
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapFileWriteIp : GPcapFileWrite {
+struct G_EXPORT GConvertIp : GStateObj {
 	Q_OBJECT
 
 public:
-	Q_INVOKABLE GPcapFileWriteIp(QObject* parent = nullptr) : GPcapFileWrite(parent) {
-		dataLinkType_ = GPacket::Ip;
-	}
-	~GPcapFileWriteIp() override { close(); }
+	Q_INVOKABLE GConvertIp(QObject* parent = nullptr) : GStateObj(parent) {}
+	~GConvertIp() override {}
 
 protected:
-	bool doOpen() override;
-	bool doClose() override;
+	bool doOpen() override { return true; }
+	bool doClose() override { return true; }
+
+protected:
+	GIpPacket convertedIpPacket_;
+	gbyte convertedIpBuf_[GPacket::MaxBufSize];
 
 public slots:
-	GPacket::Result write(GPacket* packet);
+	void convert(GPacket* packet);
+
+signals:
+	void converted(GPacket* packet);
 };

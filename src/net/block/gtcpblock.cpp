@@ -4,16 +4,7 @@
 // ----------------------------------------------------------------------------
 // GTcpBlock
 // ----------------------------------------------------------------------------
-GTcpBlock::GTcpBlock(QObject* parent) : GPcapDeviceWrite(parent) {
-}
-
-GTcpBlock::~GTcpBlock() {
-	close();
-}
-
 bool GTcpBlock::doOpen() {
-	if (!GPcapDeviceWrite::doOpen()) return false;
-
 	if (forwardRst_ && forwardFin_) {
 		SET_ERR(GErr::NOT_SUPPORTED, "Both forwardRst and forwardFin can not be true");
 		return false;
@@ -26,19 +17,35 @@ bool GTcpBlock::doOpen() {
 	forwardFinMsgStr_ = forwardFinMsg_.join("\r\n");
 	backwardFinMsgStr_ = backwardFinMsg_.join("\r\n");
 
+	if (writer_ == nullptr) {
+		SET_ERR(GErr::OBJECT_IS_NULL, "writer must be specified");
+		return false;
+	}
+
 	return true;
 }
 
 bool GTcpBlock::doClose() {
-	return GPcapDeviceWrite::doClose();
+	return true;
 }
 
 void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction, GTcpBlock::BlockType blockType, uint32_t seq, uint32_t ack, QString msg) {
 	GPacket* blockPacket = nullptr;
-	if (msg != "") {
-		blockPacket = packet->clone(msg.size());
-		packet = blockPacket;
+	size_t copyLen;
+
+	GPacket::DataLinkType dataLinkType = packet->dataLinkType();
+	switch (dataLinkType) {
+		case GPacket::Eth: blockPacket = &blockEthPacket_; copyLen = sizeof(GEthHdr) + sizeof(GIpHdr) + sizeof(GTcpHdr); break;
+		case GPacket::Ip: blockPacket = &blockIpPacket_; copyLen = sizeof(GIpHdr) + sizeof(GTcpHdr); break;
+		case GPacket::Dot11: blockPacket = nullptr; break;
+		case GPacket::Null: blockPacket = nullptr; break;
 	}
+	if (blockPacket == nullptr) {
+		SET_ERR(GErr::NOT_SUPPORTED, QString("Not supported datalink type(%d)").arg(GPacket::dataLinkTypeToInt(dataLinkType)));
+		return;
+	}
+	memcpy(blockBuf_, packet->buf_.data_, copyLen);
+	blockPacket->copyFrom(packet, GBuf(blockBuf_, copyLen));
 
 	GTcpHdr* tcpHdr = packet->tcpHdr_;
 	Q_ASSERT(tcpHdr != nullptr);
@@ -87,19 +94,6 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 	tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
 	ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
 
-	// ETH
-	GPacket::DataLinkType dataLinkType = packet->dataLinkType();
-	if (dataLinkType == GPacket::Eth) {
-		GEthHdr* ethHdr = packet->ethHdr_;
-		Q_ASSERT(ethHdr != nullptr);
-		if (direction == Forward) {
-			ethHdr->smac_ = this->intf_->mac();
-		} else {
-			ethHdr->dmac_ = ethHdr->smac();
-			ethHdr->smac_ = this->intf_->mac();
-		}
-	}
-
 	// buf size
 	size_t bufSize = 0;
 	if (dataLinkType == GPacket::Eth) bufSize += sizeof(GEthHdr);
@@ -108,8 +102,7 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 	packet->buf_.size_ = bufSize;
 
 	// write
-	write(packet);
-	if (blockPacket != nullptr) delete blockPacket;
+	writer_->write(packet);
 	qDebug() << "block packet sent";
 }
 
@@ -147,7 +140,6 @@ void GTcpBlock::block(GPacket* packet) {
 	}
 	if (forwardFin_) {
 		if (!synExist) {
-			// sendBlockPacket(blockPacket, Forward, Fin, seq, ack, forwardFinMsgStr_); // gilgil temp 2020.11.26
 			sendBlockPacket(packet, Forward, Fin, nextSeq, ack, forwardFinMsgStr_);
 			_blocked = true;
 		}

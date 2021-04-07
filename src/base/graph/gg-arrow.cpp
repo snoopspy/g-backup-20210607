@@ -72,19 +72,19 @@ void GGArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*
 
 	while (true) {
 		polyLine = QLineF(myEndText_->sceneBoundingRect().topLeft(), myEndText_->sceneBoundingRect().topRight());
-		intersectType = polyLine.intersect(centerLine, &intersectPoint);
+		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
 		polyLine = QLineF(myEndText_->sceneBoundingRect().topLeft(), myEndText_->sceneBoundingRect().bottomLeft());
-		intersectType = polyLine.intersect(centerLine, &intersectPoint);
+		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
 		polyLine = QLineF(myEndText_->sceneBoundingRect().topRight(), myEndText_->sceneBoundingRect().bottomRight());
-		intersectType = polyLine.intersect(centerLine, &intersectPoint);
+		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
 		polyLine = QLineF(myEndText_->sceneBoundingRect().bottomLeft(), myEndText_->sceneBoundingRect().bottomRight());
-		intersectType = polyLine.intersect(centerLine, &intersectPoint);
+		intersectType = polyLine.intersects(centerLine, &intersectPoint);
 		if (intersectType == QLineF::BoundedIntersection) break;
 
 		break;
