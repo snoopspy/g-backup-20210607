@@ -41,6 +41,11 @@ void GClientHelloSplit::split(GPacket* packet) {
 	FlowItem* flowItem = PFlowItem(tcpFlowMgr_->val_->mem(tcpFlowOffset_));
 	if (flowItem->processed_) return;
 
+	if (tcpHdr->flags() & GTcpHdr::Syn && tcpHdr->flags() &GTcpHdr::Ack) {
+		flowItem->processed_ = true;
+		return;
+	}
+
 	GBuf tcpData = packet->tcpData_;
 	if (!tcpData.valid()) return; // no tcp data
 	flowItem->processed_ = true;
