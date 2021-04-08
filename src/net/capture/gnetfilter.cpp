@@ -2,7 +2,7 @@
 
 #ifdef Q_OS_LINUX
 
-#include <linux/netfilter.h> // for NF_ACCEPT
+#include <linux/netfilter.h>
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
 // ----------------------------------------------------------------------------
@@ -195,9 +195,13 @@ int GNetFilter::_callback(
 	if (ph != nullptr)
 		id = ntohl(ph->packet_id);
 
-	uint32_t verdict = ipPacket->ctrl.block_ ? NF_DROP : uint32_t(netFilter->acceptVerdict_);
-	res = nfq_set_verdict2(qh, id, verdict, netFilter->mark_, 0, nullptr);
+	if (ipPacket->ctrl.block_)
+		res = nfq_set_verdict2(qh, id, NF_DROP, netFilter->mark_, 0, nullptr);
+	else if (ipPacket->ctrl.changed_)
+		res = nfq_set_verdict2(qh, id, netFilter->acceptVerdict_, netFilter->mark_, ipPacket->buf_.size_, ipPacket->buf_.data_);
+	else
+		res = nfq_set_verdict2(qh, id, netFilter->acceptVerdict_, netFilter->mark_, 0, nullptr);
 	return res;
 }
 
-#endif
+#endif // Q_OS_LINUX
