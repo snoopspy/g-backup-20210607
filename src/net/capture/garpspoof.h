@@ -92,7 +92,6 @@ protected:
 	typedef QMap<GFlow::IpFlowKey, Flow> FlowMap;
 	FlowMap flowMap_; // for relay
 
-	GAtm atm_;
 	GMac myMac_{GMac::nullMac()};
 
 	struct InfectThread : GThread {

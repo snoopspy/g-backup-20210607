@@ -31,17 +31,19 @@ GRemoteNetInfo& GRemoteNetInfo::instance(QString ip, quint16 port) {
 	GRemoteNetInfoMapKey key(ip, port);
 	GRemoteNetInfoMap::iterator it = map.find(key);
 	if (it == map.end()) {
-		map.insert({key, new GRemoteNetInfo(ip, port)});
+		map.insert(key, new GRemoteNetInfo(ip, port));
 		it = map.find(key);
 	}
-	return *(it->second);
+	return *it.value();
 }
 
 // ----------------------------------------------------------------------------
 // GRemoteNetInfoMap
 // ----------------------------------------------------------------------------
 GRemoteNetInfoMap::~GRemoteNetInfoMap() {
-	for (GRemoteNetInfoMap::iterator it = begin(); it != end(); it++) {
-		delete it->second;
+	GRemoteNetInfoMap::iterator it = begin();
+	while (it != end()) {
+		delete *it;
+		it = erase(it);
 	}
 };

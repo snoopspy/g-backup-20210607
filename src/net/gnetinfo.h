@@ -27,7 +27,6 @@ protected:
 	GNetInfo();
 	~GNetInfo() {}
 
-
 #if defined(Q_OS_LINUX) && !defined(GILGIL_ANDROID_DEBUG) // Q_OS_LINUX
 	GLocalInterfaceList interfaceList_;
 	GRtmLinux rtm_;
@@ -91,7 +90,7 @@ struct GRemoteNetInfoMapKey {
 // ----------------------------------------------------------------------------
 // GRemoteNetInfoMap
 // ----------------------------------------------------------------------------
-struct GRemoteNetInfoMap : std::map<GRemoteNetInfoMapKey, GRemoteNetInfo*> {
+struct GRemoteNetInfoMap : QMap<GRemoteNetInfoMapKey, GRemoteNetInfo*> {
 	friend struct GRemoteNetInfo;
 
 protected: // singleton

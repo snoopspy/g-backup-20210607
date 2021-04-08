@@ -2,6 +2,20 @@
 #include <QElapsedTimer>
 
 // ----------------------------------------------------------------------------
+// GAtmMgr
+// ----------------------------------------------------------------------------
+struct GAtmMgr : QMap<QString, GAtm*> {
+	GAtmMgr() {}
+	virtual ~GAtmMgr() {
+		QMap<QString, GAtm*>::iterator it = begin();
+		while (it != end()) {
+			delete *it;
+			it = erase(it);
+		}
+	}
+};
+
+// ----------------------------------------------------------------------------
 // GAtm
 // ----------------------------------------------------------------------------
 bool GAtm::allResolved() {
@@ -21,7 +35,7 @@ void GAtm::deleteUnresolved() {
 	}
 }
 
-bool GAtm::waitAll(GPcapDevice* pcapDevice, GDuration timeout) {
+bool GAtm::wait(GPcapDevice* pcapDevice, GDuration timeout) {
 	if (allResolved()) return true;
 
 	if (!pcapDevice->active()) {
@@ -131,19 +145,12 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GInterface* intf) {
 	return true;
 }
 
-GMac GAtm::waitOne(GIp ip, GPcapDevice* device, GDuration timeout) {
-	GAtmMap::iterator it = find(ip);
-	if (it != end()) {
-		GMac mac = it.value();
-		if (!mac.isNull())
-			return mac;
-	} else
-		it = insert(ip, GMac::nullMac());
-
-	if (!waitAll(device, timeout)) {
-		return GMac::nullMac();
-	}
-	return it.value();
+GAtm& GAtm::instance(QString intfName) {
+	static GAtmMgr instances;
+	QMap<QString, GAtm*>::iterator it = instances.find(intfName);
+	if (it == instances.end())
+		it = instances.insert(intfName, new GAtm);
+	return *it.value();
 }
 
 // --------------------------------------------------------------------------

@@ -76,16 +76,15 @@ GMac GConvertEthAutoMac::resolveMacByDip(GPacket* packet) {
 	GIp dip = ipHdr->dip();
 	if (dip == myIp_) return myMac_;
 	GIp adjIp = intf_->getAdjIp(dip);
-	GAtm& atm = GAtm::instance();
+	GAtm& atm = GAtm::instance(intfName_);
 	GAtmMap::iterator it = atm.find(adjIp);
 	if (it == atm.end()) {
-		GAtm atmOne;
-		GMac mac = atmOne.waitOne(adjIp, device_);
-		if (mac.isNull()) {
+		atm.insert(adjIp, GMac::nullMac());
+		bool res = atm.wait(device_);
+		if (!res) {
 			qCritical() << QString("can not resolve mac for ip %1").arg(QString(adjIp));
 			return GMac::nullMac();
 		}
-		it = atm.insert(adjIp, mac);
 		if (!active()) {
 			QString msg = QString("not opened state %1").arg(int(state_));
 			SET_ERR(GErr::NOT_OPENED_STATE, msg); // gilgil temp 2019.06.02

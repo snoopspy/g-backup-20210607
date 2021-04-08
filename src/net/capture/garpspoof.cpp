@@ -17,13 +17,8 @@ bool GArpSpoof::doOpen() {
 	if (!GPcapDevice::doOpen()) return false;
 
 	flowList_.clear();
-	for (GAtm::iterator it = atm_.begin(); it != atm_.end();) {
-		GMac mac = it.value();
-		if (mac == GMac::nullMac())
-			it = atm_.erase(it);
-		else
-			it++;
-	}
+	GAtm& atm = GAtm::instance(intfName_);
+	atm.deleteUnresolved();
 
 	for (GObj* obj: propFlows_) {
 		GArpSpoofFlow* propFlow = PArpSpoofFlow(obj);
@@ -48,17 +43,17 @@ bool GArpSpoof::doOpen() {
 		}
 
 		if (senderIp == targetIp) {
-			QString msg = QString("sender(%1) and target(%2) can not be same").arg(QString(senderIp)).arg(QString(targetIp));
+			QString msg = QString("sender(%1) and target(%2) can not be same").arg(QString(senderIp), QString(targetIp));
 			SET_ERR(GErr::FAIL, msg);
 			return false;
 		}
 
 		Flow flow(senderIp, senderMac, targetIp, targetMac);
 		flowList_.push_back(flow);
-		if (atm_.find(senderIp) == atm_.end())
-			atm_.insert(flow.senderIp_, flow.senderMac_);
-		if (atm_.find(targetIp) == atm_.end())
-			atm_.insert(flow.targetIp_, flow.targetMac_);
+		if (atm.find(senderIp) == atm.end())
+			atm.insert(flow.senderIp_, flow.senderMac_);
+		if (atm.find(targetIp) == atm.end())
+			atm.insert(flow.targetIp_, flow.targetMac_);
 	}
 
 	GSyncPcapDevice device;
@@ -67,10 +62,10 @@ bool GArpSpoof::doOpen() {
 		err = device.err;
 		return false;
 	}
-	bool res = atm_.waitAll(&device);
+	bool res = atm.wait(&device);
 	if (!res) {
 		QString msg = "can not find all host(s) ";
-		for (GAtm::iterator it = atm_.begin(); it != atm_.end(); it++) {
+		for (GAtm::iterator it = atm.begin(); it != atm.end(); it++) {
 			GMac mac = it.value();
 			if (mac.isNull()) {
 				GIp ip = it.key();
@@ -85,9 +80,9 @@ bool GArpSpoof::doOpen() {
 	flowMap_.clear();
 	for(Flow& flow: flowList_) {
 		if (flow.senderMac_.isNull())
-			flow.senderMac_ = atm_.find(flow.senderIp_).value();
+			flow.senderMac_ = atm.find(flow.senderIp_).value();
 		if (flow.targetMac_.isNull())
-			flow.targetMac_ = atm_.find(flow.targetIp_).value();
+			flow.targetMac_ = atm.find(flow.targetIp_).value();
 		GFlow::IpFlowKey ipFlowKey(flow.senderIp_, flow.targetIp_);
 		FlowMap::iterator it = flowMap_.find(ipFlowKey);
 		if (it == flowMap_.end())

@@ -30,19 +30,21 @@ struct GEthArpHdr {
 // ----------------------------------------------------------------------------
 typedef QMap<GIp, GMac> GAtmMap;
 struct G_EXPORT GAtm : GAtmMap {
+	friend struct GAtmMgr;
+
+protected:
+	~GAtm() {} // can not create in other class
+
+public:
 	bool allResolved();
 	void deleteUnresolved();
-	bool waitAll(GPcapDevice* device, GDuration timeout = G::Timeout);
-	GMac waitOne(GIp ip, GPcapDevice* device, GDuration timeout = G::Timeout);
+	bool wait(GPcapDevice* device, GDuration timeout = G::Timeout);
 
 protected:
 	bool sendQueries(GPcapDevice* device, GInterface* intf);
 
 public:
-	static GAtm& instance() {
-		static GAtm atm;
-		return atm;
-	}
+	static GAtm& instance(QString intfName);
 
 protected:
 	// --------------------------------------------------------------------------
