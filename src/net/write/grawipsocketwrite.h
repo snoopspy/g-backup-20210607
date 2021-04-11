@@ -13,14 +13,14 @@
 #include "net/write/gwrite.h"
 
 // ----------------------------------------------------------------------------
-// GRawSocketWrite
+// GRawIpSocketWrite
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRawSocketWrite : GWrite {
+struct G_EXPORT GRawIpSocketWrite : GWrite {
 	Q_OBJECT
 
 public:
-	Q_INVOKABLE GRawSocketWrite(QObject* parent = nullptr) : GWrite(parent) {}
-	~GRawSocketWrite() override { close(); }
+	Q_INVOKABLE GRawIpSocketWrite(QObject* parent = nullptr) : GWrite(parent) {}
+	~GRawIpSocketWrite() override { close(); }
 
 protected:
 	bool doOpen() override;

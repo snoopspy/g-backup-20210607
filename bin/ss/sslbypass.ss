@@ -13,7 +13,7 @@
             "slot": "split(GPacket*)"
         },
         {
-            "receiver": "rawSocketWrite1",
+            "receiver": "rawIpSocketWrite1",
             "sender": "clientHelloSplit1",
             "signal": "splitted(GPacket*)",
             "slot": "write(GPacket*)"
@@ -114,10 +114,10 @@
             "tcpFlowMgr": "tcpFlowMgr1"
         },
         {
-            "_class": "GRawSocketWrite",
-            "_x": 47,
-            "_y": 63,
-            "objectName": "rawSocketWrite1"
+            "_class": "GRawIpSocketWrite",
+            "_x": 41,
+            "_y": 61,
+            "objectName": "rawIpSocketWrite1"
         }
     ]
 }

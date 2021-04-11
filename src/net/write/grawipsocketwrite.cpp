@@ -1,9 +1,9 @@
-#include "grawsocketwrite.h"
+#include "grawipsocketwrite.h"
 
 // ----------------------------------------------------------------------------
-// GRawSocketWrite
+// GRawIpSocketWrite
 // ----------------------------------------------------------------------------
-bool GRawSocketWrite::doOpen() {
+bool GRawIpSocketWrite::doOpen() {
 	sd_ = ::socket (PF_INET, SOCK_RAW, IPPROTO_RAW);
 	if (sd_ == -1) {
 		SET_ERR(GErr::FAIL, "socket return -1");
@@ -23,7 +23,7 @@ bool GRawSocketWrite::doOpen() {
 	return true;
 }
 
-bool GRawSocketWrite::doClose() {
+bool GRawIpSocketWrite::doClose() {
 	if (sd_ != 0) {
 		::close(sd_);
 		sd_ = 0;
@@ -31,13 +31,13 @@ bool GRawSocketWrite::doClose() {
 	return true;
 }
 
-GPacket::Result GRawSocketWrite::write(GBuf buf) {
+GPacket::Result GRawIpSocketWrite::write(GBuf buf) {
 	(void)buf;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GRawSocketWrite::write(GPacket* packet) {
+GPacket::Result GRawIpSocketWrite::write(GPacket* packet) {
 
 	if (packet->ipHdr_ == nullptr) {
 		qWarning() << "packet->ipHdr_ is nullptr";
