@@ -6,7 +6,8 @@ SUBDIRS += \
 	pcap-exam \
 	pcap-findalldevs-test \
 	snoopspy \
-	sscon
+	sscon \
+	ssdemon
 win32 {
 SUBDIRS += \
 	getipforwardtable-test \

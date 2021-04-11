@@ -1,8 +1,0 @@
-makefile
-../../../src/net/demon/gdemon.cpp
-../../../src/net/demon/gdemon.h
-gtrace.cpp
-gtrace.h
-gdemonserver.cpp
-gdemonserver.h
-ssdemon.cpp
