@@ -36,11 +36,11 @@ struct GDemon {
 	virtual ~GDemon() {}
 
 	enum Cmd: int32_t {
-		cmdRunCommand = 0,
-		cmdGetInterfaceList = 1,
-		cmdGetRtm = 2,
-		cmdPcapOpen = 3,
-		cmdPcapClose = 4
+		CmdRunCommand = 0,
+		CmdGetInterfaceList = 1,
+		CmdGetRtm = 2,
+		CmdPcapOpen = 3,
+		CmdPcapClose = 4
 	};
 	typedef Cmd *PCmd;
 

@@ -262,7 +262,7 @@ int32_t GDemon::GetInterfaceListReq::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	len_ = 0;
-	cmd_ = cmdGetInterfaceList;
+	cmd_ = CmdGetInterfaceList;
 	int32_t encLen = Header::encode(buf, size); buf += encLen; size -= encLen;
 
 	if (size < 0) {
@@ -280,7 +280,7 @@ int32_t GDemon::GetInterfaceListReq::decode(pchar buffer, int32_t size) {
 		GTRACE("len_ is not zero %d\n", len_);
 		return -1;
 	}
-	if (cmd_ != cmdGetInterfaceList) {
+	if (cmd_ != CmdGetInterfaceList) {
 		GTRACE("cmd_ is not cmdGetInterfaceList %d\n", cmd_);
 		return -1;
 	}
@@ -295,7 +295,7 @@ int32_t GDemon::GetInterfaceListRep::encode(pchar buffer, int32_t size) {
 	int32_t encLen = interfaceList_.encode(buf, size); buf += encLen; size -= encLen;
 
 	len_ = encLen;
-	cmd_ = cmdGetInterfaceList;
+	cmd_ = CmdGetInterfaceList;
 	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen; // gilgil temp 2021.03.05
 
 	if (size < 0) {
@@ -309,7 +309,7 @@ int32_t GDemon::GetInterfaceListRep::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
-	if (cmd_ != cmdGetInterfaceList) {
+	if (cmd_ != CmdGetInterfaceList) {
 		GTRACE("cmd_ is not cmdGetInterfaceList %d\n", cmd_);
 		return -1;
 	}
@@ -327,7 +327,7 @@ int32_t GDemon::GetRtmReq::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	len_ = 0;
-	cmd_ = cmdGetRtm;
+	cmd_ = CmdGetRtm;
 	int32_t encLen = Header::encode(buf, size);	buf += encLen; size -= encLen;
 
 	if (size < 0) {
@@ -346,7 +346,7 @@ int32_t GDemon::GetRtmReq::decode(pchar buffer, int32_t size) {
 		GTRACE("len_ is not zero %d\n", len_);
 		return -1;
 	}
-	if (cmd_ != cmdGetRtm) {
+	if (cmd_ != CmdGetRtm) {
 		GTRACE("cmd_ is not cmdGetRtm %d\n", cmd_);
 		return -1;
 	}
@@ -361,7 +361,7 @@ int32_t GDemon::GetRtmRep::encode(pchar buffer, int32_t size) {
 	int32_t encLen = rtm_.encode(buf, size); buf += encLen; size -= encLen;
 
 	len_ = encLen;
-	cmd_ = cmdGetRtm;
+	cmd_ = CmdGetRtm;
 	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen; // gilgil temp 2021.03.05
 
 	if (size < 0) {
@@ -375,7 +375,7 @@ int32_t GDemon::GetRtmRep::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
-	if (cmd_ != cmdGetRtm) {
+	if (cmd_ != CmdGetRtm) {
 		GTRACE("cmd_ is not cmdGetRtm %d\n", cmd_);
 		return -1;
 	}
