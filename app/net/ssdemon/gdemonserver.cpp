@@ -117,16 +117,16 @@ void GDemonServer::Session::run() {
 		pchar buf = buffer;
 		int size = header->len_;
 		switch (header->cmd_) {
-			case cmdGetInterfaceList:
+			case CmdGetInterfaceList:
 				active = processGetInterfaceList(buf, size);
 				break;
-			case cmdGetRtm:
+			case CmdGetRtm:
 				active = processGetRtm(buf, size);
 				break;
-			case cmdPcapOpen:
+			case CmdPcapOpen:
 				active = processPcapOpen(buf, size);
 				break;
-			case cmdPcapClose:
+			case CmdPcapClose:
 				active = processPcapClose(buf, size);
 				break;
 			default:
