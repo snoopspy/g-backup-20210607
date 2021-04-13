@@ -76,7 +76,6 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-#pragma pack(push, 1)
 	struct Header {
 		int32_t len_;
 		Cmd cmd_;
@@ -84,8 +83,6 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 	typedef Header* PHeader;
-#pragma pack(pop)
-
 
 	struct GetInterfaceListReq : Header {
 		int32_t encode(pchar buffer, int32_t size);

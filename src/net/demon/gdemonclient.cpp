@@ -2,6 +2,36 @@
 #include <QDebug>
 
 // ----------------------------------------------------------------------------
+// GDemonClientMapKey
+// ----------------------------------------------------------------------------
+struct GDemonClientMapKey {
+	GDemonClientMapKey(std::string ip, uint16_t port) : ip_(ip), port_(port) {}
+	std::string ip_;
+	uint16_t port_;
+	bool operator<(const GDemonClientMapKey &r) const {
+		if (ip_ < r.ip_) return true;
+		if (ip_ > r.ip_) return false;
+		if (port_ < r.port_) return true;
+		if (port_ > r.port_) return false;
+		return false;
+	}
+};
+
+// ----------------------------------------------------------------------------
+// GDemonClientMap
+// ----------------------------------------------------------------------------
+struct GDemonClientMap : std::map<GDemonClientMapKey, GDemonClient*> {
+	friend struct GDemonClient;
+
+protected: // singleton
+	virtual ~GDemonClientMap() {
+		for (GDemonClientMap::iterator it = begin(); it != end(); it++) {
+			delete it->second;
+		}
+	}
+};
+
+// ----------------------------------------------------------------------------
 // GDemonClient
 // ----------------------------------------------------------------------------
 GDemonClient::GDemonClient(std::string ip, uint16_t port) : ip_(ip), port_(port) {
@@ -26,11 +56,12 @@ bool GDemonClient::connect() {
 	}
 
 #ifdef __linux__
-	in_addr_t ip_addr = inet_addr(ip_.data());
+	in_addr_t ip_addr;
 #endif // __linux__
 #ifdef WIN32
-	unsigned ip_addr = inet_addr(ip_.data());
+	unsigned ip_addr;
 #endif // WIN32
+	ip_addr = inet_addr(ip_.data());
 
 	struct sockaddr_in addr;
 	addr.sin_family = AF_INET;
@@ -161,13 +192,3 @@ GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
 	}
 	return it->second;
 }
-
-// ----------------------------------------------------------------------------
-// GDemonClientMap
-// ----------------------------------------------------------------------------
-GDemonClientMap::~GDemonClientMap() {
-	for (GDemonClientMap::iterator it = begin(); it != end(); it++) {
-		delete it->second;
-	}
-};
-
