@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPcapFileWrite : GPcapWrite {
 	Q_OBJECT
-	Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
+	Q_PROPERTY(GPacket::Dlt dlt MEMBER dlt_)
 	Q_PROPERTY(int snapLen MEMBER snapLen_)
 	Q_PROPERTY(QString fileName MEMBER fileName_)
 	Q_PROPERTY(bool resolveFileNameByTime MEMBER resolveFileNameByTime_)
@@ -29,12 +29,12 @@ public:
 
 public:
 	Q_INVOKABLE GPcapFileWrite(QObject* parent = nullptr) : GPcapWrite(parent) {
-		dataLinkType_ = GPacket::Eth;
+		dlt_ = GPacket::Eth;
 	}
 	~GPcapFileWrite() override { close(); }
 
-	void setDataLinkType(GPacket::DataLinkType dataLinkType) {
-		dataLinkType_ = dataLinkType;
+	void setDlt(GPacket::Dlt dlt) {
+		dlt_ = dlt;
 	}
 
 protected:

@@ -26,7 +26,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GPacket : QObject {
 	Q_OBJECT
-	Q_ENUMS(DataLinkType)
+	Q_ENUMS(Dlt)
 
 public:
 	// --------------------------------------------------------------------------
@@ -40,18 +40,17 @@ public:
 	} Result;
 
 	// --------------------------------------------------------------------------
-	// DataLinkType
+	// Dlt(DataLinkType)
 	// --------------------------------------------------------------------------
 	typedef enum {
 		Eth, // DLT_EN10MB (1)
 		Ip, // DLT_RAW (228)
 		Dot11, // DLT_IEEE802_11_RADIO (127)
 		Null, // DLT_NULL (0)
-	} DataLinkType;
-	static QString dataLinkTypeToString(DataLinkType dataLinkType);
-	static int dataLinkTypeToInt(DataLinkType dataLinkType);
-	static DataLinkType intToDataLinkType(int dataLink);
-	// static GBuf getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst); // gilgil temp 2019.05.31
+	} Dlt;
+	static QString dltToString(Dlt dlt);
+	static int dltToInt(Dlt dlt);
+	static Dlt intToDlt(int dataLink);
 
 public:
 	GPacket(QObject* parent = nullptr) : QObject(parent) { clear(); } // parent may be GCapture
@@ -60,13 +59,13 @@ public:
 	GPacket& operator = (const GPacket& r);
 
 protected:
-	DataLinkType dataLinkType_{Null};
+	Dlt dlt_{Null};
 
 public:
 	//
 	// info
 	//
-	DataLinkType dataLinkType() { return dataLinkType_; };
+	Dlt dlt() { return dlt_; };
 
 	//
 	// sniffing

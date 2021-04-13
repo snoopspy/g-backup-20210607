@@ -23,7 +23,7 @@ public:
 
 public:
 	Q_INVOKABLE GConvertEthAutoMac(QObject* parent = nullptr) : GPcapDeviceWrite(parent) {
-		dataLinkType_ = GPacket::Eth;
+		dlt_ = GPacket::Eth;
 	}
 	~GConvertEthAutoMac() override { close(); }
 

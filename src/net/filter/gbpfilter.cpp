@@ -6,7 +6,7 @@
 bool GBpFilter::doOpen() {
 	int res;
 
-	int dataLink = GPacket::dataLinkTypeToInt(dataLinkType_);
+	int dataLink = GPacket::dltToInt(dlt_);
 	pcap_ = pcap_open_dead(dataLink, 1);
 	if (pcap_ == nullptr) {
 		SET_ERR(GErr::FAIL, "error in pcap_open_dead return null");

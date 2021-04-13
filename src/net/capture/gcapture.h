@@ -53,7 +53,7 @@ public:
 	virtual GPacket::Result write(GBuf buf);
 	virtual GPacket::Result relay(GPacket* packet);
 
-	virtual GPacket::DataLinkType dataLinkType() { return GPacket::Null; }
+	virtual GPacket::Dlt dlt() { return GPacket::Null; }
 	virtual PathType pathType() { return OutOfPath; }
 
 protected:

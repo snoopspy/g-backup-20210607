@@ -4,7 +4,7 @@
 // GConvertIp
 // ----------------------------------------------------------------------------
 void GConvertIp::convert(GPacket* packet) {
-	GPacket::DataLinkType dlt = packet->dataLinkType();
+	GPacket::Dlt dlt = packet->dlt();
 	switch (dlt) {
 		case GPacket::Eth: {
 			size_t copyLen = packet->buf_.size_ - sizeof(GEthHdr);
@@ -19,7 +19,7 @@ void GConvertIp::convert(GPacket* packet) {
 		}
 		case GPacket::Dot11:
 		case GPacket::Null: {
-			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dlt));
+			QString msg = QString("not supported data link type(%1)").arg(GPacket::dltToString(dlt));
 			SET_ERR(GErr::NOT_SUPPORTED, msg);
 			return;
 		}

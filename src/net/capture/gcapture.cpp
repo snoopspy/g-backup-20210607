@@ -63,7 +63,7 @@ void GCapture::run() {
 	GNullPacket nullPacket;
 
 	GPacket* packet;
-	switch(dataLinkType()) {
+	switch(dlt()) {
 		case GPacket::Eth: packet = &ethPacket; break;
 		case GPacket::Ip: packet = &ipPacket; break;
 		case GPacket::Dot11: packet = &dot11Packet; break;

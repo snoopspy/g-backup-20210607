@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GEthPacket : GIpPacket {
 	GEthPacket(QObject* parent = nullptr) : GIpPacket(parent) {
-		dataLinkType_ = GPacket::Eth;
+		dlt_ = GPacket::Eth;
 	}
 
 	void parse() override;

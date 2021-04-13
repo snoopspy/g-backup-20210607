@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GDot11Packet : GPacket {
 	GDot11Packet(QObject* parent = nullptr) : GPacket(parent) {
-		dataLinkType_ = GPacket::Dot11;
+		dlt_ = GPacket::Dot11;
 	}
 
 	void parse() override;

@@ -18,11 +18,11 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GBpFilter : GStateObj {
 	Q_OBJECT
-	Q_PROPERTY(GPacket::DataLinkType dataLinkType MEMBER dataLinkType_)
+	Q_PROPERTY(GPacket::Dlt dlt MEMBER dlt_)
 	Q_PROPERTY(QString filter MEMBER filter_)
 
 public:
-	GPacket::DataLinkType dataLinkType_{GPacket::Eth};
+	GPacket::Dlt dlt_{GPacket::Eth};
 	QString filter_;
 
 public:

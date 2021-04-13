@@ -16,7 +16,7 @@
 // GArpHdr
 // ----------------------------------------------------------------------------
 #pragma pack(push, 1)
-struct G_EXPORT GArpHdr final { // libnet_arp_hdr // gilgil temp 2019.05.26
+struct G_EXPORT GArpHdr final {
 	uint16_t hrd_;
 	uint16_t pro_;
 	uint8_t hln_;

@@ -35,7 +35,7 @@ bool GPcapDeviceWrite::doOpen() {
 	}
 
 	int dataLink = pcap_datalink(pcap_);
-	dataLinkType_ = GPacket::intToDataLinkType(dataLink);
+	dlt_ = GPacket::intToDlt(dataLink);
 
 	return true;
 }

@@ -17,7 +17,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GNullPacket : GPacket {
 	GNullPacket(QObject* parent = nullptr) : GPacket(parent) {
-		dataLinkType_ = GPacket::Null;
+		dlt_ = GPacket::Null;
 	}
 
 	void parse() override;

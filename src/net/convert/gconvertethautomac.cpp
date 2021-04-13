@@ -30,8 +30,8 @@ bool GConvertEthAutoMac::doOpen() {
 	if (!GPcapDeviceWrite::doOpen())
 		return false;
 
-	if (dataLinkType_ != GPacket::Eth) {
-		QString msg = QString("data link layer(%1) must be GPacket::Eth").arg(GPacket::dataLinkTypeToString(dataLinkType_));
+	if (dlt_ != GPacket::Eth) {
+		QString msg = QString("data link layer(%1) must be GPacket::Eth").arg(GPacket::dltToString(dlt_));
 		SET_ERR(GErr::FAIL, msg);
 		return false;
 	}
@@ -95,7 +95,7 @@ GMac GConvertEthAutoMac::resolveMacByDip(GPacket* packet) {
 }
 
 void GConvertEthAutoMac::convert(GPacket* packet) {
-	GPacket::DataLinkType dlt = packet->dataLinkType();
+	GPacket::Dlt dlt = packet->dlt();
 	switch (dlt) {
 		case GPacket::Eth: {
 			emit converted(packet);
@@ -115,7 +115,7 @@ void GConvertEthAutoMac::convert(GPacket* packet) {
 		}
 		case GPacket::Dot11:
 		case GPacket::Null: {
-			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dlt));
+			QString msg = QString("not supported data link type(%1)").arg(GPacket::dltToString(dlt));
 			SET_ERR(GErr::NOT_SUPPORTED, msg);
 			return;
 		}

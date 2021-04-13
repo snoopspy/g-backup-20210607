@@ -4,7 +4,7 @@
 // GConverEth
 // ----------------------------------------------------------------------------
 void GConvertEth::convert(GPacket* packet) {
-	GPacket::DataLinkType dlt = packet->dataLinkType();
+	GPacket::Dlt dlt = packet->dlt();
 	switch (dlt) {
 		case GPacket::Eth: {
 			emit converted(packet);
@@ -24,7 +24,7 @@ void GConvertEth::convert(GPacket* packet) {
 		}
 		case GPacket::Dot11:
 		case GPacket::Null: {
-			QString msg = QString("not supported data link type(%1)").arg(GPacket::dataLinkTypeToString(dlt));
+			QString msg = QString("not supported data link type(%1)").arg(GPacket::dltToString(dlt));
 			SET_ERR(GErr::NOT_SUPPORTED, msg);
 			return;
 		}

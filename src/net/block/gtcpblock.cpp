@@ -33,15 +33,15 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 	GPacket* blockPacket = nullptr;
 	size_t copyLen;
 
-	GPacket::DataLinkType dataLinkType = packet->dataLinkType();
-	switch (dataLinkType) {
+	GPacket::Dlt dlt = packet->dlt();
+	switch (dlt) {
 		case GPacket::Eth: blockPacket = &blockEthPacket_; copyLen = sizeof(GEthHdr) + sizeof(GIpHdr) + sizeof(GTcpHdr); break;
 		case GPacket::Ip: blockPacket = &blockIpPacket_; copyLen = sizeof(GIpHdr) + sizeof(GTcpHdr); break;
 		case GPacket::Dot11: blockPacket = nullptr; break;
 		case GPacket::Null: blockPacket = nullptr; break;
 	}
 	if (blockPacket == nullptr) {
-		SET_ERR(GErr::NOT_SUPPORTED, QString("Not supported datalink type(%d)").arg(GPacket::dataLinkTypeToInt(dataLinkType)));
+		SET_ERR(GErr::NOT_SUPPORTED, QString("Not supported dlt(%d)").arg(GPacket::dltToInt(dlt)));
 		return;
 	}
 	memcpy(blockBuf_, packet->buf_.data_, copyLen);
@@ -96,7 +96,7 @@ void GTcpBlock::sendBlockPacket(GPacket* packet, GTcpBlock::Direction direction,
 
 	// buf size
 	size_t bufSize = 0;
-	if (dataLinkType == GPacket::Eth) bufSize += sizeof(GEthHdr);
+	if (dlt == GPacket::Eth) bufSize += sizeof(GEthHdr);
 	bufSize += sizeof(GIpHdr) + sizeof(GTcpHdr);
 	if (blockType == Fin) bufSize += msg.size();
 	packet->buf_.size_ = bufSize;
@@ -110,9 +110,9 @@ void GTcpBlock::block(GPacket* packet) {
 	if (!enabled_) return;
 	if (packet->tcpHdr_ == nullptr) return;
 
-	GPacket::DataLinkType dataLinkType = packet->dataLinkType();
-	if (dataLinkType != GPacket::Eth && dataLinkType != GPacket::Ip) {
-		qWarning() << QString("not supported datalinktype(%1)").arg(GPacket::dataLinkTypeToString(dataLinkType));
+	GPacket::Dlt dlt = packet->dlt();
+	if (dlt != GPacket::Eth && dlt != GPacket::Ip) {
+		qWarning() << QString("not supported dlt(%1)").arg(GPacket::dltToString(dlt));
 		return;
 	}
 

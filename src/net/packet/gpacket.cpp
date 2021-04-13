@@ -3,9 +3,9 @@
 // ----------------------------------------------------------------------------
 // GPacket
 // ----------------------------------------------------------------------------
-QString GPacket::dataLinkTypeToString(DataLinkType dataLinkType) {
+QString GPacket::dltToString(Dlt dlt) {
 	QString res;
-	switch (dataLinkType) {
+	switch (dlt) {
 		case GPacket::Eth:
 			res = "GPacket::Eth";
 			break;
@@ -22,9 +22,9 @@ QString GPacket::dataLinkTypeToString(DataLinkType dataLinkType) {
 	return res;
 }
 
-int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
+int GPacket::dltToInt(Dlt dlt) {
 	int res;
-	switch (dataLinkType) {
+	switch (dlt) {
 		case GPacket::Eth:
 			res = DLT_EN10MB;
 			break;
@@ -42,8 +42,8 @@ int GPacket::dataLinkTypeToInt(DataLinkType dataLinkType) {
 	return res;
 }
 
-GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
-	DataLinkType res;
+GPacket::Dlt GPacket::intToDlt(int dataLink) {
+	Dlt res;
 	switch (dataLink) {
 		case DLT_EN10MB:
 			res = GPacket::Eth;
@@ -64,31 +64,12 @@ GPacket::DataLinkType GPacket::intToDataLinkType(int dataLink) {
 	return res;
 }
 
-// ----- gilgil temp 2019.05.31 -----
-/*
- * GBuf GPacket::getWriteBuf(GBuf buf, DataLinkType src, DataLinkType dst) {
-	GBuf res = buf;
-	if (src != dst) {
-		if (src == GPacket::Eth && dst == GPacket::Ip) {
-			res.data_ += sizeof(GEthHdr);
-			res.size_ -= sizeof(GEthHdr);
-		} else {
-			QString msg = QString("invalid data link type src:%1 dst:%2").arg(int(src)).arg(int(dst));
-			qCritical() << msg;
-			return GBuf(nullptr, 0);
-		}
-	}
-	return res;
-}
-*/
-// ----------------------------------
-
 GPacket::GPacket(const GPacket& r) : QObject(r.parent()) {
 	operator =(r);
 }
 
 GPacket& GPacket::operator = (const GPacket& r) {
-	dataLinkType_ = r.dataLinkType_;
+	dlt_ = r.dlt_;
 	ts_ = r.ts_;
 	buf_ = r.buf_;
 	ctrl.block_ = r.ctrl.block_;

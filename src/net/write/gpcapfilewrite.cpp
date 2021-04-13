@@ -12,7 +12,7 @@ bool GPcapFileWrite::doOpen() {
 		return false;
 	}
 
-	int dataLink = GPacket::dataLinkTypeToInt(dataLinkType_);
+	int dataLink = GPacket::dltToInt(dlt_);
 	pcap_ = pcap_open_dead(dataLink, snapLen_);
 	if (pcap_ == nullptr) {
 		SET_ERR(GErr::RETURN_NULL, QString("pcap_open_dead(%1, %2)) return null").arg(dataLink, snapLen_));

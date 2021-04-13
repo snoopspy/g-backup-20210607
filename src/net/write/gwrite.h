@@ -22,10 +22,10 @@ public:
 	Q_INVOKABLE GWrite(QObject* parent = nullptr) : GStateObj(parent) {}
 	~GWrite() override {}
 
-	GPacket::DataLinkType dataLinkType() { return dataLinkType_; }
+	GPacket::Dlt dlt() { return dlt_; }
 
 protected:
-	GPacket::DataLinkType dataLinkType_{GPacket::Null};
+	GPacket::Dlt dlt_{GPacket::Null};
 
 public:
 	virtual GPacket::Result write(GPacket* packet);

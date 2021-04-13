@@ -58,7 +58,7 @@ public:
 	GPacket::Result write(GBuf buf) override;
 	GPacket::Result relay(GPacket* packet) override;
 
-	GPacket::DataLinkType dataLinkType() override { return GPacket::Ip; }
+	GPacket::Dlt dlt() override { return GPacket::Ip; }
 	PathType pathType() override { return ((flags_ & WINDIVERT_FLAG_SNIFF) == 0) ? InPath : OutOfPath; }
 };
 

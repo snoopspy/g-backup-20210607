@@ -43,9 +43,9 @@ bool GAtm::wait(GPcapDevice* pcapDevice, GDuration timeout) {
 		return false;
 	}
 
-	GPacket::DataLinkType dataLinkType = pcapDevice->dataLinkType();
-	if (dataLinkType != GPacket::Eth) {
-		qWarning() << QString("invalid dataLinkType %1").arg(GPacket::dataLinkTypeToString(dataLinkType));
+	GPacket::Dlt dlt = pcapDevice->dlt();
+	if (dlt != GPacket::Eth) {
+		qWarning() << QString("invalid dlt %1").arg(GPacket::dltToString(dlt));
 		return false;
 	}
 
