@@ -32,11 +32,20 @@ struct GDemonServer: GDemon {
 
 	struct SessionList;
 	struct Session {
-		int sd_{0};
-		pcap_t* pcap_{nullptr};
+		Session();
+		virtual ~Session();
 
+		// socket
+		int sd_{0};
 		static void _run(GDemonServer* owner, int new_sd);
 		void run();
+
+		// pcap operation
+		pcap_t* pcap_{nullptr};
+		bool pcapCaptureActive_{false};
+		std::thread* pcapCaptureThread_{nullptr};
+		static void _pcapCaptureThreadProc(Session* session, int waitTimeout);
+		void pcapCaptureThreadProc(int waitTimeout);
 
 		bool processGetInterfaceList(pchar buf, int32_t size);
 		bool processGetRtm(pchar buf, int32_t size);

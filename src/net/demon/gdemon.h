@@ -21,11 +21,13 @@
 // ----------------------------------------------------------------------------
 // GDemon
 // ----------------------------------------------------------------------------
+#pragma pack(push, 1)
 struct GDemon {
 	typedef char *pchar;
 	typedef void *pvoid;
 	typedef int32_t *pint32_t;
 	typedef uint32_t *puint32_t;
+	typedef bool *pbool;
 
 	static const uint16_t DefaultPort = 8908;
 	static const int MaxBufferSize = 8192;
@@ -107,16 +109,22 @@ struct GDemon {
 	};
 
 	struct PcapOpenReq : Header {
-		std::string dev_;
+		std::string filter_;
+		std::string intfName_;
 		int32_t snaplen_;
-		int32_t promisc_;
-		int32_t timeout_;
-		char errBuf_[PCAP_ERRBUF_SIZE];
+		int32_t flags_;
+		int32_t readTimeout_;
+		int32_t waitTimeout_;
+		bool captureThread_;
 		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct PcapOpenRes {
-		pcap* pcap_;
+	struct PcapOpenRep : Header {
+		bool result_{false};
+		int32_t dataLink_{0};
+		std::string errBuf_{"no error"};
+		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
@@ -130,8 +138,8 @@ struct GDemon {
 		struct pcap_pkthdr pktHdr_;
 		uint32_t size_;
 		pchar* data;
-
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 };
+#pragma pack(pop)

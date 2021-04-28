@@ -296,7 +296,7 @@ int32_t GDemon::GetInterfaceListRep::encode(pchar buffer, int32_t size) {
 
 	len_ = encLen;
 	cmd_ = CmdGetInterfaceList;
-	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen; // gilgil temp 2021.03.05
+	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen;
 
 	if (size < 0) {
 		GTRACE("size is %d\n", size);
@@ -362,7 +362,7 @@ int32_t GDemon::GetRtmRep::encode(pchar buffer, int32_t size) {
 
 	len_ = encLen;
 	cmd_ = CmdGetRtm;
-	Header::encode(buffer, sizeof(Header)); // buf += encLen; size -= encLen; // gilgil temp 2021.03.05
+	Header::encode(buffer, sizeof(Header));
 
 	if (size < 0) {
 		GTRACE(" size is %d\n", size);
@@ -384,6 +384,139 @@ int32_t GDemon::GetRtmRep::decode(pchar buffer, int32_t size) {
 
 	if (size < 0) {
 		GTRACE(" size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapOpenReq::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// filter_
+	int32_t len = filter_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, filter_.data(), len); buf += len; size -= len;
+
+	// intfName_
+	len = intfName_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, intfName_.data(), len); buf += len; size -= len;
+
+	// snaplen_
+	*pint32_t(buf) = snaplen_; buf += sizeof(snaplen_); size -= sizeof(snaplen_);
+
+	// flags_
+	*pint32_t(buf) = flags_; buf += sizeof(flags_); size -= sizeof(flags_);
+
+	// readTimeout_
+	*pint32_t(buf) = readTimeout_; buf += sizeof(readTimeout_); size -= sizeof(readTimeout_);
+
+	// waitTimeout_
+	*pint32_t(buf) = waitTimeout_; buf += sizeof(waitTimeout_); size -= sizeof(waitTimeout_);
+
+	// captureThread_
+	*pbool(buf) = captureThread_; buf += sizeof(captureThread_); size -= sizeof(captureThread_);
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdPcapOpen;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapOpenReq::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdPcapOpen) {
+		GTRACE("cmd_ is not CmdPcapOpen %d\n", cmd_);
+		return -1;
+	}
+
+	// filter_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	filter_ = std::string(buf, len); buf += len; size -= len;
+
+	// intfName_
+	len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	intfName_ = std::string(buf, len); buf += len; size -= len;
+
+	// snaplen_
+	snaplen_ = *pint32_t(buf); buf += sizeof(snaplen_); size -= sizeof(snaplen_);
+
+	// flags_
+	flags_ = *pint32_t(buf); buf += sizeof(flags_); size -= sizeof(flags_);
+
+	// readTimeout_
+	readTimeout_ = *pint32_t(buf); buf += sizeof(readTimeout_); size -= sizeof(readTimeout_);
+
+	// waitTimeout_
+	waitTimeout_ = *pint32_t(buf); buf += sizeof(waitTimeout_); size -= sizeof(waitTimeout_);
+
+	// captureThread_
+	captureThread_ = *pbool(buf); buf += sizeof(captureThread_); size -= sizeof(captureThread_);
+
+	if (size < 0) {
+		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapOpenRep::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// result_
+	*pbool(buf) = result_; buf += sizeof(result_); size -= sizeof(result_);
+
+	// dataLink_
+	*pint32_t(buf) = dataLink_; buf += sizeof(dataLink_); size -= sizeof(dataLink_);
+
+	// errBuf_
+	int32_t len = errBuf_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, errBuf_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdPcapOpen;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapOpenRep::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdPcapOpen) {
+		GTRACE("cmd_ is not CmdPcapOpen %d\n", cmd_);
+		return -1;
+	}
+
+	// result_
+	result_ = *pbool(buf); buf += sizeof(result_); size -= sizeof(result_);
+
+	// dataLink_
+	dataLink_ = *pint32_t(buf); buf += sizeof(dataLink_); size -= sizeof(dataLink_);
+
+	// intfName_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	errBuf_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;

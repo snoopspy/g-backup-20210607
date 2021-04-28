@@ -82,6 +82,28 @@ void GDemonServer::wait() {
 	}
 }
 
+GDemonServer::Session::Session() {
+}
+
+GDemonServer::Session::~Session() {
+	if (sd_ != 0) {
+		::close(sd_);
+		sd_ = 0;
+	}
+
+	if (pcapCaptureThread_ != nullptr) {
+		pcapCaptureActive_ = false;
+		pcapCaptureThread_->join();
+		delete pcapCaptureThread_;
+		pcapCaptureThread_ = nullptr;
+	}
+
+	if (pcap_ != nullptr) {
+		pcap_close(pcap_);
+		pcap_ = nullptr;
+	}
+}
+
 void GDemonServer::Session::_run(GDemonServer* owner, int new_sd) {
 	Session* session = new Session;
 	session->sd_ = new_sd;
@@ -95,6 +117,8 @@ void GDemonServer::Session::_run(GDemonServer* owner, int new_sd) {
 	owner->sessions_.lock();
 	owner->sessions_.remove(session);
 	owner->sessions_.unlock();
+
+	delete session;
 }
 
 void GDemonServer::Session::run() {
@@ -115,7 +139,7 @@ void GDemonServer::Session::run() {
 			break;
 
 		pchar buf = buffer;
-		int size = header->len_;
+		int size = header->len_ + sizeof(Header);
 		switch (header->cmd_) {
 			case CmdGetInterfaceList:
 				active = processGetInterfaceList(buf, size);
@@ -136,11 +160,18 @@ void GDemonServer::Session::run() {
 		}
 	}
 
-	::close(sd_);
-	if (pcap_ != nullptr)
-		pcap_close(pcap_);
-
 	GTRACE("end");
+}
+
+void GDemonServer::Session::_pcapCaptureThreadProc(Session* session, int waitTimeout) {
+	session->pcapCaptureThreadProc(waitTimeout);
+}
+
+void GDemonServer::Session::pcapCaptureThreadProc(int waitTimeout) {
+	while (pcapCaptureActive_) {
+		GTRACE("%d", waitTimeout);
+		sleep(1); // gilgil temp 2021.04.23
+	}
 }
 
 #include <net/if.h> // for ifreq
@@ -275,9 +306,57 @@ bool GDemonServer::Session::processGetRtm(pchar, int32_t) {
 }
 
 bool GDemonServer::Session::processPcapOpen(pchar buf, int32_t size) {
-	GTRACE("processPcapOpen");
-	(void)buf; (void)size;
-	return false;
+	GTRACE("");
+
+	PcapOpenReq req;
+	int32_t decLen = req.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return =1");
+		return false;
+	}
+
+	PcapOpenRep rep;
+	if (pcap_ != nullptr) {
+		rep.errBuf_ = "pcap is already opened";
+	} else {
+		char errBuf[PCAP_ERRBUF_SIZE];
+		pcap_ = pcap_open_live(req.intfName_.data(), req.snaplen_, req.flags_, req.readTimeout_, errBuf);
+		if (pcap_ == nullptr) {
+			rep.errBuf_ = errBuf;
+			GTRACE("pcap_open_live return null %s", rep.errBuf_.data());
+		} else {
+			rep.result_ = true;
+			if (req.filter_ != "") {
+				u_int uNetMask;
+				bpf_program code;
+
+				uNetMask = 0xFFFFFFFF;
+				if (pcap_compile(pcap_, &code, req.filter_.data(),  1, uNetMask) < 0) {
+					rep.result_ = false;
+					rep.errBuf_ = pcap_geterr(pcap_);
+					GTRACE("error in pcap_compile(%s)", rep.errBuf_.data()) ;
+				} else
+				if (pcap_setfilter(pcap_, &code) < 0) {
+					rep.result_ = false;
+					rep.errBuf_ = pcap_geterr(pcap_);
+					GTRACE("error in pcap_setfilter(%s)", rep.errBuf_.data()) ;
+				}
+			}
+			rep.dataLink_ = pcap_datalink(pcap_);
+			if (req.captureThread_) {
+				pcapCaptureActive_ = true;
+				pcapCaptureThread_ = new std::thread(_pcapCaptureThreadProc, this, req.waitTimeout_);
+			}
+		}
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+	}
+	return true;
 }
 
 bool GDemonServer::Session::processPcapClose(pchar buf, int32_t size) {

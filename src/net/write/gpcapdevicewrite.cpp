@@ -16,7 +16,7 @@ GPcapDeviceWrite::~GPcapDeviceWrite() {
 
 bool GPcapDeviceWrite::doOpen() {
 	if (intfName_ == "") {
-		SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
+		SET_ERR(GErr::INTERFACE_NAME_NOT_SPECIFIED, "intfName is not specified");
 		return false;
 	}
 

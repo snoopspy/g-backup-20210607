@@ -10,14 +10,15 @@
 
 #pragma once
 
-#include "gpcap.h"
+#include "gremotecapture.h"
 #include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
-// GPcapDevice
+// GRemotePcapDevice
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapDevice : GPcap {
+struct G_EXPORT GRemotePcapDevice : GRemoteCapture {
 	Q_OBJECT
+	Q_PROPERTY(QString filter MEMBER filter_)
 	Q_PROPERTY(QString intfName MEMBER intfName_)
 	Q_PROPERTY(int snapLen MEMBER snapLen_)
 	Q_PROPERTY(int flags MEMBER flags_)
@@ -25,6 +26,7 @@ struct G_EXPORT GPcapDevice : GPcap {
 	Q_PROPERTY(int waitTimeout MEMBER waitTimeout_)
 
 public:
+	QString filter_{""};
 	QString intfName_{""};
 	int snapLen_{65536}; // 65536 bytes
 	int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
@@ -32,8 +34,8 @@ public:
 	int waitTimeout_{1}; // 1 msec
 
 public:
-	Q_INVOKABLE GPcapDevice(QObject* parent = nullptr);
-	~GPcapDevice() override;
+	Q_INVOKABLE GRemotePcapDevice(QObject* parent = nullptr);
+	~GRemotePcapDevice() override;
 
 protected:
 	bool doOpen() override;
@@ -41,12 +43,16 @@ protected:
 
 public:
 	GPacket::Result read(GPacket* packet) override;
+	GPacket::Result write(GPacket* packet) override;
+	GPacket::Result write(GBuf buf) override;
+	GPacket::Result relay(GPacket* packet) override;
+
+	GPacket::Dlt dlt() override { return dlt_; }
+	PathType pathType() override { return OutOfPath; }
 
 protected:
 	GInterface* intf_{nullptr};
-
-#ifdef QT_GUI_LIB
-public:
-	GPropItem* propCreateItem(GPropItemParam* param) override;
-#endif // QT_GUI_LIB
+	GDemonClient* demonClient_{nullptr};
+	int sock_{0};
+	GPacket::Dlt dlt_{GPacket::Null};
 };

@@ -78,8 +78,8 @@ GRtmEntry* GRtm::getBestEntry(GIp ip) {
 
 GRemoteRtm::GRemoteRtm(QString ip, quint16 port) {
 	GDemonClient* client = GDemonClient::instance(ip.toStdString(), port);
-	GDemon::Rtm rtm= client->getRtm();
-	for (GDemon::RtmEntry& entry: rtm) {
+	GDemon::GetRtmRep rep = client->getRtm();
+	for (GDemon::RtmEntry& entry: rep.rtm_) {
 		GRtmEntry rtmEntry;
 		rtmEntry.dst_ = entry.dst_;
 		rtmEntry.mask_ = entry.mask_;

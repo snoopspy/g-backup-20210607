@@ -155,8 +155,8 @@ GLocalInterfaceList::GLocalInterfaceList() {
 
 GRemoteInterfaceList::GRemoteInterfaceList(QString ip, quint16 port) {
 	GDemonClient* client = GDemonClient::instance(ip.toStdString(), port);
-	GDemon::InterfaceList interfaceList = client->getInterfaceList();
-	for (GDemon::Interface& dIntf: interfaceList) {
+	GDemon::GetInterfaceListRep rep = client->getInterfaceList();
+	for (GDemon::Interface& dIntf: rep.interfaceList_) {
 		GInterface intf;
 		intf.index_ = dIntf.index_;
 		intf.name_ = dIntf.name_.data();

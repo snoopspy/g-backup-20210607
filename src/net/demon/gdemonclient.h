@@ -19,17 +19,19 @@ struct GDemonClient : GDemon {
 	GDemonClient(std::string ip, uint16_t port);
 	~GDemonClient() override;
 
+	std::string error_;
+
 	std::string ip_;
 	uint16_t port_;
 
-	std::string error_;
 	int sd_{0};
 
 	bool connect();
 	bool disconnect();
 
-	InterfaceList getInterfaceList();
-	Rtm getRtm();
+	GetInterfaceListRep getInterfaceList();
+	GetRtmRep getRtm();
+	PcapOpenRep pcapOpen(std::string filter, std::string intfName, int32_t snapLen, int32_t flags, int32_t readTimeout, int32_t waitTimeout, bool captureThread);
 
 	static GDemonClient* instance(std::string ip, uint16_t port);
 };

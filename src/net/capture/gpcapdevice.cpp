@@ -1,5 +1,4 @@
 #include "gpcapdevice.h"
-#include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
@@ -18,14 +17,7 @@ bool GPcapDevice::doOpen() {
 	if (!enabled_) return true;
 
 	if (intfName_ == "") {
-		SET_ERR(GErr::DEVICE_NOT_SPECIFIED, "device is not specified");
-		return false;
-	}
-
-	intf_ = GNetInfo::instance().interfaceList().findByName(intfName_);
-	if (intf_ == nullptr) {
-		QString msg = QString("can not find interface for %1").arg(intfName_);
-		SET_ERR(GErr::VALUE_IS_NULL, msg);
+		SET_ERR(GErr::INTERFACE_NAME_NOT_SPECIFIED, "intfName is not specified");
 		return false;
 	}
 
@@ -33,6 +25,13 @@ bool GPcapDevice::doOpen() {
 	pcap_ = pcap_open_live(qPrintable(intfName_), snapLen_, flags_, readTimeout_, errBuf);
 	if (pcap_ == nullptr) {
 		SET_ERR(GErr::RETURN_NULL, errBuf);
+		return false;
+	}
+
+	intf_ = GNetInfo::instance().interfaceList().findByName(intfName_);
+	if (intf_ == nullptr) {
+		QString msg = QString("can not find interface for %1").arg(intfName_);
+		SET_ERR(GErr::VALUE_IS_NULL, msg);
 		return false;
 	}
 

@@ -56,7 +56,8 @@ SOURCES += \
 	$${PWD}/../src/net/capture/gpcap.cpp \
 	$${PWD}/../src/net/capture/gpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gpcapfile.cpp \
-#	$${PWD}/../src/net/capture/gremotedevice.cpp \
+	$${PWD}/../src/net/capture/gremotecapture.cpp \
+	$${PWD}/../src/net/capture/gremotepcapdevice.cpp \
 	$${PWD}/../src/net/capture/gsyncnetfilter.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapfile.cpp \
@@ -172,7 +173,8 @@ HEADERS += \
 	$${PWD}/../src/net/capture/gpcap.h \
 	$${PWD}/../src/net/capture/gpcapdevice.h \
 	$${PWD}/../src/net/capture/gpcapfile.h \
-#	$${PWD}/../src/net/capture/gremotedevice.h \
+	$${PWD}/../src/net/capture/gremotecapture.h \
+	$${PWD}/../src/net/capture/gremotepcapdevice.h \
 	$${PWD}/../src/net/capture/gsyncnetfilter.h \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.h \
 	$${PWD}/../src/net/capture/gsyncpcapfile.h \

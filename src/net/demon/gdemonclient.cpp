@@ -50,6 +50,7 @@ bool GDemonClient::connect() {
 
 	sd_ = socket(AF_INET, SOCK_STREAM, 0);
 	if (sd_ == -1) {
+		error_ = strerror(errno);
 		qWarning() << strerror(errno);
 		sd_ = 0;
 		return false;
@@ -83,7 +84,8 @@ bool GDemonClient::connect() {
 	if (!connected) {
 		::close(sd_);
 		sd_ = 0;
-		qCritical() << QString("can not connect to ssdemon %1 %2").arg(ip_.data()).arg(port_);
+		error_ = qPrintable(QString("can not connect to ssdemon %1 %2").arg(ip_.data()).arg(port_));
+		qCritical() << error_.data();
 		return false;
 	}
 	return true;
@@ -98,88 +100,153 @@ bool GDemonClient::disconnect() {
 	return true;
 }
 
-GDemon::InterfaceList GDemonClient::getInterfaceList() {
-	InterfaceList interfaceList;
+GDemon::GetInterfaceListRep GDemonClient::getInterfaceList() {
+	GetInterfaceListRep rep;
 
 	if (sd_ == 0) {
-		qWarning() << "sd_ is 0";
-		return interfaceList;
+		error_ = "not connected state";
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	char buffer[MaxBufferSize];
 	GetInterfaceListReq req;
+
 	int32_t encLen = req.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
-		qWarning() << "req.encode return -1";
-		return interfaceList;
+		error_ = "req.encode return -1";
+		qWarning() << error_.data();
+		return rep;
 	}
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
-		qWarning() << "send return " << sendLen;
-		return interfaceList;
+		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	Header* header = GDemon::PHeader(buffer);
 	if (!recvAll(sd_, header, sizeof(Header))) {
-		qWarning() << "recvAll(header) return false";
-		return interfaceList;
+		error_ = "recvAll(header) return false";
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
-		qWarning() << "recvAll(body) return false";
-		return interfaceList;
+		error_ = "recvAll(body) return false";
+		qWarning() << error_.data();
+		return rep;
 	}
 
-	GetInterfaceListRep rep;
 	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
 	if (decLen == -1) {
-		qWarning() << "rep.decode return -1";
-		return interfaceList;
+		error_ = "rep.decode return -1";
+		qWarning() << error_.data();
 	}
 
-	return rep.interfaceList_;
+	return rep;
 }
 
-GDemon::Rtm GDemonClient::getRtm() {
-	Rtm rtm;
+GDemon::GetRtmRep GDemonClient::getRtm() {
+	GetRtmRep rep;
 
 	if (sd_ == 0) {
-		qWarning() << "sd_ is 0";
-		return rtm;
+		error_ = "not connected state";
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	char buffer[MaxBufferSize];
 	GetRtmReq req;
+
 	int32_t encLen = req.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
-		qWarning() << "req.encode return -1";
-		return rtm;
+		error_ = "req.encode return -1";
+		qWarning() << error_.data();
+		return rep;
 	}
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
-		qWarning() << "send return " << sendLen;
-		return rtm;
+		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	Header* header = GDemon::PHeader(buffer);
 	if (!recvAll(sd_, header, sizeof(Header))) {
-		qWarning() << "recvAll(header) return false";
-		return rtm;
+		error_ = "recvAll(header) return false";
+		qWarning() << error_.data();
+		return rep;
 	}
 
 	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
-		qWarning() << "recvAll(body) return false";
-		return rtm;
+		error_ = "recvAll(body) return false";
+		qWarning() << error_.data();
+		return rep;
 	}
 
-	GetRtmRep rep;
+	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
+	if (decLen == -1) {
+		error_ = "rep.decode return -1";
+		qWarning() << error_.data();
+	}
+
+	return rep;
+}
+
+GDemon::PcapOpenRep GDemonClient::pcapOpen(std::string filter, std::string intfName, int32_t snapLen, int32_t flags, int32_t readTimeout, int32_t waitTimeout, bool captureThread) {
+	GDemon::PcapOpenRep rep;
+
+	if (sd_ == 0) {
+		error_ = "not connected state";
+		qWarning() << error_.data();
+		return rep;
+	}
+
+	char buffer[MaxBufferSize];
+	GDemon::PcapOpenReq req;
+
+	req.filter_ = filter;
+	req.intfName_ = intfName;
+	req.snaplen_ = snapLen;
+	req.flags_ = flags;
+	req.readTimeout_ = readTimeout;
+	req.waitTimeout_ = waitTimeout;
+	req.captureThread_ = captureThread;
+	int32_t encLen = req.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		error_ = "req.encode return -1";
+		return rep;
+	}
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		error_ = qPrintable(QString("send return %1").arg(sendLen));
+		qWarning() << error_.data();
+		return rep;
+	}
+
+	Header* header = GDemon::PHeader(buffer);
+	if (!recvAll(sd_, header, sizeof(Header))) {
+		error_ = "recvAll(header) return false";
+		qWarning() << error_.data();
+		return rep;
+	}
+
+	if (!recvAll(sd_, buffer + sizeof(Header), header->len_)) {
+		error_ = "recvAll(body) return false";
+		qWarning() << error_.data();
+		return rep;
+	}
+
 	int32_t decLen = rep.decode(buffer, sizeof(Header) + header->len_);
 	if (decLen == -1) {
 		qWarning() << "rep.decode return -1";
-		return rtm;
 	}
 
-	return rep.rtm_;
+	if (!rep.result_)
+		error_ = rep.errBuf_;
+
+	return rep;
 }
 
 GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
