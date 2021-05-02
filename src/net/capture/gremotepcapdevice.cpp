@@ -34,11 +34,13 @@ bool GRemotePcapDevice::doOpen() {
 	}
 
 	dlt_ = GPacket::intToDlt(rep.dataLink_);
-	return true;
+
+	return captureThreadOpen();
 }
 
 bool GRemotePcapDevice::doClose() {
 	if (demonClient_ != nullptr) {
+		demonClient_->pcapClose();
 		delete demonClient_;
 		demonClient_ = nullptr;
 	}
@@ -46,17 +48,32 @@ bool GRemotePcapDevice::doClose() {
 }
 
 GPacket::Result GRemotePcapDevice::read(GPacket* packet) {
-	return GPacket::Fail; // gilgil temp 2021.04.22
+	packet->clear();
+
+	GDemon::PcapRead read = demonClient_->pcapRead();
+	if (read.data_ == nullptr) {
+		SET_ERR(GErr::READ_FAILED, "read fail");
+		return GPacket::Fail;
+	}
+
+	packet->ts_ = read.pktHdr_.ts;
+	packet->buf_.data_ = read.data_;
+	packet->buf_.size_ = read.pktHdr_.caplen;
+	if (autoParse_) packet->parse();
+	return GPacket::Ok;
 }
 
 GPacket::Result GRemotePcapDevice::write(GPacket* packet) {
+	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }
 
 GPacket::Result GRemotePcapDevice::write(GBuf buf) {
+	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }
 
 GPacket::Result GRemotePcapDevice::relay(GPacket* packet) {
+	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }

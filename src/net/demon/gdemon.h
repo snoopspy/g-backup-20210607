@@ -24,6 +24,7 @@
 #pragma pack(push, 1)
 struct GDemon {
 	typedef char *pchar;
+	typedef unsigned char *puchar;
 	typedef void *pvoid;
 	typedef int32_t *pint32_t;
 	typedef uint32_t *puint32_t;
@@ -42,7 +43,8 @@ struct GDemon {
 		CmdGetInterfaceList = 1,
 		CmdGetRtm = 2,
 		CmdPcapOpen = 3,
-		CmdPcapClose = 4
+		CmdPcapClose = 4,
+		CmdPcapRead = 5
 	};
 	typedef Cmd *PCmd;
 
@@ -128,16 +130,14 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct PcapCloseReq {
-		pcap* pcap_;
-		int32_t encode(pchar buffer, uint32_t size);
+	struct PcapCloseReq : Header {
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct PcapRead {
-		uint64_t pcap_;
-		struct pcap_pkthdr pktHdr_;
-		uint32_t size_;
-		pchar* data;
+	struct PcapRead : Header {
+		pcap_pkthdr pktHdr_;
+		unsigned char* data_{nullptr};
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};

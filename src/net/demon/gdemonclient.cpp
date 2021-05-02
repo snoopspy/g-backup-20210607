@@ -118,6 +118,7 @@ GDemon::GetInterfaceListRep GDemonClient::getInterfaceList() {
 		qWarning() << error_.data();
 		return rep;
 	}
+
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		error_ = qPrintable(QString("send return %d").arg(sendLen));
@@ -165,6 +166,7 @@ GDemon::GetRtmRep GDemonClient::getRtm() {
 		qWarning() << error_.data();
 		return rep;
 	}
+
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		error_ = qPrintable(QString("send return %d").arg(sendLen));
@@ -218,6 +220,7 @@ GDemon::PcapOpenRep GDemonClient::pcapOpen(std::string filter, std::string intfN
 		error_ = "req.encode return -1";
 		return rep;
 	}
+
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
 		error_ = qPrintable(QString("send return %1").arg(sendLen));
@@ -247,6 +250,51 @@ GDemon::PcapOpenRep GDemonClient::pcapOpen(std::string filter, std::string intfN
 		error_ = rep.errBuf_;
 
 	return rep;
+}
+
+void GDemonClient::pcapClose() {
+	char buffer[MaxBufferSize];
+	PcapCloseReq req;
+
+	int32_t encLen = req.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		error_ = "req.encode return -1";
+		qWarning() << error_.data();
+		return;
+	}
+
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		qWarning() << error_.data();
+		return;
+	}
+}
+
+GDemon::PcapRead GDemonClient::pcapRead() {
+	GDemon::PcapRead read;
+
+	Header* header = GDemon::PHeader(readBuffer_);
+	if (!recvAll(sd_, header, sizeof(Header))) {
+		error_ = "recvAll(header) return false";
+		qWarning() << error_.data();
+		return read;
+	}
+
+	if (!recvAll(sd_, readBuffer_ + sizeof(Header), header->len_)) {
+		error_ = "recvAll(body) return false";
+		qWarning() << error_.data();
+		return read;
+	}
+
+	int32_t decLen = read.decode(readBuffer_, sizeof(Header) + header->len_);
+	if (decLen == -1) {
+		error_ = "rep.decode return -1";
+		qWarning() << error_.data();
+		read.data_ = nullptr;
+	}
+
+	return read;
 }
 
 GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {

@@ -23,34 +23,41 @@ struct GDemonServer: GDemon {
 	GDemonServer();
 	~GDemonServer() override;
 
-	int accept_{0};
-
 	bool start(uint16_t port = DefaultPort);
 	void exec();
 	void stop();
 	void wait();
 
-	struct SessionList;
+	int accept_{0};
 	struct Session {
 		Session();
 		virtual ~Session();
 
-		// socket
-		int sd_{0};
-		static void _run(GDemonServer* owner, int new_sd);
-		void run();
+		// Socket
+		struct Socket {
+			Session* owner_;
+			int sd_{0};
+			static void _run(GDemonServer* owner, int new_sd);
+			void run();
+
+			bool processGetInterfaceList(pchar buf, int32_t size);
+			bool processGetRtm(pchar buf, int32_t size);
+			bool processPcapOpen(pchar buf, int32_t size);
+			bool processPcapClose(pchar buf, int32_t size);
+		} socket;
 
 		// pcap operation
-		pcap_t* pcap_{nullptr};
-		bool pcapCaptureActive_{false};
-		std::thread* pcapCaptureThread_{nullptr};
-		static void _pcapCaptureThreadProc(Session* session, int waitTimeout);
-		void pcapCaptureThreadProc(int waitTimeout);
+		struct Pcap {
+			Session* owner_;
+			pcap_t* pcap_{nullptr};
+			bool active_{false};
+			std::thread* thread_{nullptr};
 
-		bool processGetInterfaceList(pchar buf, int32_t size);
-		bool processGetRtm(pchar buf, int32_t size);
-		bool processPcapOpen(pchar buf, int32_t size);
-		bool processPcapClose(pchar buf, int32_t size);
+			PcapOpenRep open(PcapOpenReq req);
+			void close();
+			static void _run(Session* session, int waitTimeout);
+			void run(int waitTimeout);
+		} pcap;
 	};
 
 	struct SessionList : std::list<Session*> {
