@@ -11,7 +11,7 @@
 #pragma once
 
 #include "gpcapwrite.h"
-#include "net/ginterface.h"
+#include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDeviceWrite

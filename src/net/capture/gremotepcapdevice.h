@@ -10,13 +10,13 @@
 
 #pragma once
 
-#include "gremotecapture.h"
+#include "gremote.h"
 #include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRemotePcapDevice : GRemoteCapture {
+struct G_EXPORT GRemotePcapDevice : GRemote {
 	Q_OBJECT
 	Q_PROPERTY(QString filter MEMBER filter_)
 	Q_PROPERTY(QString intfName MEMBER intfName_)

@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GRemoteCapture(parent) {
+GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GRemote(parent) {
 }
 
 GRemotePcapDevice::~GRemotePcapDevice() {
