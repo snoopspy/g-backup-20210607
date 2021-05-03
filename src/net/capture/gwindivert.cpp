@@ -129,7 +129,9 @@ bool GWinDivert::doOpen() {
 		return false;
 	}
 
-	return captureThreadOpen();
+	captureThreadOpen();
+
+	return true;
 }
 
 bool GWinDivert::doClose() {

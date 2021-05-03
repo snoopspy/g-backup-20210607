@@ -585,7 +585,7 @@ int32_t GDemon::PcapRead::decode(pchar buffer, int32_t size) {
 	pktHdr_ = *reinterpret_cast<pcap_pkthdr*>(buf); buf += sizeof(pcap_pkthdr); size -= sizeof(pcap_pkthdr);
 
 	// data_
-	data_ = puchar(buf); buf += len_ - sizeof(pktHdr_); size -= len_ - sizeof(pktHdr_);
+	data_ = puchar(buf); buf += pktHdr_.caplen; size -= pktHdr_.caplen;
 
 	if (size < 0) {
 		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);

@@ -7,7 +7,7 @@ GCapture::~GCapture() {
 	close();
 }
 
-bool GCapture::captureThreadOpen() {
+void GCapture::captureThreadOpen() {
 	if (autoRead_) {
 		// ----- by gilgil 2009.08.31 -----
 		//
@@ -19,15 +19,13 @@ bool GCapture::captureThreadOpen() {
 		thread_.start();
 		// --------------------------------
 	}
-	return true;
 }
 
-bool GCapture::captureThreadClose() {
+void GCapture::captureThreadClose() {
 	if (autoRead_) {
 		thread_.quit();
 		thread_.wait();
 	}
-	return true;
 }
 
 GPacket::Result GCapture::read(GPacket* packet) {

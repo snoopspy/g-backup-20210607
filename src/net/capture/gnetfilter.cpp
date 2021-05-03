@@ -74,7 +74,9 @@ bool GNetFilter::doOpen() {
 	fd_ = nfq_fd(h_);
 	qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
 
-	return captureThreadOpen();
+	captureThreadOpen();
+
+	return true;
 }
 
 bool GNetFilter::doClose() {

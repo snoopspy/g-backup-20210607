@@ -48,7 +48,7 @@ bool GDemonClient::connect() {
 		return true;
 	}
 
-	sd_ = socket(AF_INET, SOCK_STREAM, 0);
+	sd_ = ::socket(AF_INET, SOCK_STREAM, 0);
 	if (sd_ == -1) {
 		error_ = strerror(errno);
 		qWarning() << strerror(errno);
@@ -269,6 +269,8 @@ void GDemonClient::pcapClose() {
 		qWarning() << error_.data();
 		return;
 	}
+
+	disconnect();
 }
 
 GDemon::PcapRead GDemonClient::pcapRead() {

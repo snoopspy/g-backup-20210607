@@ -98,7 +98,9 @@ bool GArpSpoof::doOpen() {
 	if (infectInterval_ != 0)
 		infectThread_.start();
 
-	return captureThreadOpen();
+	captureThreadOpen();
+
+	return true;
 }
 
 bool GArpSpoof::doClose() {

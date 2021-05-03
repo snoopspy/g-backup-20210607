@@ -14,22 +14,22 @@ bool GPcap::doOpen() {
 			return false;
 	}
 
-	return captureThreadOpen();
+	captureThreadOpen();
+
+	return true;
 }
 
 bool GPcap::doClose() {
 	if (!enabled_) return true;
 
-	// ----- by gilgil 2009.09.01 -----
-	// Strange to say, when pcap_next_ex is called after pcap_close is called, it occurs memory problem.
-	// So waits until thread is terminated.
-	bool res = captureThreadClose();
+	captureThreadClose();
+
 	if (pcap_ != nullptr) {
 		pcap_close(pcap_);
 		pcap_ = nullptr;
 	}
-	// --------------------------------
-	return res;
+
+	return true;
 }
 
 GPacket::Result GPcap::read(GPacket* packet) {
