@@ -21,7 +21,6 @@
 // ----------------------------------------------------------------------------
 // GDemon
 // ----------------------------------------------------------------------------
-#pragma pack(push, 1)
 struct GDemon {
 	typedef char *pchar;
 	typedef unsigned char *puchar;
@@ -142,4 +141,3 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 };
-#pragma pack(pop)
