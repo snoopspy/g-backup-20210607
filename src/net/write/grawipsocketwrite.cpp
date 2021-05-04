@@ -38,7 +38,6 @@ GPacket::Result GRawIpSocketWrite::write(GBuf buf) {
 }
 
 GPacket::Result GRawIpSocketWrite::write(GPacket* packet) {
-
 	if (packet->ipHdr_ == nullptr) {
 		qWarning() << "packet->ipHdr_ is nullptr";
 		return GPacket::Fail;

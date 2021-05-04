@@ -70,12 +70,12 @@ GPacket::Result GRemotePcapDevice::read(GPacket* packet) {
 	return GPacket::Ok;
 }
 
-GPacket::Result GRemotePcapDevice::write(GPacket* packet) {
+GPacket::Result GRemotePcapDevice::write(GBuf buf) {
 	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }
 
-GPacket::Result GRemotePcapDevice::write(GBuf buf) {
+GPacket::Result GRemotePcapDevice::write(GPacket* packet) {
 	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }

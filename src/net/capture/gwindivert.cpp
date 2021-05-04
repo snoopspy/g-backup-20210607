@@ -178,6 +178,12 @@ GPacket::Result GWinDivert::read(GPacket* packet) {
 	return GPacket::Ok;
 }
 
+GPacket::Result GWinDivert::write(GBuf buf) {
+	(void)buf;
+	SET_ERR(GErr::FAIL, "not supported");
+	return GPacket::Fail;
+}
+
 GPacket::Result GWinDivert::write(GPacket* packet) {
 	GWinDivertLib& lib = GWinDivertLib::instance();
 	Q_ASSERT(lib.ok);
@@ -191,12 +197,6 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
 		return GPacket::Fail;
 	}
 	return GPacket::Ok;
-}
-
-GPacket::Result GWinDivert::write(GBuf buf) {
-	(void)buf;
-	SET_ERR(GErr::FAIL, "not supported");
-	return GPacket::Fail;
 }
 
 GPacket::Result GWinDivert::relay(GPacket* packet) {

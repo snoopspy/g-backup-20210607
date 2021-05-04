@@ -73,10 +73,6 @@ GPacket::Result GPcap::read(GPacket* packet) {
 	return res;
 }
 
-GPacket::Result GPcap::write(GPacket* packet) {
-	return write(packet->buf_);
-}
-
 GPacket::Result GPcap::write(GBuf buf) {
 	int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
 	if (i == 0) return GPacket::Ok;
@@ -84,6 +80,10 @@ GPacket::Result GPcap::write(GBuf buf) {
 	if (e == nullptr) e = pchar("unknown");
 	qWarning() << QString("pcap_sendpacket return %1(%2) length=%3").arg(i).arg(e).arg(buf.size_);
 	return GPacket::Fail;
+}
+
+GPacket::Result GPcap::write(GPacket* packet) {
+	return write(packet->buf_);
 }
 
 GPacket::Result GPcap::relay(GPacket* packet) {

@@ -128,14 +128,14 @@ GPacket::Result GNetFilter::read(GPacket* packet) {
 	return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(GPacket* packet) {
-	(void)packet;
+GPacket::Result GNetFilter::write(GBuf buf) {
+	(void)buf;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(GBuf buf) {
-	(void)buf;
+GPacket::Result GNetFilter::write(GPacket* packet) {
+	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }

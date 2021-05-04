@@ -29,14 +29,14 @@ GPacket::Result GSyncNetFilter::read(GPacket* packet) {
 	return GPacket::Fail;
 }
 
-GPacket::Result GSyncNetFilter::write(GPacket* packet) {
-	(void)packet;
+GPacket::Result GSyncNetFilter::write(GBuf buf) {
+	(void)buf;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GSyncNetFilter::write(GBuf buf) {
-	(void)buf;
+GPacket::Result GSyncNetFilter::write(GPacket* packet) {
+	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }

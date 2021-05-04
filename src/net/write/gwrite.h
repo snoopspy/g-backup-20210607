@@ -28,7 +28,7 @@ protected:
 	GPacket::Dlt dlt_{GPacket::Null};
 
 public:
-	virtual GPacket::Result write(GPacket* packet);
 	virtual GPacket::Result write(GBuf buf);
+	virtual GPacket::Result write(GPacket* packet);
 };
 
