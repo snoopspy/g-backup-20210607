@@ -10,13 +10,13 @@
 
 #pragma once
 
-#include "gpcap.h"
+#include "gpcapcapture.h"
 #include "net/gnetinfo.h"
 
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapDevice : GPcap {
+struct G_EXPORT GPcapDevice : GPcapCapture {
 	Q_OBJECT
 	Q_PROPERTY(QString intfName MEMBER intfName_)
 	Q_PROPERTY(int snapLen MEMBER snapLen_)

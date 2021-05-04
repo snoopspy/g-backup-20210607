@@ -19,13 +19,13 @@ bool GPcapFile::doOpen() {
 		return false;
 	}
 
-	return GPcap::doOpen();
+	return GPcapCapture::doOpen();
 }
 
 bool GPcapFile::doClose() {
 	if (!enabled_) return true;
 
-	return GPcap::doClose();
+	return GPcapCapture::doClose();
 }
 
 #ifdef QT_GUI_LIB

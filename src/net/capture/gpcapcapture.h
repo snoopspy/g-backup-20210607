@@ -14,9 +14,9 @@
 #include "gcapture.h"
 
 // ----------------------------------------------------------------------------
-// GPcap
+// GPcapCapture
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcap : GCapture {
+struct G_EXPORT GPcapCapture : GCapture {
 	Q_OBJECT
 	Q_PROPERTY(QString filter MEMBER filter_)
 
@@ -24,8 +24,8 @@ public:
 	QString filter_{""};
 
 public:
-	GPcap(QObject* parent = nullptr) : GCapture(parent) {}
-	~GPcap() override { close(); }
+	GPcapCapture(QObject* parent = nullptr) : GCapture(parent) {}
+	~GPcapCapture() override { close(); }
 
 protected:
 	bool doOpen() override;

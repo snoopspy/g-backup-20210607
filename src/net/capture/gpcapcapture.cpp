@@ -1,9 +1,9 @@
-#include "gpcap.h"
+#include "gpcapcapture.h"
 
 // ----------------------------------------------------------------------------
-// GPcap
+// GPcapCapture
 // ----------------------------------------------------------------------------
-bool GPcap::doOpen() {
+bool GPcapCapture::doOpen() {
 	if (!enabled_) return true;
 
 	int dataLink = pcap_datalink(pcap_);
@@ -19,7 +19,7 @@ bool GPcap::doOpen() {
 	return true;
 }
 
-bool GPcap::doClose() {
+bool GPcapCapture::doClose() {
 	if (!enabled_) return true;
 
 	captureThreadClose();
@@ -32,7 +32,7 @@ bool GPcap::doClose() {
 	return true;
 }
 
-GPacket::Result GPcap::read(GPacket* packet) {
+GPacket::Result GPcapCapture::read(GPacket* packet) {
 	packet->clear();
 	// qDebug() << "bef pcap_next_ex"; // gilgil temp 2017.11.25
 	pcap_pkthdr* pktHdr;
@@ -73,7 +73,7 @@ GPacket::Result GPcap::read(GPacket* packet) {
 	return res;
 }
 
-GPacket::Result GPcap::write(GBuf buf) {
+GPacket::Result GPcapCapture::write(GBuf buf) {
 	int i = pcap_sendpacket(pcap_, buf.data_, int(buf.size_));
 	if (i == 0) return GPacket::Ok;
 	char* e = pcap_geterr(pcap_);
@@ -82,17 +82,17 @@ GPacket::Result GPcap::write(GBuf buf) {
 	return GPacket::Fail;
 }
 
-GPacket::Result GPcap::write(GPacket* packet) {
+GPacket::Result GPcapCapture::write(GPacket* packet) {
 	return write(packet->buf_);
 }
 
-GPacket::Result GPcap::relay(GPacket* packet) {
+GPacket::Result GPcapCapture::relay(GPacket* packet) {
 	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-bool GPcap::pcapProcessFilter(pcap_if_t* dev) {
+bool GPcapCapture::pcapProcessFilter(pcap_if_t* dev) {
 	u_int uNetMask;
 	bpf_program code;
 

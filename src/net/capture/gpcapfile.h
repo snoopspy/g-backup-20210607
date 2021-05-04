@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "gpcap.h"
+#include "gpcapcapture.h"
 
 // ----------------------------------------------------------------------------
 // GPcapFile
 // ----------------------------------------------------------------------------
-struct G_EXPORT GPcapFile : GPcap {
+struct G_EXPORT GPcapFile : GPcapCapture {
 	Q_OBJECT
 	Q_PROPERTY(QString fileName MEMBER fileName_)
 
@@ -23,7 +23,7 @@ public:
 	QString fileName_{""};
 
 public:
-	Q_INVOKABLE GPcapFile(QObject* parent = nullptr) : GPcap(parent) {}
+	Q_INVOKABLE GPcapFile(QObject* parent = nullptr) : GPcapCapture(parent) {}
 	~GPcapFile() override { close(); }
 
 protected:

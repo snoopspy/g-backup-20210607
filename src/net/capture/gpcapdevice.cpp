@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
-GPcapDevice::GPcapDevice(QObject* parent) : GPcap(parent) {
+GPcapDevice::GPcapDevice(QObject* parent) : GPcapCapture(parent) {
 	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr)
 		intfName_ = entry->intf()->name();
@@ -35,7 +35,7 @@ bool GPcapDevice::doOpen() {
 		return false;
 	}
 
-	return GPcap::doOpen();
+	return GPcapCapture::doOpen();
 }
 
 bool GPcapDevice::doClose() {
@@ -43,11 +43,11 @@ bool GPcapDevice::doClose() {
 
 	intf_ = nullptr;
 
-	return GPcap::doClose();
+	return GPcapCapture::doClose();
 }
 
 GPacket::Result GPcapDevice::read(GPacket* packet) {
-	GPacket::Result res = GPcap::read(packet);
+	GPacket::Result res = GPcapCapture::read(packet);
 	if (res == GPacket::TimeOut) QThread::msleep(waitTimeout_);
 	return res;
 }
