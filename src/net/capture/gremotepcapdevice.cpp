@@ -3,7 +3,10 @@
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GRemote(parent) {
+GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GPcapDevice(parent) {
+	GRtmEntry* entry = GRemoteNetInfo::instance(ip_, port_).rtm().getBestEntry(QString("8.8.8.8"));
+	if (entry != nullptr)
+		intfName_ = entry->intf()->name();
 }
 
 GRemotePcapDevice::~GRemotePcapDevice() {
@@ -71,16 +74,19 @@ GPacket::Result GRemotePcapDevice::read(GPacket* packet) {
 }
 
 GPacket::Result GRemotePcapDevice::write(GBuf buf) {
+	(void)buf;
 	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }
 
 GPacket::Result GRemotePcapDevice::write(GPacket* packet) {
+	(void)packet;
 	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }
 
 GPacket::Result GRemotePcapDevice::relay(GPacket* packet) {
+	(void)packet;
 	qDebug() << "fail";
 	return GPacket::Fail; // gilgil temp 2021.04.22
 }

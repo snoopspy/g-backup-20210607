@@ -24,6 +24,20 @@ GNetInfo::GNetInfo() {
 // GRemoteNetInfo
 // ----------------------------------------------------------------------------
 GRemoteNetInfo::GRemoteNetInfo(QString ip, quint16 port) : interfaceList_(ip, port), rtm_(ip, port) {
+	for (int i = 0; i < rtm_.count(); i++) {
+		GRtmEntry& entry = const_cast<GRtmEntry&>(rtm_.at(i));
+		QString intfName = entry.intfName_;
+		GInterface* intf = interfaceList_.findByName(intfName);
+		if (intf == nullptr) {
+			QString msg = QString("interfaceList_.findByName(%1) return false").arg(intfName);
+			qCritical() << msg;
+		}
+		entry.intf_ = intf;
+	}
+
+	for (GInterface& intf: interfaceList_) {
+		intf.gateway_ = rtm_.findGateway(intf.name_, intf.ip_);
+	}
 }
 
 GRemoteNetInfo& GRemoteNetInfo::instance(QString ip, quint16 port) {

@@ -21,6 +21,7 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GInterface {
 	friend struct GNetInfo;
+	friend struct GRemoteNetInfo;
 	friend struct GLocalInterfaceList;
 	friend struct GRemoteInterfaceList;
 

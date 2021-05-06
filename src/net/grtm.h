@@ -21,6 +21,7 @@ struct G_EXPORT GRtmEntry {
 	friend struct GRtmLinux;
 	friend struct GRemoteRtm;
 	friend struct GNetInfo;
+	friend struct GRemoteNetInfo;
 
 #ifdef Q_OS_LINUX
 	friend struct GRtmLinux_;
