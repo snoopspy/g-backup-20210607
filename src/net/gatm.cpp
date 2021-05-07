@@ -89,7 +89,7 @@ bool GAtm::wait(GPcapDevice* pcapDevice, GDuration timeout) {
 			qWarning() << "pcapDevice->read return GPacket::Eof";
 			break;
 		} else
-		if (res == GPacket::TimeOut) {
+		if (res == GPacket::Timeout) {
 			continue;
 		}
 

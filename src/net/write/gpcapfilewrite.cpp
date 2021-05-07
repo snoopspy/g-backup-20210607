@@ -47,6 +47,7 @@ bool GPcapFileWrite::doClose() {
 		pcap_dump_close(pcap_dumper_);
 		pcap_dumper_ = nullptr;
 	}
+
 	if (pcap_ != nullptr) {
 		pcap_close(pcap_);
 		pcap_ = nullptr;

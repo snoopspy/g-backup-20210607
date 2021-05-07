@@ -44,6 +44,7 @@ struct GDemonServer: GDemon {
 			bool processGetRtm(pchar buf, int32_t size);
 			bool processPcapOpen(pchar buf, int32_t size);
 			bool processPcapClose(pchar buf, int32_t size);
+			bool processPcapWrite(pchar buf, int32_t size);
 		} socket;
 
 		// pcap operation

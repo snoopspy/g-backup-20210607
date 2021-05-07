@@ -43,7 +43,8 @@ struct GDemon {
 		CmdGetRtm = 2,
 		CmdPcapOpen = 3,
 		CmdPcapClose = 4,
-		CmdPcapRead = 5
+		CmdPcapRead = 5,
+		CmdPcapWrite = 5
 	};
 	typedef Cmd *PCmd;
 
@@ -136,6 +137,13 @@ struct GDemon {
 
 	struct PcapRead : Header {
 		pcap_pkthdr pktHdr_;
+		unsigned char* data_{nullptr};
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct PcapWrite : Header {
+		int32_t size_;
 		unsigned char* data_{nullptr};
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);

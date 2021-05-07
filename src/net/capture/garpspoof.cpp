@@ -128,7 +128,7 @@ void GArpSpoof::run() {
 	GEthPacket packet;
 	while (active()) {
 		GPacket::Result res = read(&packet);
-		if (res == GPacket::TimeOut) continue;
+		if (res == GPacket::Timeout) continue;
 		if (res == GPacket::Eof || res == GPacket::Fail) break;
 
 		GEthHdr* ethHdr = packet.ethHdr_;

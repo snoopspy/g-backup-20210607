@@ -121,7 +121,7 @@ GDemon::GetInterfaceListRep GDemonClient::getInterfaceList() {
 
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
-		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		error_ = qPrintable(QString("send return %1").arg(sendLen));
 		qWarning() << error_.data();
 		return rep;
 	}
@@ -169,7 +169,7 @@ GDemon::GetRtmRep GDemonClient::getRtm() {
 
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
-		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		error_ = qPrintable(QString("send return %1").arg(sendLen));
 		qWarning() << error_.data();
 		return rep;
 	}
@@ -265,7 +265,7 @@ void GDemonClient::pcapClose() {
 
 	int sendLen = ::send(sd_, buffer, encLen, 0);
 	if (sendLen == 0 || sendLen == -1) {
-		error_ = qPrintable(QString("send return %d").arg(sendLen));
+		error_ = qPrintable(QString("send return %1").arg(sendLen));
 		qWarning() << error_.data();
 		return;
 	}
@@ -299,6 +299,24 @@ GDemon::PcapRead GDemonClient::pcapRead() {
 	return read;
 }
 
+void GDemonClient::pcapWrite(PcapWrite write) {
+	char buffer[MaxBufferSize];
+
+	int32_t encLen = write.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		error_ = "req.encode return -1";
+		qWarning() << error_.data();
+		return;
+	}
+
+	int sendLen = ::send(sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		error_ = qPrintable(QString("send return %1").arg(sendLen));
+		qWarning() << error_.data();
+		return;
+	}
+}
+
 GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
 	static GDemonClientMap map;
 	GDemonClientMapKey key(ip, port);
@@ -309,3 +327,4 @@ GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
 	}
 	return it->second;
 }
+

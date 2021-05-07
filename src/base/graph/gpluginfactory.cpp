@@ -217,16 +217,19 @@ void GPluginFactory::loadProcess() {
 #include <GPcapDeviceWrite>
 #include <GPcapFileWrite>
 #include <GRawIpSocketWrite>
+#include <GRemotePcapDeviceWrite>
 
 void GPluginFactory::loadWrite() {
 	qRegisterMetaType<GPcapDeviceWrite*>();
 	qRegisterMetaType<GPcapFileWrite*>();
 	qRegisterMetaType<GRawIpSocketWrite*>();
+	qRegisterMetaType<GRemotePcapDeviceWrite*>();
 
 	ItemCategory* category = new ItemCategory("write");
 	category->items_.push_back(new ItemNode(GPcapDeviceWrite::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GPcapFileWrite::staticMetaObject.className()));
 	category->items_.push_back(new ItemNode(GRawIpSocketWrite::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GRemotePcapDeviceWrite::staticMetaObject.className()));
 
 	items_.push_back(category);
 }

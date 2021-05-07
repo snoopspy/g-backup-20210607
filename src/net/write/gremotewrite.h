@@ -10,15 +10,21 @@
 
 #pragma once
 
-#include "net/grtm.h"
+#include "gwrite.h"
 
 // ----------------------------------------------------------------------------
-// GRtmWin32
+// GRemoteWrite
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRtmWin32 : GRtm {
-	friend struct GNetInfo;
+struct G_EXPORT GRemoteWrite : GWrite {
+	Q_OBJECT
+	Q_PROPERTY(QString ip MEMBER ip_)
+	Q_PROPERTY(quint16 port MEMBER port_)
 
-protected:
-	GRtmWin32();
-	~GRtmWin32() override {}
+public:
+	QString ip_{"127.0.0.1"};
+	quint16 port_{8908};
+
+public:
+	GRemoteWrite(QObject* parent = nullptr) : GWrite(parent) {}
+	~GRemoteWrite() override {}
 };

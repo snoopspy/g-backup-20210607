@@ -146,6 +146,9 @@ void GDemonServer::Session::Socket::run() {
 			case CmdPcapClose:
 				active = processPcapClose(buf, size);
 				break;
+			case CmdPcapWrite:
+				active = processPcapWrite(buf, size);
+				break;
 			default:
 				GTRACE("invalid cmd %d", header->cmd_);
 				active = false;
@@ -419,6 +422,26 @@ bool GDemonServer::Session::Socket::processPcapClose(pchar buf, int32_t size) {
 
 	owner_->pcap.close();
 	return false;
+}
+
+bool GDemonServer::Session::Socket::processPcapWrite(pchar buf, int32_t size) {
+	GTRACE("");
+
+	PcapWrite write;
+	int32_t decLen = write.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return -1");
+		return false;
+	}
+
+	int i = pcap_sendpacket(owner_->pcap.pcap_, write.data_, write.size_);
+	if (i != 0) {
+		char* e = pcap_geterr(owner_->pcap.pcap_);
+		if (e == nullptr) e = pchar("unknown");
+		GTRACE("pcap_sendpacket return %d(%s) length=%d", i, e , write.size_);
+	}
+
+	return true;
 }
 
 bool GDemonServer::RtmFunc::checkA(char* buf, RtmEntry* entry) {

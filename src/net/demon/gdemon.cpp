@@ -182,7 +182,7 @@ int32_t GDemon::RtmEntry::decode(pchar buffer, int32_t size) {
 	intfName_ = std::string(buf, len); buf += len; size -= len;
 
 	if (size < 0) {
-		GTRACE("GDemon::Interface::decode size is %d\n", size);
+		GTRACE("decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
@@ -463,7 +463,7 @@ int32_t GDemon::PcapOpenReq::decode(pchar buffer, int32_t size) {
 	captureThread_ = *pbool(buf); buf += sizeof(captureThread_); size -= sizeof(captureThread_);
 
 	if (size < 0) {
-		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
+		GTRACE("decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
@@ -516,7 +516,7 @@ int32_t GDemon::PcapOpenRep::decode(pchar buffer, int32_t size) {
 	errBuf_ = std::string(buf, len); buf += len; size -= len;
 
 	if (size < 0) {
-		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
+		GTRACE("decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
@@ -546,7 +546,7 @@ int32_t GDemon::PcapCloseReq::decode(pchar buffer, int32_t size) {
 	}
 
 	if (size < 0) {
-		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
+		GTRACE("decode size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;
@@ -577,7 +577,7 @@ int32_t GDemon::PcapRead::decode(pchar buffer, int32_t size) {
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
 	if (cmd_ != CmdPcapRead) {
-		GTRACE("cmd_ is not CmdPcapClose %d\n", cmd_);
+		GTRACE("cmd_ is not CmdPcapRead %d\n", cmd_);
 		return -1;
 	}
 
@@ -588,7 +588,49 @@ int32_t GDemon::PcapRead::decode(pchar buffer, int32_t size) {
 	data_ = puchar(buf); buf += pktHdr_.caplen; size -= pktHdr_.caplen;
 
 	if (size < 0) {
-		GTRACE("GDemon::PcapOpenReq::decode size is %d\n", size);
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapWrite::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	len_ = sizeof(size_) + size_;
+	cmd_ = CmdPcapWrite;
+	int32_t encLen = Header::encode(buf, size); buf += encLen; size -= encLen;
+
+	// size_
+	*pint32_t(buf) = size_; buf += sizeof(size_); size -= sizeof(size_);
+
+	// data_
+	memcpy(buf, data_, size_); buf += size_; size -= size_;
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::PcapWrite::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdPcapWrite) {
+		GTRACE("cmd_ is not CmdPcapWrite %d\n", cmd_);
+		return -1;
+	}
+
+	// size_
+	size_ = *pint32_t(buf); buf += sizeof(size_); size -= sizeof(size_);
+
+	// data_
+	data_ = puchar(buf); buf += size_; size -= size_;
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
 		return -1;
 	}
 	return buf - buffer;

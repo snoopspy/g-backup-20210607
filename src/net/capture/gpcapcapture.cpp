@@ -59,7 +59,7 @@ GPacket::Result GPcapCapture::read(GPacket* packet) {
 			break;
 		}
 		case 0 : // if a timeout occured
-			res = GPacket::TimeOut;
+			res = GPacket::Timeout;
 			break;
 		default: // packet captured
 			packet->ts_ = pktHdr->ts;

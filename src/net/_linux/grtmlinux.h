@@ -16,6 +16,8 @@
 // GRtmLinux
 // ----------------------------------------------------------------------------
 struct G_EXPORT GRtmLinux : GRtm {
+	friend struct GNetInfo;
+
 protected: // singleton
 	GRtmLinux();
 	~GRtmLinux() override {}

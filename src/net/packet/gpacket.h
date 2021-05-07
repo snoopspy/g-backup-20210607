@@ -35,7 +35,7 @@ public:
 	typedef enum {
 		Eof = -2, // read
 		Fail = -1, // read write
-		TimeOut = 0, // read
+		Timeout = 0, // read
 		Ok = 1, // read write
 	} Result;
 

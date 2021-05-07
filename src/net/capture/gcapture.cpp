@@ -70,7 +70,7 @@ void GCapture::run() {
 
 	while (active()) {
 		GPacket::Result res = read(packet);
-		if (res == GPacket::TimeOut) continue;
+		if (res == GPacket::Timeout) continue;
 		if (res == GPacket::Eof || res == GPacket::Fail) break;
 		emit captured(packet);
 		if (this->pathType() == InPath && !packet->ctrl.block_) {

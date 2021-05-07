@@ -48,7 +48,7 @@ bool GPcapDevice::doClose() {
 
 GPacket::Result GPcapDevice::read(GPacket* packet) {
 	GPacket::Result res = GPcapCapture::read(packet);
-	if (res == GPacket::TimeOut) QThread::msleep(waitTimeout_);
+	if (res == GPacket::Timeout) QThread::msleep(waitTimeout_);
 	return res;
 }
 
