@@ -38,7 +38,7 @@ protected:
 #if defined(Q_OS_ANDROID)
 	GRemoteInterfaceList interfaceList_{QString("127.0.0.1"), GDemon::DefaultPort};
 	GRemoteRtm rtm_{QString("127.0.0.1"), GDemon::DefaultPort};
-#endif // GILGIL_ANDROID_DEBUG
+#endif // Q_OS_ANDROID
 
 public:
 	GInterfaceList& interfaceList() { return interfaceList_; }
