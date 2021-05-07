@@ -62,6 +62,8 @@ SOURCES += \
 	$${PWD}/../src/net/capture/gsyncnetfilter.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapfile.cpp \
+	$${PWD}/../src/net/capture/gsyncremotepcapdevice.cpp \
+	$${PWD}/../src/net/capture/gsyncwindivert.cpp \
 	$${PWD}/../src/net/capture/gwindivert.cpp \
 	$${PWD}/../src/net/convert/gconverteth.cpp \
 	$${PWD}/../src/net/convert/gconvertethautomac.cpp \
@@ -180,6 +182,8 @@ HEADERS += \
 	$${PWD}/../src/net/capture/gsyncnetfilter.h \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.h \
 	$${PWD}/../src/net/capture/gsyncpcapfile.h \
+	$${PWD}/../src/net/capture/gsyncremotepcapdevice.h \
+	$${PWD}/../src/net/capture/gsyncwindivert.h \
 	$${PWD}/../src/net/capture/gwindivert.h \
 	$${PWD}/../src/net/convert/gconverteth.h \
 	$${PWD}/../src/net/convert/gconvertethautomac.h \
