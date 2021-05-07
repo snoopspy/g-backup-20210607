@@ -10,19 +10,25 @@
 
 #pragma once
 
-#include "gpcapdevice.h"
+#include "gremotepcapcapture.h"
 
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRemotePcapDevice : GPcapDevice {
+struct G_EXPORT GRemotePcapDevice : GRemotePcapCapture {
 	Q_OBJECT
-	Q_PROPERTY(QString ip MEMBER ip_)
-	Q_PROPERTY(quint16 port MEMBER port_)
+	Q_PROPERTY(QString intfName MEMBER intfName_)
+	Q_PROPERTY(int snapLen MEMBER snapLen_)
+	Q_PROPERTY(int flags MEMBER flags_)
+	Q_PROPERTY(int readTimeout MEMBER readTimeout_)
+	Q_PROPERTY(int waitTimeout MEMBER waitTimeout_)
 
 public:
-	QString ip_{"127.0.0.1"};
-	quint16 port_{8908};
+	QString intfName_{""};
+	int snapLen_{65536}; // 65536 bytes
+	int flags_{1}; // PCAP_OPENFLAG_PROMISCUOUS
+	int readTimeout_{-1}; // -1 msec
+	int waitTimeout_{1}; // 1 msec
 
 public:
 	Q_INVOKABLE GRemotePcapDevice(QObject* parent = nullptr);
@@ -32,12 +38,11 @@ protected:
 	bool doOpen() override;
 	bool doClose() override;
 
-public:
-	GPacket::Result read(GPacket* packet) override;
-	GPacket::Result write(GBuf buf) override;
-	GPacket::Result write(GPacket* packet) override;
-	GPacket::Result relay(GPacket* packet) override;
-
 protected:
-	GDemonClient* demonClient_{nullptr};
+	GInterface* intf_{nullptr};
+
+#ifdef QT_GUI_LIB
+public:
+	GPropItem* propCreateItem(GPropItemParam* param) override;
+#endif // QT_GUI_LIB
 };
