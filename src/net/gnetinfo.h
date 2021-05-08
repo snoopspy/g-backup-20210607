@@ -27,7 +27,7 @@ protected:
 	GNetInfo();
 	~GNetInfo() {}
 
-#if defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX) && !defined(Q_OS_ANDROID)
 	GLocalInterfaceList interfaceList_;
 	GRtmLinux rtm_;
 #endif // Q_OS_LINUX
@@ -35,7 +35,7 @@ protected:
 	GLocalInterfaceList interfaceList_;
 	GRtmWin32 rtm_;
 #endif // Q_OS_WIN
-#if defined(Q_OS_ANDROID)
+#ifdef Q_OS_ANDROID
 	GRemoteInterfaceList interfaceList_{QString("127.0.0.1"), GDemon::DefaultPort};
 	GRemoteRtm rtm_{QString("127.0.0.1"), GDemon::DefaultPort};
 #endif // Q_OS_ANDROID

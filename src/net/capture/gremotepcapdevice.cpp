@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GRemotePcapCapture(parent) {
+GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GPcapDevice(parent) {
 	GRtmEntry* entry = GRemoteNetInfo::instance(ip_, port_).rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr)
 		intfName_ = entry->intf()->name();
@@ -38,7 +38,9 @@ bool GRemotePcapDevice::doOpen() {
 
 	dlt_ = GPacket::intToDlt(rep.dataLink_);
 
-	return GRemotePcapCapture::doOpen();
+	captureThreadOpen();
+
+	return true;
 }
 
 bool GRemotePcapDevice::doClose() {
@@ -46,7 +48,52 @@ bool GRemotePcapDevice::doClose() {
 
 	intf_ = nullptr;
 
-	return GRemotePcapCapture::doClose();
+	if (demonClient_ != nullptr)
+		demonClient_->pcapClose();
+
+	captureThreadClose();
+
+	if (demonClient_ != nullptr) {
+		delete demonClient_;
+		demonClient_ = nullptr;
+	}
+
+	return true;
+}
+
+GPacket::Result GRemotePcapDevice::read(GPacket* packet) {
+	packet->clear();
+
+	GDemon::PcapRead read = demonClient_->pcapRead();
+	if (read.data_ == nullptr) {
+		SET_ERR(GErr::READ_FAILED, "read fail");
+		return GPacket::Fail;
+	}
+
+	packet->ts_ = read.pktHdr_.ts;
+	packet->buf_.data_ = read.data_;
+	packet->buf_.size_ = read.pktHdr_.caplen;
+	if (autoParse_) packet->parse();
+
+	return GPacket::Ok;
+}
+
+GPacket::Result GRemotePcapDevice::write(GBuf buf) {
+	GDemon::PcapWrite write;
+	write.size_ = buf.size_;
+	write.data_ = buf.data_;
+	demonClient_->pcapWrite(write);
+	return GPacket::Ok;
+}
+
+GPacket::Result GRemotePcapDevice::write(GPacket* packet) {
+	return write(packet->buf_);
+}
+
+GPacket::Result GRemotePcapDevice::relay(GPacket* packet) {
+	(void)packet;
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
 }
 
 #ifdef QT_GUI_LIB

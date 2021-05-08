@@ -56,8 +56,6 @@ SOURCES += \
 	$${PWD}/../src/net/capture/gpcapcapture.cpp \
 	$${PWD}/../src/net/capture/gpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gpcapfile.cpp \
-	$${PWD}/../src/net/capture/gremotecapture.cpp \
-	$${PWD}/../src/net/capture/gremotepcapcapture.cpp \
 	$${PWD}/../src/net/capture/gremotepcapdevice.cpp \
 	$${PWD}/../src/net/capture/gsyncnetfilter.cpp \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.cpp \
@@ -115,8 +113,6 @@ SOURCES += \
 	$${PWD}/../src/net/write/gpcapfilewrite.cpp \
 	$${PWD}/../src/net/write/gpcapwrite.cpp \
 	$${PWD}/../src/net/write/grawipsocketwrite.cpp \
-	$${PWD}/../src/net/write/gremotewrite.cpp \
-	$${PWD}/../src/net/write/gremotepcapwrite.cpp \
 	$${PWD}/../src/net/write/gremotepcapdevicewrite.cpp \
 	$${PWD}/../src/net/write/gwrite.cpp
 
@@ -179,8 +175,6 @@ HEADERS += \
 	$${PWD}/../src/net/capture/gpcapcapture.h \
 	$${PWD}/../src/net/capture/gpcapdevice.h \
 	$${PWD}/../src/net/capture/gpcapfile.h \
-	$${PWD}/../src/net/capture/gremotecapture.h \
-	$${PWD}/../src/net/capture/gremotepcapcapture.h \
 	$${PWD}/../src/net/capture/gremotepcapdevice.h \
 	$${PWD}/../src/net/capture/gsyncnetfilter.h \
 	$${PWD}/../src/net/capture/gsyncpcapdevice.h \
@@ -238,8 +232,6 @@ HEADERS += \
 	$${PWD}/../src/net/write/gpcapfilewrite.h \
 	$${PWD}/../src/net/write/gpcapwrite.h \
 	$${PWD}/../src/net/write/grawipsocketwrite.h \
-	$${PWD}/../src/net/write/gremotewrite.h \
-	$${PWD}/../src/net/write/gremotepcapwrite.h \
 	$${PWD}/../src/net/write/gremotepcapdevicewrite.h \
 	$${PWD}/../src/net/write/gwrite.h
 

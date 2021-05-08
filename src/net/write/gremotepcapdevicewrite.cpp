@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GRemotePcapDeviceWrite
 // ----------------------------------------------------------------------------
-GRemotePcapDeviceWrite::GRemotePcapDeviceWrite(QObject* parent) : GRemotePcapWrite(parent) {
+GRemotePcapDeviceWrite::GRemotePcapDeviceWrite(QObject* parent) : GPcapDeviceWrite(parent) {
 	GRtmEntry* entry = GRemoteNetInfo::instance(ip_, port_).rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr)
 		intfName_ = entry->intf()->name();
@@ -35,14 +35,33 @@ bool GRemotePcapDeviceWrite::doOpen() {
 	}
 
 	dlt_ = GPacket::intToDlt(rep.dataLink_);
-
 	return true;
 }
 
 bool GRemotePcapDeviceWrite::doClose() {
-	return GRemotePcapWrite::doClose();
+	if (demonClient_ != nullptr) {
+		demonClient_->pcapClose();
+		delete demonClient_;
+		demonClient_ = nullptr;
+	}
+
+	return true;
 }
 
+GPacket::Result GRemotePcapDeviceWrite::write(GBuf buf) {
+	GDemon::PcapWrite write;
+	write.size_ = buf.size_;
+	write.data_ = buf.data_;
+	demonClient_->pcapWrite(write);
+	return GPacket::Ok;
+}
+
+GPacket::Result GRemotePcapDeviceWrite::write(GPacket* packet) {
+	GPacket::Result res = write(packet->buf_);
+	if (res == GPacket::Ok)
+		emit written(packet);
+	return res;
+}
 
 #ifdef QT_GUI_LIB
 
