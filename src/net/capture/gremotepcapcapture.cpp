@@ -38,20 +38,17 @@ GPacket::Result GRemotePcapCapture::read(GPacket* packet) {
 	return GPacket::Ok;
 }
 
-
 GPacket::Result GRemotePcapCapture::write(GBuf buf) {
-	(void)buf;
-	qDebug() << "fail";
-	return GPacket::Fail; // gilgil temp 2021.04.22
+	GDemon::PcapWrite write;
+	write.size_ = buf.size_;
+	write.data_ = buf.data_;
+	demonClient_->pcapWrite(write);
+	return GPacket::Ok;
 }
-
 
 GPacket::Result GRemotePcapCapture::write(GPacket* packet) {
-	(void)packet;
-	qDebug() << "fail";
-	return GPacket::Fail; // gilgil temp 2021.04.22
+	return write(packet->buf_);
 }
-
 
 GPacket::Result GRemotePcapCapture::relay(GPacket* packet) {
 	(void)packet;
