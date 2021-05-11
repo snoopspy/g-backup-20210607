@@ -115,7 +115,7 @@ bool GArpSpoof::doClose() {
 
 	for (int i = 0; i < 3; i++) {
 		sendARPReciverAll();
-		QThread::msleep(100);
+		QThread::msleep(sendInterval_);
 	}
 
 	captureThreadClose();
@@ -224,6 +224,7 @@ bool GArpSpoof::sendArpInfectAll() {
 	for (Flow& flow: flowList_) {
 		if (!sendArpInfect(&flow))
 			return false;
+		QThread::msleep(sendInterval_);
 	}
 	return true;
 }
@@ -237,6 +238,7 @@ bool GArpSpoof::sendARPReciverAll() {
 	for (Flow& flow: flowList_) {
 		if (!sendArpRecover(&flow))
 			return false;
+		QThread::msleep(sendInterval_);
 	}
 	return true;
 }

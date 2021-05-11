@@ -50,6 +50,7 @@ struct G_EXPORT GArpSpoof : GPcapDevice {
 	Q_OBJECT
 	Q_PROPERTY(QString virtualMac READ getVirtualMac WRITE setVirtualMac)
 	Q_PROPERTY(ulong infectInterval MEMBER infectInterval_)
+	Q_PROPERTY(ulong sendInterval MEMBER sendInterval_)
 	Q_PROPERTY(GObjRefArrayPtr flows READ getFlows)
 
 	GObjRefArrayPtr getFlows() { return &propFlows_; }
@@ -75,6 +76,7 @@ protected:
 public:
 	GMac virtualMac_{GMac::nullMac()};
 	GDuration infectInterval_{1000};
+	GDuration sendInterval_{1};
 	GObjRefArray<GArpSpoofFlow> propFlows_; // for property
 
 protected:
