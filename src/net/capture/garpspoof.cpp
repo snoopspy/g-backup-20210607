@@ -93,6 +93,11 @@ bool GArpSpoof::doOpen() {
 
 	myMac_ = virtualMac_.isNull() ? intf_->mac() : virtualMac_;
 
+	for (Flow& flow: flowList_) {
+		flow.makePacket(&flow.infectPacket_, myMac_, true);
+		flow.makePacket(&flow.recoverPacket_, myMac_, false);
+	}
+
 	sendArpInfectAll();
 
 	if (infectInterval_ != 0)
@@ -185,6 +190,29 @@ void GArpSpoof::run() {
 	emit closed();
 }
 
+GArpSpoof::Flow::Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) {
+	senderIp_ = senderIp;
+	senderMac_ = senderMac;
+	targetIp_ = targetIp;
+	targetMac_ = targetMac;
+}
+
+void GArpSpoof::Flow::makePacket(GEthArpHdr* packet, GMac myMac, bool infect) {
+	packet->ethHdr_.dmac_ = senderMac_;
+	packet->ethHdr_.smac_ = myMac;
+	packet->ethHdr_.type_ = htons(GEthHdr::Arp);
+
+	packet->arpHdr_.hrd_ = htons(GArpHdr::ETHER);
+	packet->arpHdr_.pro_ = htons(GEthHdr::Ip4);
+	packet->arpHdr_.hln_ = sizeof(GMac);
+	packet->arpHdr_.pln_ = sizeof(GIp);
+	packet->arpHdr_.op_ = htons(GArpHdr::Reply);
+	packet->arpHdr_.smac_ = infect ? myMac : targetMac_; // infect(true) or recover(false)
+	packet->arpHdr_.sip_ = htonl(targetIp_);
+	packet->arpHdr_.tmac_ = senderMac_;
+	packet->arpHdr_.tip_ = htonl(senderIp_);
+}
+
 void GArpSpoof::InfectThread::run() {
 	while (true) {
 		if (we_.wait(arpSpoof_->infectInterval_)) break;
@@ -193,15 +221,16 @@ void GArpSpoof::InfectThread::run() {
 }
 
 bool GArpSpoof::sendArpInfectAll() {
-	for (Flow& session: flowList_) {
-		if (!sendArpInfect(&session))
+	for (Flow& flow: flowList_) {
+		if (!sendArpInfect(&flow))
 			return false;
 	}
 	return true;
 }
 
 bool GArpSpoof::sendArpInfect(Flow* flow) {
-	return sendArp(flow, true);
+	GPacket::Result res = write(GBuf(pbyte(&flow->infectPacket_), sizeof(flow->infectPacket_)));
+	return res == GPacket::Ok;
 }
 
 bool GArpSpoof::sendARPReciverAll() {
@@ -213,26 +242,6 @@ bool GArpSpoof::sendARPReciverAll() {
 }
 
 bool GArpSpoof::sendArpRecover(Flow* flow) {
-	return sendArp(flow, false);
-}
-
-bool GArpSpoof::sendArp(Flow* flow, bool infect) {
-	GEthArpHdr sendPacket;
-
-	sendPacket.ethHdr_.dmac_ = flow->senderMac_;
-	sendPacket.ethHdr_.smac_ = myMac_;
-	sendPacket.ethHdr_.type_ = htons(GEthHdr::Arp);
-
-	sendPacket.arpHdr_.hrd_ = htons(GArpHdr::ETHER);
-	sendPacket.arpHdr_.pro_ = htons(GEthHdr::Ip4);
-	sendPacket.arpHdr_.hln_ = sizeof(GMac);
-	sendPacket.arpHdr_.pln_ = sizeof(GIp);
-	sendPacket.arpHdr_.op_ = htons(GArpHdr::Reply);
-	sendPacket.arpHdr_.smac_ = infect ? myMac_ : flow->targetMac_; // infect(true) or recover(false)
-	sendPacket.arpHdr_.sip_ = htonl(flow->targetIp_);
-	sendPacket.arpHdr_.tmac_ = flow->senderMac_;
-	sendPacket.arpHdr_.tip_ = htonl(flow->senderIp_);
-
-	GPacket::Result res = write(GBuf(pbyte(&sendPacket), sizeof(sendPacket)));
+	GPacket::Result res = write(GBuf(pbyte(&flow->recoverPacket_), sizeof(flow->recoverPacket_)));
 	return res == GPacket::Ok;
 }

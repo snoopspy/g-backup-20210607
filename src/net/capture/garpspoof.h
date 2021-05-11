@@ -84,9 +84,12 @@ protected:
 		GIp targetIp_;
 		GMac targetMac_;
 
+		GEthArpHdr infectPacket_;
+		GEthArpHdr recoverPacket_;
+
 		Flow() {}
-		Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) :
-			senderIp_(senderIp), senderMac_(senderMac), targetIp_(targetIp), targetMac_(targetMac) {}
+		Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac);
+		void makePacket(GEthArpHdr* packet, GMac myMac, bool infect);
 	};
 	QList<Flow> flowList_; // for arp infect and recover
 	typedef QMap<GFlow::IpFlowKey, Flow> FlowMap;
@@ -105,5 +108,4 @@ protected:
 	bool sendArpInfect(Flow* flow);
 	bool sendARPReciverAll();
 	bool sendArpRecover(Flow* flow);
-	bool sendArp(Flow* flow, bool infect);
 };
