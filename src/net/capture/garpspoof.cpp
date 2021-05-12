@@ -150,11 +150,11 @@ void GArpSpoof::run() {
 				for (Flow& flow: flowList_) {
 					bool infect = false;
 					if (arpHdr->sip() == flow.senderIp_ && arpHdr->tip() == flow.targetIp_) { // sender > target ARP packet
-						qDebug() << QString("sender(%1) to target(%2) ARP packet").arg(QString(flow.senderIp_)).arg(QString(flow.targetIp_));
+						qDebug() << QString("sender(%1) to target(%2) ARP packet").arg(QString(flow.senderIp_), QString(flow.targetIp_));
 						infect = true;
 					} else
 					if (arpHdr->sip() == flow.targetIp_ && ethHdr->dmac() == GMac::broadcastMac()) { // target to any ARP packet
-						qDebug() << QString("target(%1) to any(%2) ARP packet").arg(QString(flow.targetIp_)).arg(QString(flow.senderIp_));
+						qDebug() << QString("target(%1) to any(%2) ARP packet").arg(QString(flow.targetIp_), QString(flow.senderIp_));
 						infect = true;
 					}
 					if (infect)
