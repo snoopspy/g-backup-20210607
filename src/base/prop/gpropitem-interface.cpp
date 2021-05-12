@@ -37,8 +37,12 @@ void GPropItemInterface::update() {
 
 void GPropItemInterface::myCurrentIndexChanged(int index) {
 	if (index == -1) return;
-	Q_ASSERT(index <= intfNames_.count());
-	QString intfName = intfNames_.at(index);
+	QString intfName;
+	if (index < intfNames_.count())
+		intfName = intfNames_.at(index);
+	else
+		intfName = comboBox_->currentText();
+
 	bool res = object_->setProperty(mpro_.name(), intfName);
 	if (!res) {
 		qWarning() << QString("object->setProperty(%1, %2) return false").arg(mpro_.name(), intfName);
