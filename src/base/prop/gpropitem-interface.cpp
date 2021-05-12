@@ -33,6 +33,7 @@ void GPropItemInterface::update() {
 		}
 	}
 	comboBox_->setCurrentIndex(-1);
+	comboBox_->setCurrentText(intfName);
 }
 
 void GPropItemInterface::myCurrentIndexChanged(int index) {
