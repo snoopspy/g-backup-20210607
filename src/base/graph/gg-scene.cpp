@@ -155,19 +155,24 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 					signalSlotForm_->lwSignalList_->addItems(_signalList);
 					signalSlotForm_->lwSlotList_->clear();
 					signalSlotForm_->lwSlotList_->addItems(_slotList);
+#ifdef Q_OS_ANDROID
+					signalSlotForm_->showMaximized();
+#else // Q_OS_ANDROID
+					signalSlotForm_->show();
+#endif // Q_OS_ANDROID
 					signalSlotForm_->exec();
 					if (signalSlotForm_->result() == QDialog::Accepted) {
 						QString signal = signalSlotForm_->lwSignalList_->selectedItems().first()->text();
 						QString slot = signalSlotForm_->lwSlotList_->selectedItems().first()->text();
 
 						bool res = GObj::connect(
-									startText->node_, qPrintable(signal),
-									endText->node_, qPrintable(slot),
-									Qt::DirectConnection);
+							startText->node_, qPrintable(signal),
+							endText->node_, qPrintable(slot),
+							Qt::DirectConnection);
 						if (!res) {
 							QString msg = QString("Can not connect %1:%2 > %3:%4").arg(
-										startText->node_->objectName(), signal,
-										endText->node_->objectName(), slot);
+								startText->node_->objectName(), signal,
+								endText->node_->objectName(), slot);
 							QMessageBox::warning(nullptr, "Error", msg);
 							return;
 						}
