@@ -89,7 +89,12 @@ void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 			break;
 		case InsertLine:
 			line = new QGraphicsLineItem(QLineF(event->scenePos(), event->scenePos()));
-			line->setPen(QPen(Qt::black, 2));
+#ifdef Q_OS_ANDROID
+	qreal width = 20;
+#else // Q_OS_ANDROID
+	qreal width = 5;
+#endif // Q_OS_ANDROID
+			line->setPen(QPen(Qt::black, width, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
 			addItem(line);
 			break;
 	}
