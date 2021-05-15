@@ -350,7 +350,7 @@ void GGraphWidget::propSave(QJsonObject& jo) {
 }
 
 void GGraphWidget::setControl() {
-	QString title = ""; // "SnoopSpy"; // gilgil temp 2016.10.11
+	QString title = "SnoopSpy";
 	if (fileName_ != "") {
 		QFileInfo fi(fileName_);
 		title = fi.completeBaseName();
