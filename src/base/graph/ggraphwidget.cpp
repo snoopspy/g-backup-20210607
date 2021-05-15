@@ -74,12 +74,8 @@ void GGraphWidget::init() {
 	mainLayout_->setSpacing(0);
 
 	toolBar_ = new QToolBar(this);
-#ifdef Q_OS_ANDROID
 	toolBar_->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	toolBar_->setIconSize(QSize(96, 96));
-#else // Q_OS_ANDROID
-	toolBar_->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-#endif // Q_OS_ANDROID
+
 	midSplitter_ = new QSplitter(Qt::Horizontal, this);
 	midLeftSplitter_ = new QSplitter(Qt::Vertical, this);
 	factoryWidget_ = new QTreeWidget(this);
@@ -137,6 +133,8 @@ void GGraphWidget::init() {
 	QObject::connect(scene_, &GGScene::selectionChanged, this, &GGraphWidget::setControl);
 
 #ifdef Q_OS_ANDROID
+	toolBar_->setIconSize(QSize(96, 96));
+
 	midSplitter_->setHandleWidth(midSplitter_->handleWidth() * 5);
 	midLeftSplitter_->setHandleWidth(midLeftSplitter_->handleWidth() * 5);
 
