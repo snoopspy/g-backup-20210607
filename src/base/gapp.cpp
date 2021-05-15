@@ -50,18 +50,21 @@ void GApp::init() {
 	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
 	qInfo() << G::pcap_lib_version();
 
-#ifdef GILGIL_ANDROID_DEBUG
-	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
-	copyFileFromAssets("ssdemon.sh", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
-	QString program = "su";
 #ifdef Q_OS_ANDROID
-	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon.sh"};
-#else // Q_OS_ANDROID
-	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
+	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 #endif // Q_OS_ANDROID
-	bool res = QProcess::startDetached(program, arguments); // gilgil temp 2021.03.12
+
+#ifdef Q_OS_ANDROID
+	QString command = "su -c 'export LD_LIBRARY_PATH=" + QDir::currentPath() + "/../lib; " + QDir::currentPath() + "/ssdemon &'";
+	int res = system(qPrintable(command));
+	qDebug() << command << "return" << res;
+#else // Q_OS_ANDROID
+	QString program = "su";
+	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
+	bool res = QProcess::startDetached(program, arguments);
 	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
-#endif // GILGIL_ANDROID_DEBUG
+#endif // Q_OS_ANDROID
+
 }
 
 bool GApp::copyFileFromAssets(QString fileName, QFile::Permissions permissions) {
