@@ -2,7 +2,6 @@
 
 #include "ggraphwidget.h"
 
-#include <QMessageBox>
 #include <QStyledItemDelegate>
 #include <QScroller>
 #include "base/gjson.h"
@@ -300,11 +299,10 @@ GObj* GGraphWidget::createNodeIfItemNodeSelected() {
 	GGraph::Factory::ItemNode* itemNode = dynamic_cast<GGraph::Factory::ItemNode*>(item);
 	if (itemNode == nullptr)
 		return nullptr;
-	QString className = itemNode->displayName_;
+	QString className = itemNode->className_;
 	GObj* node = createInstance(className);
 	if (node == nullptr) {
-		QString msg = QString("createInstance failed for (%1)").arg(className);
-		QMessageBox::warning(nullptr, "Error", msg);
+		qWarning() << QString("createInstance failed for (%1)").arg(className);
 		return nullptr;
 	}
 	node->setParent(graph_);
