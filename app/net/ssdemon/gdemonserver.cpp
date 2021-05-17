@@ -451,7 +451,7 @@ bool GDemonServer::RtmFunc::checkA(char* buf, RtmEntry* entry) {
 	// default via 10.2.2.1 dev eth0 proto dhcp metric 100 (A)
 	int res = sscanf(buf, "default via %s dev %s proto dhcp metric %d", gateway, intf, &metric);
 	if (res == 3) {
-		GTRACE("checkA %s", buf); // gilgil temp
+		// GTRACE("checkA %s", buf);
 		struct in_addr addr;
 		inet_aton(gateway, &addr);
 		entry->gateway_ = ntohl(addr.s_addr);
@@ -470,7 +470,7 @@ bool GDemonServer::RtmFunc::checkB(char* buf, RtmEntry* entry) {
 	// 10.2.2.0/24 dev eth0 proto kernel scope link src 10.2.2.3 metric 100 (B)
 	int res  = sscanf(buf, "%s dev %s proto kernel scope link src %s metric %d", cidr, intf, myip, &metric);
 	if (res == 4) {
-		GTRACE("checkB %s", buf); // gilgil temp
+		// GTRACE("checkB %s", buf);
 		uint32_t dst;
 		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;
