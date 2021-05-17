@@ -38,11 +38,11 @@ public:
 
 public:
 	enum Mode { InsertItem, MoveItem, InsertLine };
-	Mode mode() { return m_mode; }
-	void setMode(Mode mode) { m_mode = mode; }
+	Mode mode() { return mode_; }
+	void setMode(Mode mode) { mode_ = mode; }
 
 protected:
-	Mode m_mode;
+	Mode mode_;
 
 public:
 	GGraphWidget* graphWidget_;
@@ -54,8 +54,8 @@ public:
 	GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
 	GGText* findTextByObjectName(QString objectName);
 
-protected: // for drag and drop
-	QGraphicsLineItem *line;
+protected:
+	QGraphicsLineItem *dragLine_; // for drag and drop
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

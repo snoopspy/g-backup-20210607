@@ -4,11 +4,11 @@
 #include "ggraphwidget.h"
 
 GGScene::GGScene(QObject *parent) : QGraphicsScene(parent) {
-	m_mode = MoveItem;
+	mode_ = MoveItem;
 	graphWidget_ = dynamic_cast<GGraphWidget*>(parent);
 	Q_ASSERT(graphWidget_ != nullptr);
 	signalSlotForm_ = nullptr;
-	line = nullptr;
+	dragLine_ = nullptr;
 }
 
 GGScene::~GGScene() {
@@ -76,7 +76,7 @@ GGText* GGScene::findTextByObjectName(QString objectName) {
 }
 
 void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-	switch (m_mode) {
+	switch (mode_) {
 		case InsertItem: {
 			GObj* newNode = graphWidget_->createNodeIfItemNodeSelected();
 			if (newNode != nullptr) {
@@ -88,29 +88,29 @@ void GGScene::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 		case MoveItem:
 			break;
 		case InsertLine:
-			line = new QGraphicsLineItem(QLineF(event->scenePos(), event->scenePos()));
+			dragLine_ = new QGraphicsLineItem(QLineF(event->scenePos(), event->scenePos()));
 #ifdef Q_OS_ANDROID
 	qreal width = 20;
 #else // Q_OS_ANDROID
 	qreal width = 5;
 #endif // Q_OS_ANDROID
-			line->setPen(QPen(Qt::black, width, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
-			addItem(line);
+			dragLine_->setPen(QPen(Qt::black, width, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin));
+			addItem(dragLine_);
 			break;
 	}
 	QGraphicsScene::mousePressEvent(event);
 }
 
 void GGScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-	switch (m_mode) {
+	switch (mode_) {
 		case InsertItem:
 			break;
 		case MoveItem:
 			break;
 		case InsertLine:
-			if (line != nullptr) {
-				QLineF newLine(line->line().p1(), event->scenePos());
-				line->setLine(newLine);
+			if (dragLine_ != nullptr) {
+				QLineF newLine(dragLine_->line().p1(), event->scenePos());
+				dragLine_->setLine(newLine);
 				return;
 			}
 			break;
@@ -119,18 +119,18 @@ void GGScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-	switch (m_mode) {
+	switch (mode_) {
 		case InsertItem:
 			break;
 		case MoveItem:
 			break;
 		case InsertLine:
-			if (line != nullptr) {
-				QList<QGraphicsItem *> startItems = items(line->line().p1());
-				if (startItems.count() && startItems.first() == line)
+			if (dragLine_ != nullptr) {
+				QList<QGraphicsItem *> startItems = items(dragLine_->line().p1());
+				if (startItems.count() && startItems.first() == dragLine_)
 					startItems.removeFirst();
-				QList<QGraphicsItem *> endItems = items(line->line().p2());
-				if (endItems.count() && endItems.first() == line)
+				QList<QGraphicsItem *> endItems = items(dragLine_->line().p2());
+				if (endItems.count() && endItems.first() == dragLine_)
 					endItems.removeFirst();
 
 				if (startItems.count() > 0 && endItems.count() > 0 && startItems.first() != endItems.first()) {
@@ -186,9 +186,9 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 						createArrow(startText, endText, connection);
 					}
 				}
-				removeItem(line);
-				delete line;
-				line = nullptr;
+				removeItem(dragLine_);
+				delete dragLine_;
+				dragLine_ = nullptr;
 			}
 			break;
 	}

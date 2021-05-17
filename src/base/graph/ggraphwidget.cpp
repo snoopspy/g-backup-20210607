@@ -449,45 +449,40 @@ void GGraphWidget::actionLinkTriggered(bool) {
 }
 
 void GGraphWidget::actionDeleteTriggered(bool) {
-	if (scene_->selectedItems().count() == 0)
-		return;
-	QGraphicsItem* item = scene_->selectedItems().first();
-
-	GGText* text = dynamic_cast<GGText*>(item);
-	if (text != nullptr) {
-		GObj* node = text->node_;
-
-		for (QGraphicsItem* item: scene_->items()) {
-			GGArrow* arrow = dynamic_cast<GGArrow*>(item);
-			if (arrow == nullptr) continue;
-			if (arrow->startText() == text || arrow->endText() == text) {
-				GGraph::Connection* connection = arrow->connection_;
-				GObj::disconnect(
-							connection->sender_, qPrintable(connection->signal_),
-							connection->receiver_, qPrintable(connection->slot_));
-				graph_->connections_.removeOne(connection);
-				delete connection;
-				delete arrow;
+	QList<QGraphicsItem*> selectedItems = QList<QGraphicsItem *>(scene_->selectedItems());
+	for (QGraphicsItem* item: selectedItems) {
+		GGText* text = dynamic_cast<GGText*>(item);
+		if (text != nullptr) {
+			GObj* node = text->node_;
+			for (QGraphicsItem* item: scene_->items()) {
+				GGArrow* arrow = dynamic_cast<GGArrow*>(item);
+				if (arrow == nullptr) continue;
+				if (arrow->startText() == text || arrow->endText() == text) {
+					GGraph::Connection* connection = arrow->connection_;
+					GObj::disconnect(
+						connection->sender_, qPrintable(connection->signal_),
+						connection->receiver_, qPrintable(connection->slot_));
+					graph_->connections_.removeOne(connection);
+					delete connection;
+					delete arrow;
+				}
 			}
+			graph_->nodes_.removeOne(node);
+			delete node;
+			delete text;
 		}
-		graph_->nodes_.removeOne(node);
-		delete node;
-		delete text;
 
-		setControl();
-		return;
+		GGArrow* arrow = dynamic_cast<GGArrow*>(item);
+		if (arrow != nullptr) {
+			GGraph::Connection* connection = arrow->connection_;
+			GObj::disconnect(
+				connection->sender_, qPrintable(connection->signal_),
+				connection->receiver_, qPrintable(connection->slot_));
+			graph_->connections_.removeOne(connection);
+			delete arrow;
+		}
 	}
-
-	GGArrow* arrow = dynamic_cast<GGArrow*>(item);
-	if (arrow != nullptr) {
-		GGraph::Connection* connection = arrow->connection_;
-		GObj::disconnect(
-					connection->sender_, qPrintable(connection->signal_),
-					connection->receiver_, qPrintable(connection->slot_));
-		graph_->connections_.removeOne(connection);
-		delete arrow;
-		setControl();
-	}
+	setControl();
 }
 
 void GGraphWidget::actionAboutTriggered(bool) {
