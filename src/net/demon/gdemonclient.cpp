@@ -317,7 +317,7 @@ void GDemonClient::pcapWrite(PcapWrite write) {
 	}
 }
 
-GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
+GDemonClient& GDemonClient::instance(std::string ip, uint16_t port) {
 	static GDemonClientMap map;
 	GDemonClientMapKey key(ip, port);
 	GDemonClientMap::iterator it = map.find(key);
@@ -325,6 +325,6 @@ GDemonClient* GDemonClient::instance(std::string ip, uint16_t port) {
 		map.insert({key, new GDemonClient(ip, port)});
 		it = map.find(key);
 	}
-	return it->second;
+	return *(it->second);
 }
 
