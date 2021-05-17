@@ -39,9 +39,42 @@ void GGText::removeArrows() {
 }
 
 void GGText::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-	painter->drawRect(boundingRect());
-	painter->fillRect(boundingRect(), Qt::gray);
+	GGScene* gsscene = dynamic_cast<GGScene*>(scene());
+	Q_ASSERT(gsscene != nullptr);
+	QColor color = Qt::gray;
+
+	if (gsscene->mode() == GGScene::InsertLine) {
+		bool selected = false;
+		if (gsscene->dragLine_ != nullptr) {
+			QList<QGraphicsItem*> startItems = gsscene->items(gsscene->dragLine_->line().p1());
+			for (QGraphicsItem* item: startItems) {
+				GGText* text = dynamic_cast<GGText*>(item);
+				if (text != nullptr && text == this) {
+					selected = true;
+					break;
+				}
+			}
+			QList<QGraphicsItem*> endItems = gsscene->items(gsscene->dragLine_->line().p2());
+			for (QGraphicsItem* item: endItems) {
+				GGText* text = dynamic_cast<GGText*>(item);
+				if (text != nullptr && text == this) {
+					selected = true;
+					break;
+				}
+			}
+			if (selected) color = Qt::white;
+		}
+	}
+
+	QRectF rect = boundingRect();
+	painter->fillRect(rect, color);
+	painter->drawRect(rect);
 	QGraphicsTextItem::paint(painter, option, widget);
+
+	bool updated = property("updated").toBool();
+	if (!updated)
+		update();
+	setProperty("updated", !updated);
 }
 
 #endif // QT_GUI_LIB

@@ -47,15 +47,13 @@ protected:
 public:
 	GGraphWidget* graphWidget_;
 	GGSignalSlotForm* signalSlotForm_;
+	QGraphicsLineItem *dragLine_; // for drag and drop
 
 public:
 	GGText* createText(GObj* node, QPointF pos);
 	GGArrow* createArrow(GGText* startText, GGText* endText, GGraph::Connection* connection);
 	GGArrow* createArrow(QString startNodeName, QString endNodeName, GGraph::Connection* connection);
 	GGText* findTextByObjectName(QString objectName);
-
-protected:
-	QGraphicsLineItem *dragLine_; // for drag and drop
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

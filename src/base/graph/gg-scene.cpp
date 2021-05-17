@@ -109,8 +109,8 @@ void GGScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 			break;
 		case InsertLine:
 			if (dragLine_ != nullptr) {
-				QLineF newLine(dragLine_->line().p1(), event->scenePos());
-				dragLine_->setLine(newLine);
+				QLineF line(dragLine_->line().p1(), event->scenePos());
+				dragLine_->setLine(line);
 				return;
 			}
 			break;
