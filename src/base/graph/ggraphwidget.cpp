@@ -449,7 +449,7 @@ void GGraphWidget::actionLinkTriggered(bool) {
 }
 
 void GGraphWidget::actionDeleteTriggered(bool) {
-	QList<QGraphicsItem*> selectedItems = QList<QGraphicsItem *>(scene_->selectedItems());
+	QList<QGraphicsItem*> selectedItems = QList<QGraphicsItem*>(scene_->selectedItems());
 	for (QGraphicsItem* item: selectedItems) {
 		GGText* text = dynamic_cast<GGText*>(item);
 		if (text != nullptr) {

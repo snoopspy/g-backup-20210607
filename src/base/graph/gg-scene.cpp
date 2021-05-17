@@ -126,7 +126,7 @@ void GGScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 			break;
 		case InsertLine:
 			if (dragLine_ != nullptr) {
-				QList<QGraphicsItem *> startItems = items(dragLine_->line().p1());
+				QList<QGraphicsItem*> startItems = items(dragLine_->line().p1());
 				if (startItems.count() && startItems.first() == dragLine_)
 					startItems.removeFirst();
 				QList<QGraphicsItem *> endItems = items(dragLine_->line().p2());
