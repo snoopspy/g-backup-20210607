@@ -33,10 +33,7 @@ public:
 	GApp(int &argc, char** argv);
 	~GApp() override;
 	static void init();
-
-#ifdef GILGIL_ANDROID_DEBUG
 	static bool copyFileFromAssets(QString fileName, QFile::Permissions permissions);
-#endif // GILGIL_ANDROID_DEBUG
 
 #ifdef QT_GUI_LIB
 	static bool execObj(GObj* obj);
