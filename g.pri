@@ -17,6 +17,7 @@ DEFINES *= QT_MESSAGELOGCONTEXT
 G_NAME = g
 CONFIG(qt): contains(QT, gui) G_NAME = $${G_NAME}-gui
 CONFIG(debug, debug|release) G_NAME = $${G_NAME}-d
+android: G_NAME = $${G_NAME}-android
 
 #------------------------------------------------------------------------------
 # G_DIR
@@ -24,11 +25,10 @@ CONFIG(debug, debug|release) G_NAME = $${G_NAME}-d
 G_DIR = $${PWD}
 INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
-	win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.dll
-	android: G_NAME = $${G_NAME}_armeabi-v7a
-	linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.so
+	win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.lib
+	linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.a
+	android: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.a
 	LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
-	ANDROID_EXTRA_LIBS *= $${G_DIR}/bin/lib$${G_NAME}.so
 }
 
 #------------------------------------------------------------------------------
@@ -51,6 +51,8 @@ CONFIG(gstacktrace) {
 #------------------------------------------------------------------------------
 # path and link
 #------------------------------------------------------------------------------
+linux: LIBS *= -lpcap -lnetfilter_queue
+android: LIBS *= -lmnl -lnfnetlink
 win32 {
 	INCLUDEPATH *= $${PWD}/../npcap/Include
 	LIBS *= -L$${PWD}/../npcap/Lib/x64
