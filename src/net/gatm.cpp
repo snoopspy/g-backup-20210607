@@ -200,10 +200,11 @@ TEST(GAtm, resolveTest) {
 	GIp ip = intf->gateway();
 	ASSERT_NE(ip, 0);
 
-	GAtm atm;
-	GMac mac = atm.waitOne(ip, &device);
-	ASSERT_FALSE(mac.isNull());
+	GAtm& atm = GAtm::instance(intfName);
+	atm.insert(ip, GMac::nullMac());
+	EXPECT_TRUE(atm.wait(&device));
 
+	GMac mac = atm.find(ip).value();
 	qDebug() << QString("ip:%1 mac:%2").arg(QString(ip), QString(mac));
 }
 
