@@ -7,7 +7,11 @@
 // GPropItemInterface
 // ----------------------------------------------------------------------------
 GPropItemInterface::GPropItemInterface(GPropItemParam* param) : GPropItemComboBox(param) {
+#ifdef Q_OS_ANDROID
+	GInterfaceList& interfaceList = GRemoteNetInfo::instance("127.0.0.1", GDemon::DefaultPort).interfaceList();
+#else // Q_OS_ANDROID
 	GInterfaceList& interfaceList = GNetInfo::instance().interfaceList();
+#endif // Q_OS_ANDROID
 	for (int i = 0; i < interfaceList.count(); i++) {
 		const GInterface& intf = interfaceList.at(i);
 #ifdef Q_OS_LINUX
