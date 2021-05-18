@@ -489,7 +489,7 @@ bool GDemonServer::RtmFunc::checkC(char* buf, RtmEntry* entry) {
 	// default via 10.2.2.1 dev wlan0  table 1021  proto static (C)
 	int res = sscanf(buf, "default via %s dev %s", gateway, intf);
 	if (res == 2) {
-		GTRACE("checkC %s", buf); // gilgil temp
+		// GTRACE("checkC %s", buf);
 		struct in_addr addr;
 		inet_aton(gateway, &addr);
 		entry->gateway_ = ntohl(addr.s_addr);
@@ -506,7 +506,7 @@ bool GDemonServer::RtmFunc::checkD(char* buf, RtmEntry* entry) {
 	// 10.2.2.0/24 dev wlan0  proto kernel  scope link  src 10.2.2.189 (D)
 	int res = sscanf(buf, "%s dev %s proto kernel scope link src %s", cidr, intf, ip);
 	if (res == 3) {
-		GTRACE("checkD %s", buf); // gilgil temp
+		// GTRACE("checkD %s", buf);
 		uint32_t dst;
 		uint32_t mask;
 		if (!decodeCidr(cidr, &dst, &mask)) return false;

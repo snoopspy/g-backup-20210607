@@ -5,8 +5,11 @@
 // ----------------------------------------------------------------------------
 GPcapDevice::GPcapDevice(QObject* parent) : GPcapCapture(parent) {
 	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
-	if (entry != nullptr)
-		intfName_ = entry->intf()->name();
+	if (entry != nullptr) {
+		GInterface* intf = entry->intf();
+		if (intf != nullptr)
+			intfName_ = intf->name();
+	}
 }
 
 GPcapDevice::~GPcapDevice() {

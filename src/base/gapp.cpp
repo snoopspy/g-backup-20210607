@@ -64,7 +64,6 @@ void GApp::init() {
 	bool res = QProcess::startDetached(program, arguments);
 	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
 #endif // Q_OS_ANDROID
-
 }
 
 bool GApp::copyFileFromAssets(QString fileName, QFile::Permissions permissions) {
