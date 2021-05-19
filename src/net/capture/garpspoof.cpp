@@ -14,6 +14,10 @@ GArpSpoof::~GArpSpoof() {
 }
 
 bool GArpSpoof::doOpen() {
+	if (filter_ != "") {
+		SET_ERR(GErr::FAIL, "filter must be blank");
+		return false;
+	}
 	if (!GPcapDevice::doOpen()) return false;
 
 	flowList_.clear();
@@ -107,7 +111,6 @@ bool GArpSpoof::doOpen() {
 }
 
 bool GArpSpoof::doClose() {
-	qDebug() << ""; // gilgil temp 2019.08.16
 	infectThread_.we_.wakeAll();
 	infectThread_.wait();
 
