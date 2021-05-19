@@ -121,29 +121,21 @@ bool GArpSpoof::doClose() {
 	return GPcapDevice::doClose();
 }
 
-GPacket::Result GArpSpoof::relay(GPacket* packet) {
-	return write(packet);
-}
-
-void GArpSpoof::run() {
-	qDebug() << "GArpSpoof::run() beg"; // gilgil temp 2019.08.18
-
-	GEthPacket packet;
-	while (active()) {
-		GPacket::Result res = read(&packet);
+GPacket::Result GArpSpoof::read(GPacket* packet) {
+	while (true) {
+		GPacket::Result res = GPcapDevice::read(packet);
+		if (res == GPacket::Eof || res == GPacket::Fail) return res;
 		if (res == GPacket::Timeout) continue;
-		if (res == GPacket::Eof || res == GPacket::Fail) break;
 
-		GEthHdr* ethHdr = packet.ethHdr_;
-		GArpHdr* arpHdr = packet.arpHdr_;
-		GIpHdr* ipHdr = packet.ipHdr_;
-
+		GEthHdr* ethHdr = packet->ethHdr_;
 		Q_ASSERT(ethHdr != nullptr);
+
 		// attacker sending packet?
 		if (ethHdr->smac() == myMac_) continue;
 
-		switch (packet.ethHdr_->type()) {
+		switch (ethHdr->type()) {
 			case GEthHdr::Arp: {
+				GArpHdr* arpHdr = packet->arpHdr_;
 				Q_ASSERT(arpHdr != nullptr);
 				for (Flow& flow: flowList_) {
 					bool infect = false;
@@ -158,10 +150,10 @@ void GArpSpoof::run() {
 					if (infect)
 						sendArpInfect(&flow);
 				}
-				break;
+				continue;
 			}
-
 			case GEthHdr::Ip4: {
+				GIpHdr* ipHdr = packet->ipHdr_;
 				Q_ASSERT(ipHdr != nullptr);
 				GIp adjSrcIp = intf_->getAdjIp(ipHdr->sip());
 				GIp adjDstIp = intf_->getAdjIp(ipHdr->dip());
@@ -170,22 +162,25 @@ void GArpSpoof::run() {
 				if (it == flowMap_.end()) break;
 				Flow& flow = it.value();
 				ethHdr->dmac_ = flow.targetMac_;
-				emit captured(&packet);
-				ethHdr->smac_ = myMac_;
-				if (!packet.ctrl.block_) {
-					res = relay(&packet);
-					if (res != GPacket::Ok) {
-						qWarning() << "relay return " << int(res);
-					}
-				}
-				break;
+				return GPacket::Ok;
 			}
-
-			default: break;
+			default: continue;
 		}
 	}
-	qDebug() << "GArpSpoof::run() end"; // gilgil temp 2019.08.18
-	emit closed();
+}
+
+GPacket::Result GArpSpoof::write(GBuf buf) {
+	return GPcapCapture::write(buf);
+}
+
+GPacket::Result GArpSpoof::write(GPacket* packet) {
+	return GPcapCapture::write(packet);
+}
+
+GPacket::Result GArpSpoof::relay(GPacket* packet) {
+	Q_ASSERT(packet->ethHdr_ != nullptr);
+	packet->ethHdr_->smac_ = myMac_;
+	return write(packet);
 }
 
 GArpSpoof::Flow::Flow(GIp senderIp, GMac senderMac, GIp targetIp, GMac targetMac) {

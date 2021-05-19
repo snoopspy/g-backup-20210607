@@ -66,12 +66,12 @@ protected:
 	bool doClose() override;
 
 public:
+	GPacket::Result read(GPacket* packet) override;
+	GPacket::Result write(GBuf buf) override;
+	GPacket::Result write(GPacket* packet) override;
 	GPacket::Result relay(GPacket* packet) override;
 
 	PathType pathType() override { return InPath; }
-
-protected:
-	void run() override;
 
 public:
 	GMac virtualMac_{GMac::nullMac()};
