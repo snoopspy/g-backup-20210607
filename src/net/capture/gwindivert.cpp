@@ -129,9 +129,7 @@ bool GWinDivert::doOpen() {
 		return false;
 	}
 
-	GCapture::doOpen();
-
-	return true;
+	return GCapture::doOpen();
 }
 
 bool GWinDivert::doClose() {

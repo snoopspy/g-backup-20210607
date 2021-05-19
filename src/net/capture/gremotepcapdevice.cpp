@@ -38,9 +38,7 @@ bool GRemotePcapDevice::doOpen() {
 
 	dlt_ = GPacket::intToDlt(rep.dataLink_);
 
-	GCapture::doOpen();
-
-	return true;
+	return GCapture::doOpen();
 }
 
 bool GRemotePcapDevice::doClose() {

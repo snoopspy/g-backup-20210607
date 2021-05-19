@@ -12,9 +12,7 @@ bool GPcapCapture::doOpen() {
 			return false;
 	}
 
-	GCapture::doOpen();
-
-	return true;
+	return GCapture::doOpen();
 }
 
 bool GPcapCapture::doClose() {
