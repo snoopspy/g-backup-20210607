@@ -12,7 +12,7 @@ bool GPcapCapture::doOpen() {
 			return false;
 	}
 
-	captureThreadOpen();
+	GCapture::doOpen();
 
 	return true;
 }
@@ -20,7 +20,7 @@ bool GPcapCapture::doOpen() {
 bool GPcapCapture::doClose() {
 	if (!enabled_) return true;
 
-	captureThreadClose();
+	GCapture::doClose();
 
 	if (pcap_ != nullptr) {
 		pcap_close(pcap_);

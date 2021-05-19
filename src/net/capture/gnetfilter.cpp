@@ -74,7 +74,7 @@ bool GNetFilter::doOpen() {
 	fd_ = nfq_fd(h_);
 	qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
 
-	captureThreadOpen();
+	GCapture::doOpen();
 
 	return true;
 }
@@ -93,7 +93,7 @@ bool GNetFilter::doClose() {
 		fd_ = 0;
 	}
 
-	captureThreadClose();
+	GCapture::doClose();
 
 	if (qh_ != nullptr) {
 		qDebug() << "bef call nfq_destroy_queue"; // gilgil temp 2016.09.25

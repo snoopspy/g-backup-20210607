@@ -103,8 +103,6 @@ bool GArpSpoof::doOpen() {
 	if (infectInterval_ != 0)
 		infectThread_.start();
 
-	captureThreadOpen();
-
 	return true;
 }
 
@@ -118,7 +116,7 @@ bool GArpSpoof::doClose() {
 		QThread::msleep(sendInterval_);
 	}
 
-	captureThreadClose();
+	GCapture::doClose();
 
 	return GPcapDevice::doClose();
 }

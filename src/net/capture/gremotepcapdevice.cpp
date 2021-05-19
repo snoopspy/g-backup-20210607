@@ -38,7 +38,7 @@ bool GRemotePcapDevice::doOpen() {
 
 	dlt_ = GPacket::intToDlt(rep.dataLink_);
 
-	captureThreadOpen();
+	GCapture::doOpen();
 
 	return true;
 }
@@ -51,7 +51,7 @@ bool GRemotePcapDevice::doClose() {
 	if (demonClient_ != nullptr)
 		demonClient_->pcapClose();
 
-	captureThreadClose();
+	GCapture::doClose();
 
 	if (demonClient_ != nullptr) {
 		delete demonClient_;

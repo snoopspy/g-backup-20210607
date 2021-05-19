@@ -44,8 +44,8 @@ public:
 	~GCapture() override;
 
 protected:
-	void captureThreadOpen();
-	void captureThreadClose();
+	bool doOpen() override;
+	bool doClose() override;
 
 public:
 	virtual GPacket::Result read(GPacket* packet);

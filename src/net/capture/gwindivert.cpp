@@ -129,7 +129,7 @@ bool GWinDivert::doOpen() {
 		return false;
 	}
 
-	captureThreadOpen();
+	GCapture::doOpen();
 
 	return true;
 }
@@ -150,7 +150,7 @@ bool GWinDivert::doClose() {
 	}
 	handle_ = nullptr;
 
-	return captureThreadClose();
+	return GCapture::doClose();
 }
 
 GPacket::Result GWinDivert::read(GPacket* packet) {
