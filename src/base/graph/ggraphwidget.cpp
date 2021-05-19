@@ -8,7 +8,7 @@
 
 struct MyHeightItemDelegate : QStyledItemDelegate
 {
-	MyHeightItemDelegate(QObject *poParent = nullptr) : QStyledItemDelegate(poParent)  {}
+	MyHeightItemDelegate(QObject *poParent = nullptr) : QStyledItemDelegate(poParent) {}
 
 	QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override	{
 		QSize res = QStyledItemDelegate::sizeHint(option, index);
