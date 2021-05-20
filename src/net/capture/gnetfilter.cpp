@@ -12,12 +12,18 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 	GDEBUG_CTOR;
 
 	command_.openCommands_.clear();
-	command_.openCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-A", "OUTPUT", "-j", "NFQUEUE"}));
-	command_.openCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-A", "INPUT", "-j", "NFQUEUE"}));
+	command_.openCommands_.push_back(new GCommandItem(this, QStringList{
+		"su -c 'iptables -A OUTPUT -d 127.0.0.1 -j ACCEPT'",
+		"su -c 'iptables -A INPUT -d 127.0.0.1 -j ACCEPT'",
+		"su -c 'iptables -A OUTPUT -j NFQUEUE'",
+		"su -c 'iptables -A INPUT -j NFQUEUE'"}));
 
 	command_.closeCommands_.clear();
-	command_.closeCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-D", "OUTPUT", "-j", "NFQUEUE"}));
-	command_.closeCommands_.push_back(new GCommandItem(this, "sudo", QStringList{"iptables", "-D", "INPUT", "-j", "NFQUEUE"}));
+	command_.closeCommands_.push_back(new GCommandItem(this, QStringList{
+		"su -c 'iptables -D OUTPUT -d 127.0.0.1 -j ACCEPT'",
+		"su -c 'iptables -D INPUT -d 127.0.0.1 -j ACCEPT'",
+		"su -c 'iptables -D OUTPUT -j NFQUEUE'",
+		"su -c 'iptables -D INPUT -j NFQUEUE'"}));
 }
 
 GNetFilter::~GNetFilter() {
@@ -147,7 +153,7 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 void GNetFilter::run() {
 	qDebug() << "beg"; // gilgil temp 2016.09.27
 	char* buf = pchar(malloc(size_t(snapLen_)));
-	while (true) {
+	while (active()) {
 		//qDebug() << "bef call recv"; // gilgil temp 2016.09.27
 		int res = int(::recv(fd_, buf, size_t(snapLen_), 0));
 		//qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
