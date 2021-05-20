@@ -18,27 +18,25 @@
 // ----------------------------------------------------------------------------
 struct G_EXPORT GCommandItem : public GObj {
 	Q_OBJECT
-	Q_PROPERTY(QString program MEMBER program_)
-	Q_PROPERTY(QStringList arguments MEMBER arguments_)
+	Q_PROPERTY(QStringList commands MEMBER commands_)
 	Q_PROPERTY(GCommandType commandType MEMBER commandType_)
 	Q_ENUMS(GCommandType)
 
 public:
 	enum GCommandType {
 		Execute,
-		Start,
+		StartStop,
 		StartDetach
 	};
 
-	QString program_;
-	QStringList arguments_;
+	QStringList commands_;
 	GCommandType commandType_{Execute};
 
 	Q_INVOKABLE GCommandItem(QObject* parent = nullptr);
-	Q_INVOKABLE GCommandItem(QObject* parent, QString program, QStringList arguments, GCommandType commandType = Execute);
+	Q_INVOKABLE GCommandItem(QObject* parent, QStringList commands, GCommandType commandType = Execute);
 	~GCommandItem() override;
 
-	QProcess* process_{nullptr};
+	QList<QProcess*> processList_;
 };
 typedef GCommandItem* PCommandItem;
 
@@ -61,6 +59,9 @@ public:
 protected:
 	bool doOpen() override;
 	bool doClose() override;
+
+public:
+	static bool separate(QString command, QString* program, QStringList* arguments);
 
 public:
 	GObjRefArray<GCommandItem> openCommands_;
