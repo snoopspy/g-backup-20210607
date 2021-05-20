@@ -24,7 +24,7 @@ bool GArpSpoof::doOpen() {
 	GAtm& atm = GAtm::instance(intfName_);
 	atm.deleteUnresolved();
 
-	for (GObj* obj: propFlows_) {
+	for (GObj* obj: flows_) {
 		GArpSpoofFlow* propFlow = PArpSpoofFlow(obj);
 		if (!propFlow->enabled_) continue;
 
