@@ -13,6 +13,7 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 
 	command_.openCommands_.clear();
 	command_.openCommands_.push_back(new GCommandItem(this, QStringList{
+		"su -c 'iptables -F'",
 		"su -c 'iptables -A OUTPUT -d 127.0.0.1 -j ACCEPT'",
 		"su -c 'iptables -A INPUT -d 127.0.0.1 -j ACCEPT'",
 		"su -c 'iptables -A OUTPUT -j NFQUEUE'",
