@@ -16,9 +16,7 @@
 #include <QCoreApplication>
 #endif // QT_GUI_LIB
 #include <QFile>
-
-#include "base/graph/ggraph.h"
-#include "base/graph/gpluginfactory.h"
+#include "base/gbase.h"
 
 // ----------------------------------------------------------------------------
 // GApp
@@ -32,12 +30,7 @@ struct G_EXPORT GApp : QCoreApplication {
 public:
 	GApp(int &argc, char** argv);
 	~GApp() override;
-	static void init();
+	static void initLogger();
+	static void launchDemon();
 	static bool copyFileFromAssets(QString fileName, QFile::Permissions permissions);
-
-#ifdef QT_GUI_LIB
-	static bool execObj(GObj* obj);
-	static bool execFactory(GPluginFactory* pluginFactory = nullptr);
-	static bool execGraphFactory(GGraph* graph, GPluginFactory* pluginFactory = nullptr);
-#endif // QT_GUI_LIB
 };

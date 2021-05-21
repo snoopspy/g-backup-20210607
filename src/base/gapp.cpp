@@ -1,7 +1,8 @@
 #include "gapp.h"
 
-#include <QFile>
 #include <QProcess>
+
+#include "base/gjson.h"
 
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"
@@ -18,7 +19,12 @@ GApp::GApp(int &argc, char** argv) : QApplication(argc, argv) {
 #else
 GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 #endif // QT_GUI_LIB
-	init();
+	initLogger();
+
+	QString appName = QCoreApplication::applicationName();
+	qInfo() << appName << G::version();
+	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
+	qInfo() << G::pcap_lib_version();
 }
 
 GApp::~GApp() {
@@ -26,7 +32,7 @@ GApp::~GApp() {
 	qInfo() << appName << "terminated";
 }
 
-void GApp::init() {
+void GApp::initLogger() {
 	GLogManager& logManager = GLogManager::instance();
 	if (QFile::exists("sslog.ss")) {
 		QJsonObject jo = GJson::loadFromFile("sslog.ss");
@@ -44,12 +50,9 @@ void GApp::init() {
 #endif // Q_OS_ANDROID
 	logManager.push_back(new GLogUdp);
 	}
+}
 
-	QString appName = QCoreApplication::applicationName();
-	qInfo() << appName << G::version();
-	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
-	qInfo() << G::pcap_lib_version();
-
+void GApp::launchDemon() {
 #ifdef Q_OS_ANDROID
 	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 #endif // Q_OS_ANDROID
@@ -87,52 +90,3 @@ bool GApp::copyFileFromAssets(QString fileName, QFile::Permissions permissions) 
 	}
 	return true;
 }
-
-#ifdef QT_GUI_LIB
-bool GApp::execObj(GObj* obj) {
-	GPropWidget propWidget(obj);
-
-	QJsonObject jo = GJson::loadFromFile();
-	jo["object"] >> *obj;
-	jo["propWidget"] >> propWidget;
-
-	propWidget.update();
-	propWidget.show();
-	int res = QApplication::exec();
-
-	jo["object"] << *obj;
-	jo["propWidget"] << propWidget;
-
-	GJson::saveToFile(jo);
-	return res;
-}
-
-bool GApp::execFactory(GPluginFactory* pluginFactory) {
-	GGraph graph;
-	return execGraphFactory(&graph, pluginFactory);
-}
-
-bool GApp::execGraphFactory(GGraph* graph, GPluginFactory* pluginFactory) {
-	Q_ASSERT(graph != nullptr);
-
-	if (pluginFactory == nullptr) {
-		pluginFactory = &GPluginFactory::instance();
-	}
-	graph->setFactory(pluginFactory);
-
-	GGraphWidget graphWidget;
-	graphWidget.setGraph(graph);
-
-	QJsonObject jo = GJson::loadFromFile();
-	jo["graphWidget"] >> graphWidget;
-
-	graphWidget.update();
-	graphWidget.show();
-	int res = QApplication::exec();
-
-	jo["graphWidget"] << graphWidget;
-
-	GJson::saveToFile(jo);
-	return res;
-}
-#endif // QT_GUI_LIB
