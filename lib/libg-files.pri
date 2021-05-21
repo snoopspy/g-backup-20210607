@@ -13,7 +13,6 @@ SOURCES += \
 	$${PWD}/../src/base/graph/ggraphwidget.cpp \
 	$${PWD}/../src/base/graph/gpluginfactory.cpp \
 	$${PWD}/../src/base/grwpool.cpp \
-	$${PWD}/../src/base/gsscon.cpp \
 	$${PWD}/../src/base/gstateobj.cpp \
 	$${PWD}/../src/base/log/glog.cpp \
 	$${PWD}/../src/base/log/glogdbwin32.cpp \
@@ -132,7 +131,6 @@ HEADERS += \
 	$${PWD}/../src/base/graph/ggraphwidget.h \
 	$${PWD}/../src/base/graph/gpluginfactory.h \
 	$${PWD}/../src/base/grwpool.h \
-	$${PWD}/../src/base/gsscon.h \
 	$${PWD}/../src/base/gstateobj.h \
 	$${PWD}/../src/base/log/glog.h \
 	$${PWD}/../src/base/log/glogdbwin32.h \
