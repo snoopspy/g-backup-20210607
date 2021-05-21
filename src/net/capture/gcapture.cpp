@@ -55,6 +55,11 @@ GPacket::Result GCapture::relay(GPacket* packet) {
 	return GPacket::Fail;
 }
 
+GPacket::Result GCapture::drop(GPacket* packet) {
+	(void)packet;
+	return GPacket::Ok;
+}
+
 void GCapture::run() {
 	qDebug() << "GCapture::run() beg"; // gilgil temp 2017.11.25
 
@@ -71,13 +76,17 @@ void GCapture::run() {
 		case GPacket::Null: default: packet = &nullPacket; break;
 	}
 
+	PathType pt = pathType();
 	while (active()) {
 		GPacket::Result res = read(packet);
 		if (res == GPacket::Timeout) continue;
 		if (res == GPacket::Eof || res == GPacket::Fail) break;
 		emit captured(packet);
-		if (this->pathType() == InPath && !packet->ctrl.block_) {
-			res = relay(packet);
+		if (pt == InPath) {
+			if (packet->ctrl.block_)
+				res = drop(packet);
+			else
+				res = relay(packet);
 			if (res != GPacket::Ok) {
 				qWarning() << "relay return " << int(res);
 			}

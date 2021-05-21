@@ -52,6 +52,7 @@ public:
 	virtual GPacket::Result write(GBuf buf);
 	virtual GPacket::Result write(GPacket* packet);
 	virtual GPacket::Result relay(GPacket* packet);
+	virtual GPacket::Result drop(GPacket* packet);
 
 	virtual GPacket::Dlt dlt() { return GPacket::Null; }
 	virtual PathType pathType() { return OutOfPath; }
