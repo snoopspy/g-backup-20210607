@@ -45,3 +45,7 @@ void GSignal::setup(int signo) {
 	Handler oldHandler = std::signal(signo, _signalHandler);
 	handlers_[signo] = oldHandler;
 }
+
+void GSignal::ignore(int signo) {
+	std::signal(signo, SIG_IGN);
+}

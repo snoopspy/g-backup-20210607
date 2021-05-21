@@ -55,7 +55,28 @@ bool GSsCon::execFactory(GPluginFactory* pluginFactory) {
 	graph_.setFactory(pluginFactory);
 
 	GSignal& signal = GSignal::instance();
+
 	signal.setup(SIGINT);
+	signal.setup(SIGILL);
+	signal.setup(SIGABRT);
+	signal.setup(SIGFPE);
+	signal.setup(SIGSEGV);
+	signal.setup(SIGTERM);
+	signal.setup(SIGHUP);
+	signal.setup(SIGQUIT);
+	signal.setup(SIGTRAP);
+	signal.setup(SIGKILL);
+	signal.setup(SIGBUS);
+	signal.setup(SIGSYS);
+	// ----- by gilgil 2021.03.13 -----
+	// Ignore SIGPIPE which can be signaled when TCP socket operation on linux
+	// std::signal(SIGPIPE, signalHandler);
+	signal.ignore(SIGPIPE);
+	// --------------------------------
+	signal.setup(SIGALRM);
+
+
+
 	QObject::connect(&signal, &GSignal::signaled, this, &GSsCon::processSignal);
 	QObject::connect(&graph_, &GStateObj::closed, this, &GSsCon::processClose);
 
@@ -73,18 +94,29 @@ bool GSsCon::execFactory(GPluginFactory* pluginFactory) {
 }
 
 void GSsCon::processClose() {
-	qDebug() << "processClose"; // gilgil temp 2016.09.25
-	qDebug() << "bef call QCoreApplication::quit()"; // gilgil temp 2016.09.25
 	QCoreApplication::quit();
-	qDebug() << "aft call QCoreApplication::quit()"; // gilgil temp 2016.09.25
 }
 
 void GSsCon::processSignal(int signo) {
-	qDebug() << "beg processSignal" << signo; // gilgil temp 2016.09.25
-	if (signo == SIGINT) {
-		qDebug() << "bef call close()" << signo; // gilgil temp 2016.09.25
-		graph_.close();
-		qDebug() << "aft call close()" << signo; // gilgil temp 2016.09.25
+	QString signal = "unknown";
+	switch (signo) {
+		case SIGINT: signal = "SIGINT"; break;
+		case SIGILL: signal = "SIGILL"; break;
+		case SIGABRT: signal = "SIGABRT"; break;
+		case SIGFPE: signal = "SIGFPE"; break;
+		case SIGSEGV: signal = "SIGSEGV"; break;
+		case SIGTERM: signal = "SIGTERM"; break;
+		case SIGHUP: signal = "SIGHUP"; break;
+		case SIGQUIT: signal = "SIGQUIT"; break;
+		case SIGTRAP: signal = "SIGTRAP"; break;
+		case SIGKILL: signal = "SIGKILL"; break;
+		case SIGBUS: signal = "SIGBUS"; break;
+		case SIGSYS: signal = "SIGSYS"; break;
+		case SIGPIPE: signal = "SIGPIPE"; break;
+		case SIGALRM: signal = "SIGALRM"; break;
 	}
-	qDebug() << "end processSignal" << signo; // gilgil temp 2016.09.25
+	QString msg = strsignal(signo);
+	qWarning() << QString("signo=%1 signal=%2 msg=%3").arg(signo).arg(signal, msg);
+
+	graph_.close();
 }
