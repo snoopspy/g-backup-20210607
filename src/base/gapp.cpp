@@ -54,15 +54,18 @@ void GApp::init() {
 	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 #endif // Q_OS_ANDROID
 
-#ifdef Q_OS_ANDROID
-	QString command = "su -c 'export LD_LIBRARY_PATH=" + QDir::currentPath() + "/../lib; " + QDir::currentPath() + "/ssdemon &'";
-	int res = system(qPrintable(command));
-	qDebug() << command << "return" << res;
-#else // Q_OS_ANDROID
 	QString program = "su";
-	QStringList arguments{"-c", QDir::currentPath() + "/ssdemon"};
-	bool res = QProcess::startDetached(program, arguments);
-	qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
+	QString ssdemonFile = QDir::currentPath() + "/ssdemon";
+	if (QFile::exists(ssdemonFile)) {
+#ifdef Q_OS_ANDROID
+		QString command = "su -c 'export LD_LIBRARY_PATH=" + QDir::currentPath() + "/../lib; " + ssdemonFile + " &'";
+		int res = system(qPrintable(command));
+		qDebug() << command << "return" << res;
+#else // Q_OS_ANDROID
+		QStringList arguments{"-c", ssdemonFile};
+		bool res = QProcess::startDetached(program, arguments);
+		qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
+	}
 #endif // Q_OS_ANDROID
 }
 
