@@ -22,6 +22,8 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 	initLogger();
 
 	QString appName = QCoreApplication::applicationName();
+	qInfo() << "";
+	qInfo() << "";
 	qInfo() << appName << G::version();
 	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
 	qInfo() << G::pcap_lib_version();
@@ -68,8 +70,8 @@ void GApp::launchDemon() {
 		QStringList arguments{"-c", ssdemonFile};
 		bool res = QProcess::startDetached(program, arguments);
 		qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
-	}
 #endif // Q_OS_ANDROID
+	}
 }
 
 bool GApp::copyFileFromAssets(QString fileName, QFile::Permissions permissions) {
