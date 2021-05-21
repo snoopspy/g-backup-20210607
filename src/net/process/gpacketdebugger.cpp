@@ -70,6 +70,11 @@ void GPacketDebugger::debug(GPacket* packet) {
 		msg += " " + dump(udpData.data_, udpData.size_);
 	}
 
+	GIcmpHdr* icmpHdr = packet->icmpHdr_;
+	if (icmpHdr != nullptr) {
+		msg += " icmp";
+	}
+
 	msg = QString("%1:").arg(packet->buf_.size_) + msg;
 	qDebug() << msg;
 
