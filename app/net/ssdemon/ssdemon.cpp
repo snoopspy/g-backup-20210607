@@ -74,11 +74,7 @@ int main(int argc, char* argv[]) {
 	std::signal(SIGKILL, signalHandler);
 	std::signal(SIGBUS, signalHandler);
 	std::signal(SIGSYS, signalHandler);
-	// ----- by gilgil 2021.03.13 -----
-	// Ignore SIGPIPE which can be signaled when TCP socket operation on linux
-	// std::signal(SIGPIPE, signalHandler);
-	std::signal(SIGPIPE, SIG_IGN);
-	// --------------------------------
+	std::signal(SIGPIPE, SIG_IGN); // Ignore SIGPIPE which can be signaled when TCP socket operation on linux
 	std::signal(SIGALRM, signalHandler);
 
 	GTRACE("ssdemon started");
