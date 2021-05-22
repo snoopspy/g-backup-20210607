@@ -51,6 +51,7 @@ struct GDemonSession : GDemon {
 
 	GDemonServer* server_;
 	int sd_{0};
+
 	static void _run(GDemonServer* server, int new_sd);
 	void run();
 
