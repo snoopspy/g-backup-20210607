@@ -2,9 +2,6 @@
 
 #ifdef Q_OS_LINUX
 
-#include <linux/netfilter.h>
-#include <libnetfilter_queue/libnetfilter_queue.h>
-
 // ----------------------------------------------------------------------------
 // GNetFilter
 // ----------------------------------------------------------------------------
@@ -13,7 +10,9 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 
 	command_.openCommands_.clear();
 	command_.openCommands_.push_back(new GCommandItem(this, QStringList{
+#ifdef _DEBUG
 		"su -c 'iptables -F'",
+#endif // _DEBUG
 		"su -c 'iptables -A OUTPUT -d 127.0.0.1 -j ACCEPT'",
 		"su -c 'iptables -A INPUT -d 127.0.0.1 -j ACCEPT'",
 		"su -c 'iptables -A OUTPUT -j NFQUEUE'",
@@ -25,6 +24,8 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 		"su -c 'iptables -D INPUT -d 127.0.0.1 -j ACCEPT'",
 		"su -c 'iptables -D OUTPUT -j NFQUEUE'",
 		"su -c 'iptables -D INPUT -j NFQUEUE'"}));
+
+	cb_ = &_callback;
 }
 
 GNetFilter::~GNetFilter() {
@@ -38,11 +39,6 @@ bool GNetFilter::doOpen() {
 
 	if (!command_.open()) {
 		err = command_.err;
-		return false;
-	}
-
-	if (!autoRead_) {
-		SET_ERR(GErr::NOT_SUPPORTED, "autoRead must be true");
 		return false;
 	}
 
@@ -66,7 +62,7 @@ bool GNetFilter::doOpen() {
 	}
 
 	// binding this socket to queue
-	qh_ = nfq_create_queue(h_, uint16_t(queueNum_), &_callback, this);
+	qh_ = nfq_create_queue(h_, uint16_t(queueNum_), cb_, this);
 	if (!qh_) {
 		SET_ERR(GErr::FAIL, "error during nfq_create_queue()");
 		return false;
@@ -80,6 +76,8 @@ bool GNetFilter::doOpen() {
 
 	fd_ = nfq_fd(h_);
 	qDebug() << QString("fd=%1").arg(fd_); // gilgil temp 2016.09.25
+
+	recvBuf_ = new char[GPacket::MaxBufSize];
 
 	return GCapture::doOpen();
 }
@@ -122,6 +120,11 @@ bool GNetFilter::doClose() {
 		h_ = nullptr;
 	}
 
+	if (recvBuf_ != nullptr) {
+		delete recvBuf_;
+		recvBuf_ = nullptr;
+	}
+
 	command_.close();
 
 	return true;
@@ -151,15 +154,22 @@ GPacket::Result GNetFilter::relay(GPacket* packet) {
 	return GPacket::Fail;
 }
 
+#ifdef _DEBUG
+static int count = 0; // gilgil temp 2021.05.21
+#endif // _DEBUG
+
 void GNetFilter::run() {
 	qDebug() << "beg"; // gilgil temp 2016.09.27
-	char* buf = pchar(malloc(size_t(snapLen_)));
 	while (active()) {
 		//qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-		int res = int(::recv(fd_, buf, size_t(snapLen_), 0));
-		//qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
+		int res = int(::recv(fd_, recvBuf_, GPacket::MaxBufSize / 256, 0)); // gilgil temp 2021.05.21
+		qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
 		if (res >= 0) {
-			nfq_handle_packet(h_, buf, res);
+			#ifdef _DEBUG
+			if (++count != 1)
+				qWarning() << "count is" << count;
+			#endif // _DEBUG
+			nfq_handle_packet(h_, recvBuf_, res);
 			continue;
 		} else {
 			if (errno == ENOBUFS) {
@@ -170,18 +180,17 @@ void GNetFilter::run() {
 			break;
 		}
 	}
-	free(buf);
 	emit closed();
 	qDebug() << "end"; // gilgil temp 2016.09.27
 }
 
-int GNetFilter::_callback(
-		struct nfq_q_handle* qh,
-		struct nfgenmsg* nfmsg,
-		struct nfq_data* nfad,
-		void* data) {
-
+int GNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data) {
 	(void)nfmsg;
+
+	#ifdef _DEBUG
+	if (--count != 0)
+		qWarning() << "count is" << count;
+	#endif // _DEBUG
 
 	GNetFilter* netFilter = static_cast<GNetFilter*>(data);
 	GIpPacket* ipPacket = &netFilter->ipPacket_;

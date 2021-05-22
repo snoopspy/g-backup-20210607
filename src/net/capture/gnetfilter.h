@@ -16,13 +16,15 @@
 
 #ifdef Q_OS_LINUX
 
+#include <linux/netfilter.h>
+#include <libnetfilter_queue/libnetfilter_queue.h>
+
 // ----------------------------------------------------------------------------
 // GNetFilter
 // ----------------------------------------------------------------------------
 struct G_EXPORT GNetFilter : GCapture {
 	Q_OBJECT
 	Q_PROPERTY(int queueNum MEMBER queueNum_)
-	Q_PROPERTY(int snapLen MEMBER snapLen_)
 	Q_PROPERTY(Verdict acceptVerdict MEMBER acceptVerdict_)
 	Q_PROPERTY(quint32 mark MEMBER mark_)
 	Q_PROPERTY(GObjRef command READ getCommand)
@@ -37,7 +39,6 @@ public:
 
 public:
 	int queueNum_{0};
-	int snapLen_{65536}; // 65536 bytes
 	Verdict acceptVerdict_{ACCEPT};
 	uint32_t mark_{0};
 	GCommand command_;
@@ -68,12 +69,10 @@ protected:
 	int fd_{0};
 
 	GIpPacket ipPacket_{this};
+	char* recvBuf_{nullptr};
 
-	static int _callback(
-			struct nfq_q_handle* qh_,
-			struct nfgenmsg* nfmsg,
-			struct nfq_data* nfad,
-			void* data);
+	nfq_callback* cb_;
+	static int _callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data);
 };
 
 #endif
