@@ -136,7 +136,12 @@ struct GDemon {
 	};
 
 	struct PcapRead : Header {
-		pcap_pkthdr pktHdr_;
+		struct PktHdr {
+			uint64_t tv_sec;
+			uint64_t tv_usec;
+			uint32_t caplen;
+			uint32_t len;
+		} pktHdr_;
 		unsigned char* data_{nullptr};
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);

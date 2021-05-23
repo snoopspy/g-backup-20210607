@@ -582,7 +582,7 @@ int32_t GDemon::PcapRead::decode(pchar buffer, int32_t size) {
 	}
 
 	// pktHdr_
-	pktHdr_ = *reinterpret_cast<pcap_pkthdr*>(buf); buf += sizeof(pcap_pkthdr); size -= sizeof(pcap_pkthdr);
+	pktHdr_ = *reinterpret_cast<PktHdr*>(buf); buf += sizeof(pktHdr_); size -= sizeof(pktHdr_);
 
 	// data_
 	data_ = puchar(buf); buf += pktHdr_.caplen; size -= pktHdr_.caplen;

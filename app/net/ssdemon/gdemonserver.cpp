@@ -496,7 +496,10 @@ void GDemonPcap::run(int waitTimeout) {
 				break;
 		}
 
-		read.pktHdr_ = *pktHdr;
+		read.pktHdr_.tv_sec = (uint64_t)pktHdr->ts.tv_sec;
+		read.pktHdr_.tv_usec = (uint64_t)pktHdr->ts.tv_usec;
+		read.pktHdr_.caplen = (uint32_t)pktHdr->caplen;
+		read.pktHdr_.len = (uint32_t)pktHdr->len;
 		read.data_ = puchar(data);
 
 		char buffer[MaxBufferSize];
