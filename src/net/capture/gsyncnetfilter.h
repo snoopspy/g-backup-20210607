@@ -10,14 +10,14 @@
 
 #pragma once
 
-#include "gnetfilter.h"
+#include "gasyncnetfilter.h"
 
 #ifdef Q_OS_LINUX
 
 // ----------------------------------------------------------------------------
 // GSyncNetFilter
 // ----------------------------------------------------------------------------
-struct G_EXPORT GSyncNetFilter : GNetFilter {
+struct G_EXPORT GSyncNetFilter : GAsyncNetFilter {
 	Q_OBJECT
 
 public:

@@ -1,11 +1,11 @@
-#include "gnetfilter.h"
+#include "gasyncnetfilter.h"
 
 #ifdef Q_OS_LINUX
 
 // ----------------------------------------------------------------------------
-// GNetFilter
+// GAsyncNetFilter
 // ----------------------------------------------------------------------------
-GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
+GAsyncNetFilter::GAsyncNetFilter(QObject* parent) : GCapture(parent) {
 	GDEBUG_CTOR;
 
 	command_.openCommands_.clear();
@@ -28,13 +28,13 @@ GNetFilter::GNetFilter(QObject* parent) : GCapture(parent) {
 	cb_ = &_callback;
 }
 
-GNetFilter::~GNetFilter() {
+GAsyncNetFilter::~GAsyncNetFilter() {
 	GDEBUG_DTOR;
 
 	close();
 }
 
-bool GNetFilter::doOpen() {
+bool GAsyncNetFilter::doOpen() {
 	if (!enabled_) return true;
 
 	if (!command_.open()) {
@@ -82,7 +82,7 @@ bool GNetFilter::doOpen() {
 	return GCapture::doOpen();
 }
 
-bool GNetFilter::doClose() {
+bool GAsyncNetFilter::doClose() {
 	if (!enabled_) return true;
 
 	if (fd_ != 0) {
@@ -130,45 +130,37 @@ bool GNetFilter::doClose() {
 	return true;
 }
 
-GPacket::Result GNetFilter::read(GPacket* packet) {
+GPacket::Result GAsyncNetFilter::read(GPacket* packet) {
 	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(GBuf buf) {
+GPacket::Result GAsyncNetFilter::write(GBuf buf) {
 	(void)buf;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::write(GPacket* packet) {
+GPacket::Result GAsyncNetFilter::write(GPacket* packet) {
 	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-GPacket::Result GNetFilter::relay(GPacket* packet) {
+GPacket::Result GAsyncNetFilter::relay(GPacket* packet) {
 	(void)packet;
 	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
 	return GPacket::Fail;
 }
 
-#ifdef _DEBUG
-static int count = 0; // gilgil temp 2021.05.21
-#endif // _DEBUG
-
-void GNetFilter::run() {
+void GAsyncNetFilter::run() {
 	qDebug() << "beg"; // gilgil temp 2016.09.27
 	while (active()) {
 		//qDebug() << "bef call recv"; // gilgil temp 2016.09.27
 		int res = int(::recv(fd_, recvBuf_, GPacket::MaxBufSize / 256, 0)); // gilgil temp 2021.05.21
 		qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
 		if (res >= 0) {
-			#ifdef _DEBUG
-			if (++count != 1)
-				qWarning() << "count is" << count;
-			#endif // _DEBUG
 			nfq_handle_packet(h_, recvBuf_, res);
 			continue;
 		} else {
@@ -184,15 +176,10 @@ void GNetFilter::run() {
 	qDebug() << "end"; // gilgil temp 2016.09.27
 }
 
-int GNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data) {
+int GAsyncNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data) {
 	(void)nfmsg;
 
-	#ifdef _DEBUG
-	if (--count != 0)
-		qWarning() << "count is" << count;
-	#endif // _DEBUG
-
-	GNetFilter* netFilter = static_cast<GNetFilter*>(data);
+	GAsyncNetFilter* netFilter = static_cast<GAsyncNetFilter*>(data);
 	GIpPacket* ipPacket = &netFilter->ipPacket_;
 
 	ipPacket->clear();

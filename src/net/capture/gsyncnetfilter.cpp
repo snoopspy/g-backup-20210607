@@ -5,7 +5,7 @@
 // ----------------------------------------------------------------------------
 // GSyncNetFilter
 // ----------------------------------------------------------------------------
-GSyncNetFilter::GSyncNetFilter(QObject* parent) : GNetFilter(parent) {
+GSyncNetFilter::GSyncNetFilter(QObject* parent) : GAsyncNetFilter(parent) {
 	autoRead_ = false;
 }
 

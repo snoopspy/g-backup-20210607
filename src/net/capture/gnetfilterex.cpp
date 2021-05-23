@@ -8,7 +8,7 @@
 // ----------------------------------------------------------------------------
 // GNetFilterEx
 // ----------------------------------------------------------------------------
-GNetFilterEx::GNetFilterEx(QObject* parent) : GNetFilter(parent) {
+GNetFilterEx::GNetFilterEx(QObject* parent) : GAsyncNetFilter(parent) {
 	cb_ = &_callbackEx;
 }
 
@@ -17,7 +17,7 @@ GNetFilterEx::~GNetFilterEx() {
 }
 
 bool GNetFilterEx::doOpen() {
-	bool res = GNetFilter::doOpen();
+	bool res = GAsyncNetFilter::doOpen();
 	if (!res) return false;
 
 	id_ = 0;
@@ -26,7 +26,7 @@ bool GNetFilterEx::doOpen() {
 }
 
 bool GNetFilterEx::doClose() {
-	return GNetFilter::doClose();
+	return GAsyncNetFilter::doClose();
 }
 
 #ifdef _DEBUG

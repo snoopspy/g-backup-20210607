@@ -20,9 +20,9 @@
 #include <libnetfilter_queue/libnetfilter_queue.h>
 
 // ----------------------------------------------------------------------------
-// GNetFilter
+// GAsyncNetFilter
 // ----------------------------------------------------------------------------
-struct G_EXPORT GNetFilter : GCapture {
+struct G_EXPORT GAsyncNetFilter : GCapture {
 	Q_OBJECT
 	Q_PROPERTY(int queueNum MEMBER queueNum_)
 	Q_PROPERTY(Verdict acceptVerdict MEMBER acceptVerdict_)
@@ -44,8 +44,8 @@ public:
 	GCommand command_;
 
 public:
-	Q_INVOKABLE GNetFilter(QObject* parent = nullptr);
-	~GNetFilter() override;
+	Q_INVOKABLE GAsyncNetFilter(QObject* parent = nullptr);
+	~GAsyncNetFilter() override;
 
 protected:
 	bool doOpen() override;
@@ -68,10 +68,11 @@ protected:
 	struct nfq_q_handle* qh_{nullptr};
 	int fd_{0};
 
-	GIpPacket ipPacket_{this};
 	char* recvBuf_{nullptr};
-
 	nfq_callback* cb_;
+
+private:
+	GIpPacket ipPacket_{this};
 	static int _callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data);
 };
 
