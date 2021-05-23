@@ -179,8 +179,8 @@ void GAsyncNetFilter::run() {
 int GAsyncNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, struct nfq_data* nfad, void* data) {
 	(void)nfmsg;
 
-	GAsyncNetFilter* netFilter = static_cast<GAsyncNetFilter*>(data);
-	GIpPacket* ipPacket = &netFilter->ipPacket_;
+	GAsyncNetFilter* asyncNetFilter = static_cast<GAsyncNetFilter*>(data);
+	GIpPacket* ipPacket = &asyncNetFilter->ipPacket_;
 
 	ipPacket->clear();
 	gettimeofday(&ipPacket->ts_, nullptr);
@@ -190,8 +190,8 @@ int GAsyncNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, 
 		return -1;
 	}
 	ipPacket->buf_.size_ = size_t(res);
-	if (netFilter->autoParse_) ipPacket->parse();
-	emit netFilter->captured(ipPacket);
+	if (asyncNetFilter->autoParse_) ipPacket->parse();
+	emit asyncNetFilter->captured(ipPacket);
 
 	uint32_t id = 0;
 	struct nfqnl_msg_packet_hdr* ph = nfq_get_msg_packet_hdr(nfad);
@@ -199,11 +199,11 @@ int GAsyncNetFilter::_callback(struct nfq_q_handle* qh, struct nfgenmsg* nfmsg, 
 		id = ntohl(ph->packet_id);
 
 	if (ipPacket->ctrl.block_)
-		res = nfq_set_verdict2(qh, id, NF_DROP, netFilter->mark_, 0, nullptr);
+		res = nfq_set_verdict2(qh, id, NF_DROP, asyncNetFilter->mark_, 0, nullptr);
 	else if (ipPacket->ctrl.changed_)
-		res = nfq_set_verdict2(qh, id, netFilter->acceptVerdict_, netFilter->mark_, ipPacket->buf_.size_, ipPacket->buf_.data_);
+		res = nfq_set_verdict2(qh, id, asyncNetFilter->acceptVerdict_, asyncNetFilter->mark_, ipPacket->buf_.size_, ipPacket->buf_.data_);
 	else
-		res = nfq_set_verdict2(qh, id, netFilter->acceptVerdict_, netFilter->mark_, 0, nullptr);
+		res = nfq_set_verdict2(qh, id, asyncNetFilter->acceptVerdict_, asyncNetFilter->mark_, 0, nullptr);
 	return res;
 }
 
