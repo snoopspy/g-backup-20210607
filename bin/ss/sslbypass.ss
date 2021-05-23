@@ -2,7 +2,7 @@
     "connections": [
         {
             "receiver": "tcpFlowMgr1",
-            "sender": "netFilter1",
+            "sender": "asyncNetFilter1",
             "signal": "captured(GPacket*)",
             "slot": "process(GPacket*)"
         },
@@ -21,84 +21,48 @@
     ],
     "nodes": [
         {
-            "_class": "GNetFilter",
-            "_x": 73,
-            "_y": -130,
+            "_class": "GAsyncNetFilter",
+            "_x": -41,
+            "_y": -91,
             "acceptVerdict": "ACCEPT",
             "autoParse": true,
             "command": {
                 "closeCommands": [
                     {
-                        "arguments": [
-                            "iptables",
-                            "-D",
-                            "OUTPUT",
-                            "-p",
-                            "tcp",
-                            "-j",
-                            "NFQUEUE"
-                        ],
                         "commandType": "Execute",
-                        "objectName": "",
-                        "program": "sudo"
-                    },
-                    {
-                        "arguments": [
-                            "iptables",
-                            "-D",
-                            "INPUT",
-                            "-p",
-                            "tcp",
-                            "-j",
-                            "NFQUEUE"
+                        "commands": [
+                            "su -c 'iptables -D OUTPUT -d 127.0.0.1 -j ACCEPT'",
+                            "su -c 'iptables -D INPUT -d 127.0.0.1 -j ACCEPT'",
+                            "su -c 'iptables -D OUTPUT -j NFQUEUE'",
+                            "su -c 'iptables -D INPUT -j NFQUEUE'"
                         ],
-                        "commandType": "Execute",
-                        "objectName": "",
-                        "program": "sudo"
+                        "objectName": ""
                     }
                 ],
                 "objectName": "",
                 "openCommands": [
                     {
-                        "arguments": [
-                            "iptables",
-                            "-A",
-                            "OUTPUT",
-                            "-p",
-                            "tcp",
-                            "-j",
-                            "NFQUEUE"
-                        ],
                         "commandType": "Execute",
-                        "objectName": "",
-                        "program": "sudo"
-                    },
-                    {
-                        "arguments": [
-                            "iptables",
-                            "-A",
-                            "INPUT",
-                            "-p",
-                            "tcp",
-                            "-j",
-                            "NFQUEUE"
+                        "commands": [
+                            "su -c 'iptables -F'",
+                            "su -c 'iptables -A OUTPUT -d 127.0.0.1 -j ACCEPT'",
+                            "su -c 'iptables -A INPUT -d 127.0.0.1 -j ACCEPT'",
+                            "su -c 'iptables -A OUTPUT -j NFQUEUE'",
+                            "su -c 'iptables -A INPUT -j NFQUEUE'"
                         ],
-                        "commandType": "Execute",
-                        "objectName": "",
-                        "program": "sudo"
+                        "objectName": ""
                     }
                 ]
             },
             "enabled": true,
             "mark": "0",
-            "objectName": "netFilter1",
-            "queueNum": "0",
-            "snapLen": "65536"
+            "objectName": "asyncNetFilter1",
+            "queueNum": "0"
         },
         {
             "_class": "GTcpFlowMgr",
-            "_x": 61,
-            "_y": -64,
+            "_x": -33,
+            "_y": -34,
             "checkInterval": "1",
             "finTimeout": "20",
             "fullTimeout": "180",
@@ -108,15 +72,15 @@
         },
         {
             "_class": "GClientHelloSplit",
-            "_x": 50,
-            "_y": 1,
+            "_x": -43,
+            "_y": 17,
             "objectName": "clientHelloSplit1",
             "tcpFlowMgr": "tcpFlowMgr1"
         },
         {
             "_class": "GRawIpSocketWrite",
-            "_x": 41,
-            "_y": 61,
+            "_x": -53,
+            "_y": 69,
             "objectName": "rawIpSocketWrite1"
         }
     ]

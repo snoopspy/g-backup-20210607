@@ -158,7 +158,7 @@ void GAsyncNetFilter::run() {
 	qDebug() << "beg"; // gilgil temp 2016.09.27
 	while (active()) {
 		//qDebug() << "bef call recv"; // gilgil temp 2016.09.27
-		int res = int(::recv(fd_, recvBuf_, GPacket::MaxBufSize / 256, 0)); // gilgil temp 2021.05.21
+		int res = int(::recv(fd_, recvBuf_, GPacket::MaxBufSize, 0)); // gilgil temp 2021.05.21
 		qDebug() << "aft call recv" << res; // gilgil temp 2016.09.27
 		if (res >= 0) {
 			nfq_handle_packet(h_, recvBuf_, res);
