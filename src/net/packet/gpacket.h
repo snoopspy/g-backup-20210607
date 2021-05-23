@@ -100,7 +100,7 @@ public:
 	//
 	// constant
 	//
-	static constexpr int MaxBufSize = 65536;
+	static constexpr int MaxBufSize = 32768;
 
 #ifdef _DEBUG
 	//
