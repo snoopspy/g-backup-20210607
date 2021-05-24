@@ -137,7 +137,6 @@ bool GAtm::sendQueries(GPcapDevice* pcapDevice, GInterface* intf) {
 			query.arpHdr_.tip_ = htonl(ip);
 			GPacket::Result res = pcapDevice->write(queryBuf);
 			if (res != GPacket::Ok) {
-				qCritical() << "pcapDevice->write return GPacket::Fail";
 				return false;
 			}
 		}
