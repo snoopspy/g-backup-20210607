@@ -33,6 +33,7 @@ protected:
 
 public:
 	GInterface* intf() { return intf_; }
+
 protected:
 	GInterface* intf_{nullptr};
 

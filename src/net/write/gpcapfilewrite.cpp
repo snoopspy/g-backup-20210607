@@ -55,6 +55,12 @@ bool GPcapFileWrite::doClose() {
 	return true;
 }
 
+GPacket::Result GPcapFileWrite::write(GBuf buf) {
+	(void)buf;
+	SET_ERR(GErr::NOT_SUPPORTED, "not supported");
+	return GPacket::Fail;
+}
+
 GPacket::Result GPcapFileWrite::write(GPacket* packet) {
 	pcap_pkthdr pkthdr;
 	pkthdr.ts = packet->ts_;
