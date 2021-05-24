@@ -3,10 +3,12 @@
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GPcapDevice(parent) {
+GRemotePcapDevice::GRemotePcapDevice(QObject* parent) : GVirtualPcapDevice(parent) {
+#ifdef Q_OS_ANDROID
 	GRtmEntry* entry = GRemoteNetInfo::instance(ip_, port_).rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr)
 		intfName_ = entry->intf()->name();
+#endif // Q_OS_ANDROID
 }
 
 GRemotePcapDevice::~GRemotePcapDevice() {
@@ -99,11 +101,13 @@ GPacket::Result GRemotePcapDevice::relay(GPacket* packet) {
 
 #include "base/prop/gpropitem-interface.h"
 GPropItem* GRemotePcapDevice::propCreateItem(GPropItemParam* param) {
+#ifdef Q_OS_ANDROID
 	if (QString(param->mpro_.name()) == "intfName") {
 		GPropItemInterface* res = new GPropItemInterface(param);
 		res->comboBox_->setEditable(true);
 		return res;
 	}
+#endif // Q_OS_ANDROID
 	return GObj::propCreateItem(param);
 }
 

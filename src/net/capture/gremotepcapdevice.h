@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "gpcapdevice.h"
+#include "gvirtualpcapdevice.h"
 
 // ----------------------------------------------------------------------------
 // GRemotePcapDevice
 // ----------------------------------------------------------------------------
-struct G_EXPORT GRemotePcapDevice : GPcapDevice {
+struct G_EXPORT GRemotePcapDevice : GVirtualPcapDevice {
 	Q_OBJECT
 	Q_PROPERTY(QString ip MEMBER ip_)
 	Q_PROPERTY(quint16 port MEMBER port_)

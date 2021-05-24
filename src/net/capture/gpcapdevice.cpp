@@ -3,7 +3,7 @@
 // ----------------------------------------------------------------------------
 // GPcapDevice
 // ----------------------------------------------------------------------------
-GPcapDevice::GPcapDevice(QObject* parent) : GPcapCapture(parent) {
+GPcapDevice::GPcapDevice(QObject* parent) : GVirtualPcapDevice(parent) {
 	GRtmEntry* entry = GNetInfo::instance().rtm().getBestEntry(QString("8.8.8.8"));
 	if (entry != nullptr) {
 		GInterface* intf = entry->intf();
