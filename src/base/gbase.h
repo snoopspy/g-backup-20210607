@@ -18,9 +18,11 @@ typedef unsigned char gbyte, *pbyte;
 
 #ifdef WIN32
 	#if defined(G_BUILD)
-		#define G_EXPORT __declspec(dllexport)
+		// #define G_EXPORT __declspec(dllexport) --- for build dll
+		#define G_EXPORT
 	#else
-		#define G_EXPORT __declspec(dllimport)
+		// #define G_EXPORT __declspec(dllimport) --- for build dll
+		#define G_EXPORT
 #endif
 #endif
 #ifdef linux

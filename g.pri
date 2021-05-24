@@ -25,9 +25,7 @@ android: G_NAME = $${G_NAME}-android
 G_DIR = $${PWD}
 INCLUDEPATH *= $${G_DIR}/src
 !CONFIG(G_BUILD) {
-	win32: PRE_TARGETDEPS *= $${G_DIR}/bin/$${G_NAME}.lib
-	linux: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.a
-	android: PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.a
+	PRE_TARGETDEPS *= $${G_DIR}/bin/lib$${G_NAME}.a
 	LIBS *= -L$${G_DIR}/bin -l$${G_NAME}
 }
 
