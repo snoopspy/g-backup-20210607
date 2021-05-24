@@ -52,7 +52,7 @@ SOURCES += \
 	$${PWD}/../src/net/capture/garpspoof.cpp \
 	$${PWD}/../src/net/capture/gasyncnetfilter.cpp \
 	$${PWD}/../src/net/capture/gcapture.cpp \
-	$${PWD}/../src/net/capture/gnetfilterex.cpp \
+	$${PWD}/../src/net/capture/gnetfilter.cpp \
 	$${PWD}/../src/net/capture/gpcapcapture.cpp \
 	$${PWD}/../src/net/capture/gpcapdevice.cpp \
 	$${PWD}/../src/net/capture/gpcapfile.cpp \
@@ -171,7 +171,7 @@ HEADERS += \
 	$${PWD}/../src/net/capture/garpspoof.h \
 	$${PWD}/../src/net/capture/gasyncnetfilter.h \
 	$${PWD}/../src/net/capture/gcapture.h \
-	$${PWD}/../src/net/capture/gnetfilterex.h \
+	$${PWD}/../src/net/capture/gnetfilter.h \
 	$${PWD}/../src/net/capture/gpcapcapture.h \
 	$${PWD}/../src/net/capture/gpcapdevice.h \
 	$${PWD}/../src/net/capture/gpcapfile.h \
