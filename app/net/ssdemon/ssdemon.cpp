@@ -56,7 +56,6 @@ void signalHandler(int signo) {
 
 int main(int argc, char* argv[]) {
 	gtrace_default("127.0.0.1", 8908, true, nullptr);
-
 	if (!param.parse(argc, argv)) {
 		usage();
 		return -1;
@@ -77,7 +76,11 @@ int main(int argc, char* argv[]) {
 	std::signal(SIGPIPE, SIG_IGN); // Ignore SIGPIPE which can be signaled when TCP socket operation on linux
 	std::signal(SIGALRM, signalHandler);
 
+	char wd[BUFSIZ];
+	memset(wd, 0, BUFSIZ);
+	getcwd(wd, BUFSIZ);
 	GTRACE("ssdemon started");
+	GTRACE("argv[0]=%s getcwd=%s", argv[0], wd);
 	runServer();
 	GTRACE("ssdemon terminated");
 }
