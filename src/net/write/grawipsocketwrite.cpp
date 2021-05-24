@@ -12,7 +12,7 @@ bool GRawIpSocketWrite::doOpen() {
 	}
 
 	int one = 1;
-	int res = ::setsockopt(sd_, IPPROTO_IP, IP_HDRINCL, &one, sizeof(one));
+	int res = ::setsockopt(sd_, IPPROTO_IP, IP_HDRINCL, pchar(&one), sizeof(one));
 	if (res < 0) {
 		QString msg = QString("setsockopt return %1").arg(res);
 		SET_ERR(GErr::FAIL, msg);
@@ -54,7 +54,7 @@ GPacket::Result GRawIpSocketWrite::write(GPacket* packet) {
 	else
 		sin.sin_port = 0; // network byte order
 
-	int res = ::sendto(sd_, packet->ipHdr_, packet->ipHdr_->len(), 0, (sockaddr*)&sin, sizeof(sin));
+	int res = ::sendto(sd_, pchar(packet->ipHdr_), packet->ipHdr_->len(), 0, (sockaddr*)&sin, sizeof(sin));
 	if (res < 0) {
 		QString msg = QString("sendto return %1").arg(res);
 		SET_ERR(GErr::FAIL, msg);

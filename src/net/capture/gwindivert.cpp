@@ -187,7 +187,7 @@ GPacket::Result GWinDivert::write(GPacket* packet) {
 	Q_ASSERT(lib.ok);
 
 	UINT sendLen;
-	BOOL res = lib.WinDivertSend(handle_, buf.data_, UINT(buf.size_), &sendLen, &windivertAddress_);
+	BOOL res = lib.WinDivertSend(handle_, packet->buf_.data_, UINT(packet->buf_.size_), &sendLen, &windivertAddress_);
 	if (!res) {
 		DWORD lastError = GetLastError();
 		QString msg = QString("WinDivertSend return FALSE last error=%1(0x%2)").arg(lastError).arg(QString::number(lastError, 16));
