@@ -14,6 +14,8 @@ GArpSpoof::~GArpSpoof() {
 }
 
 bool GArpSpoof::doOpen() {
+	if (!enabled_) return true;
+
 	if (filter_ != "") {
 		SET_ERR(GErr::FAIL, "filter must be blank");
 		return false;
@@ -111,6 +113,8 @@ bool GArpSpoof::doOpen() {
 }
 
 bool GArpSpoof::doClose() {
+	if (!enabled_) return true;
+
 	infectThread_.we_.wakeAll();
 	infectThread_.wait();
 
