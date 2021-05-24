@@ -4,6 +4,8 @@
 // GPcapCapture
 // ----------------------------------------------------------------------------
 bool GPcapCapture::doOpen() {
+	if (!enabled_) return true;
+
 	int dataLink = pcap_datalink(pcap_);
 	dlt_ = GPacket::intToDlt(dataLink);
 

@@ -17,6 +17,8 @@ GNetFilterEx::~GNetFilterEx() {
 }
 
 bool GNetFilterEx::doOpen() {
+	if (!enabled_) return true;
+
 	bool res = GAsyncNetFilter::doOpen();
 	if (!res) return false;
 
@@ -26,6 +28,8 @@ bool GNetFilterEx::doOpen() {
 }
 
 bool GNetFilterEx::doClose() {
+	if (!enabled_) return true;
+
 	return GAsyncNetFilter::doClose();
 }
 

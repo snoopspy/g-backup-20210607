@@ -14,11 +14,15 @@ GSyncNetFilter::~GSyncNetFilter() {
 }
 
 bool GSyncNetFilter::doOpen() {
+	if (!enabled_) return true;
+
 	qDebug() << "GSyncNetFilter::doOpen()";
 	return false; // gilgil temp 2019.05.24
 }
 
 bool GSyncNetFilter::doClose() {
+	if (!enabled_) return true;
+
 	qDebug() << "GSyncNetFilter::doClose()";
 	return false; // gilgil temp 2019.05.24
 }

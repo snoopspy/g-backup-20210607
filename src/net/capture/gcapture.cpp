@@ -8,6 +8,8 @@ GCapture::~GCapture() {
 }
 
 bool GCapture::doOpen() {
+	if (!enabled_) return true;
+
 	if (autoRead_) {
 		// ----- by gilgil 2009.08.31 -----
 		//
@@ -23,6 +25,8 @@ bool GCapture::doOpen() {
 }
 
 bool GCapture::doClose() {
+	if (!enabled_) return true;
+
 	bool res = true;
 	if (autoRead_) {
 		thread_.quit();
