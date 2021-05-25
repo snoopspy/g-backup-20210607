@@ -143,8 +143,16 @@ void GObjList::load(QJsonArray ja) {
 			qWarning() << QString("GObj::createInstance(%1) return null").arg(className);
 			continue;
 		}
-		obj->propLoad(nodeJo);
+		QString objectName = nodeJo["objectName"].toString();
+		obj->setObjectName(objectName);
 		append(obj);
+	}
+
+	QList<GObj*>::iterator it = begin();
+	for (QJsonValue jv: ja) {
+		QJsonObject nodeJo = jv.toObject();
+		GObj* obj = *it++;
+		obj->propLoad(nodeJo);
 	}
 }
 
