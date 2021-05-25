@@ -11,6 +11,11 @@ bool GClientHelloSplit::doOpen() {
 	tcpFlowOffset_ = tcpFlowMgr_->requestItems_.request("GFlowMgrTest_tcp", sizeof(FlowItem));
 	tcpFlowMgr_->managables_.insert(this);
 
+	if (write_ == nullptr) {
+		SET_ERR(GErr::OBJECT_IS_NULL, "write must be specified");
+		return false;
+	}
+
 	return true;
 }
 
@@ -78,7 +83,7 @@ void GClientHelloSplit::split(GPacket* packet) {
 		tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
 		ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
 		packet->buf_.size_ += ipHdrLenDiff;
-		emit splitted(packet);
+		write_->write(packet);
 		packet->buf_ = backup;
 	}
 
@@ -96,7 +101,7 @@ void GClientHelloSplit::split(GPacket* packet) {
 		tcpHdr->sum_ = htons(GTcpHdr::calcChecksum(ipHdr, tcpHdr));
 		ipHdr->sum_ = htons(GIpHdr::calcChecksum(ipHdr));
 		packet->buf_.size_ += ipHdrLenDiff;
-		emit splitted(packet);
+		write_->write(packet);
 		packet->buf_ = backup;
 	}
 

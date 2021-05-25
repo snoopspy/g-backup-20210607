@@ -12,6 +12,7 @@
 
 #include "base/gstateobj.h"
 #include "net/flow/gtcpflowmgr.h"
+#include "net/write/gwrite.h"
 
 // ----------------------------------------------------------------------------
 // GClientHelloSplit
@@ -19,12 +20,16 @@
 struct G_EXPORT GClientHelloSplit : GStateObj, GTcpFlowMgr::Managable {
 	Q_OBJECT
 	Q_PROPERTY(GObjPtr tcpFlowMgr READ getTcpFlowMgr WRITE setTcpFlowMgr)
+	Q_PROPERTY(GObjPtr write READ getWrite WRITE setWrite)
 
 public:
 	GObjPtr getTcpFlowMgr() { return tcpFlowMgr_; }
 	void setTcpFlowMgr(GObjPtr value) { tcpFlowMgr_ = dynamic_cast<GTcpFlowMgr*>(value.data()); }
+	GObjPtr getWrite() { return write_; }
+	void setWrite(GObjPtr value) { write_ = dynamic_cast<GWrite*>(value.data()); }
 
 public:
+	GWrite* write_;
 	GTcpFlowMgr* tcpFlowMgr_{nullptr};
 
 	// --------------------------------------------------------------------------
@@ -55,7 +60,4 @@ public:
 
 public slots:
 	void split(GPacket* packet);
-
-signals:
-	void splitted(GPacket* packet);
 };
