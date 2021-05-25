@@ -2,7 +2,7 @@
     "connections": [
         {
             "receiver": "tcpFlowMgr1",
-            "sender": "asyncNetFilter1",
+            "sender": "netFilter1",
             "signal": "captured(GPacket*)",
             "slot": "process(GPacket*)"
         },
@@ -11,19 +11,13 @@
             "sender": "tcpFlowMgr1",
             "signal": "processed(GPacket*)",
             "slot": "split(GPacket*)"
-        },
-        {
-            "receiver": "rawIpSocketWrite1",
-            "sender": "clientHelloSplit1",
-            "signal": "splitted(GPacket*)",
-            "slot": "write(GPacket*)"
         }
     ],
     "nodes": [
         {
-            "_class": "GAsyncNetFilter",
-            "_x": -41,
-            "_y": -91,
+            "_class": "GNetFilter",
+            "_x": -58,
+            "_y": -72,
             "acceptVerdict": "ACCEPT",
             "autoParse": true,
             "command": {
@@ -56,13 +50,13 @@
             },
             "enabled": true,
             "mark": "0",
-            "objectName": "asyncNetFilter1",
+            "objectName": "netFilter1",
             "queueNum": "0"
         },
         {
             "_class": "GTcpFlowMgr",
-            "_x": -33,
-            "_y": -34,
+            "_x": -69,
+            "_y": -21,
             "checkInterval": "1",
             "finTimeout": "20",
             "fullTimeout": "180",
@@ -72,15 +66,16 @@
         },
         {
             "_class": "GClientHelloSplit",
-            "_x": -43,
-            "_y": 17,
+            "_x": -79,
+            "_y": 28,
             "objectName": "clientHelloSplit1",
-            "tcpFlowMgr": "tcpFlowMgr1"
+            "tcpFlowMgr": "tcpFlowMgr1",
+            "write": "rawIpSocketWrite1"
         },
         {
             "_class": "GRawIpSocketWrite",
-            "_x": -53,
-            "_y": 69,
+            "_x": -87,
+            "_y": 75,
             "objectName": "rawIpSocketWrite1"
         }
     ]
