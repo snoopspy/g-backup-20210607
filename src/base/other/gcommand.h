@@ -62,7 +62,7 @@ protected:
 	bool doClose() override;
 
 protected:
-	static bool separate(QString command, QString* program, QStringList* arguments);
+	static QStringList splitCommand(QString command);
 
 protected:
 	virtual bool cmdExecute(QString program, QStringList arguments);

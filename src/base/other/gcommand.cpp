@@ -28,12 +28,14 @@ bool GCommand::doOpen() {
 		for (QString command: item->commands_) {
 			if (command == "") continue;
 			qDebug() << command;
-			QString program;
-			QStringList arguments;
-			if (!separate(command, &program, &arguments)) {
+			QStringList arguments = splitCommand(command);
+			if (arguments.count() == 0) {
+				SET_ERR(GErr::FAIL, QString("splitCommand(%1) return nothing").arg(command));
 				res = false;
 				break;
 			}
+			QString program = arguments.at(0);
+			arguments.removeAt(0);
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
 					res = cmdExecute(program, arguments);
@@ -83,12 +85,14 @@ bool GCommand::doClose() {
 		for (QString command: item->commands_) {
 			if (command == "") continue;
 			qDebug() << command;
-			QString program;
-			QStringList arguments;
-			if (!separate(command, &program, &arguments)) {
+			QStringList arguments = splitCommand(command);
+			if (arguments.count() == 0) {
+				SET_ERR(GErr::FAIL, QString("splitCommand(%1) return nothing").arg(command));
 				res = false;
 				break;
 			}
+			QString program = arguments.at(0);
+			arguments.removeAt(0);
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
 					res = cmdExecute(program, arguments);
@@ -116,7 +120,7 @@ bool GCommand::doClose() {
 	return res;
 }
 
-bool GCommand::separate(QString command, QString* program, QStringList* arguments) {
+QStringList GCommand::splitCommand(QString command) {
 	QStringList split = command.split(' ');
 	int index = 1;
 	while (true) {
@@ -155,19 +159,16 @@ bool GCommand::separate(QString command, QString* program, QStringList* argument
 		}
 		if (!merged) {
 			qWarning() << "can not find " << quotation;
-			return false;
+			return QStringList();
 		}
 	}
 
 	if (split.count() == 0) {
 		qWarning() << "split.count is zero" << command;
-		return false;
+		return QStringList();
 	}
 
-	*program = split.at(0);
-	split.removeAt(0);
-	*arguments = split;
-	return true;
+	return split;
 }
 
 bool GCommand::cmdExecute(QString program, QStringList arguments) {
