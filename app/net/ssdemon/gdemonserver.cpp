@@ -95,6 +95,11 @@ GDemonSession::~GDemonSession() {
 		sd_ = 0;
 	}
 
+	if (command_ == nullptr) {
+		delete command_;
+		command_ = nullptr;
+	}
+
 	if (network_ != nullptr) {
 		delete network_;
 		network_ = nullptr;
@@ -143,6 +148,23 @@ void GDemonSession::run() {
 		pchar buf = buffer;
 		int size = header->len_ + sizeof(Header);
 		switch (header->cmd_) {
+			case CmdCmdExecute:
+				if (command_ == nullptr) command_ = new GDemonCommand(this);
+				active = command_->processCmdExecute(buf, size);
+				break;
+			case CmdCmdStart:
+				if (command_ == nullptr) command_ = new GDemonCommand(this);
+				active = command_->processCmdStart(buf, size);
+				break;
+			case CmdCmdStop:
+				if (command_ == nullptr) command_ = new GDemonCommand(this);
+				active = command_->processCmdStop(buf, size);
+				break;
+			case CmdCmdStartDetached:
+				if (command_ == nullptr) command_ = new GDemonCommand(this);
+				active = command_->processCmdStartDetached(buf, size);
+				break;
+
 			case CmdGetInterfaceList:
 				if (network_ == nullptr) network_ = new GDemonNetwork(this);
 				active = network_->processGetInterfaceList(buf, size);
@@ -171,6 +193,60 @@ void GDemonSession::run() {
 	}
 
 	GTRACE("end");
+}
+
+// ----------------------------------------------------------------------------
+// GDemonCommand
+// ----------------------------------------------------------------------------
+GDemonCommand::GDemonCommand(GDemonSession* session) : session_(session) {
+}
+
+GDemonCommand::~GDemonCommand() {
+}
+
+bool GDemonCommand::processCmdExecute(pchar buf, int32_t size) {
+	CmdExecuteReq req;
+	int32_t decLen = req.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return =1");
+		return false;
+	}
+
+	std::string command = req.command_;
+	GTRACE("%s", command.data());
+	int result = system(command.data());
+
+	CmdExecuteRes res;
+	res.result_ = (result == 0);
+	if (!res.result_) {
+		res.error_ = std::string("system(") + command + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
+		GTRACE("%s", res.error_.data());
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("res.encode return -1");
+		return false;
+	}
+
+	int sendLen = ::send(session_->sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+	}
+	return true;
+}
+
+bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
+	GTRACE(""); return false; // gilgil temp 2021.05.26
+}
+
+bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
+	GTRACE(""); return false; // gilgil temp 2021.05.26
+}
+
+bool GDemonCommand::processCmdStartDetached(pchar buf, int32_t size) {
+	GTRACE(""); return false; // gilgil temp 2021.05.26
 }
 
 // ----------------------------------------------------------------------------
@@ -221,7 +297,7 @@ bool GDemonNetwork::processGetInterfaceList(pchar buf, int32_t size) {
 	// Add all interfaces
 	//
 	pcap_if_t* dev = allDevs;
-	GetInterfaceListRep rep;
+	GetInterfaceListRes res;
 	i = 1;
 	while (dev != nullptr) {
 		Interface interface;
@@ -242,16 +318,16 @@ bool GDemonNetwork::processGetInterfaceList(pchar buf, int32_t size) {
 				interface.mask_ = ntohl(addr_in->sin_addr.s_addr);
 			}
 		}
-		rep.interfaceList_.push_back(interface);
+		res.interfaceList_.push_back(interface);
 		dev = dev->next;
 		i++;
 	}
 	pcap_freealldevs(allDevs);
 
 	char buffer[MaxBufferSize];
-	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
-		GTRACE("rep.encode return -1");
+		GTRACE("res.encode return -1");
 		return false;
 	}
 
@@ -284,26 +360,26 @@ bool GDemonNetwork::processGetRtm(pchar, int32_t) {
 		return false;
 	}
 
-	GetRtmRep rep;
+	GetRtmRes res;
 	while (true) {
 		char buf[256];
 		if (std::fgets(buf, 256, p) == nullptr) break;
 		RtmEntry entry;
 		if (checkA(buf, &entry))
-			rep.rtm_.push_back(entry);
+			res.rtm_.push_back(entry);
 		else if (checkB(buf, &entry))
-			rep.rtm_.push_back(entry);
+			res.rtm_.push_back(entry);
 		else if (checkC(buf, &entry))
-			rep.rtm_.push_back(entry);
+			res.rtm_.push_back(entry);
 		else if (checkD(buf, &entry))
-			rep.rtm_.push_back(entry);
+			res.rtm_.push_back(entry);
 	}
 	pclose(p);
 
 	char buffer[MaxBufferSize];
-	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
-		GTRACE("rep.encode return -1");
+		GTRACE("res.encode return -1");
 		return false;
 	}
 
@@ -420,42 +496,42 @@ GDemonPcap::~GDemonPcap() {
 	close();
 }
 
-GDemon::PcapOpenRep GDemonPcap::open(PcapOpenReq req) {
-	PcapOpenRep rep;
+GDemon::PcapOpenRes GDemonPcap::open(PcapOpenReq req) {
+	PcapOpenRes res;
 	if (pcap_ != nullptr) {
-		rep.errBuf_ = "pcap is already opened";
+		res.errBuf_ = "pcap is already opened";
 	} else {
 		char errBuf[PCAP_ERRBUF_SIZE];
 		pcap_ = pcap_open_live(req.intfName_.data(), req.snaplen_, req.flags_, req.readTimeout_, errBuf);
 		if (pcap_ == nullptr) {
-			rep.errBuf_ = errBuf;
-			GTRACE("pcap_open_live return null %s", rep.errBuf_.data());
+			res.errBuf_ = errBuf;
+			GTRACE("pcap_open_live return null %s", res.errBuf_.data());
 		} else {
-			rep.result_ = true;
+			res.result_ = true;
 			if (req.filter_ != "") {
 				u_int uNetMask;
 				bpf_program code;
 
 				uNetMask = 0xFFFFFFFF;
 				if (pcap_compile(pcap_, &code, req.filter_.data(),  1, uNetMask) < 0) {
-					rep.result_ = false;
-					rep.errBuf_ = pcap_geterr(pcap_);
-					GTRACE("error in pcap_compile(%s)", rep.errBuf_.data()) ;
+					res.result_ = false;
+					res.errBuf_ = pcap_geterr(pcap_);
+					GTRACE("error in pcap_compile(%s)", res.errBuf_.data()) ;
 				} else
 				if (pcap_setfilter(pcap_, &code) < 0) {
-					rep.result_ = false;
-					rep.errBuf_ = pcap_geterr(pcap_);
-					GTRACE("error in pcap_setfilter(%s)", rep.errBuf_.data()) ;
+					res.result_ = false;
+					res.errBuf_ = pcap_geterr(pcap_);
+					GTRACE("error in pcap_setfilter(%s)", res.errBuf_.data()) ;
 				}
 			}
-			rep.dataLink_ = pcap_datalink(pcap_);
+			res.dataLink_ = pcap_datalink(pcap_);
 			if (req.captureThread_) {
 				active_ = true;
 				thread_ = new std::thread(GDemonPcap::_run, this, req.waitTimeout_);
 			}
 		}
 	}
-	return rep;
+	return res;
 }
 
 void GDemonPcap::close() {
@@ -505,7 +581,7 @@ void GDemonPcap::run(int waitTimeout) {
 		char buffer[MaxBufferSize];
 		int32_t encLen = read.encode(buffer, MaxBufferSize);
 		if (encLen == -1) {
-			GTRACE("rep.encode return -1");
+			GTRACE("res.encode return -1");
 			return;
 		}
 
@@ -527,12 +603,12 @@ bool GDemonPcap::processPcapOpen(pchar buf, int32_t size) {
 		return false;
 	}
 
-	PcapOpenRep rep = open(req);
+	PcapOpenRes res = open(req);
 
 	char buffer[MaxBufferSize];
-	int32_t encLen = rep.encode(buffer, MaxBufferSize);
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
-		GTRACE("rep.encode return -1");
+		GTRACE("res.encode return -1");
 		return false;
 	}
 

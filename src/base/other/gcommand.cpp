@@ -36,26 +36,22 @@ bool GCommand::doOpen() {
 			}
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
-					int i = QProcess::execute(program, arguments);
-					if (i != EXIT_SUCCESS) {
-						QString msg = QString("QProcess::execute %1 return %2").arg(command).arg(i);
-						SET_ERR(GErr::FAIL, msg);
-						res = false;
-					}
+					res = cmdExecute(program, arguments);
 					break;
 				}
 				case GCommandItem::StartStop: {
-					QProcess* process = new QProcess;
-					process->start(program, arguments);
-					item->processList_.push_back(process);
+					GCommandItem::ProcessId pid = cmdStart(program, arguments);
+					if (pid != 0)
+						item->processList_.push_back(pid);
+					else
+						res = false;
 					break;
 				}
 				case GCommandItem::StartDetach: {
-					bool ok = QProcess::startDetached(program, arguments);
-					if (!ok) {
+					res = cmdStartDetached(program, arguments);
+					if (res) {
 						QString msg = QString("QProcess::startDetached %1 return false").arg(command);
 						SET_ERR(GErr::FAIL, msg);
-						res = false;
 					}
 					break;
 				}
@@ -63,6 +59,7 @@ bool GCommand::doOpen() {
 			if (!res) break;
 		}
 	}
+
 	return res;
 }
 
@@ -72,16 +69,10 @@ bool GCommand::doClose() {
 	for (GObj* obj: openCommands_) {
 		GCommandItem* item = PCommandItem(obj);
 		if (item->commandType_ == GCommandItem::StartStop) {
-			int index = 0;
-			for (QList<QProcess*>::iterator it = item->processList_.begin(); it != item->processList_.end();) {
-				QProcess* process = *it;
-				process->terminate();
-				if (!process->waitForFinished()) {
-					process->kill();
-					QString msg = QString("waitForFinished %1 return false").arg(item->commands_.at(index));
-					SET_ERR(GErr::FAIL, msg);
-				}
-				delete process;
+			for (QList<GCommandItem::ProcessId>::iterator it = item->processList_.begin(); it != item->processList_.end();) {
+				GCommandItem::ProcessId pid = *it;
+				if (!cmdStop(pid))
+					res = false;
 				it = item->processList_.erase(it);
 			}
 		}
@@ -100,12 +91,7 @@ bool GCommand::doClose() {
 			}
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
-					int i = QProcess::execute(program, arguments);
-					if (i != EXIT_SUCCESS) {
-						QString msg = QString("QProcess::execute %1 return %2").arg(command).arg(i);
-						SET_ERR(GErr::FAIL, msg);
-						res = false;
-					}
+					res = cmdExecute(program, arguments);
 					break;
 				}
 				case GCommandItem::StartStop: {
@@ -114,16 +100,14 @@ bool GCommand::doClose() {
 					res = false;
 					break;
 				}
-				case GCommandItem::StartDetach: {
-					bool ok = QProcess::startDetached(program, arguments);
-					if (!ok) {
+				case GCommandItem::StartDetach:{
+					res = cmdStartDetached(program, arguments);
+					if (res) {
 						QString msg = QString("QProcess::startDetached %1 return false").arg(command);
 						SET_ERR(GErr::FAIL, msg);
-						res = false;
 					}
 					break;
 				}
-
 			}
 			if (!res) break;
 		}
@@ -183,5 +167,47 @@ bool GCommand::separate(QString command, QString* program, QStringList* argument
 	*program = split.at(0);
 	split.removeAt(0);
 	*arguments = split;
+	return true;
+}
+
+bool GCommand::cmdExecute(QString program, QStringList arguments) {
+	int res = QProcess::execute(program, arguments);
+	if (res != EXIT_SUCCESS) {
+		SET_ERR(GErr::FAIL, QString("execute(%1) return %2").arg(program + " " + arguments.join(" ")).arg(res));
+		return false;
+	}
+	return true;
+}
+
+GCommandItem::ProcessId GCommand::cmdStart(QString program, QStringList arguments) {
+	QProcess* process = new QProcess;
+	process->start(program, arguments);
+	GCommandItem::ProcessId pid = GCommandItem::ProcessId(process);
+	if (pid == 0) {
+		SET_ERR(GErr::FAIL, QString("can not execute %1").arg(program + " " + arguments.join(" ")));
+		return false;
+	}
+	return pid;
+}
+
+bool GCommand::cmdStop(GCommandItem::ProcessId pid) {
+	QProcess* process = reinterpret_cast<QProcess*>(pid);
+	Q_ASSERT(process != nullptr);
+	process->terminate();
+	bool res = process->waitForFinished();
+	if (!res) {
+		SET_ERR(GErr::FAIL, QString("waitForFinished(%1) return false").arg(QString::number(pid, 16)));
+		process->kill();
+	}
+	delete process;
+	return res;
+}
+
+bool GCommand::cmdStartDetached(QString program, QStringList arguments) {
+	bool res = QProcess::startDetached(program, arguments);
+	if (!res) {
+		SET_ERR(GErr::FAIL, QString("can not execute %1").arg(program + " " + arguments.join(" ")));
+		return false;
+	}
 	return true;
 }

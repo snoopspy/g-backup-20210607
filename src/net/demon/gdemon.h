@@ -27,6 +27,8 @@ struct GDemon {
 	typedef void *pvoid;
 	typedef int32_t *pint32_t;
 	typedef uint32_t *puint32_t;
+	typedef int64_t *pint64_t;
+	typedef uint64_t *puint64_t;
 	typedef bool *pbool;
 
 	static const uint16_t DefaultPort = 8908;
@@ -38,16 +40,88 @@ struct GDemon {
 	virtual ~GDemon() {}
 
 	enum Cmd: int32_t {
-		CmdRunCommand = 0,
-		CmdGetInterfaceList = 1,
-		CmdGetRtm = 2,
-		CmdPcapOpen = 3,
-		CmdPcapClose = 4,
-		CmdPcapRead = 5,
-		CmdPcapWrite = 5
+		CmdCmdExecute = 0,
+		CmdCmdStart = 1,
+		CmdCmdStop = 2,
+		CmdCmdStartDetached = 3,
+		CmdGetInterfaceList = 4,
+		CmdGetRtm = 5,
+		CmdPcapOpen = 6,
+		CmdPcapClose = 7,
+		CmdPcapRead = 8,
+		CmdPcapWrite = 9
 	};
 	typedef Cmd *PCmd;
 
+	//
+	// header
+	//
+	struct Header {
+		int32_t len_;
+		Cmd cmd_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+	typedef Header* PHeader;
+
+	//
+	// command
+	//
+	struct CmdExecuteReq : Header {
+		std::string command_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdExecuteRes : Header {
+		bool result_{false};
+		std::string error_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStartReq : Header {
+		std::string command_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStartRes : Header {
+		int64_t pid_{0};
+		std::string error_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStopReq : Header {
+		int64_t pid_{0};
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStopRes : Header {
+		bool result_{false};
+		std::string error_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStartDetachedReq : Header {
+		std::string command_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	struct CmdStartDetachedRes : Header {
+		bool result_{false};
+		std::string error_;
+		int32_t encode(pchar buffer, int32_t size);
+		int32_t decode(pchar buffer, int32_t size);
+	};
+
+	//
+	// network information
+	//
 	struct Interface {
 		static const int MacSize = 6;
 		int32_t index_{0};
@@ -80,20 +154,12 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct Header {
-		int32_t len_;
-		Cmd cmd_;
-		int32_t encode(pchar buffer, int32_t size);
-		int32_t decode(pchar buffer, int32_t size);
-	};
-	typedef Header* PHeader;
-
 	struct GetInterfaceListReq : Header {
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct GetInterfaceListRep : Header {
+	struct GetInterfaceListRes : Header {
 		InterfaceList interfaceList_;
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
@@ -104,12 +170,15 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct GetRtmRep : Header {
+	struct GetRtmRes : Header {
 		Rtm rtm_;
 		int32_t encode(pchar buffer, int32_t size);
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
+	//
+	// pcap
+	//
 	struct PcapOpenReq : Header {
 		std::string filter_;
 		std::string intfName_;
@@ -122,7 +191,7 @@ struct GDemon {
 		int32_t decode(pchar buffer, int32_t size);
 	};
 
-	struct PcapOpenRep : Header {
+	struct PcapOpenRes : Header {
 		bool result_{false};
 		int32_t dataLink_{0};
 		std::string errBuf_{"no error"};

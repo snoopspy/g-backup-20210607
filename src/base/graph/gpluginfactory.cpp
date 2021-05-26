@@ -182,12 +182,15 @@ void GPluginFactory::loadFlow() {
 // Other
 // ----------------------------------------------------------------------------
 #include <GCommand>
+#include <GRemoteCommand>
 
 void GPluginFactory::loadOther() {
 	qRegisterMetaType<GCommand*>();
+	qRegisterMetaType<GRemoteCommand*>();
 
 	ItemCategory* category = new ItemCategory("other");
 	category->items_.push_back(new ItemNode(GCommand::staticMetaObject.className()));
+	category->items_.push_back(new ItemNode(GRemoteCommand::staticMetaObject.className()));
 
 	items_.push_back(category);
 }

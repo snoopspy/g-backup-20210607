@@ -43,6 +43,7 @@ struct GDemonServer: GDemon {
 // ----------------------------------------------------------------------------
 // GDemonSession
 // ----------------------------------------------------------------------------
+struct GDemonCommand;
 struct GDemonNetwork;
 struct GDemonPcap;
 struct GDemonSession : GDemon {
@@ -55,8 +56,24 @@ struct GDemonSession : GDemon {
 	static void _run(GDemonServer* server, int new_sd);
 	void run();
 
+	GDemonCommand* command_{nullptr};
 	GDemonNetwork* network_{nullptr};
 	GDemonPcap* pcap_{nullptr};
+};
+
+// ----------------------------------------------------------------------------
+// GDemonCommand
+// ----------------------------------------------------------------------------
+struct GDemonCommand : GDemon {
+	GDemonCommand(GDemonSession* session);
+	~GDemonCommand() override;
+
+	GDemonSession* session_;
+
+	bool processCmdExecute(pchar buf, int32_t size);
+	bool processCmdStart(pchar buf, int32_t size);
+	bool processCmdStop(pchar buf, int32_t size);
+	bool processCmdStartDetached(pchar buf, int32_t size);
 };
 
 // ----------------------------------------------------------------------------
@@ -93,7 +110,7 @@ struct GDemonPcap : GDemon {
 	bool active_{false};
 	std::thread* thread_{nullptr};
 
-	PcapOpenRep open(PcapOpenReq req);
+	PcapOpenRes open(PcapOpenReq res);
 	void close();
 	static void _run(GDemonPcap* pcap, int waitTimeout);
 	void run(int waitTimeout);

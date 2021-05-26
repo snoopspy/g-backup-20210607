@@ -24,6 +24,390 @@ bool GDemon::recvAll(int sd, pvoid buffer, int32_t size) {
 	return true;
 }
 
+//
+// header
+//
+int32_t GDemon::Header::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	*pint32_t(buf) = len_; buf += sizeof(len_); size -= sizeof(len_);
+	*PCmd(buf) = cmd_; buf += sizeof(cmd_); size -= sizeof(cmd_);
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	len_ = *pint32_t(buf); buf += sizeof(len_); size -= sizeof(len_);
+	cmd_ = *PCmd(buf); buf += sizeof(cmd_); size -= sizeof(cmd_);
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+//
+// command
+//
+int32_t GDemon::CmdExecuteReq::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// command_
+	int32_t len = command_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, command_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdExecute;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdExecuteReq::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdExecute) {
+		GTRACE("cmd_ is not CmdCmdExecute %d\n", cmd_);
+		return -1;
+	}
+
+	// command_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	command_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdExecuteRes::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// result_
+	*pbool(buf) = result_; buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = error_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, error_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdExecute;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdExecuteRes::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdExecute) {
+		GTRACE("cmd_ is not CmdCmdExecute %d\n", cmd_);
+		return -1;
+	}
+
+	// result_
+	result_ = *pbool(buf); buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	error_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartReq::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// command_
+	int32_t len = command_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, command_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStart;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartReq::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStart) {
+		GTRACE("cmd_ is not CmdCmdStart %d\n", cmd_);
+		return -1;
+	}
+
+	// command_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	command_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartRes::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// pid_
+	*pint64_t(buf) = pid_; buf += sizeof(pid_); size -= sizeof(pid_);
+
+	// error_
+	int32_t len = error_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, error_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStart;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartRes::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStart) {
+		GTRACE("cmd_ is not CmdCmdStart %d\n", cmd_);
+		return -1;
+	}
+
+	// pid_
+	pid_ = *pint64_t(buf); buf += sizeof(pid_); size -= sizeof(pid_);
+
+	// error_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	error_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStopReq::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// pid_
+	*pint64_t(buf) = pid_; buf += sizeof(pid_); size -= sizeof(pid_);
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStop;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStopReq::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStop) {
+		GTRACE("cmd_ is not CmdCmdStop %d\n", cmd_);
+		return -1;
+	}
+
+	// pid_
+	pid_ = *pint64_t(buf); buf += sizeof(pid_); size -= sizeof(pid_);
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStopRes::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// result_
+	*pbool(buf) = result_; buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = error_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, error_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStop;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStopRes::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStop) {
+		GTRACE("cmd_ is not CmdCmdStop %d\n", cmd_);
+		return -1;
+	}
+
+	// result_
+	result_ = *pbool(buf); buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	error_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartDetachedReq::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// command_
+	int32_t len = command_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, command_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStartDetached;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartDetachedReq::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStartDetached) {
+		GTRACE("cmd_ is not CmdCmdStartDetached %d\n", cmd_);
+		return -1;
+	}
+
+	// command_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	command_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartDetachedRes::encode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	buf += sizeof(Header); size -= sizeof(Header);
+
+	// result_
+	*pbool(buf) = result_; buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = error_.size();
+	*pint32_t(buf) = int32_t(len); buf += sizeof(len); size -= sizeof(len);
+	memcpy(buf, error_.data(), len); buf += len; size -= len;
+
+	len_ = buf - buffer - sizeof(Header);
+	cmd_ = CmdCmdStartDetached;
+	Header::encode(buffer, sizeof(Header));
+
+	if (size < 0) {
+		GTRACE("size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+int32_t GDemon::CmdStartDetachedRes::decode(pchar buffer, int32_t size) {
+	volatile pchar buf = buffer;
+
+	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
+	if (cmd_ != CmdCmdStartDetached) {
+		GTRACE("cmd_ is not CmdCmdStartDetached %d\n", cmd_);
+		return -1;
+	}
+
+	// result_
+	result_ = *pbool(buf); buf += sizeof(result_); size -= sizeof(result_);
+
+	// error_
+	int32_t len = *pint32_t(buf); buf += sizeof(len); size -= sizeof(len);
+	error_ = std::string(buf, len); buf += len; size -= len;
+
+	if (size < 0) {
+		GTRACE("decode size is %d\n", size);
+		return -1;
+	}
+	return buf - buffer;
+}
+
+//
+// network information
+//
 int32_t GDemon::Interface::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
@@ -232,32 +616,6 @@ int32_t GDemon::Rtm::decode(pchar buffer, int32_t size) {
 }
 
 
-int32_t GDemon::Header::encode(pchar buffer, int32_t size) {
-	volatile pchar buf = buffer;
-
-	*pint32_t(buf) = len_; buf += sizeof(len_); size -= sizeof(len_);
-	*PCmd(buf) = cmd_; buf += sizeof(cmd_); size -= sizeof(cmd_);
-
-	if (size < 0) {
-		GTRACE("size is %d\n", size);
-		return -1;
-	}
-	return buf - buffer;
-}
-
-int32_t GDemon::Header::decode(pchar buffer, int32_t size) {
-	volatile pchar buf = buffer;
-
-	len_ = *pint32_t(buf); buf += sizeof(len_); size -= sizeof(len_);
-	cmd_ = *PCmd(buf); buf += sizeof(cmd_); size -= sizeof(cmd_);
-
-	if (size < 0) {
-		GTRACE("size is %d\n", size);
-		return -1;
-	}
-	return buf - buffer;
-}
-
 int32_t GDemon::GetInterfaceListReq::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
@@ -287,7 +645,7 @@ int32_t GDemon::GetInterfaceListReq::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::GetInterfaceListRep::encode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListRes::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	buf += sizeof(Header); size -= sizeof(Header);
@@ -305,7 +663,7 @@ int32_t GDemon::GetInterfaceListRep::encode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::GetInterfaceListRep::decode(pchar buffer, int32_t size) {
+int32_t GDemon::GetInterfaceListRes::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
@@ -353,7 +711,7 @@ int32_t GDemon::GetRtmReq::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::GetRtmRep::encode(pchar buffer, int32_t size) {
+int32_t GDemon::GetRtmRes::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	buf += sizeof(Header); size -= sizeof(Header);
@@ -371,7 +729,7 @@ int32_t GDemon::GetRtmRep::encode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::GetRtmRep::decode(pchar buffer, int32_t size) {
+int32_t GDemon::GetRtmRes::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;
@@ -389,6 +747,9 @@ int32_t GDemon::GetRtmRep::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
+//
+// pcap
+//
 int32_t GDemon::PcapOpenReq::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
@@ -469,7 +830,7 @@ int32_t GDemon::PcapOpenReq::decode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::PcapOpenRep::encode(pchar buffer, int32_t size) {
+int32_t GDemon::PcapOpenRes::encode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	buf += sizeof(Header); size -= sizeof(Header);
@@ -496,7 +857,7 @@ int32_t GDemon::PcapOpenRep::encode(pchar buffer, int32_t size) {
 	return buf - buffer;
 }
 
-int32_t GDemon::PcapOpenRep::decode(pchar buffer, int32_t size) {
+int32_t GDemon::PcapOpenRes::decode(pchar buffer, int32_t size) {
 	volatile pchar buf = buffer;
 
 	int32_t decLen = Header::decode(buf, size); buf += decLen; size -= decLen;

@@ -32,15 +32,23 @@ struct GDemonClient : GDemon {
 	bool connect();
 	bool disconnect();
 
+	// command
+	CmdExecuteRes cmdExecute(std::string command);
+	CmdStartRes cmdStart(std::string command);
+	CmdStopRes cmdStop(uint64_t pid);
+	CmdStartDetachedRes cmdStartDetached(std::string command);
+
 	// network information
-	GetInterfaceListRep getInterfaceList();
-	GetRtmRep getRtm();
+	GetInterfaceListRes getInterfaceList();
+	GetRtmRes getRtm();
 
 	// pcap
-	PcapOpenRep pcapOpen(std::string filter, std::string intfName, int32_t snapLen, int32_t flags, int32_t readTimeout, int32_t waitTimeout, bool captureThread);
+	PcapOpenRes pcapOpen(std::string filter, std::string intfName, int32_t snapLen, int32_t flags, int32_t readTimeout, int32_t waitTimeout, bool captureThread);
 	void pcapClose();
 	PcapRead pcapRead();
 	void pcapWrite(PcapWrite write);
+
+	//
 
 	static GDemonClient& instance(std::string ip, uint16_t port);
 };

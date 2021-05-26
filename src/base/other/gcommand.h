@@ -36,7 +36,8 @@ public:
 	Q_INVOKABLE GCommandItem(QObject* parent, QStringList commands, GCommandType commandType = Execute);
 	~GCommandItem() override;
 
-	QList<QProcess*> processList_;
+	typedef uint64_t ProcessId;
+	QList<ProcessId> processList_;
 };
 typedef GCommandItem* PCommandItem;
 
@@ -60,8 +61,14 @@ protected:
 	bool doOpen() override;
 	bool doClose() override;
 
-public:
+protected:
 	static bool separate(QString command, QString* program, QStringList* arguments);
+
+protected:
+	virtual bool cmdExecute(QString program, QStringList arguments);
+	virtual GCommandItem::ProcessId cmdStart(QString program, QStringList arguments);
+	virtual bool cmdStop(GCommandItem::ProcessId pid);
+	virtual bool cmdStartDetached(QString program, QStringList arguments);
 
 public:
 	GObjRefArray<GCommandItem> openCommands_;
