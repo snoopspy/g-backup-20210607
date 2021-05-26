@@ -63,7 +63,7 @@ void GApp::launchDemon() {
 	QString ssdemonFile = QDir::currentPath() + "/ssdemon";
 	if (QFile::exists(ssdemonFile)) {
 #ifdef Q_OS_ANDROID
-		QString command = "su -c 'export LD_LIBRARY_PATH=" + QDir::currentPath() + "/../lib; " + ssdemonFile + " &'";
+		QString command = QString("su -c 'cd %1; export LD_LIBRARY_PATH=%2; ./ssdemon &'").arg(QDir::currentPath(), QDir::currentPath() + "/../lib");
 		int res = system(qPrintable(command));
 		qDebug() << command << "return" << res;
 #else // Q_OS_ANDROID
