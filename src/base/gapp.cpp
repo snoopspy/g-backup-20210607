@@ -59,18 +59,15 @@ void GApp::launchDemon() {
 	copyFileFromAssets("ssdemon", QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
 #endif // Q_OS_ANDROID
 
-	QString program = "su";
-	QString ssdemonFile = QDir::currentPath() + "/ssdemon";
+	QString ssdemonFile = "ssdemon";
 	if (QFile::exists(ssdemonFile)) {
 #ifdef Q_OS_ANDROID
-		QString command = QString("su -c 'cd %1; export LD_LIBRARY_PATH=%2; ./ssdemon &'").arg(QDir::currentPath(), QDir::currentPath() + "/../lib");
+		QString command = QString("su -c 'cd %1; export LD_LIBRARY_PATH=%2; ./%3 &'").arg(QDir::currentPath(), QDir::currentPath() + "/../lib", ssdemonFile);
+#else // Q_OS_ANDROID
+		QString command = QString("su -c 'cd %1; ./%2 &'").arg(QDir::currentPath(), ssdemonFile);
+#endif // Q_OS_ANDROID
 		int res = system(qPrintable(command));
 		qDebug() << command << "return" << res;
-#else // Q_OS_ANDROID
-		QStringList arguments{"-c", ssdemonFile};
-		bool res = QProcess::startDetached(program, arguments);
-		qDebug() << QString("QProcess::startDetached %1 %2 return %3").arg(program, arguments.join(" ")).arg(res);
-#endif // Q_OS_ANDROID
 	}
 }
 
