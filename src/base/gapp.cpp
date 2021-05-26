@@ -22,8 +22,7 @@ GApp::GApp(int &argc, char** argv) : QCoreApplication(argc, argv) {
 	initLogger();
 
 	QString appName = QCoreApplication::applicationName();
-	qInfo() << "";
-	qInfo() << "";
+	qInfo() << "====================================================================";
 	qInfo() << appName << G::version();
 	qInfo() << "Copyright (c) Gilbert Lee All rights reserved";
 	qInfo() << G::pcap_lib_version();
