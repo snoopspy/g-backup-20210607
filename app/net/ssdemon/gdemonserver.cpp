@@ -164,7 +164,6 @@ void GDemonSession::run() {
 				if (command_ == nullptr) command_ = new GDemonCommand(this);
 				active = command_->processCmdStartDetached(buf, size);
 				break;
-
 			case CmdGetInterfaceList:
 				if (network_ == nullptr) network_ = new GDemonNetwork(this);
 				active = network_->processGetInterfaceList(buf, size);
@@ -237,16 +236,198 @@ bool GDemonCommand::processCmdExecute(pchar buf, int32_t size) {
 	return true;
 }
 
+#include <unistd.h>
 bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
-	GTRACE(""); return false; // gilgil temp 2021.05.26
+	CmdStartReq req;
+	int32_t decLen = req.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return =1");
+		return false;
+	}
+
+	std::string command = req.command_;
+	GTRACE("%s", command.data());
+
+	pid_t pid = fork();
+	if (pid == 0) { // child
+		GTRACE("child"); // gilgil temp 2021.05.27
+		std::vector<std::string> arguments = splitCommand(command);
+		if (arguments.size() == 0) {
+			GTRACE("argument is null for command(%s)", command.data());
+			exit(EXIT_FAILURE);
+		}
+
+		std::string program = *arguments.begin();
+		int count = int(arguments.size());
+		char* argv[count + 1];
+		int i = 0;
+		for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); it++) {
+			std::string& argument = *it;
+			argv[i] = pchar(argument.data());
+			i++;
+		}
+		argv[count] = nullptr;
+		// for (int i = 0; i < count; i++) GTRACE("%d %s", i, argv[i]); // gilgil temp 2021.05.27
+		int res = execvp(argv[0], argv);
+		GTRACE("not reachable execvp(%s) return %d\n", command.data(), res);
+		exit(EXIT_FAILURE);
+	}
+
+	CmdStartRes res;
+	res.pid_ = pid;
+	if (res.pid_ < 0) {
+		res.error_ = std::string("fork() return ") + std::to_string(pid) + " errno=" + std::to_string(errno);
+		GTRACE("%s", res.error_.data());
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("res.encode return -1");
+		return false;
+	}
+
+	int sendLen = ::send(session_->sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+	}
+	return true;
 }
 
 bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
-	GTRACE(""); return false; // gilgil temp 2021.05.26
+	CmdStopReq req;
+	int32_t decLen = req.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return =1");
+		return false;
+	}
+
+	pid_t pid = req.pid_;
+	GTRACE("pid=%d", pid);
+	int result = kill(pid, SIGKILL);
+
+	CmdStopRes res;
+	res.result_ = (result == 0);
+	if (!res.result_) {
+		res.error_ = std::string("kill(") + std::to_string(pid) + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
+		GTRACE("%s", res.error_.data());
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("res.encode return -1");
+		return false;
+	}
+
+	int sendLen = ::send(session_->sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+	}
+	return true;
 }
 
 bool GDemonCommand::processCmdStartDetached(pchar buf, int32_t size) {
-	GTRACE(""); return false; // gilgil temp 2021.05.26
+	CmdStartDetachedReq req;
+	int32_t decLen = req.decode(buf, size);
+	if (decLen == -1) {
+		GTRACE("req.decode return =1");
+		return false;
+	}
+
+	std::string command = req.command_ + " &";
+	GTRACE("%s", command.data());
+	int result = system(command.data());
+
+	CmdStartDetachedRes res;
+	res.result_ = (result == 0);
+	if (!res.result_) {
+		res.error_ = std::string("system(") + command + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
+		GTRACE("%s", res.error_.data());
+	}
+
+	char buffer[MaxBufferSize];
+	int32_t encLen = res.encode(buffer, MaxBufferSize);
+	if (encLen == -1) {
+		GTRACE("res.encode return -1");
+		return false;
+	}
+
+	int sendLen = ::send(session_->sd_, buffer, encLen, 0);
+	if (sendLen == 0 || sendLen == -1) {
+		GTRACE("send return %d", sendLen);
+	}
+	return true;
+}
+
+std::vector<std::string> GDemonCommand::splitString(std::string s, char ch) {
+	std::vector<std::string> res;
+
+	size_t pos = s.find(ch);
+	size_t initialPos = 0;
+	res.clear();
+
+	while(pos != std::string::npos) {
+		res.push_back( s.substr( initialPos, pos - initialPos ) );
+		initialPos = pos + 1;
+		pos = s.find( ch, initialPos );
+	}
+	res.push_back( s.substr( initialPos, std::min( pos, s.size() ) - initialPos + 1 ) );
+
+	return res;
+}
+
+std::vector<std::string> GDemonCommand::splitCommand(std::string command) {
+	std::vector<std::string> split = splitString(command, ' ');
+	int index = 1;
+	while (true) {
+		int count = split.size();
+		if (index >= count) break;
+
+		std::string argument = split.at(index);
+		char quotation = '\0';
+		if (argument.at(0) == '\'') quotation = '\'';
+		else if (argument.at(0) == '\"') quotation = '\"';
+		if (quotation == '\0') {
+			index++;
+			continue;
+		}
+
+		int j = index + 1;
+		bool merged = false;
+		while (j < count) {
+			argument = split.at(j);
+			if (argument.at(argument.length() - 1) == quotation) {
+				std::string mergeArgument;
+				for (int k = index; k <= j; k++) {
+					mergeArgument += split.at(k);
+					if (k != j)
+						mergeArgument += " ";
+				}
+				mergeArgument = mergeArgument.substr(1, mergeArgument.length() - 2);
+				int mergeCount = j - index + 1;
+				std::vector<std::string>::iterator eraseIndex = split.begin();
+				for (int i = 1; i < index; i++) eraseIndex++;
+				for (int k = 0; k < mergeCount; k++) split.erase(eraseIndex);
+				split.insert(eraseIndex, mergeArgument);
+				index++;
+				merged = true;
+				break;
+			} else
+				j++;
+		}
+		if (!merged) {
+			GTRACE("can not find %c command=%s", quotation, command.data());
+			return std::vector<std::string>();
+		}
+	}
+
+	if (split.size() == 0) {
+		GTRACE("split.count is zero command=%s", command.data());
+		return std::vector<std::string>();
+	}
+
+	return split;
 }
 
 // ----------------------------------------------------------------------------

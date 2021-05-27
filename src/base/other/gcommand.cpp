@@ -158,13 +158,13 @@ QStringList GCommand::splitCommand(QString command) {
 				j++;
 		}
 		if (!merged) {
-			qWarning() << "can not find " << quotation;
+			qWarning() << "can not find " << quotation << "command =" << command;
 			return QStringList();
 		}
 	}
 
 	if (split.count() == 0) {
-		qWarning() << "split.count is zero" << command;
+		qWarning() << "split.count is zero command =" << command;
 		return QStringList();
 	}
 

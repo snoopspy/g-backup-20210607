@@ -10,9 +10,11 @@
 
 #pragma once
 
+#include <csignal>
 #include <list>
 #include <mutex>
 #include <thread>
+#include <vector>
 
 #include "gdemon.h"
 
@@ -74,6 +76,10 @@ struct GDemonCommand : GDemon {
 	bool processCmdStart(pchar buf, int32_t size);
 	bool processCmdStop(pchar buf, int32_t size);
 	bool processCmdStartDetached(pchar buf, int32_t size);
+
+protected:
+	static std::vector<std::string> splitString(std::string s, char ch);
+	static std::vector<std::string> splitCommand(std::string command);
 };
 
 // ----------------------------------------------------------------------------
