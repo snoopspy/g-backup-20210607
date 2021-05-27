@@ -304,7 +304,7 @@ bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 
 	pid_t pid = req.pid_;
 	GTRACE("pid=%d", pid);
-	int result = kill(pid, SIGKILL);
+	int result = kill(pid, SIGTERM);
 
 	CmdStopRes res;
 	res.result_ = (result == 0);
