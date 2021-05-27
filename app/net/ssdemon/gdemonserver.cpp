@@ -294,6 +294,7 @@ bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
 	return true;
 }
 
+#include <sys/wait.h>
 bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 	CmdStopReq req;
 	int32_t decLen = req.decode(buf, size);
@@ -305,6 +306,10 @@ bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 	pid_t pid = req.pid_;
 	GTRACE("pid=%d", pid);
 	int result = kill(pid, SIGTERM);
+
+	int state;
+	pid_t waitRes = waitpid(pid, &state, 0);
+	GTRACE("kill(%d) return %d waitpid return %d state=%d", pid, result, waitRes, state);
 
 	CmdStopRes res;
 	res.result_ = (result == 0);
