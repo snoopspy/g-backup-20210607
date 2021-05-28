@@ -1,9 +1,5 @@
 #include "gapp.h"
-
-#include <QProcess>
-
 #include "base/gjson.h"
-
 #include "base/graph/ggraphwidget.h"
 #include "base/log/glogmanager.h"
 #include "base/log/glogdbwin32.h"

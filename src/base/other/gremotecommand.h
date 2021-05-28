@@ -36,8 +36,8 @@ protected:
 protected:
 	GDemonClient* demonClient_{nullptr};
 
-	bool cmdExecute(QString program, QStringList arguments) override;
-	GCommandItem::ProcessId cmdStart(QString program, QStringList arguments) override;
+	bool cmdExecute(QString command) override;
+	GCommandItem::ProcessId cmdStart(QString command) override;
 	bool cmdStop(GCommandItem::ProcessId pid) override;
-	bool cmdStartDetached(QString program, QStringList arguments) override;
+	bool cmdStartDetached(QString command) override;
 };

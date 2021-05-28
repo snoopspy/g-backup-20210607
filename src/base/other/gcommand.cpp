@@ -28,21 +28,13 @@ bool GCommand::doOpen() {
 		for (QString command: item->commands_) {
 			if (command == "") continue;
 			qDebug() << command;
-			QStringList arguments = splitCommand(command);
-			if (arguments.count() == 0) {
-				SET_ERR(GErr::FAIL, QString("splitCommand(%1) return nothing").arg(command));
-				res = false;
-				break;
-			}
-			QString program = arguments.at(0);
-			arguments.removeAt(0);
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
-					res = cmdExecute(program, arguments);
+					res = cmdExecute(command);
 					break;
 				}
 				case GCommandItem::StartStop: {
-					GCommandItem::ProcessId pid = cmdStart(program, arguments);
+					GCommandItem::ProcessId pid = cmdStart(command);
 					if (pid != 0)
 						item->processList_.push_back(pid);
 					else
@@ -50,11 +42,7 @@ bool GCommand::doOpen() {
 					break;
 				}
 				case GCommandItem::StartDetach: {
-					res = cmdStartDetached(program, arguments);
-					if (res) {
-						QString msg = QString("QProcess::startDetached %1 return false").arg(command);
-						SET_ERR(GErr::FAIL, msg);
-					}
+					res = cmdStartDetached(command);
 					break;
 				}
 			}
@@ -85,17 +73,9 @@ bool GCommand::doClose() {
 		for (QString command: item->commands_) {
 			if (command == "") continue;
 			qDebug() << command;
-			QStringList arguments = splitCommand(command);
-			if (arguments.count() == 0) {
-				SET_ERR(GErr::FAIL, QString("splitCommand(%1) return nothing").arg(command));
-				res = false;
-				break;
-			}
-			QString program = arguments.at(0);
-			arguments.removeAt(0);
 			switch (item->commandType_) {
 				case GCommandItem::Execute: {
-					res = cmdExecute(program, arguments);
+					res = cmdExecute(command);
 					break;
 				}
 				case GCommandItem::StartStop: {
@@ -105,11 +85,7 @@ bool GCommand::doClose() {
 					break;
 				}
 				case GCommandItem::StartDetach:{
-					res = cmdStartDetached(program, arguments);
-					if (res) {
-						QString msg = QString("QProcess::startDetached %1 return false").arg(command);
-						SET_ERR(GErr::FAIL, msg);
-					}
+					res = cmdStartDetached(command);
 					break;
 				}
 			}
@@ -120,15 +96,32 @@ bool GCommand::doClose() {
 	return res;
 }
 
-QStringList GCommand::splitCommand(QString command) {
-	QStringList split = command.split(' ');
+std::vector<std::string> GCommand::splitString(std::string s, char ch) {
+	std::vector<std::string> res;
+
+	size_t pos = s.find(ch);
+	size_t initialPos = 0;
+	res.clear();
+
+	while(pos != std::string::npos) {
+		res.push_back(s.substr(initialPos, pos - initialPos));
+		initialPos = pos + 1;
+		pos = s.find(ch, initialPos);
+	}
+	res.push_back(s.substr(initialPos, std::min(pos, s.size()) - initialPos + 1));
+
+	return res;
+}
+
+std::vector<std::string> GCommand::splitCommand(std::string command) {
+	std::vector<std::string> split = splitString(command, ' ');
 	int index = 1;
 	while (true) {
-		int count = split.count();
+		int count = split.size();
 		if (index >= count) break;
 
-		QString argument = split.at(index);
-		QChar quotation = '\0';
+		std::string argument = split.at(index);
+		char quotation = '\0';
 		if (argument.at(0) == '\'') quotation = '\'';
 		else if (argument.at(0) == '\"') quotation = '\"';
 		if (quotation == '\0') {
@@ -141,16 +134,18 @@ QStringList GCommand::splitCommand(QString command) {
 		while (j < count) {
 			argument = split.at(j);
 			if (argument.at(argument.length() - 1) == quotation) {
-				QString mergeArgument;
+				std::string mergeArgument;
 				for (int k = index; k <= j; k++) {
 					mergeArgument += split.at(k);
 					if (k != j)
 						mergeArgument += " ";
 				}
-				mergeArgument = mergeArgument.mid(1, mergeArgument.length() - 2);
+				mergeArgument = mergeArgument.substr(1, mergeArgument.length() - 2);
 				int mergeCount = j - index + 1;
-				for (int k = 0; k < mergeCount; k++) split.removeAt(index);
-				split.insert(index, mergeArgument);
+				std::vector<std::string>::iterator eraseIndex = split.begin();
+				for (int i = 0; i < index; i++) eraseIndex++;
+				for (int k = 0; k < mergeCount; k++) split.erase(eraseIndex);
+				split.insert(eraseIndex, mergeArgument);
 				index++;
 				merged = true;
 				break;
@@ -158,56 +153,81 @@ QStringList GCommand::splitCommand(QString command) {
 				j++;
 		}
 		if (!merged) {
-			qWarning() << "can not find " << quotation << "command =" << command;
-			return QStringList();
+			qWarning() << QString("can not find %1 command=%2").arg(quotation), QString(command.data());
+			return std::vector<std::string>();
 		}
 	}
 
-	if (split.count() == 0) {
-		qWarning() << "split.count is zero command =" << command;
-		return QStringList();
+	if (split.size() == 0) {
+		qWarning() << QString("split.count is zero command=%1").arg(QString(command.data()));
+		return std::vector<std::string>();
 	}
 
 	return split;
 }
 
-bool GCommand::cmdExecute(QString program, QStringList arguments) {
-	int res = QProcess::execute(program, arguments);
+bool GCommand::cmdExecute(QString command) {
+	int res = ::system(qPrintable(command));
 	if (res != EXIT_SUCCESS) {
-		SET_ERR(GErr::FAIL, QString("execute(%1) return %2").arg(program + " " + arguments.join(" ")).arg(res));
+		SET_ERR(GErr::FAIL, QString("execute(%1) return %2").arg(command).arg(res));
 		return false;
 	}
 	return true;
 }
 
-GCommandItem::ProcessId GCommand::cmdStart(QString program, QStringList arguments) {
-	QProcess* process = new QProcess;
-	process->start(program, arguments);
-	GCommandItem::ProcessId pid = GCommandItem::ProcessId(process);
-	if (pid == 0) {
-		SET_ERR(GErr::FAIL, QString("can not execute %1").arg(program + " " + arguments.join(" ")));
+#include <unistd.h> // for fork
+#include <signal.h> // for SIGTERM
+GCommandItem::ProcessId GCommand::cmdStart(QString command) {
+	std::vector<std::string> arguments = splitCommand(qPrintable(command));
+	size_t count = arguments.size();
+	if (count == 0) {
+		SET_ERR(GErr::FAIL, QString("splitCommand(%1) return nothing").arg(command));
+		return 0;
+	}
+
+	char *argv[count + 1];
+	for (size_t i = 0; i < count; i++)
+		argv[i] = pchar(arguments[i].data());
+	argv[count] = nullptr;
+
+	pid_t pid = fork();
+	if (pid == 0) { // child
+		int res = execvp(argv[0], argv);
+		qWarning() << QString("not reachable execvp(%1) return %2").arg(command).arg(res);
+		exit(EXIT_FAILURE);
+	}
+
+	if (pid < 0) { // fail
+		QString msg = QString("fork() return %1 errono=%2").arg(pid).arg(std::to_string(errno).data());
+		SET_ERR(GErr::FAIL, msg);
+		return 0;
+	}
+
+	return GCommandItem::ProcessId(pid);
+}
+
+#include <wait.h> // for waitpid
+bool GCommand::cmdStop(GCommandItem::ProcessId pid) {
+	pid_t _pid = pid;
+	int killRes = kill(_pid, SIGTERM);
+
+	int state;
+	pid_t waitRes = waitpid(_pid, &state, 0);
+	qWarning() << QString("kill(%1) return %2 waitpid return %3 state=%4").arg(_pid).arg(killRes).arg(waitRes).arg(state);
+
+	if (killRes != 0) {
+		QString msg = QString("kill(%1) rerutn %2 errno=%3").arg(_pid).arg(killRes).arg(std::to_string(errno).data());
+		SET_ERR(GErr::FAIL, msg);
 		return false;
 	}
-	return pid;
+	return true;
 }
 
-bool GCommand::cmdStop(GCommandItem::ProcessId pid) {
-	QProcess* process = reinterpret_cast<QProcess*>(pid);
-	Q_ASSERT(process != nullptr);
-	process->terminate();
-	bool res = process->waitForFinished();
-	if (!res) {
-		SET_ERR(GErr::FAIL, QString("waitForFinished(%1) return false").arg(QString::number(pid, 16)));
-		process->kill();
-	}
-	delete process;
-	return res;
-}
-
-bool GCommand::cmdStartDetached(QString program, QStringList arguments) {
-	bool res = QProcess::startDetached(program, arguments);
-	if (!res) {
-		SET_ERR(GErr::FAIL, QString("can not execute %1").arg(program + " " + arguments.join(" ")));
+bool GCommand::cmdStartDetached(QString command) {
+	command += " &";
+	int res = ::system(qPrintable(command));
+	if (res != EXIT_SUCCESS) {
+		SET_ERR(GErr::FAIL, QString("execute(%1) return %2").arg(command).arg(res));
 		return false;
 	}
 	return true;

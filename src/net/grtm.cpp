@@ -1,6 +1,4 @@
 #include <QDebug>
-#include <QProcess>
-#include <QTextStream>
 #include "grtm.h"
 
 // ----------------------------------------------------------------------------

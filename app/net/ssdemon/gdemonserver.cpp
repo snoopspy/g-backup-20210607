@@ -216,7 +216,7 @@ bool GDemonCommand::processCmdExecute(pchar buf, int32_t size) {
 	int result = system(command.data());
 
 	CmdExecuteRes res;
-	res.result_ = (result == 0);
+	res.result_ = (result == EXIT_SUCCESS);
 	if (!res.result_) {
 		res.error_ = std::string("system(") + command + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
 		GTRACE("%s", res.error_.data());
@@ -248,38 +248,37 @@ bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
 	std::string command = req.command_;
 	GTRACE("%s", command.data());
 
+	std::vector<std::string> arguments = splitCommand(command);
+	size_t count = int(arguments.size());
+	if (count == 0) {
+		GTRACE("splitCommand(%s) return nothing", command.data());
+		exit(EXIT_FAILURE);
+	}
+
+	std::string program = *arguments.begin();
+
+	char *argv[count + 1];
+	for (size_t i = 0; i < count; i++)
+		argv[i] = pchar(arguments[i].data());
+	argv[count] = nullptr;
+	// for (int i = 0; i < count; i++) GTRACE("%d %s", i, argv[i]); // gilgil temp 2021.05.27
+
 	pid_t pid = fork();
 	if (pid == 0) { // child
-		GTRACE("child"); // gilgil temp 2021.05.27
-		std::vector<std::string> arguments = splitCommand(command);
-		if (arguments.size() == 0) {
-			GTRACE("argument is null for command(%s)", command.data());
-			exit(EXIT_FAILURE);
-		}
-
-		std::string program = *arguments.begin();
-		int count = int(arguments.size());
-		char* argv[count + 1];
-		int i = 0;
-		for (std::vector<std::string>::iterator it = arguments.begin(); it != arguments.end(); it++) {
-			std::string& argument = *it;
-			argv[i] = pchar(argument.data());
-			i++;
-		}
-		argv[count] = nullptr;
-		// for (int i = 0; i < count; i++) GTRACE("%d %s", i, argv[i]); // gilgil temp 2021.05.27
+		// GTRACE("child"); // gilgil temp 2021.05.27
 		int res = execvp(argv[0], argv);
-		GTRACE("not reachable execvp(%s) return %d\n", command.data(), res);
+		GTRACE("not reachable execvp(%s) return %d", command.data(), res);
 		exit(EXIT_FAILURE);
 	}
 
 	CmdStartRes res;
 	res.pid_ = pid;
-	if (res.pid_ < 0) {
+	if (res.pid_ < 0) { // fail
 		res.error_ = std::string("fork() return ") + std::to_string(pid) + " errno=" + std::to_string(errno);
 		GTRACE("%s", res.error_.data());
 	}
 
+	// parent
 	char buffer[MaxBufferSize];
 	int32_t encLen = res.encode(buffer, MaxBufferSize);
 	if (encLen == -1) {
@@ -304,17 +303,16 @@ bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 	}
 
 	pid_t pid = req.pid_;
-	GTRACE("pid=%d", pid);
-	int result = kill(pid, SIGTERM);
+	int killRes = kill(pid, SIGTERM);
 
 	int state;
 	pid_t waitRes = waitpid(pid, &state, 0);
-	GTRACE("kill(%d) return %d waitpid return %d state=%d", pid, result, waitRes, state);
+	GTRACE("kill(%d) return %d waitpid return %d state=%d", pid, killRes, waitRes, state);
 
 	CmdStopRes res;
-	res.result_ = (result == 0);
+	res.result_ = (killRes == 0);
 	if (!res.result_) {
-		res.error_ = std::string("kill(") + std::to_string(pid) + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
+		res.error_ = std::string("kill(") + std::to_string(pid) + ") return " + std::to_string(killRes) + " errno=" + std::to_string(errno);
 		GTRACE("%s", res.error_.data());
 	}
 
@@ -373,11 +371,11 @@ std::vector<std::string> GDemonCommand::splitString(std::string s, char ch) {
 	res.clear();
 
 	while(pos != std::string::npos) {
-		res.push_back( s.substr( initialPos, pos - initialPos ) );
+		res.push_back(s.substr(initialPos, pos - initialPos));
 		initialPos = pos + 1;
-		pos = s.find( ch, initialPos );
+		pos = s.find(ch, initialPos);
 	}
-	res.push_back( s.substr( initialPos, std::min( pos, s.size() ) - initialPos + 1 ) );
+	res.push_back(s.substr(initialPos, std::min(pos, s.size()) - initialPos + 1));
 
 	return res;
 }
@@ -412,7 +410,7 @@ std::vector<std::string> GDemonCommand::splitCommand(std::string command) {
 				mergeArgument = mergeArgument.substr(1, mergeArgument.length() - 2);
 				int mergeCount = j - index + 1;
 				std::vector<std::string>::iterator eraseIndex = split.begin();
-				for (int i = 1; i < index; i++) eraseIndex++;
+				for (int i = 0; i < index; i++) eraseIndex++;
 				for (int k = 0; k < mergeCount; k++) split.erase(eraseIndex);
 				split.insert(eraseIndex, mergeArgument);
 				index++;

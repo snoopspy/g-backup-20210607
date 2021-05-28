@@ -17,8 +17,7 @@ bool GRemoteCommand::doClose() {
 	return res;
 }
 
-bool GRemoteCommand::cmdExecute(QString program, QStringList arguments) {
-	QString command = program + " " + arguments.join(" ");
+bool GRemoteCommand::cmdExecute(QString command) {
 	GDemon::CmdExecuteRes res = demonClient_->cmdExecute(qPrintable(command));
 	if (!res.result_) {
 		SET_ERR(GErr::FAIL, demonClient_->error_.data());
@@ -27,8 +26,7 @@ bool GRemoteCommand::cmdExecute(QString program, QStringList arguments) {
 	return true;
 }
 
-GCommandItem::ProcessId GRemoteCommand::cmdStart(QString program, QStringList arguments) {
-	QString command = program + " " + arguments.join(" ");
+GCommandItem::ProcessId GRemoteCommand::cmdStart(QString command) {
 	GDemon::CmdStartRes res = demonClient_->cmdStart(qPrintable(command));
 	if (res.pid_ == 0) {
 		SET_ERR(GErr::FAIL, demonClient_->error_.data());
@@ -46,8 +44,7 @@ bool GRemoteCommand::cmdStop(GCommandItem::ProcessId pid) {
 	return true;
 }
 
-bool GRemoteCommand::cmdStartDetached(QString program, QStringList arguments) {
-	QString command = program + " " + arguments.join(" ");
+bool GRemoteCommand::cmdStartDetached(QString command) {
 	GDemon::CmdStartDetachedRes res = demonClient_->cmdStartDetached(qPrintable(command));
 	if (!res.result_) {
 		SET_ERR(GErr::FAIL, demonClient_->error_.data());
