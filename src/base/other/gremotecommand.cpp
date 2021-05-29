@@ -26,7 +26,7 @@ bool GRemoteCommand::cmdExecute(QString command) {
 	return true;
 }
 
-GCommandItem::ProcessId GRemoteCommand::cmdStart(QString command) {
+pid_t GRemoteCommand::cmdStart(QString command) {
 	GDemon::CmdStartRes res = demonClient_->cmdStart(qPrintable(command));
 	if (res.pid_ == 0) {
 		SET_ERR(GErr::FAIL, demonClient_->error_.data());
@@ -35,7 +35,7 @@ GCommandItem::ProcessId GRemoteCommand::cmdStart(QString command) {
 	return res.pid_;
 }
 
-bool GRemoteCommand::cmdStop(GCommandItem::ProcessId pid) {
+bool GRemoteCommand::cmdStop(pid_t pid) {
 	GDemon::CmdStopRes res = demonClient_->cmdStop(pid);
 	if (!res.result_) {
 		SET_ERR(GErr::FAIL, demonClient_->error_.data());

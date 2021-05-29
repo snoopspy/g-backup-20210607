@@ -11,6 +11,7 @@
 #pragma once
 
 #include "base/gstateobj.h"
+#include "base/sys/gprocess.h"
 
 // ----------------------------------------------------------------------------
 // GCommandItem
@@ -35,8 +36,7 @@ public:
 	Q_INVOKABLE GCommandItem(QObject* parent, QStringList commands, GCommandType commandType = Execute);
 	~GCommandItem() override;
 
-	typedef uint64_t ProcessId; // pid_t
-	QList<ProcessId> processList_;
+	QList<pid_t> processList_;
 };
 typedef GCommandItem* PCommandItem;
 
@@ -61,13 +61,9 @@ protected:
 	bool doClose() override;
 
 protected:
-	static std::vector<std::string> splitString(std::string s, char ch);
-	static std::vector<std::string> splitCommand(std::string command);
-
-protected:
 	virtual bool cmdExecute(QString command);
-	virtual GCommandItem::ProcessId cmdStart(QString command);
-	virtual bool cmdStop(GCommandItem::ProcessId pid);
+	virtual pid_t cmdStart(QString command);
+	virtual bool cmdStop(pid_t pid);
 	virtual bool cmdStartDetached(QString command);
 
 public:
