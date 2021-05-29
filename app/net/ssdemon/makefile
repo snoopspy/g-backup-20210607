@@ -1,11 +1,11 @@
 TARGET=../../../bin/ssdemon
-SRCS=$(wildcard *.cpp) $(wildcard ../../../src/net/demon/gdemon.cpp)
+SRCS=$(wildcard *.cpp) $(wildcard ../../../src/base/sys/gprocess.cpp) $(wildcard ../../../src/net/demon/gdemon.cpp)
 OBJS=$(SRCS:%.cpp=%.o)
 
 CPPFLAGS+=-g
 CPPFLAGS+=-O2 # for release
 CPPFLAGS+=-Wall -Wextra
-CPPFLAGS+=-I../../../src/net/demon
+CPPFLAGS+=-I../../../src/base/sys -I../../../src/net/demon
 LDLIBS+=-lpcap -pthread
 
 all: $(TARGET)

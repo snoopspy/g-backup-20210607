@@ -212,13 +212,14 @@ bool GDemonCommand::processCmdExecute(pchar buf, int32_t size) {
 	}
 
 	std::string command = req.command_;
-	GTRACE("%s", command.data());
-	int result = system(command.data());
+	std::string error;
+	bool result = GProcess::execute(command, error);
+	GTRACE("%s return %s", command.data(), result ? "true" : "false");
 
 	CmdExecuteRes res;
-	res.result_ = (result == EXIT_SUCCESS);
-	if (!res.result_) {
-		res.error_ = std::string("system(") + command + ") return " + std::to_string(result) + " errno=" + std::to_string(errno);
+	res.result_ = result;
+	if (!res.result_) { // fail
+		res.error_ = error;
 		GTRACE("%s", res.error_.data());
 	}
 
@@ -236,7 +237,6 @@ bool GDemonCommand::processCmdExecute(pchar buf, int32_t size) {
 	return true;
 }
 
-#include <unistd.h>
 bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
 	CmdStartReq req;
 	int32_t decLen = req.decode(buf, size);
@@ -246,35 +246,14 @@ bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
 	}
 
 	std::string command = req.command_;
-	GTRACE("%s", command.data());
-
-	std::vector<std::string> arguments = splitCommand(command);
-	size_t count = int(arguments.size());
-	if (count == 0) {
-		GTRACE("splitCommand(%s) return nothing", command.data());
-		exit(EXIT_FAILURE);
-	}
-
-	std::string program = *arguments.begin();
-
-	char *argv[count + 1];
-	for (size_t i = 0; i < count; i++)
-		argv[i] = pchar(arguments[i].data());
-	argv[count] = nullptr;
-	// for (int i = 0; i < count; i++) GTRACE("%d %s", i, argv[i]); // gilgil temp 2021.05.27
-
-	pid_t pid = fork();
-	if (pid == 0) { // child
-		// GTRACE("child"); // gilgil temp 2021.05.27
-		int res = execvp(argv[0], argv);
-		GTRACE("not reachable execvp(%s) return %d", command.data(), res);
-		exit(EXIT_FAILURE);
-	}
+	std::string error;
+	pid_t pid = GProcess::start(command, error);
+	GTRACE("%s return %d", command.data(), pid);
 
 	CmdStartRes res;
 	res.pid_ = pid;
-	if (res.pid_ < 0) { // fail
-		res.error_ = std::string("fork() return ") + std::to_string(pid) + " errno=" + std::to_string(errno);
+	if (res.pid_ <= 0) { // fail
+		res.error_ = error;
 		GTRACE("%s", res.error_.data());
 	}
 
@@ -293,7 +272,6 @@ bool GDemonCommand::processCmdStart(pchar buf, int32_t size) {
 	return true;
 }
 
-#include <sys/wait.h>
 bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 	CmdStopReq req;
 	int32_t decLen = req.decode(buf, size);
@@ -303,16 +281,14 @@ bool GDemonCommand::processCmdStop(pchar buf, int32_t size) {
 	}
 
 	pid_t pid = req.pid_;
-	int killRes = kill(pid, SIGTERM);
-
-	int state;
-	pid_t waitRes = waitpid(pid, &state, 0);
-	GTRACE("kill(%d) return %d waitpid return %d state=%d", pid, killRes, waitRes, state);
+	std::string error;
+	bool result = GProcess::stop(pid, error);
+	GTRACE("GProcess:stop(%d) return %s", pid, result ? "true" : "false");
 
 	CmdStopRes res;
-	res.result_ = (killRes == 0);
+	res.result_ = (result);
 	if (!res.result_) {
-		res.error_ = std::string("kill(") + std::to_string(pid) + ") return " + std::to_string(killRes) + " errno=" + std::to_string(errno);
+		res.error_ = error;
 		GTRACE("%s", res.error_.data());
 	}
 
@@ -361,76 +337,6 @@ bool GDemonCommand::processCmdStartDetached(pchar buf, int32_t size) {
 		GTRACE("send return %d", sendLen);
 	}
 	return true;
-}
-
-std::vector<std::string> GDemonCommand::splitString(std::string s, char ch) {
-	std::vector<std::string> res;
-
-	size_t pos = s.find(ch);
-	size_t initialPos = 0;
-	res.clear();
-
-	while(pos != std::string::npos) {
-		res.push_back(s.substr(initialPos, pos - initialPos));
-		initialPos = pos + 1;
-		pos = s.find(ch, initialPos);
-	}
-	res.push_back(s.substr(initialPos, std::min(pos, s.size()) - initialPos + 1));
-
-	return res;
-}
-
-std::vector<std::string> GDemonCommand::splitCommand(std::string command) {
-	std::vector<std::string> split = splitString(command, ' ');
-	int index = 1;
-	while (true) {
-		int count = split.size();
-		if (index >= count) break;
-
-		std::string argument = split.at(index);
-		char quotation = '\0';
-		if (argument.at(0) == '\'') quotation = '\'';
-		else if (argument.at(0) == '\"') quotation = '\"';
-		if (quotation == '\0') {
-			index++;
-			continue;
-		}
-
-		int j = index + 1;
-		bool merged = false;
-		while (j < count) {
-			argument = split.at(j);
-			if (argument.at(argument.length() - 1) == quotation) {
-				std::string mergeArgument;
-				for (int k = index; k <= j; k++) {
-					mergeArgument += split.at(k);
-					if (k != j)
-						mergeArgument += " ";
-				}
-				mergeArgument = mergeArgument.substr(1, mergeArgument.length() - 2);
-				int mergeCount = j - index + 1;
-				std::vector<std::string>::iterator eraseIndex = split.begin();
-				for (int i = 0; i < index; i++) eraseIndex++;
-				for (int k = 0; k < mergeCount; k++) split.erase(eraseIndex);
-				split.insert(eraseIndex, mergeArgument);
-				index++;
-				merged = true;
-				break;
-			} else
-				j++;
-		}
-		if (!merged) {
-			GTRACE("can not find %c command=%s", quotation, command.data());
-			return std::vector<std::string>();
-		}
-	}
-
-	if (split.size() == 0) {
-		GTRACE("split.count is zero command=%s", command.data());
-		return std::vector<std::string>();
-	}
-
-	return split;
 }
 
 // ----------------------------------------------------------------------------
