@@ -1,15 +1,17 @@
 .PHONY: all lib app plugin clean distclean
 
+NPROC=$(shell grep -c ^processor /proc/cpuinfo)
+
 all: lib app plugin
 
 lib:
 	cd lib && make && cd ..
 
 app:
-	cd app && qmake "CONFIG+=release" && make -j 4 && cd ..
+	cd app && qmake "CONFIG+=release" && make -j$(NPROC) && cd ..
 
 plugin:
-	cd plugin && qmake "CONFIG+=release" && make -j 4 && cd ..
+	cd plugin && qmake "CONFIG+=release" && make -j$(NPROC) && cd ..
 
 clean:
 	cd lib && make clean; true
