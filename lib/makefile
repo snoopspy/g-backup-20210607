@@ -52,6 +52,7 @@ clean:
 	rm -rf *.pro.user
 
 distclean: clean
+	find ../bin -name "*.a" -delete
 	find ../bin -name "*.so*" -delete
 	find ../bin -type f -executable -name "*-test" -delete
 	rm -f ../bin/g-d-test
