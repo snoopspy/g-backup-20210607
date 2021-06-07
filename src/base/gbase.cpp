@@ -1,11 +1,16 @@
 #include "gbase.h"
 #include <pcap.h>
 
+
 const char* G::version() {
 #ifdef _DEBUG
-	return "G Library version 0.2.3 Debug Build(" __DATE__ " " __TIME__ ")";
+	return "version "
+#include "../../version.txt"
+	" Debug Build(" __DATE__ " " __TIME__ ")";
 #else // RELEASE
-	return "G Library version 0.2.3 Release Build(" __DATE__ " " __TIME__ ")";
+	return "version "
+#include "../../version.txt"
+	" Release Build(" __DATE__ " " __TIME__ ")";
 #endif // _DEBUG
 }
 

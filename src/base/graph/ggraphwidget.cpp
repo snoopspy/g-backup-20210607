@@ -486,7 +486,7 @@ void GGraphWidget::actionDeleteTriggered(bool) {
 }
 
 void GGraphWidget::actionAboutTriggered(bool) {
-	QMessageBox::information(nullptr, "About", QString("SnoopSpy based on ") + G::version());
+	QMessageBox::information(nullptr, "About", QString("SnoopSpy ") + G::version());
 }
 
 void GGraphWidget::factoryWidgetClicked(const QModelIndex&) {
