@@ -5,13 +5,13 @@ NPROC=$(shell grep -c ^processor /proc/cpuinfo)
 all: lib app plugin
 
 lib:
-	cd lib && make && cd ..
+	cd lib && make
 
 app:
-	cd app && qmake "CONFIG+=release" && make -j$(NPROC) && cd ..
+	cd app && qmake "CONFIG+=release" && make -j$(NPROC)
 
 plugin:
-	cd plugin && qmake "CONFIG+=release" && make -j$(NPROC) && cd ..
+	cd plugin && qmake "CONFIG+=release" && make -j$(NPROC)
 
 setup:
 	cd setup && ./linux-setup.sh
@@ -30,6 +30,6 @@ distclean: clean
 	cd plugin && make distclean; true
 	find bin -type f -executable -delete
 	find bin -type f -name "*.json" -delete
-	rm -rf setup/setup
+	rm -rf setup/linux-setup
 	rm -rf setup/*.gz
 	find -type f -name 'Makefile*'  -delete
