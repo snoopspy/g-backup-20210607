@@ -41,6 +41,7 @@ cp ../bin/ss/* linux-setup/ss
 # compress
 #
 cd linux-setup
-tar czf snoopspy-$(date '+%Y%m%d').tar.gz *
+tar czf snoopspy-$(sed 's/"//g' ../../version.txt).tar.gz *
+#tar czf snoopspy-$(date '+%Y%m%d').tar.gz *
 cd ..
 
