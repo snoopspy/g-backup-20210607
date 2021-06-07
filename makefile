@@ -31,5 +31,9 @@ distclean: clean
 	find bin -type f -executable -delete
 	find bin -type f -name "*.json" -delete
 	rm -rf setup/linux-setup
-	rm -rf setup/*.gz
 	find -type f -name 'Makefile*'  -delete
+	rm -rf lib/android-build
+	rm -rf app/net/snoopspy/android-build
+	#rm -rf setup/*.gz
+	#rm -rf setup/*.apk
+

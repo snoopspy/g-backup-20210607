@@ -20,8 +20,8 @@ if true; then
 	# lib
 	#
 	cd lib
-	mkdir -p build
-	cd build
+	mkdir -p android-build
+	cd android-build
 	$QTBINDIR/qmake ../libg-gui.pro $QMAKE_OPTION
 	$MAKEDIR/make -j$(nproc)
 	cd ../..
@@ -31,8 +31,8 @@ fi
 # app
 #
 if true; then
-	mkdir -p app/net/snoopspy/build
-	cd app/net/snoopspy/build
+	mkdir -p app/net/snoopspy/android-build
+	cd app/net/snoopspy/android-build
 	$QTBINDIR/qmake ../snoopspy.pro $QMAKE_OPTION
 	$MAKEDIR/make -j$(nproc)
 	$MAKEDIR/make INSTALL_ROOT=./android-build install
