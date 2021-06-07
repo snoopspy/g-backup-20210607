@@ -1,4 +1,4 @@
-.PHONY: all lib app plugin clean distclean
+.PHONY: all lib app plugin setup clean distclean
 
 NPROC=$(shell grep -c ^processor /proc/cpuinfo)
 
@@ -12,6 +12,9 @@ app:
 
 plugin:
 	cd plugin && qmake "CONFIG+=release" && make -j$(NPROC) && cd ..
+
+setup:
+	cd setup && ./linux-setup.sh
 
 clean:
 	cd lib && make clean; true
