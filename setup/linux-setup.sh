@@ -40,4 +40,6 @@ cp ../bin/ss/* linux-setup/ss
 #
 # compress
 #
-tar czf snoopspy-$(sed 's/"//g' ../../version.txt).tar.gz linux-setup/*
+cd linux-setup
+tar czf ../snoopspy-$(sed 's/"//g' ../../version.txt).tar.gz *
+cd ..
