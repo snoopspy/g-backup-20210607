@@ -2,7 +2,7 @@
 
 NPROC=$(shell grep -c ^processor /proc/cpuinfo)
 
-all: lib app plugin
+all: lib app plugin setup
 
 lib:
 	cd lib && make
